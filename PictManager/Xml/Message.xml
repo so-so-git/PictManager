@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="shift_jis" ?>
+<!DOCTYPE root [
+	<!ELEMENT root (msg)+>
+	<!ELEMENT msg (#PCDATA)>
+	<!ATTLIST msg id ID #REQUIRED>
+	<!ATTLIST msg caption CDATA #REQUIRED>
+	<!ATTLIST msg buttons CDATA #REQUIRED>
+	<!ATTLIST msg icon CDATA #REQUIRED>
+]>
+<root>
+	<!-- インフォメーションメッセージ -->
+	<msg id="I000" caption="ファイル一周" buttons="OK" icon="Information">
+		一周しました。
+	</msg>
+	<msg id="I001" caption="処理完了" buttons="OK" icon="Information">
+		ファイル名の変更が完了しました。
+	</msg>
+	<msg id="I002" caption="ファイル名一括変更実行中" buttons="OK" icon="Information">
+		名称変更対象ファイル情報取得中...\n-> {0}
+	</msg>
+	<msg id="I003" caption="ファイル名一括変更実行中" buttons="OK" icon="Information">
+		ファイル名変更中...\n-> {0}
+	</msg>
+	<msg id="I004" caption="処理完了" buttons="OK" icon="Information">
+		ファイル移動が完了しました。
+	</msg>
+	<msg id="I005" caption="全画像ファイル削除済" buttons="OK" icon="Information">
+		ディレクトリ内の全てのファイルが削除されました。
+	</msg>
+	<msg id="I006" caption="削除済みファイル無し" buttons="OK" icon="Information">
+		削除済みのファイルはありません。
+	</msg>
+	<msg id="I007" caption="変更内容適用中止" buttons="OK" icon="Information">
+		変更内容の適用が中止されました。
+	</msg>
+	<msg id="I008" caption="類似画像無し" buttons="OK" icon="Information">
+		類似画像は検出されませんでした。
+	</msg>
+	<msg id="I009" caption="類似画像一括検索完了" buttons="OK" icon="Information">
+		全ての行の類似画像の検索が完了しました。
+	</msg>
+	<msg id="I010" caption="ファイル表示順ソート実行中" buttons="OK" icon="Information">
+		ファイル表示順ソート中...
+	</msg>
+  <msg id="I011" caption="インポート完了" buttons="OK" icon="Information">
+    インポートが完了しました。
+  </msg>
+
+  <!-- コンフォームメッセージ -->
+	<msg id="Q000" caption="終了確認" buttons="YesNo" icon="Question">
+		終了します。\nよろしいですか？
+	</msg>
+	<msg id="Q001" caption="ファイル削除確認" buttons="YesNo" icon="Question">
+		エラー対象のファイルを削除しますか？
+	</msg>
+	<msg id="Q002" caption="削除確認" buttons="YesNo" icon="Question">
+		表示中のファイルを削除します。\nよろしいですか？
+	</msg>
+	<msg id="Q003" caption="スライド表示開始確認" buttons="YesNo" icon="Question">
+		スライド表示を開始しますか？
+	</msg>
+	<msg id="Q004" caption="ファイル削除確認" buttons="YesNo" icon="Question">
+		選択中のファイルを削除します。\nよろしいですか？
+	</msg>
+	<msg id="Q005" caption="編集内容破棄確認" buttons="YesNo" icon="Question">
+		編集されたセルが存在します。\n編集内容を破棄し、画面を閉じてよろしいですか？
+	</msg>
+	<msg id="Q006" caption="編集内容破棄確認" buttons="YesNo" icon="Question">
+		現在の編集内容を破棄し、最後に適用した時点へ戻してよろしいですか？
+	</msg>
+	<msg id="Q007" caption="上書き保存確認" buttons="YesNo" icon="Question">
+		表示中の内容でファイルを上書きしてよろしいですか？
+	</msg>
+	<msg id="Q008" caption="変更適用確認" buttons="YesNo" icon="Question">
+		変更内容を適用してよろしいですか？
+	</msg>
+	<msg id="Q009" caption="ディレクトリ作成確認" buttons="YesNo" icon="Question">
+		移動先のディレクトリが存在しません。\n作成してよろしいですか？
+	</msg>
+	<msg id="Q010" caption="ブックマーク全削除確認" buttons="YesNo" icon="Question">
+		全てのブックマークを削除してよろしいですか？
+	</msg>
+  <msg id="Q011" caption="ロールバック確認" buttons="YesNo" icon="Question">
+    全てのファイルの状態を、画面を開いた時点のものに戻してよろしいですか？
+  </msg>
+
+  <!-- ワーニングメッセージ -->
+	<msg id="W000" caption="未入力エラー" buttons="OK" icon="Warning">
+		{0} が未入力です。
+	</msg>
+	<msg id="W001" caption="不正な対象ディレクトリ" buttons="OK" icon="Warning">
+		対象ディレクトリが不正です。\n正しいディレクトリを入力して下さい。
+	</msg>
+	<msg id="W002" caption="不正な入力" buttons="OK" icon="Warning">
+		プラス値で入力して下さい。
+	</msg>
+	<msg id="W003" caption="上限値オーバー" buttons="OK" icon="Warning">
+		入力された値が上限値を超えています。\n入力は無効です。
+	</msg>
+	<msg id="W004" caption="無効なページ指定" buttons="OK" icon="Warning">
+		ページ指定は1以上の半角整数のみ有効です。
+	</msg>
+	<msg id="W005" caption="禁則文字有り" buttons="OK" icon="Warning">
+		ファイル名に使用出来ない文字が含まれています。\n再入力して下さい。
+	</msg>
+	<msg id="W006" caption="対象ファイル削除済" buttons="OK" icon="Warning">
+		既に削除済みです。
+	</msg>
+	<msg id="W007" caption="切替間隔未入力" buttons="OK" icon="Warning">
+		画像切替間隔を入力して下さい。
+	</msg>
+	<msg id="W008" caption="切替間隔入力エラー" buttons="OK" icon="Warning">
+		画像切替間隔は1以上の半角数字で入力して下さい。
+	</msg>
+	<msg id="W009" caption="対象ファイル未選択" buttons="OK" icon="Warning">
+		対象ファイルを選択して下さい。
+	</msg>
+	<msg id="W010" caption="複数対象検出" buttons="OK" icon="Warning">
+		単一の対象のみをドロップして下さい。
+	</msg>
+	<msg id="W011" caption="未入力エラー" buttons="OK" icon="Warning">
+		元ファイルを含む、通し番号を付加する の何れかもしくは両方にチェックを入れて下さい。
+	</msg>
+	<msg id="W012" caption="未入力エラー" buttons="OK" icon="Warning">
+		置換後文字が入力されている場合は置換前文字を入力して下さい。
+	</msg>
+	<msg id="W013" caption="未入力エラー" buttons="OK" icon="Warning">
+		通し番号の間隔が未入力です。
+	</msg>
+	<msg id="W014" caption="入力値エラー" buttons="OK" icon="Warning">
+		通し番号の間隔は半角整数で入力して下さい。
+	</msg>
+	<msg id="W015" caption="入力値エラー" buttons="OK" icon="Warning">
+		{0} にファイル名に使用出来ない文字が含まれています。
+	</msg>
+	<msg id="W016" caption="パス区切り文字有り" buttons="OK" icon="Warning">
+		パス区切り文字が含まれています。\n異なるディレクトリへの移動は出来ません。
+	</msg>
+	<msg id="W017" caption="禁則文字有り" buttons="OK" icon="Warning">
+		使用出来ない文字が含まれています。\n再入力するか、Escキーで変更を破棄して編集を終了して下さい。
+	</msg>
+	<msg id="W018" caption="拡張子変更検出" buttons="OK" icon="Warning">
+		拡張子を変更することは出来ません。\n再入力するか、Escキーで変更を破棄して編集を終了して下さい。
+	</msg>
+	<msg id="W019" caption="ボリューム区切り文字未入力" buttons="OK" icon="Warning">
+		ボリューム区切り文字が含まれていません。\n再入力するか、Escキーで変更を破棄して編集を終了して下さい。
+	</msg>
+	<msg id="W020" caption="複数のボリューム区切り文字有り" buttons="OK" icon="Warning">
+		ボリューム区切り文字が複数入力されています。\n再入力するか、Escキーで変更を破棄して編集を終了して下さい。
+	</msg>
+	<msg id="W021" caption="不正なボリューム区切り文字位置" buttons="OK" icon="Warning">
+		ボリューム区切り文字の位置が不正です。\n再入力するか、Escキーで変更を破棄して編集を終了して下さい。
+	</msg>
+	<msg id="W022" caption="空のディレクトリ名有り" buttons="OK" icon="Warning">
+		パス中にディレクトリ名が空の箇所があります。\n再入力するか、Escキーで変更を破棄して編集を終了して下さい。
+	</msg>
+	<msg id="W023" caption="多重起動" buttons="OK" icon="Warning">
+		既に起動しています。
+	</msg>
+  <msg id="W024" caption="存在しないパス" buttons="OK" icon="Warning">
+    指定された{0}は存在しません。
+  </msg>
+  <msg id="W025" caption="無効なファイル形式" buttons="OK" icon="Warning">
+    指定された形式のファイルは処理できません。
+  </msg>
+  <msg id="W026" caption="バージョン警告" buttons="OK" icon="Warning">
+    {0}モードでビルドされたモジュールです。
+  </msg>
+
+  <!-- エラーメッセージ -->
+	<msg id="E000" caption="バージョンエラー" buttons="OK" icon="Error">
+		{0}モードでビルドされたモジュールの為、起動出来ません。
+	</msg>
+	<msg id="E001" caption="IOException" buttons="OK" icon="Error">
+		エラー対象ファイル - {0}
+	</msg>
+	<msg id="E002" caption="削除失敗" buttons="OK" icon="Error">
+		ファイルの削除は失敗しました。
+	</msg>
+	<msg id="E003" caption="対象ファイルエラー" buttons="OK" icon="Error">
+		{0} が存在しません。\n削除されたか、移動された可能性があります。
+	</msg>
+	<msg id="E004" caption="メニューバー生成エラー" buttons="OK" icon="Error">
+		メニューバーの生成に失敗しました。\nフォーム名に対応した生成メソッドがあるか確認して下さい。\n(空のメニューバーでフォームを生成します)
+	</msg>
+	<msg id="E005" caption="表示対象未指定" buttons="OK" icon="Error">
+		表示対象のパスが指定されていません。
+	</msg>
+	<msg id="E006" caption="表示対象ディレクトリ無し" buttons="OK" icon="Error">
+		表示対象のディレクトリが存在しません。
+	</msg>
+	<msg id="E007" caption="ファイルオープンエラー" buttons="OK" icon="Error">
+		{0} を開けません。
+	</msg>
+	<msg id="E008" caption="フォルダ監視エラー" buttons="OK" icon="Error">
+		フォルダ監視中に、ファイル "{0}" のリネームに失敗しました。
+	</msg>
+  <msg id="E009" caption="重複するカテゴリ名" buttons="OK" icon="Error">
+    入力されたカテゴリ名 [{0}] は既に存在します。
+  </msg>
+</root>

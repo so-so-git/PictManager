@@ -1,0 +1,277 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="PictManagerModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2006/04/edm/ssdl">
+        <EntityContainer Name="PictManagerModelStoreContainer">
+          <EntitySet Name="MstCategories" EntityType="PictManagerModel.Store.MstCategories" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MstTags" EntityType="PictManagerModel.Store.MstTags" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="TblImages" EntityType="PictManagerModel.Store.TblImages" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="TblSets" EntityType="PictManagerModel.Store.TblSets" store:Type="Tables" Schema="dbo" />
+        </EntityContainer>
+        <EntityType Name="MstCategories">
+          <Key>
+            <PropertyRef Name="CategoryId" />
+          </Key>
+          <Property Name="CategoryId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CategoryName" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="InsertedDateTime" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedDateTime" Type="datetime" />
+        </EntityType>
+        <EntityType Name="MstTags">
+          <Key>
+            <PropertyRef Name="TagId" />
+          </Key>
+          <Property Name="TagId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="TagName" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="InsertedDateTime" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedDateTime" Type="datetime" />
+        </EntityType>
+        <EntityType Name="TblImages">
+          <Key>
+            <PropertyRef Name="ImageId" />
+          </Key>
+          <Property Name="ImageId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ImageData" Type="varbinary(max)" Nullable="false" />
+          <Property Name="CategoryId" Type="int" Nullable="false" />
+          <Property Name="TagId1" Type="int" />
+          <Property Name="TagId2" Type="int" />
+          <Property Name="TagId3" Type="int" />
+          <Property Name="TagId4" Type="int" />
+          <Property Name="TagId5" Type="int" />
+          <Property Name="TagId6" Type="int" />
+          <Property Name="TagId7" Type="int" />
+          <Property Name="TagId8" Type="int" />
+          <Property Name="TagId9" Type="int" />
+          <Property Name="SetId" Type="int" />
+          <Property Name="SetOrder" Type="int" />
+          <Property Name="Description" Type="varchar" MaxLength="256" />
+          <Property Name="InsertedDateTime" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedDateTime" Type="datetime" />
+        </EntityType>
+        <EntityType Name="TblSets">
+          <Key>
+            <PropertyRef Name="SetId" />
+          </Key>
+          <Property Name="SetId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="varchar" MaxLength="256" />
+          <Property Name="InsertedDateTime" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedDateTime" Type="datetime" />
+        </EntityType>
+        <Function Name="InitializeTblImages" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="PictManagerModel" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2006/04/edm">
+        <EntityContainer Name="PictManagerEntities">
+          <EntitySet Name="MstCategories" EntityType="PictManagerModel.MstCategories" />
+          <EntitySet Name="MstTags" EntityType="PictManagerModel.MstTags" />
+          <EntitySet Name="TblImages" EntityType="PictManagerModel.TblImages" />
+          <EntitySet Name="TblSets" EntityType="PictManagerModel.TblSets" />
+          </EntityContainer>
+        <EntityType Name="MstCategories">
+          <Documentation>
+            <Summary>カテゴリマスタ</Summary>
+            </Documentation>
+          <Key>
+            <PropertyRef Name="CategoryId" />
+          </Key>
+          <Property Name="CategoryId" Type="Int32" Nullable="false" >
+            <Documentation>
+              <Summary>カテゴリID</Summary></Documentation></Property>
+          <Property Name="CategoryName" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" >
+            <Documentation>
+              <Summary>カテゴリ名</Summary></Documentation></Property>
+          <Property Name="InsertedDateTime" Type="DateTime" Nullable="false" >
+            <Documentation>
+              <Summary>登録日時</Summary></Documentation></Property>
+          <Property Name="UpdatedDateTime" Type="DateTime" >
+            <Documentation>
+              <Summary>更新日時</Summary></Documentation></Property>
+          </EntityType>
+        <EntityType Name="MstTags">
+          <Documentation>
+            <Summary>タグマスタ</Summary>
+            </Documentation>
+          <Key>
+            <PropertyRef Name="TagId" />
+          </Key>
+          <Property Name="TagId" Type="Int32" Nullable="false" >
+            <Documentation>
+              <Summary>タグID</Summary></Documentation></Property>
+          <Property Name="TagName" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" >
+            <Documentation>
+              <Summary>タグ名</Summary></Documentation></Property>
+          <Property Name="InsertedDateTime" Type="DateTime" Nullable="false" >
+            <Documentation>
+              <Summary>登録日時</Summary></Documentation></Property>
+          <Property Name="UpdatedDateTime" Type="DateTime" >
+            <Documentation>
+              <Summary>更新日時</Summary></Documentation></Property>
+          </EntityType>
+        <EntityType Name="TblImages">
+          <Documentation>
+            <Summary>画像管理テーブル</Summary>
+            </Documentation>
+          <Key>
+            <PropertyRef Name="ImageId" />
+          </Key>
+          <Property Name="ImageId" Type="Int32" Nullable="false" >
+            <Documentation>
+              <Summary>画像ID</Summary></Documentation></Property>
+          <Property Name="ImageData" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" >
+            <Documentation>
+              <Summary>画像データ</Summary></Documentation></Property>
+          <Property Name="CategoryId" Type="Int32" Nullable="false" >
+            <Documentation>
+              <Summary>カテゴリID</Summary></Documentation></Property>
+          <Property Name="TagId1" Type="Int32" >
+            <Documentation>
+              <Summary>タグID1</Summary></Documentation></Property>
+          <Property Name="TagId2" Type="Int32" >
+            <Documentation>
+              <Summary>タグID2</Summary></Documentation></Property>
+          <Property Name="TagId3" Type="Int32" >
+            <Documentation>
+              <Summary>タグID3</Summary></Documentation></Property>
+          <Property Name="TagId4" Type="Int32" >
+            <Documentation>
+              <Summary>タグID4</Summary></Documentation></Property>
+          <Property Name="TagId5" Type="Int32" >
+            <Documentation>
+              <Summary>タグID5</Summary></Documentation></Property>
+          <Property Name="TagId6" Type="Int32" >
+            <Documentation>
+              <Summary>タグID6</Summary></Documentation></Property>
+          <Property Name="TagId7" Type="Int32" >
+            <Documentation>
+              <Summary>タグID7</Summary></Documentation></Property>
+          <Property Name="TagId8" Type="Int32" >
+            <Documentation>
+              <Summary>タグID8</Summary></Documentation></Property>
+          <Property Name="TagId9" Type="Int32" >
+            <Documentation>
+              <Summary>タグID9</Summary></Documentation></Property>
+          <Property Name="SetId" Type="Int32" >
+            <Documentation>
+              <Summary>画像セットID</Summary></Documentation></Property>
+          <Property Name="SetOrder" Type="Int32" >
+            <Documentation>
+              <Summary>画像セット内並び順</Summary></Documentation></Property>
+          <Property Name="Description" Type="String" MaxLength="256" Unicode="false" FixedLength="false" >
+            <Documentation>
+              <Summary>説明</Summary></Documentation></Property>
+          <Property Name="InsertedDateTime" Type="DateTime" Nullable="false" >
+            <Documentation>
+              <Summary>登録日時</Summary></Documentation></Property>
+          <Property Name="UpdatedDateTime" Type="DateTime" >
+            <Documentation>
+              <Summary>登録日時</Summary></Documentation></Property>
+          </EntityType>
+        <EntityType Name="TblSets">
+          <Documentation>
+            <Summary>画像セットテーブル</Summary>
+            </Documentation>
+          <Key>
+            <PropertyRef Name="SetId" />
+          </Key>
+          <Property Name="SetId" Type="Int32" Nullable="false" >
+            <Documentation>
+              <Summary>画像セットID</Summary></Documentation></Property>
+          <Property Name="Description" Type="String" MaxLength="256" Unicode="false" FixedLength="false" >
+            <Documentation>
+              <Summary>説明</Summary></Documentation></Property>
+          <Property Name="InsertedDateTime" Type="DateTime" Nullable="false" >
+            <Documentation>
+              <Summary>登録日時</Summary></Documentation></Property>
+          <Property Name="UpdatedDateTime" Type="DateTime" >
+            <Documentation>
+              <Summary>更新日時</Summary></Documentation></Property>
+          </EntityType>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="urn:schemas-microsoft-com:windows:storage:mapping:CS">
+        <EntityContainerMapping StorageEntityContainer="PictManagerModelStoreContainer" CdmEntityContainer="PictManagerEntities">
+          <EntitySetMapping Name="MstCategories">
+            <EntityTypeMapping TypeName="IsTypeOf(PictManagerModel.MstCategories)">
+              <MappingFragment StoreEntitySet="MstCategories">
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+                <ScalarProperty Name="InsertedDateTime" ColumnName="InsertedDateTime" />
+                <ScalarProperty Name="UpdatedDateTime" ColumnName="UpdatedDateTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MstTags">
+            <EntityTypeMapping TypeName="IsTypeOf(PictManagerModel.MstTags)">
+              <MappingFragment StoreEntitySet="MstTags">
+                <ScalarProperty Name="TagId" ColumnName="TagId" />
+                <ScalarProperty Name="TagName" ColumnName="TagName" />
+                <ScalarProperty Name="InsertedDateTime" ColumnName="InsertedDateTime" />
+                <ScalarProperty Name="UpdatedDateTime" ColumnName="UpdatedDateTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TblImages">
+            <EntityTypeMapping TypeName="IsTypeOf(PictManagerModel.TblImages)">
+              <MappingFragment StoreEntitySet="TblImages">
+                <ScalarProperty Name="ImageId" ColumnName="ImageId" />
+                <ScalarProperty Name="ImageData" ColumnName="ImageData" />
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="TagId1" ColumnName="TagId1" />
+                <ScalarProperty Name="TagId2" ColumnName="TagId2" />
+                <ScalarProperty Name="TagId3" ColumnName="TagId3" />
+                <ScalarProperty Name="TagId4" ColumnName="TagId4" />
+                <ScalarProperty Name="TagId5" ColumnName="TagId5" />
+                <ScalarProperty Name="TagId6" ColumnName="TagId6" />
+                <ScalarProperty Name="TagId7" ColumnName="TagId7" />
+                <ScalarProperty Name="TagId8" ColumnName="TagId8" />
+                <ScalarProperty Name="TagId9" ColumnName="TagId9" />
+                <ScalarProperty Name="SetId" ColumnName="SetId" />
+                <ScalarProperty Name="SetOrder" ColumnName="SetOrder" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="InsertedDateTime" ColumnName="InsertedDateTime" />
+                <ScalarProperty Name="UpdatedDateTime" ColumnName="UpdatedDateTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TblSets">
+            <EntityTypeMapping TypeName="IsTypeOf(PictManagerModel.TblSets)">
+              <MappingFragment StoreEntitySet="TblSets">
+                <ScalarProperty Name="SetId" ColumnName="SetId" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="InsertedDateTime" ColumnName="InsertedDateTime" />
+                <ScalarProperty Name="UpdatedDateTime" ColumnName="UpdatedDateTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2007/06/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram Name="PictManager">
+        <EntityTypeShape EntityType="PictManagerModel.MstCategories" Width="1.5" PointX="0.75" PointY="0.75" Height="1.936666666666667" IsExpanded="true" />
+        <EntityTypeShape EntityType="PictManagerModel.MstTags" Width="1.5" PointX="2.75" PointY="0.75" Height="1.936666666666667" IsExpanded="true" />
+        <EntityTypeShape EntityType="PictManagerModel.TblImages" Width="1.5" PointX="0.75" PointY="3.75" Height="4.7127083333333317" IsExpanded="true" />
+        <EntityTypeShape EntityType="PictManagerModel.TblSets" Width="1.5" PointX="2.75" PointY="3.75" Height="1.9366666666666674" IsExpanded="true" />
+        </Diagram></edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

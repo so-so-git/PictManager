@@ -1,0 +1,71 @@
+<2013/12/27 00:19:47> : SO.PictManager.EntryPoint
+System.NotSupportedException: メソッド 'Single' は LINQ to Entities ではサポートされません。代わりにメソッド 'First' の使用を検討してください。
+   場所 System.Data.Objects.ELinq.ExpressionConverter.MethodCallTranslator.SingleTranslatorNotSupported.Translate(ExpressionConverter parent, MethodCallExpression call)
+   場所 System.Data.Objects.ELinq.ExpressionConverter.MethodCallTranslator.SequenceMethodTranslator.Translate(ExpressionConverter parent, MethodCallExpression call, SequenceMethod sequenceMethod)
+   場所 System.Data.Objects.ELinq.ExpressionConverter.MethodCallTranslator.TypedTranslate(ExpressionConverter parent, MethodCallExpression linq)
+   場所 System.Data.Objects.ELinq.ExpressionConverter.TypedTranslator`1.Translate(ExpressionConverter parent, Expression linq)
+   場所 System.Data.Objects.ELinq.ExpressionConverter.TranslateExpression(Expression linq)
+   場所 System.Data.Objects.ELinq.ExpressionConverter.Convert()
+   場所 System.Data.Objects.ELinq.ELinqQueryState.GetExecutionPlan(Nullable`1 forMergeOption)
+   場所 System.Data.Objects.ObjectQuery`1.GetResults(Nullable`1 forMergeOption)
+   場所 System.Data.Objects.ObjectQuery`1.System.Collections.Generic.IEnumerable<T>.GetEnumerator()
+   場所 System.Linq.Enumerable.Single[TSource](IEnumerable`1 source)
+   場所 System.Data.Objects.ELinq.ObjectQueryProvider.<GetElementFunction>b__2[TResult](IEnumerable`1 sequence)
+   場所 System.Data.Objects.ELinq.ObjectQueryProvider.ExecuteSingle[TResult](IEnumerable`1 query, Expression queryRoot)
+   場所 System.Data.Objects.ELinq.ObjectQueryProvider.System.Linq.IQueryProvider.Execute[S](Expression expression)
+   場所 System.Linq.Queryable.Single[TSource](IQueryable`1 source)
+   場所 SO.PictManager.Forms.UrlDropForm..ctor() 場所 D:\VSProjects\Projects\PictManager\PictManager\Forms\UrlDropForm.cs:行 38
+   場所 SO.PictManager.Forms.StartForm.btnOpenUrlDrop_Click(Object sender, EventArgs e) 場所 D:\VSProjects\Projects\PictManager\PictManager\Forms\StartForm.cs:行 149
+   場所 System.Windows.Forms.Control.OnClick(EventArgs e)
+   場所 System.Windows.Forms.Button.OnClick(EventArgs e)
+   場所 System.Windows.Forms.Button.OnMouseUp(MouseEventArgs mevent)
+   場所 System.Windows.Forms.Control.WmMouseUp(Message& m, MouseButtons button, Int32 clicks)
+   場所 System.Windows.Forms.Control.WndProc(Message& m)
+   場所 System.Windows.Forms.ButtonBase.WndProc(Message& m)
+   場所 System.Windows.Forms.Button.WndProc(Message& m)
+   場所 System.Windows.Forms.Control.ControlNativeWindow.OnMessage(Message& m)
+   場所 System.Windows.Forms.Control.ControlNativeWindow.WndProc(Message& m)
+   場所 System.Windows.Forms.NativeWindow.DebuggableCallback(IntPtr hWnd, Int32 msg, IntPtr wparam, IntPtr lparam)
+   場所 System.Windows.Forms.UnsafeNativeMethods.DispatchMessageW(MSG& msg)
+   場所 System.Windows.Forms.Application.ComponentManager.System.Windows.Forms.UnsafeNativeMethods.IMsoComponentManager.FPushMessageLoop(Int32 dwComponentID, Int32 reason, Int32 pvLoopData)
+   場所 System.Windows.Forms.Application.ThreadContext.RunMessageLoopInner(Int32 reason, ApplicationContext context)
+   場所 System.Windows.Forms.Application.ThreadContext.RunMessageLoop(Int32 reason, ApplicationContext context)
+   場所 System.Windows.Forms.Application.Run(Form mainForm)
+   場所 SO.PictManager.EntryPoint.Main(String[] args) 場所 D:\VSProjects\Projects\PictManager\PictManager\EntryPoint.cs:行 102
+
+<2013/12/27 00:48:21> : SO.PictManager.EntryPoint
+System.Reflection.TargetInvocationException: 呼び出しのターゲットが例外をスローしました。 ---> System.Reflection.TargetInvocationException: 操作中に例外が発生し、結果が無効になりました。例外の詳細については InnerException を確認してください。 ---> System.Net.WebException: リモート サーバーがエラーを返しました: (403) 使用不可能
+   場所 System.Net.HttpWebRequest.EndGetResponse(IAsyncResult asyncResult)
+   場所 System.Net.WebClient.GetWebResponse(WebRequest request, IAsyncResult result)
+   場所 System.Net.WebClient.DownloadBitsResponseCallback(IAsyncResult result)
+   --- 内部例外スタック トレースの終わり ---
+   場所 System.ComponentModel.AsyncCompletedEventArgs.RaiseExceptionIfNecessary()
+   場所 System.Net.DownloadDataCompletedEventArgs.get_Result()
+   場所 SO.PictManager.Forms.UrlDropForm.<lblDropArea_DragDrop>b__3(Object sender3, DownloadDataCompletedEventArgs e3) 場所 D:\VSProjects\Projects\PictManager\PictManager\Forms\UrlDropForm.cs:行 154
+   場所 System.Net.DownloadDataCompletedEventHandler.Invoke(Object sender, DownloadDataCompletedEventArgs e)
+   場所 System.Net.WebClient.OnDownloadDataCompleted(DownloadDataCompletedEventArgs e)
+   場所 System.Net.WebClient.DownloadDataOperationCompleted(Object arg)
+   --- 内部例外スタック トレースの終わり ---
+   場所 System.RuntimeMethodHandle._InvokeMethodFast(Object target, Object[] arguments, SignatureStruct& sig, MethodAttributes methodAttributes, RuntimeTypeHandle typeOwner)
+   場所 System.RuntimeMethodHandle.InvokeMethodFast(Object target, Object[] arguments, Signature sig, MethodAttributes methodAttributes, RuntimeTypeHandle typeOwner)
+   場所 System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture, Boolean skipVisibilityChecks)
+   場所 System.Delegate.DynamicInvokeImpl(Object[] args)
+   場所 System.Windows.Forms.Control.InvokeMarshaledCallbackDo(ThreadMethodEntry tme)
+   場所 System.Windows.Forms.Control.InvokeMarshaledCallbackHelper(Object obj)
+   場所 System.Threading.ExecutionContext.runTryCode(Object userData)
+   場所 System.Runtime.CompilerServices.RuntimeHelpers.ExecuteCodeWithGuaranteedCleanup(TryCode code, CleanupCode backoutCode, Object userData)
+   場所 System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   場所 System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state)
+   場所 System.Windows.Forms.Control.InvokeMarshaledCallback(ThreadMethodEntry tme)
+   場所 System.Windows.Forms.Control.InvokeMarshaledCallbacks()
+   場所 System.Windows.Forms.Control.WndProc(Message& m)
+   場所 System.Windows.Forms.Control.ControlNativeWindow.OnMessage(Message& m)
+   場所 System.Windows.Forms.Control.ControlNativeWindow.WndProc(Message& m)
+   場所 System.Windows.Forms.NativeWindow.DebuggableCallback(IntPtr hWnd, Int32 msg, IntPtr wparam, IntPtr lparam)
+   場所 System.Windows.Forms.UnsafeNativeMethods.DispatchMessageW(MSG& msg)
+   場所 System.Windows.Forms.Application.ComponentManager.System.Windows.Forms.UnsafeNativeMethods.IMsoComponentManager.FPushMessageLoop(Int32 dwComponentID, Int32 reason, Int32 pvLoopData)
+   場所 System.Windows.Forms.Application.ThreadContext.RunMessageLoopInner(Int32 reason, ApplicationContext context)
+   場所 System.Windows.Forms.Application.ThreadContext.RunMessageLoop(Int32 reason, ApplicationContext context)
+   場所 System.Windows.Forms.Application.Run(Form mainForm)
+   場所 SO.PictManager.EntryPoint.Main(String[] args) 場所 D:\VSProjects\Projects\PictManager\PictManager\EntryPoint.cs:行 102
+

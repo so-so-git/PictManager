@@ -1,0 +1,169 @@
+<2013/12/26 20:46:54> : SO.PictManager.EntryPoint
+System.Data.SqlClient.SqlException: オブジェクト名 'tbl_Categories' が無効です。
+   場所 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection)
+   場所 System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection)
+   場所 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj)
+   場所 System.Data.SqlClient.TdsParser.Run(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj)
+   場所 System.Data.SqlClient.SqlDataReader.ConsumeMetaData()
+   場所 System.Data.SqlClient.SqlDataReader.get_MetaData()
+   場所 System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   場所 System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async)
+   場所 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, DbAsyncResult result)
+   場所 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   場所 System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   場所 System.Data.SqlClient.SqlCommand.ExecuteReader()
+   場所 SO.Library.Data.SqlAccessor.ExecuteReader(String sql, SqlParameter[] param) 場所 D:\VSProjects\Projects\SOLibrary\SOLibrary\Data\SqlAccessor.cs:行 168
+   場所 SO.PictManager.Data.ImageAccessor.GetCategoryList() 場所 D:\VSProjects\Projects\PictManager\PictManager\Data\ImageAccessor.cs:行 176
+   場所 SO.PictManager.Forms.UrlDropForm.RefreshCategoryComboBox() 場所 D:\VSProjects\Projects\PictManager\PictManager\Forms\UrlDropForm.cs:行 49
+   場所 SO.PictManager.Forms.UrlDropForm..ctor() 場所 D:\VSProjects\Projects\PictManager\PictManager\Forms\UrlDropForm.cs:行 30
+   場所 SO.PictManager.EntryPoint.Main(String[] args) 場所 D:\VSProjects\Projects\PictManager\PictManager\EntryPoint.cs:行 103
+
+<2013/12/26 21:17:08> : SO.PictManager.EntryPoint
+System.NullReferenceException: オブジェクト参照がオブジェクト インスタンスに設定されていません。
+   場所 SO.Library.Data.SqlAccessor.Dispose() 場所 D:\VSProjects\Projects\SOLibrary\SOLibrary\Data\SqlAccessor.cs:行 268
+   場所 SO.PictManager.Data.ImageAccessor.Dispose() 場所 D:\VSProjects\Projects\PictManager\PictManager\Data\ImageAccessor.cs:行 241
+   場所 SO.PictManager.Forms.UrlDropForm.RefreshCategoryComboBox() 場所 D:\VSProjects\Projects\PictManager\PictManager\Forms\UrlDropForm.cs:行 50
+   場所 SO.PictManager.Forms.UrlDropForm..ctor() 場所 D:\VSProjects\Projects\PictManager\PictManager\Forms\UrlDropForm.cs:行 30
+   場所 SO.PictManager.Forms.StartForm.btnOpenUrlDrop_Click(Object sender, EventArgs e) 場所 D:\VSProjects\Projects\PictManager\PictManager\Forms\StartForm.cs:行 149
+   場所 System.Windows.Forms.Control.OnClick(EventArgs e)
+   場所 System.Windows.Forms.Button.OnClick(EventArgs e)
+   場所 System.Windows.Forms.Button.OnMouseUp(MouseEventArgs mevent)
+   場所 System.Windows.Forms.Control.WmMouseUp(Message& m, MouseButtons button, Int32 clicks)
+   場所 System.Windows.Forms.Control.WndProc(Message& m)
+   場所 System.Windows.Forms.ButtonBase.WndProc(Message& m)
+   場所 System.Windows.Forms.Button.WndProc(Message& m)
+   場所 System.Windows.Forms.Control.ControlNativeWindow.OnMessage(Message& m)
+   場所 System.Windows.Forms.Control.ControlNativeWindow.WndProc(Message& m)
+   場所 System.Windows.Forms.NativeWindow.DebuggableCallback(IntPtr hWnd, Int32 msg, IntPtr wparam, IntPtr lparam)
+   場所 System.Windows.Forms.UnsafeNativeMethods.DispatchMessageW(MSG& msg)
+   場所 System.Windows.Forms.Application.ComponentManager.System.Windows.Forms.UnsafeNativeMethods.IMsoComponentManager.FPushMessageLoop(Int32 dwComponentID, Int32 reason, Int32 pvLoopData)
+   場所 System.Windows.Forms.Application.ThreadContext.RunMessageLoopInner(Int32 reason, ApplicationContext context)
+   場所 System.Windows.Forms.Application.ThreadContext.RunMessageLoop(Int32 reason, ApplicationContext context)
+   場所 System.Windows.Forms.Application.Run(Form mainForm)
+   場所 SO.PictManager.EntryPoint.Main(String[] args) 場所 D:\VSProjects\Projects\PictManager\PictManager\EntryPoint.cs:行 102
+
+<2013/12/26 21:17:34> : SO.PictManager.EntryPoint
+System.NullReferenceException: オブジェクト参照がオブジェクト インスタンスに設定されていません。
+   場所 SO.Library.Data.SqlAccessor.Dispose() 場所 D:\VSProjects\Projects\SOLibrary\SOLibrary\Data\SqlAccessor.cs:行 268
+   場所 SO.PictManager.Data.ImageAccessor.Dispose() 場所 D:\VSProjects\Projects\PictManager\PictManager\Data\ImageAccessor.cs:行 241
+   場所 SO.PictManager.Forms.UrlDropForm.RefreshCategoryComboBox() 場所 D:\VSProjects\Projects\PictManager\PictManager\Forms\UrlDropForm.cs:行 50
+   場所 SO.PictManager.Forms.UrlDropForm..ctor() 場所 D:\VSProjects\Projects\PictManager\PictManager\Forms\UrlDropForm.cs:行 30
+   場所 SO.PictManager.Forms.StartForm.btnOpenUrlDrop_Click(Object sender, EventArgs e) 場所 D:\VSProjects\Projects\PictManager\PictManager\Forms\StartForm.cs:行 149
+   場所 System.Windows.Forms.Control.OnClick(EventArgs e)
+   場所 System.Windows.Forms.Button.OnClick(EventArgs e)
+   場所 System.Windows.Forms.Button.OnMouseUp(MouseEventArgs mevent)
+   場所 System.Windows.Forms.Control.WmMouseUp(Message& m, MouseButtons button, Int32 clicks)
+   場所 System.Windows.Forms.Control.WndProc(Message& m)
+   場所 System.Windows.Forms.ButtonBase.WndProc(Message& m)
+   場所 System.Windows.Forms.Button.WndProc(Message& m)
+   場所 System.Windows.Forms.Control.ControlNativeWindow.OnMessage(Message& m)
+   場所 System.Windows.Forms.Control.ControlNativeWindow.WndProc(Message& m)
+   場所 System.Windows.Forms.NativeWindow.DebuggableCallback(IntPtr hWnd, Int32 msg, IntPtr wparam, IntPtr lparam)
+   場所 System.Windows.Forms.UnsafeNativeMethods.DispatchMessageW(MSG& msg)
+   場所 System.Windows.Forms.Application.ComponentManager.System.Windows.Forms.UnsafeNativeMethods.IMsoComponentManager.FPushMessageLoop(Int32 dwComponentID, Int32 reason, Int32 pvLoopData)
+   場所 System.Windows.Forms.Application.ThreadContext.RunMessageLoopInner(Int32 reason, ApplicationContext context)
+   場所 System.Windows.Forms.Application.ThreadContext.RunMessageLoop(Int32 reason, ApplicationContext context)
+   場所 System.Windows.Forms.Application.Run(Form mainForm)
+   場所 SO.PictManager.EntryPoint.Main(String[] args) 場所 D:\VSProjects\Projects\PictManager\PictManager\EntryPoint.cs:行 102
+
+<2013/12/26 21:30:26> : SO.PictManager.EntryPoint
+System.IndexOutOfRangeException: InsertedDateTime
+   場所 System.Data.ProviderBase.FieldNameLookup.GetOrdinal(String fieldName)
+   場所 System.Data.SqlClient.SqlDataReader.GetOrdinal(String name)
+   場所 System.Data.SqlClient.SqlDataReader.get_Item(String name)
+   場所 SO.PictManager.Data.DbUtilities.MapReaderToDto[T](SqlDataReader reader, String[] ignoreNames) 場所 D:\VSProjects\Projects\PictManager\PictManager\Data\DbUtilities.cs:行 116
+   場所 SO.PictManager.Data.ImageAccessor.GetCategoryList() 場所 D:\VSProjects\Projects\PictManager\PictManager\Data\ImageAccessor.cs:行 180
+   場所 SO.PictManager.Forms.UrlDropForm.RefreshCategoryComboBox() 場所 D:\VSProjects\Projects\PictManager\PictManager\Forms\UrlDropForm.cs:行 49
+   場所 SO.PictManager.Forms.UrlDropForm..ctor() 場所 D:\VSProjects\Projects\PictManager\PictManager\Forms\UrlDropForm.cs:行 30
+   場所 SO.PictManager.Forms.StartForm.btnOpenUrlDrop_Click(Object sender, EventArgs e) 場所 D:\VSProjects\Projects\PictManager\PictManager\Forms\StartForm.cs:行 149
+   場所 System.Windows.Forms.Control.OnClick(EventArgs e)
+   場所 System.Windows.Forms.Button.OnClick(EventArgs e)
+   場所 System.Windows.Forms.Button.OnMouseUp(MouseEventArgs mevent)
+   場所 System.Windows.Forms.Control.WmMouseUp(Message& m, MouseButtons button, Int32 clicks)
+   場所 System.Windows.Forms.Control.WndProc(Message& m)
+   場所 System.Windows.Forms.ButtonBase.WndProc(Message& m)
+   場所 System.Windows.Forms.Button.WndProc(Message& m)
+   場所 System.Windows.Forms.Control.ControlNativeWindow.OnMessage(Message& m)
+   場所 System.Windows.Forms.Control.ControlNativeWindow.WndProc(Message& m)
+   場所 System.Windows.Forms.NativeWindow.DebuggableCallback(IntPtr hWnd, Int32 msg, IntPtr wparam, IntPtr lparam)
+   場所 System.Windows.Forms.UnsafeNativeMethods.DispatchMessageW(MSG& msg)
+   場所 System.Windows.Forms.Application.ComponentManager.System.Windows.Forms.UnsafeNativeMethods.IMsoComponentManager.FPushMessageLoop(Int32 dwComponentID, Int32 reason, Int32 pvLoopData)
+   場所 System.Windows.Forms.Application.ThreadContext.RunMessageLoopInner(Int32 reason, ApplicationContext context)
+   場所 System.Windows.Forms.Application.ThreadContext.RunMessageLoop(Int32 reason, ApplicationContext context)
+   場所 System.Windows.Forms.Application.Run(Form mainForm)
+   場所 SO.PictManager.EntryPoint.Main(String[] args) 場所 D:\VSProjects\Projects\PictManager\PictManager\EntryPoint.cs:行 102
+
+<2013/12/26 21:34:10> : SO.PictManager.EntryPoint
+System.NullReferenceException: オブジェクト参照がオブジェクト インスタンスに設定されていません。
+   場所 SO.Library.Data.SqlAccessor.Dispose() 場所 D:\VSProjects\Projects\SOLibrary\SOLibrary\Data\SqlAccessor.cs:行 268
+   場所 SO.PictManager.Data.ImageAccessor.Dispose() 場所 D:\VSProjects\Projects\PictManager\PictManager\Data\ImageAccessor.cs:行 241
+   場所 SO.PictManager.Forms.UrlDropForm.btnAddCategory_Click(Object sender, EventArgs e) 場所 D:\VSProjects\Projects\PictManager\PictManager\Forms\UrlDropForm.cs:行 87
+   場所 System.Windows.Forms.Control.OnClick(EventArgs e)
+   場所 System.Windows.Forms.Button.OnClick(EventArgs e)
+   場所 System.Windows.Forms.Button.OnMouseUp(MouseEventArgs mevent)
+   場所 System.Windows.Forms.Control.WmMouseUp(Message& m, MouseButtons button, Int32 clicks)
+   場所 System.Windows.Forms.Control.WndProc(Message& m)
+   場所 System.Windows.Forms.ButtonBase.WndProc(Message& m)
+   場所 System.Windows.Forms.Button.WndProc(Message& m)
+   場所 System.Windows.Forms.Control.ControlNativeWindow.OnMessage(Message& m)
+   場所 System.Windows.Forms.Control.ControlNativeWindow.WndProc(Message& m)
+   場所 System.Windows.Forms.NativeWindow.DebuggableCallback(IntPtr hWnd, Int32 msg, IntPtr wparam, IntPtr lparam)
+   場所 System.Windows.Forms.UnsafeNativeMethods.DispatchMessageW(MSG& msg)
+   場所 System.Windows.Forms.Application.ComponentManager.System.Windows.Forms.UnsafeNativeMethods.IMsoComponentManager.FPushMessageLoop(Int32 dwComponentID, Int32 reason, Int32 pvLoopData)
+   場所 System.Windows.Forms.Application.ThreadContext.RunMessageLoopInner(Int32 reason, ApplicationContext context)
+   場所 System.Windows.Forms.Application.ThreadContext.RunMessageLoop(Int32 reason, ApplicationContext context)
+   場所 System.Windows.Forms.Application.Run(Form mainForm)
+   場所 SO.PictManager.EntryPoint.Main(String[] args) 場所 D:\VSProjects\Projects\PictManager\PictManager\EntryPoint.cs:行 102
+
+<2013/12/26 21:44:19> : SO.PictManager.EntryPoint
+System.NullReferenceException: オブジェクト参照がオブジェクト インスタンスに設定されていません。
+   場所 SO.Library.Data.SqlAccessor.Dispose() 場所 D:\VSProjects\Projects\SOLibrary\SOLibrary\Data\SqlAccessor.cs:行 268
+   場所 SO.PictManager.Data.ImageAccessor.Dispose() 場所 D:\VSProjects\Projects\PictManager\PictManager\Data\ImageAccessor.cs:行 269
+   場所 SO.PictManager.Forms.UrlDropForm.btnAddCategory_Click(Object sender, EventArgs e) 場所 D:\VSProjects\Projects\PictManager\PictManager\Forms\UrlDropForm.cs:行 102
+   場所 System.Windows.Forms.Control.OnClick(EventArgs e)
+   場所 System.Windows.Forms.Button.OnClick(EventArgs e)
+   場所 System.Windows.Forms.Button.OnMouseUp(MouseEventArgs mevent)
+   場所 System.Windows.Forms.Control.WmMouseUp(Message& m, MouseButtons button, Int32 clicks)
+   場所 System.Windows.Forms.Control.WndProc(Message& m)
+   場所 System.Windows.Forms.ButtonBase.WndProc(Message& m)
+   場所 System.Windows.Forms.Button.WndProc(Message& m)
+   場所 System.Windows.Forms.Control.ControlNativeWindow.OnMessage(Message& m)
+   場所 System.Windows.Forms.Control.ControlNativeWindow.WndProc(Message& m)
+   場所 System.Windows.Forms.NativeWindow.DebuggableCallback(IntPtr hWnd, Int32 msg, IntPtr wparam, IntPtr lparam)
+   場所 System.Windows.Forms.UnsafeNativeMethods.DispatchMessageW(MSG& msg)
+   場所 System.Windows.Forms.Application.ComponentManager.System.Windows.Forms.UnsafeNativeMethods.IMsoComponentManager.FPushMessageLoop(Int32 dwComponentID, Int32 reason, Int32 pvLoopData)
+   場所 System.Windows.Forms.Application.ThreadContext.RunMessageLoopInner(Int32 reason, ApplicationContext context)
+   場所 System.Windows.Forms.Application.ThreadContext.RunMessageLoop(Int32 reason, ApplicationContext context)
+   場所 System.Windows.Forms.Application.Run(Form mainForm)
+   場所 SO.PictManager.EntryPoint.Main(String[] args) 場所 D:\VSProjects\Projects\PictManager\PictManager\EntryPoint.cs:行 102
+
+<2013/12/26 21:51:27> : SO.PictManager.Forms.UrlDropForm
+System.IndexOutOfRangeException: InsertedDateTime
+   場所 System.Data.ProviderBase.FieldNameLookup.GetOrdinal(String fieldName)
+   場所 System.Data.SqlClient.SqlDataReader.GetOrdinal(String name)
+   場所 System.Data.SqlClient.SqlDataReader.get_Item(String name)
+   場所 SO.PictManager.Data.DbUtilities.MapReaderToDto[T](SqlDataReader reader, String[] ignoreNames) 場所 D:\VSProjects\Projects\PictManager\PictManager\Data\DbUtilities.cs:行 116
+   場所 SO.PictManager.Data.ImageAccessor.GetCategoryList() 場所 D:\VSProjects\Projects\PictManager\PictManager\Data\ImageAccessor.cs:行 208
+   場所 SO.PictManager.Forms.UrlDropForm.RefreshCategoryComboBox() 場所 D:\VSProjects\Projects\PictManager\PictManager\Forms\UrlDropForm.cs:行 46
+   場所 SO.PictManager.Forms.UrlDropForm.btnAddCategory_Click(Object sender, EventArgs e) 場所 D:\VSProjects\Projects\PictManager\PictManager\Forms\UrlDropForm.cs:行 89
+
+<2013/12/26 21:52:55> : SO.PictManager.Forms.UrlDropForm
+System.IndexOutOfRangeException: InsertedDateTime
+   場所 System.Data.ProviderBase.FieldNameLookup.GetOrdinal(String fieldName)
+   場所 System.Data.SqlClient.SqlDataReader.GetOrdinal(String name)
+   場所 System.Data.SqlClient.SqlDataReader.get_Item(String name)
+   場所 SO.PictManager.Data.DbUtilities.MapReaderToDto[T](SqlDataReader reader, String[] ignoreNames) 場所 D:\VSProjects\Projects\PictManager\PictManager\Data\DbUtilities.cs:行 116
+   場所 SO.PictManager.Data.ImageAccessor.GetCategoryList() 場所 D:\VSProjects\Projects\PictManager\PictManager\Data\ImageAccessor.cs:行 208
+   場所 SO.PictManager.Forms.UrlDropForm.RefreshCategoryComboBox() 場所 D:\VSProjects\Projects\PictManager\PictManager\Forms\UrlDropForm.cs:行 46
+   場所 SO.PictManager.Forms.UrlDropForm.btnAddCategory_Click(Object sender, EventArgs e) 場所 D:\VSProjects\Projects\PictManager\PictManager\Forms\UrlDropForm.cs:行 89
+
+<2013/12/26 21:53:26> : SO.PictManager.Forms.UrlDropForm
+System.IndexOutOfRangeException: InsertedDateTime
+   場所 System.Data.ProviderBase.FieldNameLookup.GetOrdinal(String fieldName)
+   場所 System.Data.SqlClient.SqlDataReader.GetOrdinal(String name)
+   場所 System.Data.SqlClient.SqlDataReader.get_Item(String name)
+   場所 SO.PictManager.Data.DbUtilities.MapReaderToDto[T](SqlDataReader reader, String[] ignoreNames) 場所 D:\VSProjects\Projects\PictManager\PictManager\Data\DbUtilities.cs:行 116
+   場所 SO.PictManager.Data.ImageAccessor.GetCategoryList() 場所 D:\VSProjects\Projects\PictManager\PictManager\Data\ImageAccessor.cs:行 208
+   場所 SO.PictManager.Forms.UrlDropForm.RefreshCategoryComboBox() 場所 D:\VSProjects\Projects\PictManager\PictManager\Forms\UrlDropForm.cs:行 46
+   場所 SO.PictManager.Forms.UrlDropForm.btnAddCategory_Click(Object sender, EventArgs e) 場所 D:\VSProjects\Projects\PictManager\PictManager\Forms\UrlDropForm.cs:行 89
+
