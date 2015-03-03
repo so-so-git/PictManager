@@ -56,19 +56,21 @@
             // txtTargetDirectory
             // 
             this.txtTargetDirectory.AllowDrop = true;
-            this.txtTargetDirectory.Location = new System.Drawing.Point(16, 16);
+            this.txtTargetDirectory.Location = new System.Drawing.Point(19, 20);
+            this.txtTargetDirectory.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtTargetDirectory.Name = "txtTargetDirectory";
-            this.txtTargetDirectory.Size = new System.Drawing.Size(300, 19);
+            this.txtTargetDirectory.Size = new System.Drawing.Size(349, 23);
             this.txtTargetDirectory.TabIndex = 0;
             this.txtTargetDirectory.DragDrop += new System.Windows.Forms.DragEventHandler(this.txtTargetFolder_DragDrop);
-            this.txtTargetDirectory.Enter += new System.EventHandler(this.txtTargetDirectory_Enter);
             this.txtTargetDirectory.DragEnter += new System.Windows.Forms.DragEventHandler(this.txtTargetDirectory_DragEnter);
+            this.txtTargetDirectory.Enter += new System.EventHandler(this.txtTargetDirectory_Enter);
             // 
             // btnRef
             // 
-            this.btnRef.Location = new System.Drawing.Point(320, 16);
+            this.btnRef.Location = new System.Drawing.Point(373, 20);
+            this.btnRef.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnRef.Name = "btnRef";
-            this.btnRef.Size = new System.Drawing.Size(20, 20);
+            this.btnRef.Size = new System.Drawing.Size(23, 25);
             this.btnRef.TabIndex = 1;
             this.btnRef.Text = "...";
             this.btnRef.UseVisualStyleBackColor = true;
@@ -77,9 +79,10 @@
             // btnView
             // 
             this.btnView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnView.Location = new System.Drawing.Point(112, 108);
+            this.btnView.Location = new System.Drawing.Point(131, 135);
+            this.btnView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnView.Name = "btnView";
-            this.btnView.Size = new System.Drawing.Size(72, 24);
+            this.btnView.Size = new System.Drawing.Size(84, 30);
             this.btnView.TabIndex = 7;
             this.btnView.Text = "閲覧";
             this.btnView.UseVisualStyleBackColor = true;
@@ -89,9 +92,10 @@
             // 
             this.btnQuit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnQuit.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnQuit.Location = new System.Drawing.Point(268, 108);
+            this.btnQuit.Location = new System.Drawing.Point(313, 135);
+            this.btnQuit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnQuit.Name = "btnQuit";
-            this.btnQuit.Size = new System.Drawing.Size(72, 24);
+            this.btnQuit.Size = new System.Drawing.Size(84, 30);
             this.btnQuit.TabIndex = 9;
             this.btnQuit.Text = "終了";
             this.btnQuit.UseVisualStyleBackColor = true;
@@ -100,9 +104,10 @@
             // rdoThumbnail
             // 
             this.rdoThumbnail.AutoSize = true;
-            this.rdoThumbnail.Location = new System.Drawing.Point(231, 48);
+            this.rdoThumbnail.Location = new System.Drawing.Point(269, 60);
+            this.rdoThumbnail.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.rdoThumbnail.Name = "rdoThumbnail";
-            this.rdoThumbnail.Size = new System.Drawing.Size(96, 16);
+            this.rdoThumbnail.Size = new System.Drawing.Size(98, 19);
             this.rdoThumbnail.TabIndex = 4;
             this.rdoThumbnail.Text = "サムネイル表示";
             this.rdoThumbnail.UseVisualStyleBackColor = true;
@@ -110,9 +115,10 @@
             // rdoList
             // 
             this.rdoList.AutoSize = true;
-            this.rdoList.Location = new System.Drawing.Point(143, 48);
+            this.rdoList.Location = new System.Drawing.Point(167, 60);
+            this.rdoList.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.rdoList.Name = "rdoList";
-            this.rdoList.Size = new System.Drawing.Size(71, 16);
+            this.rdoList.Size = new System.Drawing.Size(73, 19);
             this.rdoList.TabIndex = 3;
             this.rdoList.Text = "リスト表示";
             this.rdoList.UseVisualStyleBackColor = true;
@@ -126,9 +132,10 @@
             // 
             this.rdoSlide.AutoSize = true;
             this.rdoSlide.Checked = true;
-            this.rdoSlide.Location = new System.Drawing.Point(20, 48);
+            this.rdoSlide.Location = new System.Drawing.Point(23, 60);
+            this.rdoSlide.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.rdoSlide.Name = "rdoSlide";
-            this.rdoSlide.Size = new System.Drawing.Size(108, 16);
+            this.rdoSlide.Size = new System.Drawing.Size(109, 19);
             this.rdoSlide.TabIndex = 2;
             this.rdoSlide.TabStop = true;
             this.rdoSlide.Text = "スライドショー表示";
@@ -137,9 +144,10 @@
             // btnConfig
             // 
             this.btnConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnConfig.Location = new System.Drawing.Point(12, 108);
+            this.btnConfig.Location = new System.Drawing.Point(14, 135);
+            this.btnConfig.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnConfig.Name = "btnConfig";
-            this.btnConfig.Size = new System.Drawing.Size(72, 24);
+            this.btnConfig.Size = new System.Drawing.Size(84, 30);
             this.btnConfig.TabIndex = 6;
             this.btnConfig.Text = "設定";
             this.btnConfig.UseVisualStyleBackColor = true;
@@ -170,13 +178,13 @@
             this.menuEndWatch,
             this.menuQuit});
             this.tasktrayMenu.Name = "tasktrayMenu";
-            this.tasktrayMenu.Size = new System.Drawing.Size(221, 70);
+            this.tasktrayMenu.Size = new System.Drawing.Size(191, 70);
             // 
             // menuOpenFolder
             // 
             this.menuOpenFolder.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.menuOpenFolder.Name = "menuOpenFolder";
-            this.menuOpenFolder.Size = new System.Drawing.Size(220, 22);
+            this.menuOpenFolder.Size = new System.Drawing.Size(190, 22);
             this.menuOpenFolder.Text = "監視対象のフォルダを開く";
             this.menuOpenFolder.Click += new System.EventHandler(this.menuOpenFolder_Click);
             // 
@@ -184,7 +192,7 @@
             // 
             this.menuEndWatch.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.menuEndWatch.Name = "menuEndWatch";
-            this.menuEndWatch.Size = new System.Drawing.Size(220, 22);
+            this.menuEndWatch.Size = new System.Drawing.Size(190, 22);
             this.menuEndWatch.Text = "監視終了";
             this.menuEndWatch.Click += new System.EventHandler(this.menuEndWatch_Click);
             // 
@@ -192,7 +200,7 @@
             // 
             this.menuQuit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.menuQuit.Name = "menuQuit";
-            this.menuQuit.Size = new System.Drawing.Size(220, 22);
+            this.menuQuit.Size = new System.Drawing.Size(190, 22);
             this.menuQuit.Text = "アプリケーション終了";
             this.menuQuit.Click += new System.EventHandler(this.menuQuit_Click);
             // 
@@ -200,9 +208,10 @@
             // 
             this.btnSaveMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSaveMode.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnSaveMode.Location = new System.Drawing.Point(190, 108);
+            this.btnSaveMode.Location = new System.Drawing.Point(222, 135);
+            this.btnSaveMode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnSaveMode.Name = "btnSaveMode";
-            this.btnSaveMode.Size = new System.Drawing.Size(72, 24);
+            this.btnSaveMode.Size = new System.Drawing.Size(84, 30);
             this.btnSaveMode.TabIndex = 8;
             this.btnSaveMode.Text = "監視";
             this.btnSaveMode.UseVisualStyleBackColor = true;
@@ -210,17 +219,19 @@
             // cmbCategories
             // 
             this.cmbCategories.FormattingEnabled = true;
-            this.cmbCategories.Location = new System.Drawing.Point(16, 16);
+            this.cmbCategories.Location = new System.Drawing.Point(19, 20);
+            this.cmbCategories.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cmbCategories.Name = "cmbCategories";
-            this.cmbCategories.Size = new System.Drawing.Size(198, 20);
+            this.cmbCategories.Size = new System.Drawing.Size(230, 23);
             this.cmbCategories.TabIndex = 0;
             // 
             // btnMaintenance
             // 
             this.btnMaintenance.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnMaintenance.Location = new System.Drawing.Point(12, 78);
+            this.btnMaintenance.Location = new System.Drawing.Point(14, 98);
+            this.btnMaintenance.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnMaintenance.Name = "btnMaintenance";
-            this.btnMaintenance.Size = new System.Drawing.Size(72, 24);
+            this.btnMaintenance.Size = new System.Drawing.Size(84, 30);
             this.btnMaintenance.TabIndex = 5;
             this.btnMaintenance.Text = "DBメンテ";
             this.btnMaintenance.UseVisualStyleBackColor = true;
@@ -229,10 +240,10 @@
             // StartForm
             // 
             this.AcceptButton = this.btnView;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnQuit;
-            this.ClientSize = new System.Drawing.Size(352, 146);
+            this.ClientSize = new System.Drawing.Size(411, 182);
             this.Controls.Add(this.cmbCategories);
             this.Controls.Add(this.btnConfig);
             this.Controls.Add(this.rdoList);
@@ -244,8 +255,10 @@
             this.Controls.Add(this.btnMaintenance);
             this.Controls.Add(this.btnRef);
             this.Controls.Add(this.txtTargetDirectory);
+            this.Font = new System.Drawing.Font("Meiryo UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MaximizeBox = false;
             this.Name = "StartForm";
             this.Text = "PictManager - 対象ディレクトリ指定";

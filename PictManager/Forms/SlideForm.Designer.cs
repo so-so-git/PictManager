@@ -48,10 +48,12 @@
             // 
             // picViewer
             // 
-            this.picViewer.Size = new System.Drawing.Size(970, 364);
+            this.picViewer.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            this.picViewer.Size = new System.Drawing.Size(737, 445);
             // 
             // pnlParent
             // 
+            this.pnlParent.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             // 
             // pnlParent.Panel1
             // 
@@ -59,6 +61,7 @@
             // 
             // pnlParent.Panel2
             // 
+            this.pnlParent.Panel2.AutoScroll = true;
             this.pnlParent.Panel2.Controls.Add(this.chkSimilar);
             this.pnlParent.Panel2.Controls.Add(this.cmbSort);
             this.pnlParent.Panel2.Controls.Add(this.btnBookmark);
@@ -68,90 +71,91 @@
             this.pnlParent.Panel2.Controls.Add(this.chkLupe);
             this.pnlParent.Panel2.Controls.Add(this.btnPrevious);
             this.pnlParent.Panel2.Controls.Add(this.lblCountDelim);
-            this.pnlParent.Size = new System.Drawing.Size(972, 422);
-            // 
-            // btnDelete
-            // 
-            this.btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.pnlParent.Size = new System.Drawing.Size(1134, 472);
+            this.pnlParent.SplitterDistance = 383;
+            this.pnlParent.SplitterWidth = 6;
             // 
             // btnClose
             // 
-            this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnClose.Location = new System.Drawing.Point(897, 4);
+            this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnClose.Location = new System.Drawing.Point(1049, 8);
+            this.btnClose.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.btnClose.TabIndex = 13;
             // 
             // cmbPicMode
             // 
-            this.cmbPicMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.cmbPicMode.Location = new System.Drawing.Point(801, 4);
+            this.cmbPicMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
+            this.cmbPicMode.Location = new System.Drawing.Point(945, 13);
+            this.cmbPicMode.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            this.cmbPicMode.Size = new System.Drawing.Size(98, 23);
             this.cmbPicMode.TabIndex = 12;
             // 
             // lblInfo
             // 
-            this.lblInfo.Size = new System.Drawing.Size(972, 364);
+            this.lblInfo.Size = new System.Drawing.Size(1118, 445);
             this.lblInfo.TabIndex = 0;
             // 
             // btnZoomOut
             // 
-            this.btnZoomOut.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnZoomOut.Location = new System.Drawing.Point(620, 4);
+            this.btnZoomOut.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnZoomOut.Location = new System.Drawing.Point(737, 8);
+            this.btnZoomOut.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.btnZoomOut.TabIndex = 10;
             // 
             // btnZoomIn
             // 
-            this.btnZoomIn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnZoomIn.Location = new System.Drawing.Point(587, 4);
+            this.btnZoomIn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnZoomIn.Location = new System.Drawing.Point(700, 8);
+            this.btnZoomIn.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.btnZoomIn.TabIndex = 9;
             // 
             // btnPrevious
             // 
-            this.btnPrevious.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnPrevious.Location = new System.Drawing.Point(406, 4);
+            this.btnPrevious.Location = new System.Drawing.Point(476, 8);
+            this.btnPrevious.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnPrevious.Name = "btnPrevious";
-            this.btnPrevious.Size = new System.Drawing.Size(25, 23);
+            this.btnPrevious.Size = new System.Drawing.Size(29, 29);
             this.btnPrevious.TabIndex = 4;
-            this.btnPrevious.Text = "<<";
+            this.btnPrevious.Text = "<";
             this.btnPrevious.UseVisualStyleBackColor = true;
             this.btnPrevious.Click += new System.EventHandler(this.btnPrevious_Click);
             // 
             // btnNext
             // 
-            this.btnNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnNext.Location = new System.Drawing.Point(530, 4);
+            this.btnNext.Location = new System.Drawing.Point(618, 8);
+            this.btnNext.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnNext.Name = "btnNext";
-            this.btnNext.Size = new System.Drawing.Size(25, 23);
+            this.btnNext.Size = new System.Drawing.Size(29, 29);
             this.btnNext.TabIndex = 8;
-            this.btnNext.Text = ">>";
+            this.btnNext.Text = ">";
             this.btnNext.UseVisualStyleBackColor = true;
             this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
             // 
             // lblCount
             // 
-            this.lblCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblCount.Location = new System.Drawing.Point(486, 9);
+            this.lblCount.Location = new System.Drawing.Point(571, 12);
             this.lblCount.Name = "lblCount";
-            this.lblCount.Size = new System.Drawing.Size(35, 16);
+            this.lblCount.Size = new System.Drawing.Size(41, 20);
             this.lblCount.TabIndex = 7;
             this.lblCount.Text = "9999";
             this.lblCount.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblCountDelim
             // 
-            this.lblCountDelim.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblCountDelim.Location = new System.Drawing.Point(474, 9);
+            this.lblCountDelim.Location = new System.Drawing.Point(555, 11);
             this.lblCountDelim.Name = "lblCountDelim";
-            this.lblCountDelim.Size = new System.Drawing.Size(11, 16);
+            this.lblCountDelim.Size = new System.Drawing.Size(13, 20);
             this.lblCountDelim.TabIndex = 6;
             this.lblCountDelim.Text = "/";
             this.lblCountDelim.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // txtIndex
             // 
-            this.txtIndex.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtIndex.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.txtIndex.Location = new System.Drawing.Point(438, 8);
+            this.txtIndex.Location = new System.Drawing.Point(511, 12);
+            this.txtIndex.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtIndex.Name = "txtIndex";
-            this.txtIndex.Size = new System.Drawing.Size(35, 19);
+            this.txtIndex.Size = new System.Drawing.Size(40, 23);
             this.txtIndex.TabIndex = 5;
             this.txtIndex.Text = "9999";
             this.txtIndex.TextChanged += new System.EventHandler(this.txtIndex_TextChanged);
@@ -160,11 +164,12 @@
             // chkSimilar
             // 
             this.chkSimilar.Appearance = System.Windows.Forms.Appearance.Button;
-            this.chkSimilar.Location = new System.Drawing.Point(157, 4);
+            this.chkSimilar.Location = new System.Drawing.Point(183, 8);
+            this.chkSimilar.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chkSimilar.Name = "chkSimilar";
-            this.chkSimilar.Size = new System.Drawing.Size(63, 23);
+            this.chkSimilar.Size = new System.Drawing.Size(73, 29);
             this.chkSimilar.TabIndex = 2;
-            this.chkSimilar.Text = "Similar";
+            this.chkSimilar.Text = "類似検索";
             this.chkSimilar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.chkSimilar.UseVisualStyleBackColor = true;
             this.chkSimilar.CheckedChanged += new System.EventHandler(this.chkSimilar_CheckedChanged);
@@ -173,31 +178,33 @@
             // 
             this.cmbSort.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbSort.FormattingEnabled = true;
-            this.cmbSort.Location = new System.Drawing.Point(653, 4);
+            this.cmbSort.Location = new System.Drawing.Point(774, 12);
+            this.cmbSort.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cmbSort.Name = "cmbSort";
-            this.cmbSort.Size = new System.Drawing.Size(142, 20);
+            this.cmbSort.Size = new System.Drawing.Size(165, 23);
             this.cmbSort.TabIndex = 11;
             this.cmbSort.SelectedIndexChanged += new System.EventHandler(this.cmbSort_SelectedIndexChanged);
             // 
             // btnBookmark
             // 
-            this.btnBookmark.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnBookmark.Location = new System.Drawing.Point(81, 4);
+            this.btnBookmark.Location = new System.Drawing.Point(94, 8);
+            this.btnBookmark.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnBookmark.Name = "btnBookmark";
-            this.btnBookmark.Size = new System.Drawing.Size(70, 23);
+            this.btnBookmark.Size = new System.Drawing.Size(82, 29);
             this.btnBookmark.TabIndex = 1;
-            this.btnBookmark.Text = "Bookmark";
+            this.btnBookmark.Text = "ブックマーク";
             this.btnBookmark.UseVisualStyleBackColor = true;
             this.btnBookmark.Click += new System.EventHandler(this.btnBookmark_Clicked);
             // 
             // chkLupe
             // 
             this.chkLupe.Appearance = System.Windows.Forms.Appearance.Button;
-            this.chkLupe.Location = new System.Drawing.Point(226, 4);
+            this.chkLupe.Location = new System.Drawing.Point(264, 8);
+            this.chkLupe.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chkLupe.Name = "chkLupe";
-            this.chkLupe.Size = new System.Drawing.Size(63, 23);
+            this.chkLupe.Size = new System.Drawing.Size(73, 29);
             this.chkLupe.TabIndex = 3;
-            this.chkLupe.Text = "Lupe";
+            this.chkLupe.Text = "部分拡大";
             this.chkLupe.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.chkLupe.UseVisualStyleBackColor = true;
             this.chkLupe.CheckedChanged += new System.EventHandler(this.chkLupe_CheckedChanged);
@@ -205,19 +212,21 @@
             // picLupe
             // 
             this.picLupe.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picLupe.Location = new System.Drawing.Point(27, 25);
+            this.picLupe.Location = new System.Drawing.Point(31, 31);
+            this.picLupe.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.picLupe.Name = "picLupe";
-            this.picLupe.Size = new System.Drawing.Size(200, 200);
+            this.picLupe.Size = new System.Drawing.Size(233, 250);
             this.picLupe.TabIndex = 2;
             this.picLupe.TabStop = false;
             this.picLupe.Visible = false;
             // 
             // SlideForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(972, 446);
+            this.ClientSize = new System.Drawing.Size(1134, 496);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.Name = "SlideForm";
             this.Text = "PictManager - スライドショー";
             this.Resize += new System.EventHandler(this.Form_Resize);

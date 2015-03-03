@@ -48,9 +48,6 @@ namespace SO.PictManager.Forms
         /// <summary>スライド表示の切り替え間隔</summary>
         private int _slideInterval;
 
-        /// <summary>リサイズ変更前サイズ</summary>
-        private Size _beforeResize;
-
         /// <summary>類似画像表示用サムネイルフォーム</summary>
         private ThumbnailForm _thumbnailForm;
 
@@ -105,16 +102,14 @@ namespace SO.PictManager.Forms
             // UI制御
             InitializeAccessibility();
 
-            // 初期表示時のコントロール配置更新用に最大化前のサイズを保管
-            _beforeResize = Size;
-
             // コントローラ初期化
-            InitializeJoystick();
+            //InitializeJoystick();
         }
 
         #endregion
 
         #region CreateMenu - メニューバー作成
+
         /// <summary>
         /// (BaseForm.CreateMenu()をオーバーライドします)
         /// メニューバーを生成します。
@@ -185,9 +180,11 @@ namespace SO.PictManager.Forms
                     (s, e) => DisplayByGrayScale()));
             barMenu.Items.Add(menuTemp);
         }
+
         #endregion
 
         #region InitializeAccessibility - コンポーネントのアクセス制限初期化
+
         /// <summary>
         /// (ViewImageForm.InitializeAccessibility()をオーバーライドします)
         /// フォーム項目のアクセス可不可の初期設定を行ないます。
@@ -203,9 +200,11 @@ namespace SO.PictManager.Forms
                 cmbPicMode.Enabled = false;
             }
         }
+
         #endregion
 
         #region InitializeJoystick - コントローラ初期化
+
         /// <summary>
         /// 操作用のコントローラを初期化します。
         /// </summary>
@@ -224,9 +223,11 @@ namespace SO.PictManager.Forms
                 _pad = null;
             }
         }
+
         #endregion
 
         #region RefreshTargetFiles - 対象ファイルリスト最新化
+
         /// <summary>
         /// 表示中ディレクトリの現在の状態を再取得します。
         /// </summary>
@@ -237,9 +238,11 @@ namespace SO.PictManager.Forms
             // ファイル総数を更新
             lblCount.Text = FileCount.ToString();
         }
+
         #endregion
 
         #region ChangeAccessibility - コンポーネントのアクセス制御
+
         /// <summary>
         /// フォーム項目のアクセス可不可を設定します。
         /// </summary>
@@ -260,9 +263,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region DisplayPicture - 指定画像表示
+
         /// <summary>
         /// (ViewImageForm.DisplayPicture()をオーバーライドします)
         /// 現在のインデックスが指し示す画像を表示します。
@@ -318,9 +323,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region DisplayPictureByIndex - 指定されたインデックスの画像を表示
+
         /// <summary>
         /// インデックスを直接指定し、画像を表示します。
         /// </summary>
@@ -352,9 +359,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region DisplayPictureByTextBoxValue - インデックス直接指定ボックスで指定された画像を表示
+
         /// <summary>
         /// インデックス直接指定ボックスで指定されたインデックスの画像を表示します。
         /// </summary>
@@ -379,9 +388,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region SearchNextValidIndex - 次の未削除画像のインデックス取得
+
         /// <summary>
         /// 次の有効な(削除されていない)画像のインデックスを検索します。
         /// </summary>
@@ -429,9 +440,11 @@ namespace SO.PictManager.Forms
 
             return ret;
         }
+
         #endregion
 
         #region SaveBookmark - ブックマーク保存
+
         /// <summary>
         /// 現在表示している画像をブックマークとして保存します。
         /// </summary>
@@ -467,9 +480,11 @@ namespace SO.PictManager.Forms
             if (_bookmarkForm != null)
                 _bookmarkForm.RefreshBookmarks();
         }
+
         #endregion
 
         #region ShowBookmarkForm - ブックマークウィンドウを開く
+
         /// <summary>
         /// ブックマークウィンドウを開きます。
         /// 既に開かれている場合、ブックマークウィンドウをアクティブに設定します。
@@ -506,9 +521,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region SaveStateInfo - 状態情報保存
+
         /// <summary>
         /// 状態情報をシリアライズしてXMLファイルとして保存します。
         /// </summary>
@@ -524,9 +541,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region CloseForm - フォームをクローズ
+
         /// <summary>
         /// フォームをクローズします。
         /// </summary>
@@ -544,11 +563,13 @@ namespace SO.PictManager.Forms
 
             base.CloseForm();
         }
+
         #endregion
 
         #region イベントハンドラ
 
         #region Form_Shown - フォーム初期表示時
+
         /// <summary>
         /// (ViewImageForm.Form_Shown(sender, EventArgs)をオーバーライドします)
         /// フォームが表示された際に実行される処理です。
@@ -561,9 +582,11 @@ namespace SO.PictManager.Forms
             base.Form_Shown(sender, e);
             Form_ResizeEnd(sender, e);
         }
+
         #endregion
 
         #region Form_FormClosing - ×ボタン押下時
+
         /// <summary>
         /// (ViewImageForm.Form_FormClosing(sender, EventArgs)をオーバーライドします)
         /// ×ボタンがクリックされた際に実行される処理です。
@@ -600,9 +623,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region Form_KeyDown - フォーム上でのキー押下時
+
         /// <summary>
         /// フォーム上でキーが押下された際に実行される処理です。
         /// 特殊なキーが押下された場合に固有の処理を実行します。
@@ -677,39 +702,73 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region Form_Resize - フォームサイズ変更時
+
         /// <summary>
         /// フォームのサイズが変更された際に実行される処理です。
         /// 各ボタン、コントロールの配置を再設定します。
         /// </summary>
         /// <param orderName="sender">イベント発生元オブジェクト</param>
         /// <param orderName="e">イベント引数</param>
-        private void Form_Resize(object sender, EventArgs e)
+        protected override void Form_Resize(object sender, EventArgs e)
         {
-            if (Size != _beforeResize)
+            base.Form_Resize(sender, e);
+
+            const int SPACE_WIDTH = 6;
+
+            // 中央のコントロール群の位置調整
+            int x = pnlParent.Width / 2 - lblCountDelim.Width / 2 - txtIndex.Width - btnPrevious.Width - SPACE_WIDTH * 2;
+            int leftLimit = chkLupe.Location.X + chkLupe.Width + SPACE_WIDTH;
+            if (x < leftLimit)
             {
-                int gap = Size.Width - _beforeResize.Width;
-
-                btnPrevious.Location = new Point(btnPrevious.Location.X + gap / 2, btnPrevious.Location.Y);
-                txtIndex.Location = new Point(txtIndex.Location.X + gap / 2, txtIndex.Location.Y);
-                lblCountDelim.Location = new Point(lblCountDelim.Location.X + gap / 2, lblCountDelim.Location.Y);
-                lblCount.Location = new Point(lblCount.Location.X + gap / 2, lblCount.Location.Y);
-                btnNext.Location = new Point(btnNext.Location.X + gap / 2, btnNext.Location.Y);
-
-                btnClose.Location = new Point(btnClose.Location.X + gap, btnClose.Location.Y);
-                cmbPicMode.Location = new Point(cmbPicMode.Location.X + gap, cmbPicMode.Location.Y);
-                btnZoomIn.Location = new Point(btnZoomIn.Location.X + gap, btnZoomIn.Location.Y);
-                btnZoomOut.Location = new Point(btnZoomOut.Location.X + gap, btnZoomOut.Location.Y);
-                cmbSort.Location = new Point(cmbSort.Location.X + gap, cmbSort.Location.Y);
-
-                _beforeResize = Size;
+                x = leftLimit;
             }
+
+            btnPrevious.Location = new Point(x, btnPrevious.Location.Y);
+            x += btnPrevious.Width + SPACE_WIDTH;
+
+            txtIndex.Location = new Point(x, txtIndex.Location.Y);
+            x += txtIndex.Width + SPACE_WIDTH;
+
+            lblCountDelim.Location = new Point(x, lblCountDelim.Location.Y);
+            x += lblCountDelim.Width + SPACE_WIDTH;
+
+            lblCount.Location = new Point(x, lblCount.Location.Y);
+            x += lblCount.Width + SPACE_WIDTH;
+
+            btnNext.Location = new Point(x, btnNext.Location.Y);
+
+            // 右のコントロール群の位置調整
+            x = pnlParent.Width - btnClose.Width - cmbPicMode.Width - cmbSort.Width
+                - btnZoomOut.Width - btnZoomIn.Width - SPACE_WIDTH * 5;
+            leftLimit = btnNext.Location.X + btnNext.Width + SPACE_WIDTH;
+            if (x < leftLimit)
+            {
+                x = leftLimit;
+            }
+
+            btnZoomIn.Location = new Point(x, btnZoomIn.Location.Y);
+            x += btnZoomIn.Width + SPACE_WIDTH;
+
+            btnZoomOut.Location = new Point(x, btnZoomOut.Location.Y);
+            x += btnZoomOut.Width + SPACE_WIDTH;
+
+            cmbSort.Location = new Point(x, cmbSort.Location.Y);
+            x += cmbSort.Width + SPACE_WIDTH;
+
+            cmbPicMode.Location = new Point(x, cmbPicMode.Location.Y);
+            x += cmbPicMode.Width + SPACE_WIDTH;
+
+            btnClose.Location = new Point(x, btnClose.Location.Y);
         }
+
         #endregion
 
         #region menuRefresh_Click - 対象ファイル再取得メニュー押下時
+
         /// <summary>
         /// 対象ファイル再取得メニューがクリックされた際に実行される処理です。
         /// 現在の情報で対象ファイルリストを更新します。
@@ -749,9 +808,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region menuRenameAll_Click - 一括ファイル名変更メニュー押下時
+
         /// <summary>
         /// 一括ファイル名変更メニューがクリックされた際に実行される処理です。
         /// ファイル名変更情報入力ダイアログを表示し、入力された内容に応じてファイル名を一括で変更します。
@@ -789,9 +850,11 @@ namespace SO.PictManager.Forms
             lblCount.Text = (FileCount + 1).ToString();
             DisplayPicture();
         }
+
         #endregion
 
         #region menuMoveAll_Click - 一括ファイル移動メニュー押下時
+
         /// <summary>
         /// 一括ファイル移動メニューがクリックされた際に実行される処理です。
         /// 移動先ディレクトリ指定ダイアログを表示し、入力された内容に応じてファイルを一括で移動します。
@@ -806,9 +869,11 @@ namespace SO.PictManager.Forms
             // ファイル移動実行、正常終了時はディレクトリ選択フォームへ戻る
             if (MoveAllFiles() == ResultStatus.OK) this.BackToOwner();
         }
+
         #endregion
 
         #region menuMove_Click - 表示画像移動メニュー押下時
+
         /// <summary>
         /// (ViewImageForm.menuMove_Click(object, EventArgs)をオーバーライドします)
         /// 表示画像移動メニューがクリックされた際に実行される処理です。
@@ -824,9 +889,11 @@ namespace SO.PictManager.Forms
             // 次の有効イメージを表示
             menuRefresh_Click(sender, e);
         }
+
         #endregion
 
         #region menuChkSlide_Click - スライド表示メニュー押下時
+
         /// <summary>
         /// スライド表示メニューがクリックされた際に実行される処理です。
         /// ファイルリストの全画像をスライドショーで表示します。
@@ -927,9 +994,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region menuTxtInterval_KeyDown - 画像切替間隔テキストボックスでのキー押下時
+
         /// <summary>
         /// 画像切替間隔メニューでキーが押下された際に実行される処理です。
         /// Enterキーが押下された場合、スライドショー表示を開始します。
@@ -966,9 +1035,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region btnDelete_Click - 削除ボタン押下時
+
         /// <summary>
         /// 削除ボタンがクリックされた際に実行される処理です。
         /// 表示中の画像の削除を行ないます。
@@ -1024,9 +1095,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region btnBookmark_Clicked - ブックマークボタン押下時
+
         /// <summary>
         /// ブックマークボタンが押下された際に実行される処理です。
         /// 表示中の画像をブックマークに追加します。
@@ -1044,9 +1117,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region chkSimilar_CheckedChanged - 類似画像表示チェックボックス変更時
+
         /// <summary>
         /// 類似画像表示チェックボックスが変更された際に実行される処理です。
         /// 表示中の画像と類似したものをパスリストから検索してサムネイルフォームで表示します。
@@ -1096,9 +1171,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region chkLupe_CheckedChanged - ルーペ表示チェックボックス変更時
+
         /// <summary>
         /// ルーペ表示チェックボックスが変更された際に実行される処理です。
         /// 部分拡大鏡を表示します。
@@ -1135,9 +1212,11 @@ namespace SO.PictManager.Forms
                 g.DrawImage(picViewer.Image, new Rectangle(new Point(0, 0), picLupe.Size), new Rectangle(new Point(0, 0), new Size(50, 50)), GraphicsUnit.Pixel);
             }
         }
+
         #endregion
 
         #region btnPrevious_Click - 前へボタン押下時
+
         /// <summary>
         /// 前へボタンがクリックされた際に実行される処理です。
         /// 前のインデックスの画像を表示します。
@@ -1162,9 +1241,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region btnNext_Click - 次へボタン押下時
+
         /// <summary>
         /// 次へボタンがクリックされた際に実行される処理です。
         /// 次のインデックスの画像を表示します。
@@ -1196,9 +1277,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region txtIndex_TextChanged - インデックス直接指定ボックス値変更時
+
         /// <summary>
         /// 画像インデックス指定テキストボックスの内容が変更された際に実行される処理です。
         /// 画像切替間隔メニューとの間で入力された内容の同期を取ります。
@@ -1222,9 +1305,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region txtIndex_KeyDown - インデックス直接指定ボックス上でのキー押下時
+
         /// <summary>
         /// 画像インデックス指定テキストボックスでキーが押下された際に実行される処理です。
         /// Enterキーが押下された場合、入力されたインデックスの画像を表示します。
@@ -1259,6 +1344,7 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region cmbSort_SelectedIndexChanged - ソート順コンボボックス変更時

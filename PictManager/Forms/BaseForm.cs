@@ -23,11 +23,7 @@ namespace SO.PictManager.Forms
     /// <summary>
     /// 基底フォームクラス
     /// </summary>
-    public
-#if !DESIGN
-        abstract
-#endif
-        partial class BaseForm : Form
+    public partial class BaseForm : Form
     {
         #region クラス定数
 
@@ -147,9 +143,7 @@ namespace SO.PictManager.Forms
             InitializeComponent();
 
             // メニューバー作成
-#if !DESIGN
             CreateMenu();
-#endif
         }
 
         /// <summary>
@@ -172,17 +166,14 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region 抽象メソッド
+        #region CreateMenu - メニューバー作成
 
-#if DESIGN
-        // デザイン時エラー回避用仮メソッド
-        protected virtual void CreateMenu() {}
-#else
         /// <summary>
-        /// メニューバー作成メソッドの抽象定義です。
+        /// 空のメニューバーを生成します。
+        /// 継承フォームでメニューバーを実装する場合は、
+        /// このメソッドをオーバーライドして下さい。
         /// </summary>
-        protected abstract void CreateMenu();
-#endif
+        protected virtual void CreateMenu() { }
 
         #endregion
 

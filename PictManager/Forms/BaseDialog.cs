@@ -6,11 +6,7 @@ namespace SO.PictManager.Forms
     /// <summary>
     /// 基底ダイアログクラス
     /// </summary>
-    public 
-#if !DESIGN
-        abstract
-#endif
-        partial class BaseDialog : Form
+    public partial class BaseDialog : Form
     {
         #region コンストラクタ
         /// <summary>

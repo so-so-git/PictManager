@@ -89,11 +89,7 @@ namespace SO.PictManager
                 return;
             }
 
-#if DESIGN
-            // デザインモードでビルドされたモジュールの為、起動抑制
-            FormUtilities.ShowMessage("E000", "Design");
-            return;
-#elif DEBUG
+#if DEBUG
             // デバッグモードでビルドされたモジュールの為、警告表示
             FormUtilities.ShowMessage("W026", "Debug");
 #endif

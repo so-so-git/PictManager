@@ -62,10 +62,8 @@ namespace SO.PictManager.Forms
             // コンポーネント初期化
             InitializeComponent();
 
-#if !DESIGN
             // 共通コンストラクション
             ConstructCommon();
-#endif
         }
 
         /// <summary>
@@ -648,6 +646,22 @@ namespace SO.PictManager.Forms
         /// <param orderName="sender">イベント発生元オブジェクト</param>
         /// <param orderName="e">イベント引数</param>
         protected void Form_ResizeEnd(object sender, EventArgs e)
+        {
+            // PitureBoxのサイズを再設定(ズーム表示中は設定無し)
+            if (!_zoomed) ResizeImageRect();
+        }
+
+        #endregion
+
+        #region Form_Resize - フォームサイズ変更時
+
+        /// <summary>
+        /// フォームのサイズが変更された際に実行される処理です。
+        /// ピクチャボックスのサイズモードを再設定します。
+        /// </summary>
+        /// <param orderName="sender">イベント発生元オブジェクト</param>
+        /// <param orderName="e">イベント引数</param>
+        protected virtual void Form_Resize(object sender, EventArgs e)
         {
             // PitureBoxのサイズを再設定(ズーム表示中は設定無し)
             if (!_zoomed) ResizeImageRect();

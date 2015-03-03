@@ -53,7 +53,11 @@ namespace SO.PictManager.Common
             RestoreRenameInfo();
 
             // ロガー生成
-            Logger = new Logger(ConfigurationManager.AppSettings["ExecuteLogPath"]);
+            string logPath = ConfigurationManager.AppSettings["ExecuteLogPath"];
+            if (!string.IsNullOrEmpty(logPath))
+            {
+                Logger = new Logger(logPath);
+            }
         }
         #endregion
 
@@ -121,7 +125,10 @@ namespace SO.PictManager.Common
         public static ConfigInfo RestoreConfigInfo()
         {
             string path = ConfigurationManager.AppSettings[ConfigInfo.SAVE_PATH_KEY];
-            Config = XmlManager.Deserialize<ConfigInfo>(path, true);
+            if (!string.IsNullOrEmpty(path))
+                Config = XmlManager.Deserialize<ConfigInfo>(path, true);
+            else
+                Config = new ConfigInfo();
 
             return Config;
         }
@@ -156,7 +163,10 @@ namespace SO.PictManager.Common
         public static StateInfo RestoreStateInfo()
         {
             string path = ConfigurationManager.AppSettings[StateInfo.SAVE_PATH_KEY];
-            State = XmlManager.Deserialize<StateInfo>(path, true);
+            if (!string.IsNullOrEmpty(path))
+                State = XmlManager.Deserialize<StateInfo>(path, true);
+            else
+                State = new StateInfo();
 
             return State;
         }
@@ -191,7 +201,10 @@ namespace SO.PictManager.Common
         public static RenameInfo RestoreRenameInfo()
         {
             string path = ConfigurationManager.AppSettings[RenameInfo.SAVE_PATH_KEY];
-            Rename = XmlManager.Deserialize<RenameInfo>(path, true);
+            if (!string.IsNullOrEmpty(path))
+                Rename = XmlManager.Deserialize<RenameInfo>(path, true);
+            else
+                Rename = new RenameInfo();
 
             return Rename;
         }
