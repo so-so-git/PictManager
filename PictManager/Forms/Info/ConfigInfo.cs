@@ -53,6 +53,9 @@ namespace SO.PictManager.Forms.Info
             /// <summary>読込画像データモードを取得・設定します。</summary>
             public ImageDataMode Mode { get; set; }
 
+            /// <summary>コントローラを使用するかのフラグを取得・設定します。</summary>
+            public bool IsUseJoystick { get; set; }
+
             #endregion
 
             #region コンストラクタ
@@ -76,6 +79,7 @@ namespace SO.PictManager.Forms.Info
                 newObj.IsIncludeSubDirectory = original.IsIncludeSubDirectory;
                 newObj.IsConfirmQuit = original.IsConfirmQuit;
                 newObj.Mode = original.Mode;
+                newObj.IsUseJoystick = original.IsUseJoystick;
             }
 
             #endregion

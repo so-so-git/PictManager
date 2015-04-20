@@ -103,7 +103,10 @@ namespace SO.PictManager.Forms
             InitializeAccessibility();
 
             // コントローラ初期化
-            //InitializeJoystick();
+            if (Utilities.Config.CommonInfo.IsUseJoystick)
+            {
+                InitializeJoystick();
+            }
         }
 
         #endregion
