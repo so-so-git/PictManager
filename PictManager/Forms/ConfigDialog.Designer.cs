@@ -55,27 +55,30 @@
             // 
             // btnOk
             // 
-            this.btnOk.Location = new System.Drawing.Point(376, 249);
+            this.btnOk.Location = new System.Drawing.Point(439, 311);
+            this.btnOk.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.btnOk.TabIndex = 3;
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(304, 249);
+            this.btnCancel.Location = new System.Drawing.Point(355, 311);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.btnCancel.TabIndex = 2;
             // 
             // tabConfig
             // 
-            this.tabConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tabConfig.Controls.Add(this.tbpCommon);
             this.tabConfig.Controls.Add(this.tbpSlide);
             this.tabConfig.Controls.Add(this.tbpList);
             this.tabConfig.Controls.Add(this.tbpThumbnail);
-            this.tabConfig.Location = new System.Drawing.Point(12, 12);
+            this.tabConfig.Location = new System.Drawing.Point(14, 15);
+            this.tabConfig.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabConfig.Name = "tabConfig";
             this.tabConfig.SelectedIndex = 0;
-            this.tabConfig.Size = new System.Drawing.Size(436, 231);
+            this.tabConfig.Size = new System.Drawing.Size(509, 289);
             this.tabConfig.TabIndex = 0;
             // 
             // tbpCommon
@@ -84,21 +87,24 @@
             this.tbpCommon.Controls.Add(this.chkConfirmQuit);
             this.tbpCommon.Controls.Add(this.chkIncludeSub);
             this.tbpCommon.Controls.Add(this.grpFileFormat);
-            this.tbpCommon.Location = new System.Drawing.Point(4, 22);
+            this.tbpCommon.Location = new System.Drawing.Point(4, 24);
+            this.tbpCommon.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tbpCommon.Name = "tbpCommon";
-            this.tbpCommon.Padding = new System.Windows.Forms.Padding(3);
-            this.tbpCommon.Size = new System.Drawing.Size(428, 205);
+            this.tbpCommon.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tbpCommon.Size = new System.Drawing.Size(501, 261);
             this.tbpCommon.TabIndex = 0;
-            this.tbpCommon.Text = "共通";
+            this.tbpCommon.Text = "全体設定";
             this.tbpCommon.UseVisualStyleBackColor = true;
             // 
             // grpImageDataMode
             // 
             this.grpImageDataMode.Controls.Add(this.rdoModeDatabase);
             this.grpImageDataMode.Controls.Add(this.rdoModeFile);
-            this.grpImageDataMode.Location = new System.Drawing.Point(6, 7);
+            this.grpImageDataMode.Location = new System.Drawing.Point(7, 9);
+            this.grpImageDataMode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.grpImageDataMode.Name = "grpImageDataMode";
-            this.grpImageDataMode.Size = new System.Drawing.Size(292, 48);
+            this.grpImageDataMode.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.grpImageDataMode.Size = new System.Drawing.Size(341, 60);
             this.grpImageDataMode.TabIndex = 0;
             this.grpImageDataMode.TabStop = false;
             this.grpImageDataMode.Text = "画像データモード";
@@ -106,9 +112,10 @@
             // rdoModeDatabase
             // 
             this.rdoModeDatabase.AutoSize = true;
-            this.rdoModeDatabase.Location = new System.Drawing.Point(78, 20);
+            this.rdoModeDatabase.Location = new System.Drawing.Point(91, 25);
+            this.rdoModeDatabase.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.rdoModeDatabase.Name = "rdoModeDatabase";
-            this.rdoModeDatabase.Size = new System.Drawing.Size(80, 16);
+            this.rdoModeDatabase.Size = new System.Drawing.Size(82, 19);
             this.rdoModeDatabase.TabIndex = 1;
             this.rdoModeDatabase.TabStop = true;
             this.rdoModeDatabase.Text = "データベース";
@@ -117,9 +124,10 @@
             // rdoModeFile
             // 
             this.rdoModeFile.AutoSize = true;
-            this.rdoModeFile.Location = new System.Drawing.Point(12, 20);
+            this.rdoModeFile.Location = new System.Drawing.Point(14, 25);
+            this.rdoModeFile.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.rdoModeFile.Name = "rdoModeFile";
-            this.rdoModeFile.Size = new System.Drawing.Size(57, 16);
+            this.rdoModeFile.Size = new System.Drawing.Size(59, 19);
             this.rdoModeFile.TabIndex = 0;
             this.rdoModeFile.TabStop = true;
             this.rdoModeFile.Text = "ファイル";
@@ -128,9 +136,10 @@
             // chkConfirmQuit
             // 
             this.chkConfirmQuit.AutoSize = true;
-            this.chkConfirmQuit.Location = new System.Drawing.Point(6, 138);
+            this.chkConfirmQuit.Location = new System.Drawing.Point(7, 172);
+            this.chkConfirmQuit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chkConfirmQuit.Name = "chkConfirmQuit";
-            this.chkConfirmQuit.Size = new System.Drawing.Size(112, 16);
+            this.chkConfirmQuit.Size = new System.Drawing.Size(114, 19);
             this.chkConfirmQuit.TabIndex = 4;
             this.chkConfirmQuit.Text = "終了時に確認する";
             this.chkConfirmQuit.UseVisualStyleBackColor = true;
@@ -138,9 +147,10 @@
             // chkIncludeSub
             // 
             this.chkIncludeSub.AutoSize = true;
-            this.chkIncludeSub.Location = new System.Drawing.Point(6, 116);
+            this.chkIncludeSub.Location = new System.Drawing.Point(7, 145);
+            this.chkIncludeSub.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chkIncludeSub.Name = "chkIncludeSub";
-            this.chkIncludeSub.Size = new System.Drawing.Size(130, 16);
+            this.chkIncludeSub.Size = new System.Drawing.Size(132, 19);
             this.chkIncludeSub.TabIndex = 3;
             this.chkIncludeSub.Text = "サブフォルダを検索する";
             this.chkIncludeSub.UseVisualStyleBackColor = true;
@@ -152,9 +162,11 @@
             this.grpFileFormat.Controls.Add(this.chkGif);
             this.grpFileFormat.Controls.Add(this.chkJpg);
             this.grpFileFormat.Controls.Add(this.chkBmp);
-            this.grpFileFormat.Location = new System.Drawing.Point(6, 62);
+            this.grpFileFormat.Location = new System.Drawing.Point(7, 78);
+            this.grpFileFormat.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.grpFileFormat.Name = "grpFileFormat";
-            this.grpFileFormat.Size = new System.Drawing.Size(292, 48);
+            this.grpFileFormat.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.grpFileFormat.Size = new System.Drawing.Size(341, 60);
             this.grpFileFormat.TabIndex = 1;
             this.grpFileFormat.TabStop = false;
             this.grpFileFormat.Text = "対象ファイル形式";
@@ -162,9 +174,10 @@
             // chkIco
             // 
             this.chkIco.AutoSize = true;
-            this.chkIco.Location = new System.Drawing.Point(238, 20);
+            this.chkIco.Location = new System.Drawing.Point(278, 25);
+            this.chkIco.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chkIco.Name = "chkIco";
-            this.chkIco.Size = new System.Drawing.Size(45, 16);
+            this.chkIco.Size = new System.Drawing.Size(51, 19);
             this.chkIco.TabIndex = 4;
             this.chkIco.Tag = "ico";
             this.chkIco.Text = "Icon";
@@ -173,9 +186,10 @@
             // chkPng
             // 
             this.chkPng.AutoSize = true;
-            this.chkPng.Location = new System.Drawing.Point(185, 20);
+            this.chkPng.Location = new System.Drawing.Point(216, 25);
+            this.chkPng.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chkPng.Name = "chkPng";
-            this.chkPng.Size = new System.Drawing.Size(47, 16);
+            this.chkPng.Size = new System.Drawing.Size(51, 19);
             this.chkPng.TabIndex = 3;
             this.chkPng.Tag = "png";
             this.chkPng.Text = "PNG";
@@ -184,9 +198,10 @@
             // chkGif
             // 
             this.chkGif.AutoSize = true;
-            this.chkGif.Location = new System.Drawing.Point(137, 20);
+            this.chkGif.Location = new System.Drawing.Point(160, 25);
+            this.chkGif.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chkGif.Name = "chkGif";
-            this.chkGif.Size = new System.Drawing.Size(42, 16);
+            this.chkGif.Size = new System.Drawing.Size(47, 19);
             this.chkGif.TabIndex = 2;
             this.chkGif.Tag = "gif";
             this.chkGif.Text = "GIF";
@@ -195,9 +210,10 @@
             // chkJpg
             // 
             this.chkJpg.AutoSize = true;
-            this.chkJpg.Location = new System.Drawing.Point(78, 20);
+            this.chkJpg.Location = new System.Drawing.Point(91, 25);
+            this.chkJpg.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chkJpg.Name = "chkJpg";
-            this.chkJpg.Size = new System.Drawing.Size(53, 16);
+            this.chkJpg.Size = new System.Drawing.Size(54, 19);
             this.chkJpg.TabIndex = 1;
             this.chkJpg.Tag = "jpg,jpeg";
             this.chkJpg.Text = "JPEG";
@@ -206,9 +222,10 @@
             // chkBmp
             // 
             this.chkBmp.AutoSize = true;
-            this.chkBmp.Location = new System.Drawing.Point(12, 20);
+            this.chkBmp.Location = new System.Drawing.Point(14, 25);
+            this.chkBmp.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chkBmp.Name = "chkBmp";
-            this.chkBmp.Size = new System.Drawing.Size(60, 16);
+            this.chkBmp.Size = new System.Drawing.Size(68, 19);
             this.chkBmp.TabIndex = 0;
             this.chkBmp.Tag = "bmp";
             this.chkBmp.Text = "Bitmap";
@@ -217,9 +234,10 @@
             // tbpSlide
             // 
             this.tbpSlide.Controls.Add(this.chkBookmarkTopMost);
-            this.tbpSlide.Location = new System.Drawing.Point(4, 22);
+            this.tbpSlide.Location = new System.Drawing.Point(4, 24);
+            this.tbpSlide.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tbpSlide.Name = "tbpSlide";
-            this.tbpSlide.Size = new System.Drawing.Size(428, 205);
+            this.tbpSlide.Size = new System.Drawing.Size(501, 261);
             this.tbpSlide.TabIndex = 2;
             this.tbpSlide.Text = "スライド表示";
             this.tbpSlide.UseVisualStyleBackColor = true;
@@ -228,27 +246,30 @@
             // 
             this.chkBookmarkTopMost.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.chkBookmarkTopMost.AutoSize = true;
-            this.chkBookmarkTopMost.Location = new System.Drawing.Point(12, 13);
+            this.chkBookmarkTopMost.Location = new System.Drawing.Point(14, 17);
+            this.chkBookmarkTopMost.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chkBookmarkTopMost.Name = "chkBookmarkTopMost";
-            this.chkBookmarkTopMost.Size = new System.Drawing.Size(203, 16);
+            this.chkBookmarkTopMost.Size = new System.Drawing.Size(204, 19);
             this.chkBookmarkTopMost.TabIndex = 4;
             this.chkBookmarkTopMost.Text = "ブックマークウィンドウを前面に表示する";
             this.chkBookmarkTopMost.UseVisualStyleBackColor = true;
             // 
             // tbpList
             // 
-            this.tbpList.Location = new System.Drawing.Point(4, 22);
+            this.tbpList.Location = new System.Drawing.Point(4, 24);
+            this.tbpList.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tbpList.Name = "tbpList";
-            this.tbpList.Size = new System.Drawing.Size(428, 205);
+            this.tbpList.Size = new System.Drawing.Size(501, 261);
             this.tbpList.TabIndex = 3;
             this.tbpList.Text = "リスト表示";
             this.tbpList.UseVisualStyleBackColor = true;
             // 
             // tbpThumbnail
             // 
-            this.tbpThumbnail.Location = new System.Drawing.Point(4, 22);
+            this.tbpThumbnail.Location = new System.Drawing.Point(4, 24);
+            this.tbpThumbnail.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tbpThumbnail.Name = "tbpThumbnail";
-            this.tbpThumbnail.Size = new System.Drawing.Size(428, 205);
+            this.tbpThumbnail.Size = new System.Drawing.Size(501, 261);
             this.tbpThumbnail.TabIndex = 1;
             this.tbpThumbnail.Text = "サムネイル表示";
             this.tbpThumbnail.UseVisualStyleBackColor = true;
@@ -256,21 +277,23 @@
             // btnApply
             // 
             this.btnApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnApply.Location = new System.Drawing.Point(234, 249);
+            this.btnApply.Location = new System.Drawing.Point(273, 311);
+            this.btnApply.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnApply.Name = "btnApply";
-            this.btnApply.Size = new System.Drawing.Size(64, 24);
+            this.btnApply.Size = new System.Drawing.Size(75, 30);
             this.btnApply.TabIndex = 1;
-            this.btnApply.Text = "Apply";
+            this.btnApply.Text = "適用";
             this.btnApply.UseVisualStyleBackColor = true;
             this.btnApply.Click += new System.EventHandler(this.btnApply_Click);
             // 
             // ConfigDialog
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(460, 287);
+            this.ClientSize = new System.Drawing.Size(537, 359);
             this.Controls.Add(this.btnApply);
             this.Controls.Add(this.tabConfig);
+            this.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.Name = "ConfigDialog";
             this.Text = "PictManager - システム設定";
             this.Controls.SetChildIndex(this.tabConfig, 0);

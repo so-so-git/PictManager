@@ -35,17 +35,20 @@
             // 
             this.barMenu.Location = new System.Drawing.Point(0, 0);
             this.barMenu.Name = "barMenu";
-            this.barMenu.Size = new System.Drawing.Size(292, 24);
+            this.barMenu.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
+            this.barMenu.Size = new System.Drawing.Size(341, 24);
             this.barMenu.TabIndex = 0;
             this.barMenu.Text = "barMenu";
             // 
             // BaseForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(292, 266);
+            this.ClientSize = new System.Drawing.Size(341, 332);
             this.Controls.Add(this.barMenu);
+            this.Font = new System.Drawing.Font("Meiryo UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.MainMenuStrip = this.barMenu;
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "BaseForm";
             this.Text = "BaseForm";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form_KeyDown);

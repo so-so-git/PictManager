@@ -38,16 +38,18 @@
             // 
             this.cmbCategory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbCategory.FormattingEnabled = true;
-            this.cmbCategory.Location = new System.Drawing.Point(13, 13);
+            this.cmbCategory.Location = new System.Drawing.Point(15, 16);
+            this.cmbCategory.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cmbCategory.Name = "cmbCategory";
-            this.cmbCategory.Size = new System.Drawing.Size(121, 20);
+            this.cmbCategory.Size = new System.Drawing.Size(140, 23);
             this.cmbCategory.TabIndex = 0;
             // 
             // btnAddCategory
             // 
-            this.btnAddCategory.Location = new System.Drawing.Point(140, 11);
+            this.btnAddCategory.Location = new System.Drawing.Point(163, 14);
+            this.btnAddCategory.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnAddCategory.Name = "btnAddCategory";
-            this.btnAddCategory.Size = new System.Drawing.Size(76, 23);
+            this.btnAddCategory.Size = new System.Drawing.Size(89, 29);
             this.btnAddCategory.TabIndex = 1;
             this.btnAddCategory.Text = "カテゴリ追加";
             this.btnAddCategory.UseVisualStyleBackColor = true;
@@ -56,16 +58,16 @@
             // lblDropArea
             // 
             this.lblDropArea.AllowDrop = true;
-            this.lblDropArea.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblDropArea.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblDropArea.BackColor = System.Drawing.SystemColors.Control;
             this.lblDropArea.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblDropArea.Font = new System.Drawing.Font("MS UI Gothic", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.lblDropArea.Image = ((System.Drawing.Image)(resources.GetObject("lblDropArea.Image")));
-            this.lblDropArea.Location = new System.Drawing.Point(14, 46);
+            this.lblDropArea.Location = new System.Drawing.Point(16, 58);
             this.lblDropArea.Name = "lblDropArea";
-            this.lblDropArea.Size = new System.Drawing.Size(202, 105);
+            this.lblDropArea.Size = new System.Drawing.Size(236, 131);
             this.lblDropArea.TabIndex = 2;
             this.lblDropArea.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblDropArea.DragDrop += new System.Windows.Forms.DragEventHandler(this.lblDropArea_DragDrop);
@@ -73,15 +75,17 @@
             // 
             // UrlDropForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(232, 167);
+            this.ClientSize = new System.Drawing.Size(271, 209);
             this.Controls.Add(this.lblDropArea);
             this.Controls.Add(this.btnAddCategory);
             this.Controls.Add(this.cmbCategory);
+            this.Font = new System.Drawing.Font("Meiryo UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MaximizeBox = false;
             this.Name = "UrlDropForm";
-            this.Text = "UrlDropForm";
+            this.Text = "PictManager - URL受付";
             this.TopMost = true;
             this.ResumeLayout(false);
 

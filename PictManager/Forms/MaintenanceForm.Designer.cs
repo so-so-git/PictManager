@@ -54,9 +54,11 @@
             this.grpImport.Controls.Add(this.cmbCategories);
             this.grpImport.Controls.Add(this.lblTargetDirectory);
             this.grpImport.Controls.Add(this.lblCategories);
-            this.grpImport.Location = new System.Drawing.Point(13, 13);
+            this.grpImport.Location = new System.Drawing.Point(15, 16);
+            this.grpImport.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.grpImport.Name = "grpImport";
-            this.grpImport.Size = new System.Drawing.Size(385, 127);
+            this.grpImport.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.grpImport.Size = new System.Drawing.Size(449, 159);
             this.grpImport.TabIndex = 0;
             this.grpImport.TabStop = false;
             this.grpImport.Text = "画像ファイルインポート";
@@ -65,9 +67,10 @@
             // 
             this.rdoImportDirectory.AutoSize = true;
             this.rdoImportDirectory.Checked = true;
-            this.rdoImportDirectory.Location = new System.Drawing.Point(8, 19);
+            this.rdoImportDirectory.Location = new System.Drawing.Point(9, 24);
+            this.rdoImportDirectory.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.rdoImportDirectory.Name = "rdoImportDirectory";
-            this.rdoImportDirectory.Size = new System.Drawing.Size(72, 16);
+            this.rdoImportDirectory.Size = new System.Drawing.Size(74, 19);
             this.rdoImportDirectory.TabIndex = 0;
             this.rdoImportDirectory.TabStop = true;
             this.rdoImportDirectory.Text = "ディレクトリ";
@@ -77,9 +80,10 @@
             // rdoImportFile
             // 
             this.rdoImportFile.AutoSize = true;
-            this.rdoImportFile.Location = new System.Drawing.Point(86, 19);
+            this.rdoImportFile.Location = new System.Drawing.Point(100, 24);
+            this.rdoImportFile.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.rdoImportFile.Name = "rdoImportFile";
-            this.rdoImportFile.Size = new System.Drawing.Size(57, 16);
+            this.rdoImportFile.Size = new System.Drawing.Size(59, 19);
             this.rdoImportFile.TabIndex = 1;
             this.rdoImportFile.Text = "ファイル";
             this.rdoImportFile.UseVisualStyleBackColor = true;
@@ -88,9 +92,10 @@
             // btnImport
             // 
             this.btnImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnImport.Location = new System.Drawing.Point(304, 97);
+            this.btnImport.Location = new System.Drawing.Point(355, 121);
+            this.btnImport.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnImport.Name = "btnImport";
-            this.btnImport.Size = new System.Drawing.Size(75, 23);
+            this.btnImport.Size = new System.Drawing.Size(87, 29);
             this.btnImport.TabIndex = 8;
             this.btnImport.Text = "インポート";
             this.btnImport.UseVisualStyleBackColor = true;
@@ -99,18 +104,20 @@
             // chkIncludeSubDirectory
             // 
             this.chkIncludeSubDirectory.AutoSize = true;
-            this.chkIncludeSubDirectory.Location = new System.Drawing.Point(8, 95);
+            this.chkIncludeSubDirectory.Location = new System.Drawing.Point(9, 119);
+            this.chkIncludeSubDirectory.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chkIncludeSubDirectory.Name = "chkIncludeSubDirectory";
-            this.chkIncludeSubDirectory.Size = new System.Drawing.Size(123, 16);
+            this.chkIncludeSubDirectory.Size = new System.Drawing.Size(125, 19);
             this.chkIncludeSubDirectory.TabIndex = 7;
             this.chkIncludeSubDirectory.Text = "サブディレクトリも含む";
             this.chkIncludeSubDirectory.UseVisualStyleBackColor = true;
             // 
             // btnRef
             // 
-            this.btnRef.Location = new System.Drawing.Point(359, 44);
+            this.btnRef.Location = new System.Drawing.Point(419, 55);
+            this.btnRef.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnRef.Name = "btnRef";
-            this.btnRef.Size = new System.Drawing.Size(20, 20);
+            this.btnRef.Size = new System.Drawing.Size(23, 25);
             this.btnRef.TabIndex = 4;
             this.btnRef.Text = "...";
             this.btnRef.UseVisualStyleBackColor = true;
@@ -119,34 +126,36 @@
             // txtTargetPath
             // 
             this.txtTargetPath.AllowDrop = true;
-            this.txtTargetPath.Location = new System.Drawing.Point(57, 44);
+            this.txtTargetPath.Location = new System.Drawing.Point(66, 55);
+            this.txtTargetPath.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtTargetPath.Name = "txtTargetPath";
-            this.txtTargetPath.Size = new System.Drawing.Size(296, 19);
+            this.txtTargetPath.Size = new System.Drawing.Size(345, 23);
             this.txtTargetPath.TabIndex = 3;
             // 
             // cmbCategories
             // 
             this.cmbCategories.FormattingEnabled = true;
-            this.cmbCategories.Location = new System.Drawing.Point(57, 69);
+            this.cmbCategories.Location = new System.Drawing.Point(66, 86);
+            this.cmbCategories.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cmbCategories.Name = "cmbCategories";
-            this.cmbCategories.Size = new System.Drawing.Size(198, 20);
+            this.cmbCategories.Size = new System.Drawing.Size(230, 23);
             this.cmbCategories.TabIndex = 6;
             // 
             // lblTargetDirectory
             // 
             this.lblTargetDirectory.AutoSize = true;
-            this.lblTargetDirectory.Location = new System.Drawing.Point(6, 48);
+            this.lblTargetDirectory.Location = new System.Drawing.Point(7, 60);
             this.lblTargetDirectory.Name = "lblTargetDirectory";
-            this.lblTargetDirectory.Size = new System.Drawing.Size(35, 12);
+            this.lblTargetDirectory.Size = new System.Drawing.Size(43, 15);
             this.lblTargetDirectory.TabIndex = 2;
             this.lblTargetDirectory.Text = "対象：";
             // 
             // lblCategories
             // 
             this.lblCategories.AutoSize = true;
-            this.lblCategories.Location = new System.Drawing.Point(6, 72);
+            this.lblCategories.Location = new System.Drawing.Point(7, 90);
             this.lblCategories.Name = "lblCategories";
-            this.lblCategories.Size = new System.Drawing.Size(45, 12);
+            this.lblCategories.Size = new System.Drawing.Size(53, 15);
             this.lblCategories.TabIndex = 5;
             this.lblCategories.Text = "カテゴリ：";
             // 
@@ -162,10 +171,12 @@
             // 
             // MaintenanceForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(410, 152);
+            this.ClientSize = new System.Drawing.Size(478, 190);
             this.Controls.Add(this.grpImport);
+            this.Font = new System.Drawing.Font("Meiryo UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "MaintenanceForm";
             this.Text = "PictManager - データベースメンテナンス";
             this.grpImport.ResumeLayout(false);

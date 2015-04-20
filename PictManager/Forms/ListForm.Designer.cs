@@ -32,8 +32,8 @@
             this.grdFiles = new System.Windows.Forms.DataGridView();
             this.pnlParent = new System.Windows.Forms.SplitContainer();
             this.lblFileCount = new System.Windows.Forms.Label();
-            this.btnRollback = new SO.PictManager.Components.KeyPrevButton();
-            this.btnRevert = new SO.PictManager.Components.KeyPrevButton();
+            this.btnRevertAll = new SO.PictManager.Components.KeyPrevButton();
+            this.btnRevertSelection = new SO.PictManager.Components.KeyPrevButton();
             this.btnApply = new SO.PictManager.Components.KeyPrevButton();
             this.btnClose = new SO.PictManager.Components.KeyPrevButton();
             this.barStatus = new System.Windows.Forms.StatusStrip();
@@ -53,16 +53,17 @@
             this.grdFiles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grdFiles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grdFiles.Location = new System.Drawing.Point(0, 0);
+            this.grdFiles.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.grdFiles.MultiSelect = false;
             this.grdFiles.Name = "grdFiles";
             this.grdFiles.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.grdFiles.RowTemplate.Height = 21;
-            this.grdFiles.Size = new System.Drawing.Size(632, 363);
+            this.grdFiles.Size = new System.Drawing.Size(737, 463);
             this.grdFiles.TabIndex = 0;
-            this.grdFiles.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdFiles_CellValueChanged);
+            this.grdFiles.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdFiles_CellClick);
             this.grdFiles.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdFiles_CellDoubleClick);
             this.grdFiles.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.grdFiles_CellValidating);
-            this.grdFiles.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdFiles_CellClick);
+            this.grdFiles.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdFiles_CellValueChanged);
             // 
             // pnlParent
             // 
@@ -70,6 +71,7 @@
             this.pnlParent.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this.pnlParent.IsSplitterFixed = true;
             this.pnlParent.Location = new System.Drawing.Point(0, 24);
+            this.pnlParent.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.pnlParent.Name = "pnlParent";
             this.pnlParent.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -81,68 +83,70 @@
             // pnlParent.Panel2
             // 
             this.pnlParent.Panel2.Controls.Add(this.lblFileCount);
-            this.pnlParent.Panel2.Controls.Add(this.btnRollback);
-            this.pnlParent.Panel2.Controls.Add(this.btnRevert);
+            this.pnlParent.Panel2.Controls.Add(this.btnRevertAll);
+            this.pnlParent.Panel2.Controls.Add(this.btnRevertSelection);
             this.pnlParent.Panel2.Controls.Add(this.btnApply);
             this.pnlParent.Panel2.Controls.Add(this.btnClose);
             this.pnlParent.Panel2.Controls.Add(this.barStatus);
-            this.pnlParent.Size = new System.Drawing.Size(632, 422);
-            this.pnlParent.SplitterDistance = 363;
+            this.pnlParent.Size = new System.Drawing.Size(737, 534);
+            this.pnlParent.SplitterDistance = 463;
+            this.pnlParent.SplitterWidth = 5;
             this.pnlParent.TabIndex = 2;
             // 
             // lblFileCount
             // 
             this.lblFileCount.AutoSize = true;
-            this.lblFileCount.Location = new System.Drawing.Point(234, 9);
+            this.lblFileCount.Location = new System.Drawing.Point(349, 12);
             this.lblFileCount.Name = "lblFileCount";
-            this.lblFileCount.Size = new System.Drawing.Size(51, 12);
+            this.lblFileCount.Size = new System.Drawing.Size(59, 15);
             this.lblFileCount.TabIndex = 5;
             this.lblFileCount.Text = "999 files.";
             // 
-            // btnRollback
+            // btnRevertAll
             // 
-            this.btnRollback.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnRollback.Enabled = false;
-            this.btnRollback.Location = new System.Drawing.Point(153, 4);
-            this.btnRollback.Name = "btnRollback";
-            this.btnRollback.Size = new System.Drawing.Size(63, 23);
-            this.btnRollback.TabIndex = 2;
-            this.btnRollback.Text = "Rollback";
-            this.btnRollback.UseVisualStyleBackColor = true;
-            this.btnRollback.Click += new System.EventHandler(this.btnRollback_Click);
+            this.btnRevertAll.Enabled = false;
+            this.btnRevertAll.Location = new System.Drawing.Point(231, 5);
+            this.btnRevertAll.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnRevertAll.Name = "btnRevertAll";
+            this.btnRevertAll.Size = new System.Drawing.Size(112, 29);
+            this.btnRevertAll.TabIndex = 2;
+            this.btnRevertAll.Text = "全ての変更を取消";
+            this.btnRevertAll.UseVisualStyleBackColor = true;
+            this.btnRevertAll.Click += new System.EventHandler(this.btnRevertAll_Click);
             // 
-            // btnRevert
+            // btnRevertSelection
             // 
-            this.btnRevert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnRevert.Enabled = false;
-            this.btnRevert.Location = new System.Drawing.Point(84, 4);
-            this.btnRevert.Name = "btnRevert";
-            this.btnRevert.Size = new System.Drawing.Size(63, 23);
-            this.btnRevert.TabIndex = 1;
-            this.btnRevert.Text = "Revert";
-            this.btnRevert.UseVisualStyleBackColor = true;
-            this.btnRevert.Click += new System.EventHandler(this.btnRevert_Click);
+            this.btnRevertSelection.Enabled = false;
+            this.btnRevertSelection.Location = new System.Drawing.Point(93, 5);
+            this.btnRevertSelection.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnRevertSelection.Name = "btnRevertSelection";
+            this.btnRevertSelection.Size = new System.Drawing.Size(132, 29);
+            this.btnRevertSelection.TabIndex = 1;
+            this.btnRevertSelection.Text = "選択行の変更を取消";
+            this.btnRevertSelection.UseVisualStyleBackColor = true;
+            this.btnRevertSelection.Click += new System.EventHandler(this.btnRevertSelection_Click);
             // 
             // btnApply
             // 
-            this.btnApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnApply.Enabled = false;
-            this.btnApply.Location = new System.Drawing.Point(12, 4);
+            this.btnApply.Location = new System.Drawing.Point(14, 5);
+            this.btnApply.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnApply.Name = "btnApply";
-            this.btnApply.Size = new System.Drawing.Size(63, 23);
+            this.btnApply.Size = new System.Drawing.Size(73, 29);
             this.btnApply.TabIndex = 0;
-            this.btnApply.Text = "Apply";
+            this.btnApply.Text = "適用";
             this.btnApply.UseVisualStyleBackColor = true;
             this.btnApply.Click += new System.EventHandler(this.btnApply_Click);
             // 
             // btnClose
             // 
-            this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClose.Location = new System.Drawing.Point(556, 4);
+            this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnClose.Location = new System.Drawing.Point(649, 5);
+            this.btnClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(63, 23);
+            this.btnClose.Size = new System.Drawing.Size(73, 29);
             this.btnClose.TabIndex = 3;
-            this.btnClose.Text = "Close";
+            this.btnClose.Text = "閉じる";
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
@@ -150,9 +154,10 @@
             // 
             this.barStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblStatus});
-            this.barStatus.Location = new System.Drawing.Point(0, 32);
+            this.barStatus.Location = new System.Drawing.Point(0, 43);
             this.barStatus.Name = "barStatus";
-            this.barStatus.Size = new System.Drawing.Size(632, 23);
+            this.barStatus.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
+            this.barStatus.Size = new System.Drawing.Size(737, 23);
             this.barStatus.TabIndex = 4;
             this.barStatus.Text = "statusStrip1";
             // 
@@ -164,17 +169,18 @@
             // 
             // ListForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(632, 446);
+            this.ClientSize = new System.Drawing.Size(737, 558);
             this.Controls.Add(this.pnlParent);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
+            this.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.Name = "ListForm";
             this.Text = "PictManager - ファイル一覧";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.Shown += new System.EventHandler(this.Form_Shown);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_FormClosing);
+            this.Shown += new System.EventHandler(this.Form_Shown);
             this.Controls.SetChildIndex(this.pnlParent, 0);
             ((System.ComponentModel.ISupportInitialize)(this.grdFiles)).EndInit();
             this.pnlParent.Panel1.ResumeLayout(false);
@@ -196,8 +202,8 @@
 		private System.Windows.Forms.ToolStripStatusLabel lblStatus;
 		private SO.PictManager.Components.KeyPrevButton btnApply;
 		private SO.PictManager.Components.KeyPrevButton btnClose;
-		private SO.PictManager.Components.KeyPrevButton btnRevert;
-        private SO.PictManager.Components.KeyPrevButton btnRollback;
+		private SO.PictManager.Components.KeyPrevButton btnRevertSelection;
+        private SO.PictManager.Components.KeyPrevButton btnRevertAll;
         private System.Windows.Forms.Label lblFileCount;
 
     }

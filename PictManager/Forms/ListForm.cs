@@ -38,11 +38,8 @@ namespace SO.PictManager.Forms
 
         #region クラス定数
 
-        /// <summary>編集済マーク</summary>
-        private const string EDITED_MARK = " *";
-
-        /// <summary>グリッド列インデックス：削除チェック</summary>
-        private const int IDX_DEL_CHK = 0;
+        /// <summary>グリッド列インデックス：選択チェック</summary>
+        private const int IDX_SEL_CHK = 0;
         /// <summary>グリッド列インデックス：ファイル名</summary>
         private const int IDX_FILE_NAME = 1;
         /// <summary>グリッド列インデックス：ディレクトリパス</summary>
@@ -128,7 +125,7 @@ namespace SO.PictManager.Forms
             menuTemp = new ToolStripMenuItem("操作(&O)", null, null, "menuOpe");
             menuTemp.ShortcutKeys = Keys.Alt | Keys.O;
             menuTemp.DropDownItems.Add(new ToolStripMenuItem("全ての変更を適用", null, btnApply_Click));
-            menuTemp.DropDownItems.Add(new ToolStripMenuItem("全ての変更を戻す", null, btnRevert_Click));
+            menuTemp.DropDownItems.Add(new ToolStripMenuItem("全ての変更を戻す", null, btnRevertSelection_Click));
             menuTemp.DropDownItems.Add(new ToolStripSeparator());
             menuTemp.DropDownItems.Add(new ToolStripMenuItem("重複しているファイルのみを抽出", null, menuFilterDuplicated_Click));
             menuTemp.DropDownItems.Add(new ToolStripSeparator());
@@ -152,7 +149,7 @@ namespace SO.PictManager.Forms
         {
             // 選択チェックボックス列
             var colChk = new DataGridViewCheckBoxColumn();
-            colChk.HeaderText = "削除";
+            colChk.HeaderText = "選択";
             colChk.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             colChk.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             grdFiles.Columns.Add(colChk);
@@ -192,6 +189,7 @@ namespace SO.PictManager.Forms
         #endregion
 
         #region CreateCells - グリッドセル生成
+
         /// <summary>
         /// ファイル一覧グリッドのセルを生成します。
         /// </summary>
@@ -214,13 +212,14 @@ namespace SO.PictManager.Forms
                 }
                 row.Tag = delFlg;    // タグを削除済みフラグとして使用
                 row.HeaderCell.Value = (++i).ToString();
+                row.HeaderCell.Style.Font = new Font(this.Font, FontStyle.Regular);
                 row.ReadOnly = delFlg;
 
                 // 選択チェックボックスセル
-                var celDelChk = new DataGridViewCheckBoxCell();
-                celDelChk.Value = delFlg;
-                celDelChk.Tag = delFlg;
-                row.Cells.Add(celDelChk);
+                var celChk = new DataGridViewCheckBoxCell();
+                celChk.Value = delFlg;
+                celChk.Tag = delFlg;
+                row.Cells.Add(celChk);
 
                 // ファイル名セル
                 var celFile = new DataGridViewTextBoxCell();
@@ -267,7 +266,7 @@ namespace SO.PictManager.Forms
 
                     // 類似画像検索ボタンセル
                     celSimilar = new DataGridViewButtonCell();
-                    celSimilar.Value = "Similar";
+                    celSimilar.Value = "類似";
                 }
                 row.Cells.Add(celRef);
                 row.Cells.Add(celMD5);
@@ -282,7 +281,7 @@ namespace SO.PictManager.Forms
                     // MD5重複チェック
                     for (int j = 0; j < grdFiles.RowCount; ++j)
                     {
-                        if (Convert.ToBoolean(grdFiles[IDX_DEL_CHK, j].Tag)) continue;
+                        if (Convert.ToBoolean(grdFiles[IDX_SEL_CHK, j].Tag)) continue;
 
                         DataGridViewCell targetCell = grdFiles[IDX_MD5, j];
                         if (celMD5.Value.Equals(targetCell.Value))
@@ -300,6 +299,7 @@ namespace SO.PictManager.Forms
             grdFiles.Rows.AddRange(rowList.ToArray());
             grdFiles.ResumeLayout();
         }
+
         #endregion
 
         #region GetImagePath - 画像ファイルパス取得
@@ -318,6 +318,7 @@ namespace SO.PictManager.Forms
         #endregion
 
         #region IsValidValue - 入力内容検証
+
         /// <summary>
         /// セルに入力された内容の妥当性を検証します。
         /// </summary>
@@ -386,9 +387,11 @@ namespace SO.PictManager.Forms
 
             return true;
         }
+
         #endregion
 
         #region ApplyChange - 入力された変更を適用
+
         /// <summary>
         /// ファイル一覧グリッドセルで入力された変更内容を各ファイルに適用します。
         /// </summary>
@@ -398,10 +401,10 @@ namespace SO.PictManager.Forms
         protected virtual bool ApplyChange(DataGridViewCell cell, List<int> proceededRows)
         {
             bool ret = true;
-            int listRow = int.Parse(grdFiles.Rows[cell.RowIndex].HeaderCell.Value.ToString().Replace(EDITED_MARK, string.Empty)) - 1;
+            int listRow = int.Parse(grdFiles.Rows[cell.RowIndex].HeaderCell.Value.ToString()) - 1;
             switch (cell.ColumnIndex)
             {
-                case IDX_DEL_CHK:
+                case IDX_SEL_CHK:
                     // 対象削除
                     DeleteFile(FilePathes[listRow]);
                     proceededRows.Add(listRow);
@@ -426,6 +429,7 @@ namespace SO.PictManager.Forms
 
             return ret;
         }
+
         #endregion
 
         #region ChangePath - 入力内容をファイルパスに反映
@@ -458,22 +462,55 @@ namespace SO.PictManager.Forms
         }
         #endregion
 
-        #region RefreshAllConditions - 最新の確定状態に戻す
+        #region RevertEdit - 最新の確定状態に戻す
         /// <summary>
-        /// グリッドの状態を最新の確定状態に戻します。
+        /// グリッドの状態を直近の確定状態に戻します。
         /// </summary>
-        /// <param name="initialPosition">true:フォーム表示時の状態に戻す / false:最終適用時の状態に戻す</param>
-        private void RefreshAllConditions(bool initialPosition)
+        /// <param name="isAllRevert">true:全ての対象を戻す / false:選択された対象のみ戻す</param>
+        private void RevertEdit(bool isAllRevert)
         {
             foreach (DataGridViewColumn col in grdFiles.Columns)
                 col.HeaderCell.SortGlyphDirection = SortOrder.None;
 
-            // セルを再作成
-            grdFiles.Rows.Clear();
-            CreateCells();
+            if (isAllRevert)
+            {
+                // セルを再作成
+                grdFiles.Rows.Clear();
+                CreateCells();
+            }
+            else
+            {
+                // 選択されている行を取得
+                var selectedRows = from r in grdFiles.Rows.Cast<DataGridViewRow>()
+                                   where Convert.ToBoolean(r.Cells[IDX_SEL_CHK].Value)
+                                   select r;
+
+                for (int rowIndex = 0; rowIndex < grdFiles.Rows.Count; rowIndex++)
+                {
+                    DataGridViewRow row = grdFiles.Rows[rowIndex];
+
+                    if (Convert.ToBoolean(row.Cells[IDX_SEL_CHK].Value)) continue;
+
+                    DataGridViewRowHeaderCell rhCell = grdFiles.Rows[rowIndex].HeaderCell;
+                    for (int colIndex = 0; colIndex < row.Cells.Count; colIndex++)
+                    {
+                        DataGridViewCell cell = row.Cells[colIndex];
+                        if (cell.Value.Equals(cell.Tag))    // セル内容が表示時と同一の場合
+                        {
+                            // 変更カウントをデクリメント、変更判別色クリア
+                            if (cell.Style.BackColor == Color.Yellow) --_changeCnt;
+                            cell.Style.BackColor =
+                                    grdFiles.Columns[colIndex].DefaultCellStyle.BackColor;
+                        }
+
+                        // 行ヘッダの変更スタイルをクリア
+                        rhCell.Style.Font = new Font(rhCell.Style.Font, FontStyle.Regular);
+                    }
+                }
+            }
+
             _changeCnt = 0;
-            btnApply.Enabled = false;
-            btnRevert.Enabled = false;
+            btnApply.Enabled = btnRevertSelection.Enabled = btnRevertAll.Enabled = false;
         }
         #endregion
 
@@ -567,7 +604,7 @@ namespace SO.PictManager.Forms
                         DataGridViewRowHeadersWidthSizeMode.DisableResizing;
                 grdFiles.Columns[IDX_FILE_NAME].Width =
                         (grdFiles.Width - grdFiles.RowHeadersWidth -
-                         grdFiles.Columns[IDX_DEL_CHK].Width -
+                         grdFiles.Columns[IDX_SEL_CHK].Width -
                          grdFiles.Columns[IDX_REF_BTN].Width -
                          grdFiles.Columns[IDX_SIMILAR_BTN].Width) / 3;
             }
@@ -675,6 +712,7 @@ namespace SO.PictManager.Forms
         #endregion
 
         #region grdFiles_CellClick - セルクリック時
+
         /// <summary>
         /// ファイル一覧グリッドのセルがクリックされた際に実行される処理です。
         /// ・ファイル名列、ディレクトリパス列がクリックされた場合：変更前後の内容をステータスバーに表示します。
@@ -691,7 +729,7 @@ namespace SO.PictManager.Forms
 
                 switch (e.ColumnIndex)
                 {
-                    case IDX_DEL_CHK:
+                    case IDX_SEL_CHK:
                         // チェック切り替え
                         var delChk = grdFiles[e.ColumnIndex, e.RowIndex] as DataGridViewCheckBoxCell;
                         delChk.Value = !Convert.ToBoolean(delChk.Value);
@@ -723,9 +761,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region grdFiles_CellValidating - セル入力内容検証時
+
         /// <summary>
         /// ファイル一覧グリッドのセルの入力内容検証時に実行される処理です。
         /// IsValidInputの実装内容に基づき、セルの入力内容を検証します。
@@ -750,9 +790,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region grdFiles_CellValueChanged - セル内容変更時
+
         /// <summary>
         /// ファイル一覧グリッドのセルの内容が変更された際に実行される処理です。
         /// 
@@ -776,21 +818,22 @@ namespace SO.PictManager.Forms
                 }
 
                 DataGridViewRowHeaderCell rhCell = grdFiles.Rows[e.RowIndex].HeaderCell;
-                if (cell.Value.Equals(cell.Tag))    // セル内容が表示時と同一の場合
+                if (cell.Value.Equals(((StoredValues)cell.Tag).Original))    // セル内容が表示時と同一の場合
                 {
                     // 変更カウントをデクリメント、変更判別色クリア
-                    if (cell.Style.BackColor == Color.Yellow) --_changeCnt;
-                    cell.Style.BackColor =
-                            grdFiles.Columns[e.ColumnIndex].DefaultCellStyle.BackColor;
+                    if (cell.Style.BackColor == Color.Yellow)
+                    {
+                        --_changeCnt;
+                    }
+                    cell.Style.BackColor = grdFiles.Columns[e.ColumnIndex].DefaultCellStyle.BackColor;
 
                     // 行の全ての内容が元に戻された場合は行ヘッダの変更マークをクリア
                     if (!grdFiles.Rows[e.RowIndex].Cells.Cast<DataGridViewCell>().Any(
                             c => c.Style.BackColor == Color.Yellow))
-                        if (rhCell.Value.ToString().EndsWith(EDITED_MARK))
-                        {
-                            string val = rhCell.Value.ToString();
-                            rhCell.Value = val.Substring(0, val.Length - EDITED_MARK.Length);
-                        }
+                    {
+                        if (rhCell.Style.Font.Bold)
+                            rhCell.Style.Font = new Font(rhCell.Style.Font, FontStyle.Regular);
+                    }
                 }
                 else    // セル内容が表示時から変更された場合
                 {
@@ -799,17 +842,18 @@ namespace SO.PictManager.Forms
                     ++_changeCnt;
 
                     // 行ヘッダの変更マークが未設定の場合は設定
-                    if (!rhCell.Value.ToString().EndsWith(EDITED_MARK))
-                        rhCell.Value += EDITED_MARK;
+                    if (!rhCell.Style.Font.Bold)
+                        rhCell.Style.Font = new Font(rhCell.Style.Font, FontStyle.Bold);
                 }
 
-                btnApply.Enabled = btnRevert.Enabled = btnRollback.Enabled = _changeCnt > 0;
+                btnApply.Enabled = btnRevertSelection.Enabled = btnRevertAll.Enabled = _changeCnt > 0;
             }
             catch (Exception ex)
             {
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region btnClose_Click - 終了ボタン押下時
@@ -830,6 +874,7 @@ namespace SO.PictManager.Forms
         #endregion
 
         #region btnApply_Click - 適用ボタン押下時
+
         /// <summary>
         /// 適用ボタンがクリックされた際に実行される処理です。
         /// ファイル一覧グリッドに入力された内容を各ファイルに適用します。
@@ -861,14 +906,14 @@ namespace SO.PictManager.Forms
                 {
                     if (!ApplyChange(cell, proceededRows))
                     {
-                        RefreshAllConditions(false);
+                        RevertEdit(true);
                         Console.WriteLine("Apply break.");
                         return;
                     }
                 }
 
                 // 表示を最新状態に更新
-                RefreshAllConditions(false);
+                RevertEdit(true);
             }
             catch (Exception ex)
             {
@@ -880,22 +925,25 @@ namespace SO.PictManager.Forms
                 CursorFace.Current = Cursors.Default;
             }
         }
+
         #endregion
 
-        #region btnRevert_Click - 最終適用時点に戻すボタン押下時
+        #region btnRevertSelection_Click - 選択行の変更を取消ボタン押下時
+
         /// <summary>
-        /// 最終適用時点に戻すボタンがクリックされた際に実行される処理です。
-        /// ファイル一覧グリッドの内容を最後に適用が実行された状態に戻します。
+        /// 選択行の変更を取消ボタンがクリックされた際に実行される処理です。
+        /// ファイル一覧グリッドの選択チェックボックスがONの行の内容を、
+        /// 最後に適用が実行された状態に戻します。
         /// </summary>
         /// <param orderName="sender">イベント発生元オブジェクト</param>
         /// <param orderName="e">イベント引数</param>
-        private void btnRevert_Click(object sender, EventArgs e)
+        private void btnRevertSelection_Click(object sender, EventArgs e)
         {
             try
             {
                 if (FormUtilities.ShowMessage("Q006") == DialogResult.Yes)
                 {
-                    RefreshAllConditions(false);
+                    RevertEdit(false);
                 }
             }
             catch (Exception ex)
@@ -903,22 +951,25 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
-        #region btnRollback_Click - ロールバックボタン押下時
+        #region btnRevertAll_Click - 全ての変更を取消ボタン押下時
+
         /// <summary>
-        /// 最終適用時点に戻すボタンがクリックされた際に実行される処理です。
-        /// ファイル一覧グリッドの内容を最後に適用が実行された状態に戻します。
+        /// 全ての変更を取消ボタンがクリックされた際に実行される処理です。
+        /// ファイル一覧グリッドの全てのの行の内容を、
+        /// 最後に適用が実行された状態に戻します。
         /// </summary>
         /// <param orderName="sender">イベント発生元オブジェクト</param>
         /// <param orderName="e">イベント引数</param>
-        private void btnRollback_Click(object sender, EventArgs e)
+        private void btnRevertAll_Click(object sender, EventArgs e)
         {
             try
             {
                 if (FormUtilities.ShowMessage("Q011") == DialogResult.Yes)
                 {
-                    RefreshAllConditions(true);
+                    RevertEdit(true);
                 }
             }
             catch (Exception ex)
@@ -926,9 +977,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region menuRefresh_Click - 対象ファイル再取得メニュー押下時
+
         /// <summary>
         /// 対象ファイル再取得メニューがクリックされた際に実行される処理です。
         /// 現在の情報で対象ファイルリストを更新します。
@@ -939,16 +992,18 @@ namespace SO.PictManager.Forms
         {
             try
             {
-                RefreshAllConditions(true);
+                RevertEdit(true);
             }
             catch (Exception ex)
             {
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region menuRenameAll_Click - 一括ファイル名変更メニュー押下時
+
         /// <summary>
         /// 一括ファイル名変更メニューがクリックされた際に実行される処理です。
         /// ファイル名変更情報入力ダイアログを表示し、入力された内容に応じてファイル名を一括で変更します。
@@ -960,13 +1015,14 @@ namespace SO.PictManager.Forms
             try
             {
                 if (RenameAllFiles() == ResultStatus.OK)
-                    RefreshAllConditions(true);
+                    RevertEdit(true);
             }
             catch (Exception ex)
             {
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region menuMoveAll_Click - 一括ファイル移動メニュー押下時

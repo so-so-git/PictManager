@@ -50,15 +50,16 @@
             // 
             this.barStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblStatus});
-            this.barStatus.Location = new System.Drawing.Point(0, 424);
+            this.barStatus.Location = new System.Drawing.Point(0, 535);
             this.barStatus.Name = "barStatus";
-            this.barStatus.Size = new System.Drawing.Size(632, 22);
+            this.barStatus.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
+            this.barStatus.Size = new System.Drawing.Size(737, 23);
             this.barStatus.TabIndex = 0;
             // 
             // lblStatus
             // 
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(82, 17);
+            this.lblStatus.Size = new System.Drawing.Size(102, 18);
             this.lblStatus.Text = "[ステータス表示]";
             // 
             // pnlParent
@@ -67,6 +68,7 @@
             this.pnlParent.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this.pnlParent.IsSplitterFixed = true;
             this.pnlParent.Location = new System.Drawing.Point(0, 24);
+            this.pnlParent.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.pnlParent.Name = "pnlParent";
             this.pnlParent.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -83,8 +85,9 @@
             this.pnlParent.Panel2.Controls.Add(this.lblPageSlash);
             this.pnlParent.Panel2.Controls.Add(this.txtPage);
             this.pnlParent.Panel2.Controls.Add(this.btnClose);
-            this.pnlParent.Size = new System.Drawing.Size(632, 400);
-            this.pnlParent.SplitterDistance = 361;
+            this.pnlParent.Size = new System.Drawing.Size(737, 511);
+            this.pnlParent.SplitterDistance = 464;
+            this.pnlParent.SplitterWidth = 5;
             this.pnlParent.TabIndex = 1;
             this.pnlParent.TabStop = false;
             // 
@@ -93,15 +96,17 @@
             this.pnlThumbnail.AutoScroll = true;
             this.pnlThumbnail.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlThumbnail.Location = new System.Drawing.Point(0, 0);
+            this.pnlThumbnail.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.pnlThumbnail.Name = "pnlThumbnail";
-            this.pnlThumbnail.Size = new System.Drawing.Size(632, 361);
+            this.pnlThumbnail.Size = new System.Drawing.Size(737, 464);
             this.pnlThumbnail.TabIndex = 0;
             // 
             // btnNext
             // 
-            this.btnNext.Location = new System.Drawing.Point(358, 4);
+            this.btnNext.Location = new System.Drawing.Point(418, 5);
+            this.btnNext.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnNext.Name = "btnNext";
-            this.btnNext.Size = new System.Drawing.Size(35, 23);
+            this.btnNext.Size = new System.Drawing.Size(41, 29);
             this.btnNext.TabIndex = 5;
             this.btnNext.Text = ">>";
             this.btnNext.UseVisualStyleBackColor = true;
@@ -109,19 +114,21 @@
             // 
             // btnDelete
             // 
-            this.btnDelete.Location = new System.Drawing.Point(8, 4);
+            this.btnDelete.Location = new System.Drawing.Point(9, 5);
+            this.btnDelete.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(64, 23);
+            this.btnDelete.Size = new System.Drawing.Size(75, 29);
             this.btnDelete.TabIndex = 1;
-            this.btnDelete.Text = "Delete";
+            this.btnDelete.Text = "削除";
             this.btnDelete.UseVisualStyleBackColor = true;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
             // btnPrevious
             // 
-            this.btnPrevious.Location = new System.Drawing.Point(242, 4);
+            this.btnPrevious.Location = new System.Drawing.Point(282, 5);
+            this.btnPrevious.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnPrevious.Name = "btnPrevious";
-            this.btnPrevious.Size = new System.Drawing.Size(35, 23);
+            this.btnPrevious.Size = new System.Drawing.Size(41, 29);
             this.btnPrevious.TabIndex = 3;
             this.btnPrevious.Text = "<<";
             this.btnPrevious.UseVisualStyleBackColor = true;
@@ -130,26 +137,27 @@
             // lblPageMax
             // 
             this.lblPageMax.AutoSize = true;
-            this.lblPageMax.Location = new System.Drawing.Point(326, 10);
+            this.lblPageMax.Location = new System.Drawing.Point(380, 12);
             this.lblPageMax.Name = "lblPageMax";
-            this.lblPageMax.Size = new System.Drawing.Size(23, 12);
+            this.lblPageMax.Size = new System.Drawing.Size(28, 15);
             this.lblPageMax.TabIndex = 3;
             this.lblPageMax.Text = "999";
             // 
             // lblPageSlash
             // 
             this.lblPageSlash.AutoSize = true;
-            this.lblPageSlash.Location = new System.Drawing.Point(314, 10);
+            this.lblPageSlash.Location = new System.Drawing.Point(366, 12);
             this.lblPageSlash.Name = "lblPageSlash";
-            this.lblPageSlash.Size = new System.Drawing.Size(11, 12);
+            this.lblPageSlash.Size = new System.Drawing.Size(12, 15);
             this.lblPageSlash.TabIndex = 2;
             this.lblPageSlash.Text = "/";
             // 
             // txtPage
             // 
-            this.txtPage.Location = new System.Drawing.Point(286, 7);
+            this.txtPage.Location = new System.Drawing.Point(334, 9);
+            this.txtPage.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtPage.Name = "txtPage";
-            this.txtPage.Size = new System.Drawing.Size(28, 19);
+            this.txtPage.Size = new System.Drawing.Size(32, 23);
             this.txtPage.TabIndex = 4;
             this.txtPage.Text = "999";
             this.txtPage.TextChanged += new System.EventHandler(this.txtPage_TextChanged);
@@ -158,28 +166,28 @@
             // 
             // btnClose
             // 
-            this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClose.Location = new System.Drawing.Point(548, 4);
+            this.btnClose.Location = new System.Drawing.Point(639, 5);
+            this.btnClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(75, 23);
+            this.btnClose.Size = new System.Drawing.Size(87, 29);
             this.btnClose.TabIndex = 6;
-            this.btnClose.Text = "Close";
+            this.btnClose.Text = "閉じる";
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // ThumbnailForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(632, 446);
+            this.ClientSize = new System.Drawing.Size(737, 558);
             this.Controls.Add(this.pnlParent);
             this.Controls.Add(this.barStatus);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ThumbnailForm";
             this.Text = "PictManager - サムネイル";
-            this.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.Form_MouseWheel);
-            this.Shown += new System.EventHandler(this.Form_Shown);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_FormClosing);
+            this.Shown += new System.EventHandler(this.Form_Shown);
+            this.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.Form_MouseWheel);
             this.Resize += new System.EventHandler(this.Form_Resize);
             this.Controls.SetChildIndex(this.barStatus, 0);
             this.Controls.SetChildIndex(this.pnlParent, 0);

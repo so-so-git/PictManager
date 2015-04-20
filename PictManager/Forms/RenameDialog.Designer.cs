@@ -60,28 +60,32 @@
             // 
             // btnOk
             // 
-            this.btnOk.Location = new System.Drawing.Point(291, 484);
+            this.btnOk.Location = new System.Drawing.Point(339, 605);
+            this.btnOk.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnOk.Size = new System.Drawing.Size(75, 30);
             this.btnOk.TabIndex = 26;
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(219, 484);
+            this.btnCancel.Location = new System.Drawing.Point(255, 605);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnCancel.Size = new System.Drawing.Size(75, 30);
             this.btnCancel.TabIndex = 25;
             // 
             // lblPrefix
             // 
-            this.lblPrefix.Location = new System.Drawing.Point(10, 260);
+            this.lblPrefix.Location = new System.Drawing.Point(12, 325);
             this.lblPrefix.Name = "lblPrefix";
-            this.lblPrefix.Size = new System.Drawing.Size(64, 20);
+            this.lblPrefix.Size = new System.Drawing.Size(75, 25);
             this.lblPrefix.TabIndex = 15;
             this.lblPrefix.Text = "接頭文字：";
             this.lblPrefix.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblSuffix
             // 
-            this.lblSuffix.Location = new System.Drawing.Point(10, 288);
+            this.lblSuffix.Location = new System.Drawing.Point(12, 360);
             this.lblSuffix.Name = "lblSuffix";
-            this.lblSuffix.Size = new System.Drawing.Size(64, 20);
+            this.lblSuffix.Size = new System.Drawing.Size(75, 25);
             this.lblSuffix.TabIndex = 17;
             this.lblSuffix.Text = "接尾文字：";
             this.lblSuffix.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -89,9 +93,10 @@
             // chkOriginal
             // 
             this.chkOriginal.AutoSize = true;
-            this.chkOriginal.Location = new System.Drawing.Point(12, 178);
+            this.chkOriginal.Location = new System.Drawing.Point(14, 222);
+            this.chkOriginal.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chkOriginal.Name = "chkOriginal";
-            this.chkOriginal.Size = new System.Drawing.Size(144, 16);
+            this.chkOriginal.Size = new System.Drawing.Size(146, 19);
             this.chkOriginal.TabIndex = 10;
             this.chkOriginal.Text = "元のファイル名を保持する";
             this.chkOriginal.UseVisualStyleBackColor = true;
@@ -99,19 +104,21 @@
             // 
             // txtPrefix
             // 
-            this.txtPrefix.Location = new System.Drawing.Point(78, 260);
+            this.txtPrefix.Location = new System.Drawing.Point(91, 325);
+            this.txtPrefix.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtPrefix.MaxLength = 200;
             this.txtPrefix.Name = "txtPrefix";
-            this.txtPrefix.Size = new System.Drawing.Size(256, 19);
+            this.txtPrefix.Size = new System.Drawing.Size(298, 23);
             this.txtPrefix.TabIndex = 16;
             this.txtPrefix.TextChanged += new System.EventHandler(this.TextBoxes_TextChanged);
             // 
             // txtSuffix
             // 
-            this.txtSuffix.Location = new System.Drawing.Point(78, 288);
+            this.txtSuffix.Location = new System.Drawing.Point(91, 360);
+            this.txtSuffix.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtSuffix.MaxLength = 200;
             this.txtSuffix.Name = "txtSuffix";
-            this.txtSuffix.Size = new System.Drawing.Size(256, 19);
+            this.txtSuffix.Size = new System.Drawing.Size(298, 23);
             this.txtSuffix.TabIndex = 18;
             this.txtSuffix.TextChanged += new System.EventHandler(this.TextBoxes_TextChanged);
             // 
@@ -119,9 +126,10 @@
             // 
             this.rdoBefore.AutoSize = true;
             this.rdoBefore.Checked = true;
-            this.rdoBefore.Location = new System.Drawing.Point(32, 202);
+            this.rdoBefore.Location = new System.Drawing.Point(37, 252);
+            this.rdoBefore.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.rdoBefore.Name = "rdoBefore";
-            this.rdoBefore.Size = new System.Drawing.Size(158, 16);
+            this.rdoBefore.Size = new System.Drawing.Size(160, 19);
             this.rdoBefore.TabIndex = 11;
             this.rdoBefore.TabStop = true;
             this.rdoBefore.Text = "元ファイル名は通し番号の前";
@@ -131,9 +139,10 @@
             // chkAddSeq
             // 
             this.chkAddSeq.AutoSize = true;
-            this.chkAddSeq.Location = new System.Drawing.Point(12, 124);
+            this.chkAddSeq.Location = new System.Drawing.Point(14, 155);
+            this.chkAddSeq.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chkAddSeq.Name = "chkAddSeq";
-            this.chkAddSeq.Size = new System.Drawing.Size(121, 16);
+            this.chkAddSeq.Size = new System.Drawing.Size(123, 19);
             this.chkAddSeq.TabIndex = 7;
             this.chkAddSeq.Text = "通し番号を付加する";
             this.chkAddSeq.UseVisualStyleBackColor = true;
@@ -141,64 +150,68 @@
             // 
             // txtStep
             // 
-            this.txtStep.Location = new System.Drawing.Point(72, 143);
+            this.txtStep.Location = new System.Drawing.Point(84, 179);
+            this.txtStep.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtStep.MaxLength = 3;
             this.txtStep.Name = "txtStep";
-            this.txtStep.Size = new System.Drawing.Size(32, 19);
+            this.txtStep.Size = new System.Drawing.Size(37, 23);
             this.txtStep.TabIndex = 9;
             this.txtStep.Text = "1";
             // 
             // lblStep
             // 
-            this.lblStep.Location = new System.Drawing.Point(28, 143);
+            this.lblStep.Location = new System.Drawing.Point(33, 179);
             this.lblStep.Name = "lblStep";
-            this.lblStep.Size = new System.Drawing.Size(40, 20);
+            this.lblStep.Size = new System.Drawing.Size(47, 25);
             this.lblStep.TabIndex = 8;
             this.lblStep.Text = "間隔：";
             this.lblStep.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // txtRepBefore
             // 
-            this.txtRepBefore.Location = new System.Drawing.Point(78, 316);
+            this.txtRepBefore.Location = new System.Drawing.Point(91, 395);
+            this.txtRepBefore.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtRepBefore.MaxLength = 200;
             this.txtRepBefore.Name = "txtRepBefore";
-            this.txtRepBefore.Size = new System.Drawing.Size(256, 19);
+            this.txtRepBefore.Size = new System.Drawing.Size(298, 23);
             this.txtRepBefore.TabIndex = 20;
             this.txtRepBefore.TextChanged += new System.EventHandler(this.TextBoxes_TextChanged);
             // 
             // lblReplace
             // 
-            this.lblReplace.Location = new System.Drawing.Point(10, 316);
+            this.lblReplace.Location = new System.Drawing.Point(12, 395);
             this.lblReplace.Name = "lblReplace";
-            this.lblReplace.Size = new System.Drawing.Size(64, 20);
+            this.lblReplace.Size = new System.Drawing.Size(75, 25);
             this.lblReplace.TabIndex = 19;
             this.lblReplace.Text = "置換文字：";
             this.lblReplace.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblArrow1
             // 
-            this.lblArrow1.Location = new System.Drawing.Point(78, 340);
+            this.lblArrow1.Location = new System.Drawing.Point(91, 425);
             this.lblArrow1.Name = "lblArrow1";
-            this.lblArrow1.Size = new System.Drawing.Size(16, 16);
+            this.lblArrow1.Size = new System.Drawing.Size(19, 20);
             this.lblArrow1.TabIndex = 21;
             this.lblArrow1.Text = "↓";
             this.lblArrow1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // txtRepAfter
             // 
-            this.txtRepAfter.Location = new System.Drawing.Point(78, 360);
+            this.txtRepAfter.Location = new System.Drawing.Point(91, 450);
+            this.txtRepAfter.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtRepAfter.MaxLength = 200;
             this.txtRepAfter.Name = "txtRepAfter";
-            this.txtRepAfter.Size = new System.Drawing.Size(256, 19);
+            this.txtRepAfter.Size = new System.Drawing.Size(298, 23);
             this.txtRepAfter.TabIndex = 22;
             this.txtRepAfter.TextChanged += new System.EventHandler(this.TextBoxes_TextChanged);
             // 
             // rdoAfter
             // 
             this.rdoAfter.AutoSize = true;
-            this.rdoAfter.Location = new System.Drawing.Point(196, 202);
+            this.rdoAfter.Location = new System.Drawing.Point(229, 252);
+            this.rdoAfter.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.rdoAfter.Name = "rdoAfter";
-            this.rdoAfter.Size = new System.Drawing.Size(158, 16);
+            this.rdoAfter.Size = new System.Drawing.Size(160, 19);
             this.rdoAfter.TabIndex = 12;
             this.rdoAfter.Text = "元ファイル名は通し番号の後";
             this.rdoAfter.UseVisualStyleBackColor = true;
@@ -206,19 +219,20 @@
             // 
             // txtSeqDelimiter
             // 
-            this.txtSeqDelimiter.Location = new System.Drawing.Point(98, 228);
+            this.txtSeqDelimiter.Location = new System.Drawing.Point(114, 285);
+            this.txtSeqDelimiter.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtSeqDelimiter.MaxLength = 1;
             this.txtSeqDelimiter.Name = "txtSeqDelimiter";
-            this.txtSeqDelimiter.Size = new System.Drawing.Size(24, 19);
+            this.txtSeqDelimiter.Size = new System.Drawing.Size(27, 23);
             this.txtSeqDelimiter.TabIndex = 14;
             this.txtSeqDelimiter.Text = "_";
             this.txtSeqDelimiter.TextChanged += new System.EventHandler(this.TextBoxes_TextChanged);
             // 
             // lblDelimiter2
             // 
-            this.lblDelimiter2.Location = new System.Drawing.Point(30, 228);
+            this.lblDelimiter2.Location = new System.Drawing.Point(35, 285);
             this.lblDelimiter2.Name = "lblDelimiter2";
-            this.lblDelimiter2.Size = new System.Drawing.Size(64, 20);
+            this.lblDelimiter2.Size = new System.Drawing.Size(75, 25);
             this.lblDelimiter2.TabIndex = 13;
             this.lblDelimiter2.Text = "区切文字：";
             this.lblDelimiter2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -226,9 +240,10 @@
             // chkShuffle
             // 
             this.chkShuffle.AutoSize = true;
-            this.chkShuffle.Location = new System.Drawing.Point(12, 12);
+            this.chkShuffle.Location = new System.Drawing.Point(14, 15);
+            this.chkShuffle.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chkShuffle.Name = "chkShuffle";
-            this.chkShuffle.Size = new System.Drawing.Size(119, 16);
+            this.chkShuffle.Size = new System.Drawing.Size(121, 19);
             this.chkShuffle.TabIndex = 0;
             this.chkShuffle.Text = "順番をシャッフルする";
             this.chkShuffle.UseVisualStyleBackColor = true;
@@ -237,20 +252,22 @@
             // btnClear
             // 
             this.btnClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClear.Location = new System.Drawing.Point(147, 484);
+            this.btnClear.Location = new System.Drawing.Point(171, 605);
+            this.btnClear.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(64, 24);
+            this.btnClear.Size = new System.Drawing.Size(75, 30);
             this.btnClear.TabIndex = 24;
-            this.btnClear.Text = "Clear";
+            this.btnClear.Text = "クリア";
             this.btnClear.UseVisualStyleBackColor = true;
             this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
             // 
             // chkAddDirName
             // 
             this.chkAddDirName.AutoSize = true;
-            this.chkAddDirName.Location = new System.Drawing.Point(12, 68);
+            this.chkAddDirName.Location = new System.Drawing.Point(14, 85);
+            this.chkAddDirName.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chkAddDirName.Name = "chkAddDirName";
-            this.chkAddDirName.Size = new System.Drawing.Size(182, 16);
+            this.chkAddDirName.Size = new System.Drawing.Size(184, 19);
             this.chkAddDirName.TabIndex = 4;
             this.chkAddDirName.Text = "先頭に親ディレクトリ名を挿入する";
             this.chkAddDirName.UseVisualStyleBackColor = true;
@@ -258,19 +275,20 @@
             // 
             // txtDirDelimiter
             // 
-            this.txtDirDelimiter.Location = new System.Drawing.Point(96, 92);
+            this.txtDirDelimiter.Location = new System.Drawing.Point(112, 115);
+            this.txtDirDelimiter.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtDirDelimiter.MaxLength = 1;
             this.txtDirDelimiter.Name = "txtDirDelimiter";
-            this.txtDirDelimiter.Size = new System.Drawing.Size(24, 19);
+            this.txtDirDelimiter.Size = new System.Drawing.Size(27, 23);
             this.txtDirDelimiter.TabIndex = 6;
             this.txtDirDelimiter.Text = "_";
             this.txtDirDelimiter.TextChanged += new System.EventHandler(this.TextBoxes_TextChanged);
             // 
             // lblDelimiter1
             // 
-            this.lblDelimiter1.Location = new System.Drawing.Point(28, 92);
+            this.lblDelimiter1.Location = new System.Drawing.Point(33, 115);
             this.lblDelimiter1.Name = "lblDelimiter1";
-            this.lblDelimiter1.Size = new System.Drawing.Size(64, 20);
+            this.lblDelimiter1.Size = new System.Drawing.Size(75, 25);
             this.lblDelimiter1.TabIndex = 5;
             this.lblDelimiter1.Text = "区切文字：";
             this.lblDelimiter1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -280,9 +298,11 @@
             this.grpSample.Controls.Add(this.lblArrow2);
             this.grpSample.Controls.Add(this.lblSampleAfter);
             this.grpSample.Controls.Add(this.lblSampleBefore);
-            this.grpSample.Location = new System.Drawing.Point(15, 389);
+            this.grpSample.Location = new System.Drawing.Point(17, 486);
+            this.grpSample.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.grpSample.Name = "grpSample";
-            this.grpSample.Size = new System.Drawing.Size(319, 86);
+            this.grpSample.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.grpSample.Size = new System.Drawing.Size(372, 108);
             this.grpSample.TabIndex = 23;
             this.grpSample.TabStop = false;
             this.grpSample.Text = "サンプル";
@@ -290,25 +310,25 @@
             // lblArrow2
             // 
             this.lblArrow2.AutoSize = true;
-            this.lblArrow2.Location = new System.Drawing.Point(7, 33);
+            this.lblArrow2.Location = new System.Drawing.Point(8, 41);
             this.lblArrow2.Name = "lblArrow2";
-            this.lblArrow2.Size = new System.Drawing.Size(17, 12);
+            this.lblArrow2.Size = new System.Drawing.Size(19, 15);
             this.lblArrow2.TabIndex = 1;
             this.lblArrow2.Text = "↓";
             // 
             // lblSampleAfter
             // 
-            this.lblSampleAfter.Location = new System.Drawing.Point(7, 49);
+            this.lblSampleAfter.Location = new System.Drawing.Point(8, 61);
             this.lblSampleAfter.Name = "lblSampleAfter";
-            this.lblSampleAfter.Size = new System.Drawing.Size(306, 32);
+            this.lblSampleAfter.Size = new System.Drawing.Size(357, 40);
             this.lblSampleAfter.TabIndex = 2;
             this.lblSampleAfter.Text = "parent\\.jpg";
             // 
             // lblSampleBefore
             // 
-            this.lblSampleBefore.Location = new System.Drawing.Point(7, 15);
+            this.lblSampleBefore.Location = new System.Drawing.Point(8, 19);
             this.lblSampleBefore.Name = "lblSampleBefore";
-            this.lblSampleBefore.Size = new System.Drawing.Size(306, 18);
+            this.lblSampleBefore.Size = new System.Drawing.Size(357, 22);
             this.lblSampleBefore.TabIndex = 0;
             this.lblSampleBefore.Text = "parent\\Image.jpg";
             // 
@@ -316,17 +336,19 @@
             // 
             this.cmbSort.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbSort.FormattingEnabled = true;
-            this.cmbSort.Location = new System.Drawing.Point(89, 38);
+            this.cmbSort.Location = new System.Drawing.Point(104, 48);
+            this.cmbSort.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cmbSort.Name = "cmbSort";
-            this.cmbSort.Size = new System.Drawing.Size(142, 20);
+            this.cmbSort.Size = new System.Drawing.Size(165, 23);
             this.cmbSort.TabIndex = 3;
             // 
             // chkSort
             // 
             this.chkSort.AutoSize = true;
-            this.chkSort.Location = new System.Drawing.Point(12, 41);
+            this.chkSort.Location = new System.Drawing.Point(14, 51);
+            this.chkSort.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chkSort.Name = "chkSort";
-            this.chkSort.Size = new System.Drawing.Size(69, 16);
+            this.chkSort.Size = new System.Drawing.Size(77, 19);
             this.chkSort.TabIndex = 1;
             this.chkSort.Text = "ソート順：";
             this.chkSort.UseVisualStyleBackColor = true;
@@ -334,9 +356,9 @@
             // 
             // RenameDialog
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(368, 523);
+            this.ClientSize = new System.Drawing.Size(429, 654);
             this.Controls.Add(this.cmbSort);
             this.Controls.Add(this.grpSample);
             this.Controls.Add(this.btnClear);
@@ -361,6 +383,8 @@
             this.Controls.Add(this.chkOriginal);
             this.Controls.Add(this.lblSuffix);
             this.Controls.Add(this.lblPrefix);
+            this.Font = new System.Drawing.Font("Meiryo UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "RenameDialog";
             this.Text = "ファイル名変更形式指定";
             this.Controls.SetChildIndex(this.lblPrefix, 0);
