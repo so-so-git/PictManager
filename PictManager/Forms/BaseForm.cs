@@ -361,8 +361,10 @@ namespace SO.PictManager.Forms
             int idx = 0;
             try
             {
+                // 前回のリネーム情報を復元してリネームダイアログを表示
+                var renameDlg = new RenameDialog(Utilities.RestoreRenameInfo());
+
                 // リネーム情報取得
-                var renameDlg = new RenameDialog();
                 RenameInfo renameInfo = null;
                 try
                 {

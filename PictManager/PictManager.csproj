@@ -212,7 +212,9 @@
     <Compile Include="Forms\ViewImageForm.Designer.cs">
       <DependentUpon>ViewImageForm.cs</DependentUpon>
     </Compile>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="ClassDiagram.cd" />
     <EntityDeploy Include="DataModel\PictManager.edmx">
       <Generator>EntityModelCodeGenerator</Generator>

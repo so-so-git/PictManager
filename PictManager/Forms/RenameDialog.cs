@@ -37,11 +37,8 @@ namespace SO.PictManager.Forms
             // コンポーネント初期化
             InitializeComponent();
 
-            // ソート順コンボボックス構築
-            FileSorter.BindSortOrderDataSource(cmbSort);
-
-            // コントロールアクセス制御
-            ChangeAccessibles();
+            // 共通初期化処理
+            CommonConstruction(null);
         }
 
         /// <summary>
@@ -53,11 +50,25 @@ namespace SO.PictManager.Forms
             // コンポーネント初期化
             InitializeComponent();
 
+            // 共通初期化処理
+            CommonConstruction(renameInfo);
+        }
+
+        /// <summary>
+        /// 各コンストラクタ共通の初期化処理を行います。
+        /// </summary>
+        /// <param name="renameInfo">画面に設定するリネーム情報</param>
+        private void CommonConstruction(RenameInfo renameInfo)
+        {
+
             // ソート順コンボボックス構築
             FileSorter.BindSortOrderDataSource(cmbSort);
 
             // リネーム情報設定
-            SetRenameInfo(renameInfo);
+            if (renameInfo != null)
+            {
+                SetRenameInfo(renameInfo);
+            }
 
             // コントロールアクセス制御
             ChangeAccessibles();
@@ -165,7 +176,7 @@ namespace SO.PictManager.Forms
             txtDirDelimiter.Text = renameInfo.DirDelimiter ?? string.Empty;
             chkOriginal.Checked = renameInfo.IsReserveOriginalName;
             chkAddSeq.Checked = renameInfo.IsAddSequential;
-            chkAddSeq.Checked = renameInfo.IsShuffle;
+            chkShuffle.Checked = renameInfo.IsShuffle;
             txtStep.Text = (renameInfo.IncrementStep ?? 0).ToString();
             renameInfo.SeqDelimiter = chkAddSeq.Checked && chkOriginal.Checked ? txtSeqDelimiter.Text : null;
             txtPrefix.Text = renameInfo.Prefix;
@@ -174,7 +185,10 @@ namespace SO.PictManager.Forms
             txtRepBefore.Text = renameInfo.ReplaceAfter ?? string.Empty;
             rdoBefore.Checked = renameInfo.OriginalPosition == OriginalPosition.Before;
             rdoAfter.Checked = renameInfo.OriginalPosition == OriginalPosition.After;
-            cmbSort.SelectedValue = renameInfo.SortOrder ?? FileSortOrder.FileNameAsc;
+            if (renameInfo.IsShuffle || !renameInfo.SortOrder.HasValue)
+                cmbSort.SelectedValue = FileSortOrder.FileNameAsc;
+            else
+                cmbSort.SelectedValue = renameInfo.SortOrder.Value;
         }
 
         #endregion

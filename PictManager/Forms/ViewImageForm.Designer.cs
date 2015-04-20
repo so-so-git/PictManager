@@ -85,7 +85,7 @@
             this.pnlParent.Panel2.Controls.Add(this.btnClose);
             this.pnlParent.Panel2.Controls.Add(this.barStatus);
             this.pnlParent.Size = new System.Drawing.Size(737, 534);
-            this.pnlParent.SplitterDistance = 458;
+            this.pnlParent.SplitterDistance = 457;
             this.pnlParent.SplitterWidth = 5;
             this.pnlParent.TabIndex = 0;
             this.pnlParent.TabStop = false;
@@ -166,14 +166,14 @@
             this.barStatus.Location = new System.Drawing.Point(0, 49);
             this.barStatus.Name = "barStatus";
             this.barStatus.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
-            this.barStatus.Size = new System.Drawing.Size(737, 22);
+            this.barStatus.Size = new System.Drawing.Size(737, 23);
             this.barStatus.TabIndex = 0;
             this.barStatus.Text = "statusStrip1";
             // 
             // lblStatus
             // 
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(82, 17);
+            this.lblStatus.Size = new System.Drawing.Size(102, 18);
             this.lblStatus.Text = "[ステータス表示]";
             this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
