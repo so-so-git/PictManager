@@ -23,19 +23,6 @@ namespace SO.PictManager.Forms
     /// </summary>
     public partial class ListForm : BaseForm
     {
-        #region struct StoredValues - 各時点の値の保管用構造体
-        /// <summary>
-        /// 各時点の値の保管用構造体
-        /// </summary>
-        private struct StoredValues
-        {
-            /// <summary>フォーム表示次の値</summary>
-            public string Original;
-            /// <summary>最後に適用された値</summary>
-            public string LastApplied;
-        }
-        #endregion
-
         #region クラス定数
 
         /// <summary>グリッド列インデックス：選択チェック</summary>
@@ -211,32 +198,26 @@ namespace SO.PictManager.Forms
                     delFlg = true;
                 }
                 row.Tag = delFlg;    // タグを削除済みフラグとして使用
+                row.ReadOnly = delFlg;
                 row.HeaderCell.Value = (++i).ToString();
                 row.HeaderCell.Style.Font = new Font(this.Font, FontStyle.Regular);
-                row.ReadOnly = delFlg;
 
                 // 選択チェックボックスセル
                 var celChk = new DataGridViewCheckBoxCell();
-                celChk.Value = delFlg;
-                celChk.Tag = delFlg;
+                celChk.Value = false;
+                celChk.Tag = false;
                 row.Cells.Add(celChk);
 
                 // ファイル名セル
                 var celFile = new DataGridViewTextBoxCell();
-                StoredValues storedFileName;
-                storedFileName.Original = Path.GetFileName(file);
-                storedFileName.LastApplied = storedFileName.Original;
-                celFile.Value = storedFileName.Original;
-                celFile.Tag = storedFileName;
+                celFile.Value = Path.GetFileName(file);
+                celFile.Tag = celFile.Value;
                 row.Cells.Add(celFile);
 
                 // 親ディレクトリパスセル
                 var celDir = new DataGridViewTextBoxCell();
-                StoredValues storedDirName;
-                storedDirName.Original = Path.GetDirectoryName(file);
-                storedDirName.LastApplied = storedDirName.Original;
-                celDir.Value = storedDirName.Original;
-                celDir.Tag = storedDirName;
+                celDir.Value = Path.GetDirectoryName(file);
+                celDir.Tag = celDir.Value;
                 row.Cells.Add(celDir);
 
                 DataGridViewCell celRef;
@@ -303,6 +284,7 @@ namespace SO.PictManager.Forms
         #endregion
 
         #region GetImagePath - 画像ファイルパス取得
+
         /// <summary>
         /// 指定された行の画像ファイルのパスを取得します。
         /// </summary>
@@ -310,11 +292,12 @@ namespace SO.PictManager.Forms
         /// <returns>画像ファイルのパス</returns>
         private string GetImagePath(int rowIdx)
         {
-            StoredValues storedDirName = (StoredValues)grdFiles[IDX_DIR_PATH, rowIdx].Tag;
-            StoredValues storedFileName = (StoredValues)grdFiles[IDX_FILE_NAME, rowIdx].Tag;
+            string dirName = grdFiles[IDX_DIR_PATH, rowIdx].Tag.ToSafeString();
+            string fileName = grdFiles[IDX_FILE_NAME, rowIdx].Tag.ToSafeString();
 
-            return Path.Combine(storedDirName.LastApplied, storedFileName.LastApplied);
+            return Path.Combine(dirName, fileName);
         }
+
         #endregion
 
         #region IsValidValue - 入力内容検証
@@ -463,6 +446,7 @@ namespace SO.PictManager.Forms
         #endregion
 
         #region RevertEdit - 最新の確定状態に戻す
+
         /// <summary>
         /// グリッドの状態を直近の確定状態に戻します。
         /// </summary>
@@ -477,6 +461,8 @@ namespace SO.PictManager.Forms
                 // セルを再作成
                 grdFiles.Rows.Clear();
                 CreateCells();
+
+                _changeCnt = 0;
             }
             else
             {
@@ -489,44 +475,48 @@ namespace SO.PictManager.Forms
                 {
                     DataGridViewRow row = grdFiles.Rows[rowIndex];
 
-                    if (Convert.ToBoolean(row.Cells[IDX_SEL_CHK].Value)) continue;
+                    if (!Convert.ToBoolean(row.Cells[IDX_SEL_CHK].Value)) continue;
 
-                    DataGridViewRowHeaderCell rhCell = grdFiles.Rows[rowIndex].HeaderCell;
-                    for (int colIndex = 0; colIndex < row.Cells.Count; colIndex++)
+                    for (int colIndex = IDX_SEL_CHK; colIndex < IDX_REF_BTN; colIndex++)
                     {
                         DataGridViewCell cell = row.Cells[colIndex];
-                        if (cell.Value.Equals(cell.Tag))    // セル内容が表示時と同一の場合
+                        if (!cell.Value.Equals(cell.Tag))    // セル内容が表示時と異なる場合
                         {
+                            // 変更前の内容を復元
+                            cell.Value = cell.Tag;
+
                             // 変更カウントをデクリメント、変更判別色クリア
                             if (cell.Style.BackColor == Color.Yellow) --_changeCnt;
                             cell.Style.BackColor =
                                     grdFiles.Columns[colIndex].DefaultCellStyle.BackColor;
                         }
-
-                        // 行ヘッダの変更スタイルをクリア
-                        rhCell.Style.Font = new Font(rhCell.Style.Font, FontStyle.Regular);
                     }
+
+                    // 行ヘッダの変更スタイルをクリア
+                    DataGridViewRowHeaderCell rhCell = grdFiles.Rows[rowIndex].HeaderCell;
+                    rhCell.Style.Font = new Font(rhCell.Style.Font, FontStyle.Regular);
                 }
             }
 
-            _changeCnt = 0;
-            btnApply.Enabled = btnRevertSelection.Enabled = btnRevertAll.Enabled = false;
+            btnApply.Enabled = btnRevertSelection.Enabled = btnRevertAll.Enabled = _changeCnt > 0;
         }
+
         #endregion
 
         #region ShowHistoryByStatusBar - 変更前後の内容をステータスバーに表示
+
         /// <summary>
         /// 指定セルの変更前後の内容をステータスバーに表示します。
         /// </summary>
-        /// <param orderName="cell">変更内容を表示するセル</param>
+        /// <param name="cell">変更内容を表示するセル</param>
         private void ShowHistoryByStatusBar(DataGridViewCell cell)
         {
-            StoredValues storedVal = (StoredValues)cell.Tag;
-            lblStatus.Text = storedVal.LastApplied;
+            lblStatus.Text = cell.Tag.ToString();
 
             if (cell.Style.BackColor == Color.Yellow)
                 lblStatus.Text += " -> " + cell.Value.ToString();
         }
+
         #endregion
 
         #region SelectDirectoryForChange - 変更後ディレクトリ選択
@@ -818,7 +808,7 @@ namespace SO.PictManager.Forms
                 }
 
                 DataGridViewRowHeaderCell rhCell = grdFiles.Rows[e.RowIndex].HeaderCell;
-                if (cell.Value.Equals(((StoredValues)cell.Tag).Original))    // セル内容が表示時と同一の場合
+                if (cell.Value.Equals(cell.Tag))    // セル内容が表示時と同一の場合
                 {
                     // 変更カウントをデクリメント、変更判別色クリア
                     if (cell.Style.BackColor == Color.Yellow)
