@@ -59,7 +59,7 @@
             this.txtTargetDirectory.Location = new System.Drawing.Point(19, 20);
             this.txtTargetDirectory.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtTargetDirectory.Name = "txtTargetDirectory";
-            this.txtTargetDirectory.Size = new System.Drawing.Size(349, 23);
+            this.txtTargetDirectory.Size = new System.Drawing.Size(342, 23);
             this.txtTargetDirectory.TabIndex = 0;
             this.txtTargetDirectory.DragDrop += new System.Windows.Forms.DragEventHandler(this.txtTargetFolder_DragDrop);
             this.txtTargetDirectory.DragEnter += new System.Windows.Forms.DragEventHandler(this.txtTargetDirectory_DragEnter);
@@ -67,10 +67,10 @@
             // 
             // btnRef
             // 
-            this.btnRef.Location = new System.Drawing.Point(373, 20);
+            this.btnRef.Location = new System.Drawing.Point(367, 20);
             this.btnRef.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnRef.Name = "btnRef";
-            this.btnRef.Size = new System.Drawing.Size(23, 25);
+            this.btnRef.Size = new System.Drawing.Size(29, 25);
             this.btnRef.TabIndex = 1;
             this.btnRef.Text = "...";
             this.btnRef.UseVisualStyleBackColor = true;
@@ -178,13 +178,13 @@
             this.menuEndWatch,
             this.menuQuit});
             this.tasktrayMenu.Name = "tasktrayMenu";
-            this.tasktrayMenu.Size = new System.Drawing.Size(191, 70);
+            this.tasktrayMenu.Size = new System.Drawing.Size(221, 70);
             // 
             // menuOpenFolder
             // 
             this.menuOpenFolder.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.menuOpenFolder.Name = "menuOpenFolder";
-            this.menuOpenFolder.Size = new System.Drawing.Size(190, 22);
+            this.menuOpenFolder.Size = new System.Drawing.Size(220, 22);
             this.menuOpenFolder.Text = "監視対象のフォルダを開く";
             this.menuOpenFolder.Click += new System.EventHandler(this.menuOpenFolder_Click);
             // 
@@ -192,7 +192,7 @@
             // 
             this.menuEndWatch.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.menuEndWatch.Name = "menuEndWatch";
-            this.menuEndWatch.Size = new System.Drawing.Size(190, 22);
+            this.menuEndWatch.Size = new System.Drawing.Size(220, 22);
             this.menuEndWatch.Text = "監視終了";
             this.menuEndWatch.Click += new System.EventHandler(this.menuEndWatch_Click);
             // 
@@ -200,7 +200,7 @@
             // 
             this.menuQuit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.menuQuit.Name = "menuQuit";
-            this.menuQuit.Size = new System.Drawing.Size(190, 22);
+            this.menuQuit.Size = new System.Drawing.Size(220, 22);
             this.menuQuit.Text = "アプリケーション終了";
             this.menuQuit.Click += new System.EventHandler(this.menuQuit_Click);
             // 
@@ -218,6 +218,7 @@
             // 
             // cmbCategories
             // 
+            this.cmbCategories.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbCategories.FormattingEnabled = true;
             this.cmbCategories.Location = new System.Drawing.Point(19, 20);
             this.cmbCategories.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);

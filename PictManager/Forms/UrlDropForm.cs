@@ -97,7 +97,7 @@ namespace SO.PictManager.Forms
                     } while (isRetry);
 
                     // カテゴリ登録
-                    var dto = new MstCategories();
+                    var dto = new MstCategory();
                     dto.CategoryName = dlg.InputString;
                     dto.InsertedDateTime = DateTime.Now;
 
@@ -155,17 +155,15 @@ namespace SO.PictManager.Forms
 
             using (var entity = new PictManagerEntities())
             {
-                var dto = new TblImages();
+                var dto = new TblImage();
                 dto.ImageData = DownloadManager.DownloadData(uri);
-                dto.CategoryId = (cmbCategory.SelectedItem as MstCategories).CategoryId;
+                dto.CategoryId = (cmbCategory.SelectedItem as MstCategory).CategoryId;
                 dto.InsertedDateTime = DateTime.Now;
 
                 entity.AddToTblImages(dto);
                 entity.SaveChanges();
             }
         }
-
-
 
         #endregion
     }

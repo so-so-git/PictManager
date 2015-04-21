@@ -35,12 +35,18 @@
             this.chkIncludeSubDirectory = new System.Windows.Forms.CheckBox();
             this.btnRef = new System.Windows.Forms.Button();
             this.txtTargetPath = new System.Windows.Forms.TextBox();
-            this.cmbCategories = new System.Windows.Forms.ComboBox();
+            this.cmbImportCategory = new System.Windows.Forms.ComboBox();
             this.lblTargetDirectory = new System.Windows.Forms.Label();
             this.lblCategories = new System.Windows.Forms.Label();
             this.dlgImportFile = new System.Windows.Forms.OpenFileDialog();
             this.dlgImportDirectory = new System.Windows.Forms.FolderBrowserDialog();
+            this.grpCategories = new System.Windows.Forms.GroupBox();
+            this.txtEntryCategory = new System.Windows.Forms.TextBox();
+            this.btnEntryCategory = new System.Windows.Forms.Button();
+            this.cmbDeleteCategory = new System.Windows.Forms.ComboBox();
+            this.btnDeleteCategory = new System.Windows.Forms.Button();
             this.grpImport.SuspendLayout();
+            this.grpCategories.SuspendLayout();
             this.SuspendLayout();
             // 
             // grpImport
@@ -51,10 +57,10 @@
             this.grpImport.Controls.Add(this.chkIncludeSubDirectory);
             this.grpImport.Controls.Add(this.btnRef);
             this.grpImport.Controls.Add(this.txtTargetPath);
-            this.grpImport.Controls.Add(this.cmbCategories);
+            this.grpImport.Controls.Add(this.cmbImportCategory);
             this.grpImport.Controls.Add(this.lblTargetDirectory);
             this.grpImport.Controls.Add(this.lblCategories);
-            this.grpImport.Location = new System.Drawing.Point(15, 16);
+            this.grpImport.Location = new System.Drawing.Point(13, 110);
             this.grpImport.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.grpImport.Name = "grpImport";
             this.grpImport.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -114,10 +120,10 @@
             // 
             // btnRef
             // 
-            this.btnRef.Location = new System.Drawing.Point(419, 55);
+            this.btnRef.Location = new System.Drawing.Point(413, 55);
             this.btnRef.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnRef.Name = "btnRef";
-            this.btnRef.Size = new System.Drawing.Size(23, 25);
+            this.btnRef.Size = new System.Drawing.Size(29, 25);
             this.btnRef.TabIndex = 4;
             this.btnRef.Text = "...";
             this.btnRef.UseVisualStyleBackColor = true;
@@ -129,17 +135,18 @@
             this.txtTargetPath.Location = new System.Drawing.Point(66, 55);
             this.txtTargetPath.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtTargetPath.Name = "txtTargetPath";
-            this.txtTargetPath.Size = new System.Drawing.Size(345, 23);
+            this.txtTargetPath.Size = new System.Drawing.Size(341, 23);
             this.txtTargetPath.TabIndex = 3;
             // 
-            // cmbCategories
+            // cmbImportCategory
             // 
-            this.cmbCategories.FormattingEnabled = true;
-            this.cmbCategories.Location = new System.Drawing.Point(66, 86);
-            this.cmbCategories.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.cmbCategories.Name = "cmbCategories";
-            this.cmbCategories.Size = new System.Drawing.Size(230, 23);
-            this.cmbCategories.TabIndex = 6;
+            this.cmbImportCategory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbImportCategory.FormattingEnabled = true;
+            this.cmbImportCategory.Location = new System.Drawing.Point(66, 86);
+            this.cmbImportCategory.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.cmbImportCategory.Name = "cmbImportCategory";
+            this.cmbImportCategory.Size = new System.Drawing.Size(230, 23);
+            this.cmbImportCategory.TabIndex = 6;
             // 
             // lblTargetDirectory
             // 
@@ -169,11 +176,66 @@
             this.dlgImportDirectory.Description = "インポート対象ディレクトリを選択して下さい。";
             this.dlgImportDirectory.ShowNewFolderButton = false;
             // 
+            // grpCategories
+            // 
+            this.grpCategories.Controls.Add(this.txtEntryCategory);
+            this.grpCategories.Controls.Add(this.btnDeleteCategory);
+            this.grpCategories.Controls.Add(this.btnEntryCategory);
+            this.grpCategories.Controls.Add(this.cmbDeleteCategory);
+            this.grpCategories.Location = new System.Drawing.Point(13, 13);
+            this.grpCategories.Name = "grpCategories";
+            this.grpCategories.Size = new System.Drawing.Size(307, 90);
+            this.grpCategories.TabIndex = 1;
+            this.grpCategories.TabStop = false;
+            this.grpCategories.Text = "カテゴリー管理";
+            // 
+            // txtEntryCategory
+            // 
+            this.txtEntryCategory.AllowDrop = true;
+            this.txtEntryCategory.Location = new System.Drawing.Point(9, 23);
+            this.txtEntryCategory.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.txtEntryCategory.Name = "txtEntryCategory";
+            this.txtEntryCategory.Size = new System.Drawing.Size(230, 23);
+            this.txtEntryCategory.TabIndex = 3;
+            // 
+            // btnEntryCategory
+            // 
+            this.btnEntryCategory.Location = new System.Drawing.Point(245, 21);
+            this.btnEntryCategory.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnEntryCategory.Name = "btnEntryCategory";
+            this.btnEntryCategory.Size = new System.Drawing.Size(50, 25);
+            this.btnEntryCategory.TabIndex = 4;
+            this.btnEntryCategory.Text = "登録";
+            this.btnEntryCategory.UseVisualStyleBackColor = true;
+            this.btnEntryCategory.Click += new System.EventHandler(this.btnEntryCategory_Click);
+            // 
+            // cmbDeleteCategory
+            // 
+            this.cmbDeleteCategory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbDeleteCategory.FormattingEnabled = true;
+            this.cmbDeleteCategory.Location = new System.Drawing.Point(9, 54);
+            this.cmbDeleteCategory.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.cmbDeleteCategory.Name = "cmbDeleteCategory";
+            this.cmbDeleteCategory.Size = new System.Drawing.Size(230, 23);
+            this.cmbDeleteCategory.TabIndex = 6;
+            // 
+            // btnDeleteCategory
+            // 
+            this.btnDeleteCategory.Location = new System.Drawing.Point(245, 52);
+            this.btnDeleteCategory.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnDeleteCategory.Name = "btnDeleteCategory";
+            this.btnDeleteCategory.Size = new System.Drawing.Size(50, 25);
+            this.btnDeleteCategory.TabIndex = 4;
+            this.btnDeleteCategory.Text = "削除";
+            this.btnDeleteCategory.UseVisualStyleBackColor = true;
+            this.btnDeleteCategory.Click += new System.EventHandler(this.btnDeleteCategory_Click);
+            // 
             // MaintenanceForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(478, 190);
+            this.ClientSize = new System.Drawing.Size(471, 278);
+            this.Controls.Add(this.grpCategories);
             this.Controls.Add(this.grpImport);
             this.Font = new System.Drawing.Font("Meiryo UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -181,6 +243,8 @@
             this.Text = "PictManager - データベースメンテナンス";
             this.grpImport.ResumeLayout(false);
             this.grpImport.PerformLayout();
+            this.grpCategories.ResumeLayout(false);
+            this.grpCategories.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -188,7 +252,7 @@
         #endregion
 
         private System.Windows.Forms.GroupBox grpImport;
-        private System.Windows.Forms.ComboBox cmbCategories;
+        private System.Windows.Forms.ComboBox cmbImportCategory;
         private System.Windows.Forms.Label lblCategories;
         private System.Windows.Forms.CheckBox chkIncludeSubDirectory;
         private System.Windows.Forms.Button btnRef;
@@ -199,5 +263,10 @@
         private System.Windows.Forms.RadioButton rdoImportFile;
         private System.Windows.Forms.OpenFileDialog dlgImportFile;
         private System.Windows.Forms.FolderBrowserDialog dlgImportDirectory;
+        private System.Windows.Forms.GroupBox grpCategories;
+        private System.Windows.Forms.TextBox txtEntryCategory;
+        private System.Windows.Forms.Button btnEntryCategory;
+        private System.Windows.Forms.Button btnDeleteCategory;
+        private System.Windows.Forms.ComboBox cmbDeleteCategory;
     }
 }

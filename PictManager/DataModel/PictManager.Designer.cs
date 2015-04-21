@@ -11,7 +11,7 @@
 [assembly: global::System.Data.Objects.DataClasses.EdmSchemaAttribute()]
 
 // 元のファイル名:
-// 生成日: 3/3/2015 9:00:01 AM
+// 生成日: 4/21/2015 1:31:29 PM
 namespace SO.PictManager.DataModel
 {
     
@@ -49,131 +49,131 @@ namespace SO.PictManager.DataModel
         /// スキーマの MstCategories にはコメントがありません。
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
-        public global::System.Data.Objects.ObjectQuery<MstCategories> MstCategories
+        public global::System.Data.Objects.ObjectQuery<MstCategory> MstCategories
         {
             get
             {
                 if ((this._MstCategories == null))
                 {
-                    this._MstCategories = base.CreateQuery<MstCategories>("[MstCategories]");
+                    this._MstCategories = base.CreateQuery<MstCategory>("[MstCategories]");
                 }
                 return this._MstCategories;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
-        private global::System.Data.Objects.ObjectQuery<MstCategories> _MstCategories;
+        private global::System.Data.Objects.ObjectQuery<MstCategory> _MstCategories;
         /// <summary>
         /// スキーマの MstTags にはコメントがありません。
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
-        public global::System.Data.Objects.ObjectQuery<MstTags> MstTags
+        public global::System.Data.Objects.ObjectQuery<MstTag> MstTags
         {
             get
             {
                 if ((this._MstTags == null))
                 {
-                    this._MstTags = base.CreateQuery<MstTags>("[MstTags]");
+                    this._MstTags = base.CreateQuery<MstTag>("[MstTags]");
                 }
                 return this._MstTags;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
-        private global::System.Data.Objects.ObjectQuery<MstTags> _MstTags;
+        private global::System.Data.Objects.ObjectQuery<MstTag> _MstTags;
         /// <summary>
         /// スキーマの TblImages にはコメントがありません。
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
-        public global::System.Data.Objects.ObjectQuery<TblImages> TblImages
+        public global::System.Data.Objects.ObjectQuery<TblImage> TblImages
         {
             get
             {
                 if ((this._TblImages == null))
                 {
-                    this._TblImages = base.CreateQuery<TblImages>("[TblImages]");
+                    this._TblImages = base.CreateQuery<TblImage>("[TblImages]");
                 }
                 return this._TblImages;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
-        private global::System.Data.Objects.ObjectQuery<TblImages> _TblImages;
+        private global::System.Data.Objects.ObjectQuery<TblImage> _TblImages;
         /// <summary>
         /// スキーマの TblSets にはコメントがありません。
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
-        public global::System.Data.Objects.ObjectQuery<TblSets> TblSets
+        public global::System.Data.Objects.ObjectQuery<TblSet> TblSets
         {
             get
             {
                 if ((this._TblSets == null))
                 {
-                    this._TblSets = base.CreateQuery<TblSets>("[TblSets]");
+                    this._TblSets = base.CreateQuery<TblSet>("[TblSets]");
                 }
                 return this._TblSets;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
-        private global::System.Data.Objects.ObjectQuery<TblSets> _TblSets;
+        private global::System.Data.Objects.ObjectQuery<TblSet> _TblSets;
         /// <summary>
         /// スキーマの MstCategories にはコメントがありません。
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
-        public void AddToMstCategories(MstCategories mstCategories)
+        public void AddToMstCategories(MstCategory mstCategory)
         {
-            base.AddObject("MstCategories", mstCategories);
+            base.AddObject("MstCategories", mstCategory);
         }
         /// <summary>
         /// スキーマの MstTags にはコメントがありません。
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
-        public void AddToMstTags(MstTags mstTags)
+        public void AddToMstTags(MstTag mstTag)
         {
-            base.AddObject("MstTags", mstTags);
+            base.AddObject("MstTags", mstTag);
         }
         /// <summary>
         /// スキーマの TblImages にはコメントがありません。
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
-        public void AddToTblImages(TblImages tblImages)
+        public void AddToTblImages(TblImage tblImage)
         {
-            base.AddObject("TblImages", tblImages);
+            base.AddObject("TblImages", tblImage);
         }
         /// <summary>
         /// スキーマの TblSets にはコメントがありません。
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
-        public void AddToTblSets(TblSets tblSets)
+        public void AddToTblSets(TblSet tblSet)
         {
-            base.AddObject("TblSets", tblSets);
+            base.AddObject("TblSets", tblSet);
         }
     }
     /// <summary>
-    /// カテゴリマスタ
+    /// スキーマの SO.PictManager.DataModel.MstCategory にはコメントがありません。
     /// </summary>
     /// <KeyProperties>
     /// CategoryId
     /// </KeyProperties>
-    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName="PictManagerModel", Name="MstCategories")]
+    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName="SO.PictManager.DataModel", Name="MstCategory")]
     [global::System.Runtime.Serialization.DataContractAttribute(IsReference=true)]
     [global::System.Serializable()]
-    public partial class MstCategories : global::System.Data.Objects.DataClasses.EntityObject
+    public partial class MstCategory : global::System.Data.Objects.DataClasses.EntityObject
     {
         /// <summary>
-        /// 新しい MstCategories オブジェクトを作成します。
+        /// 新しい MstCategory オブジェクトを作成します。
         /// </summary>
         /// <param name="categoryId">CategoryId の初期値。</param>
         /// <param name="categoryName">CategoryName の初期値。</param>
         /// <param name="insertedDateTime">InsertedDateTime の初期値。</param>
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
-        public static MstCategories CreateMstCategories(int categoryId, string categoryName, global::System.DateTime insertedDateTime)
+        public static MstCategory CreateMstCategory(int categoryId, string categoryName, global::System.DateTime insertedDateTime)
         {
-            MstCategories mstCategories = new MstCategories();
-            mstCategories.CategoryId = categoryId;
-            mstCategories.CategoryName = categoryName;
-            mstCategories.InsertedDateTime = insertedDateTime;
-            return mstCategories;
+            MstCategory mstCategory = new MstCategory();
+            mstCategory.CategoryId = categoryId;
+            mstCategory.CategoryName = categoryName;
+            mstCategory.InsertedDateTime = insertedDateTime;
+            return mstCategory;
         }
         /// <summary>
-        /// カテゴリID
+        /// スキーマのプロパティ CategoryId にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
@@ -200,7 +200,7 @@ namespace SO.PictManager.DataModel
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         partial void OnCategoryIdChanged();
         /// <summary>
-        /// カテゴリ名
+        /// スキーマのプロパティ CategoryName にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
@@ -227,7 +227,7 @@ namespace SO.PictManager.DataModel
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         partial void OnCategoryNameChanged();
         /// <summary>
-        /// 登録日時
+        /// スキーマのプロパティ InsertedDateTime にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
@@ -254,7 +254,7 @@ namespace SO.PictManager.DataModel
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         partial void OnInsertedDateTimeChanged();
         /// <summary>
-        /// 更新日時
+        /// スキーマのプロパティ UpdatedDateTime にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
@@ -282,33 +282,33 @@ namespace SO.PictManager.DataModel
         partial void OnUpdatedDateTimeChanged();
     }
     /// <summary>
-    /// タグマスタ
+    /// スキーマの SO.PictManager.DataModel.MstTag にはコメントがありません。
     /// </summary>
     /// <KeyProperties>
     /// TagId
     /// </KeyProperties>
-    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName="PictManagerModel", Name="MstTags")]
+    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName="SO.PictManager.DataModel", Name="MstTag")]
     [global::System.Runtime.Serialization.DataContractAttribute(IsReference=true)]
     [global::System.Serializable()]
-    public partial class MstTags : global::System.Data.Objects.DataClasses.EntityObject
+    public partial class MstTag : global::System.Data.Objects.DataClasses.EntityObject
     {
         /// <summary>
-        /// 新しい MstTags オブジェクトを作成します。
+        /// 新しい MstTag オブジェクトを作成します。
         /// </summary>
         /// <param name="tagId">TagId の初期値。</param>
         /// <param name="tagName">TagName の初期値。</param>
         /// <param name="insertedDateTime">InsertedDateTime の初期値。</param>
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
-        public static MstTags CreateMstTags(int tagId, string tagName, global::System.DateTime insertedDateTime)
+        public static MstTag CreateMstTag(int tagId, string tagName, global::System.DateTime insertedDateTime)
         {
-            MstTags mstTags = new MstTags();
-            mstTags.TagId = tagId;
-            mstTags.TagName = tagName;
-            mstTags.InsertedDateTime = insertedDateTime;
-            return mstTags;
+            MstTag mstTag = new MstTag();
+            mstTag.TagId = tagId;
+            mstTag.TagName = tagName;
+            mstTag.InsertedDateTime = insertedDateTime;
+            return mstTag;
         }
         /// <summary>
-        /// タグID
+        /// スキーマのプロパティ TagId にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
@@ -335,7 +335,7 @@ namespace SO.PictManager.DataModel
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         partial void OnTagIdChanged();
         /// <summary>
-        /// タグ名
+        /// スキーマのプロパティ TagName にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
@@ -362,7 +362,7 @@ namespace SO.PictManager.DataModel
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         partial void OnTagNameChanged();
         /// <summary>
-        /// 登録日時
+        /// スキーマのプロパティ InsertedDateTime にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
@@ -389,7 +389,7 @@ namespace SO.PictManager.DataModel
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         partial void OnInsertedDateTimeChanged();
         /// <summary>
-        /// 更新日時
+        /// スキーマのプロパティ UpdatedDateTime にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
@@ -417,35 +417,35 @@ namespace SO.PictManager.DataModel
         partial void OnUpdatedDateTimeChanged();
     }
     /// <summary>
-    /// 画像管理テーブル
+    /// スキーマの SO.PictManager.DataModel.TblImage にはコメントがありません。
     /// </summary>
     /// <KeyProperties>
     /// ImageId
     /// </KeyProperties>
-    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName="PictManagerModel", Name="TblImages")]
+    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName="SO.PictManager.DataModel", Name="TblImage")]
     [global::System.Runtime.Serialization.DataContractAttribute(IsReference=true)]
     [global::System.Serializable()]
-    public partial class TblImages : global::System.Data.Objects.DataClasses.EntityObject
+    public partial class TblImage : global::System.Data.Objects.DataClasses.EntityObject
     {
         /// <summary>
-        /// 新しい TblImages オブジェクトを作成します。
+        /// 新しい TblImage オブジェクトを作成します。
         /// </summary>
         /// <param name="imageId">ImageId の初期値。</param>
         /// <param name="imageData">ImageData の初期値。</param>
         /// <param name="categoryId">CategoryId の初期値。</param>
         /// <param name="insertedDateTime">InsertedDateTime の初期値。</param>
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
-        public static TblImages CreateTblImages(int imageId, byte[] imageData, int categoryId, global::System.DateTime insertedDateTime)
+        public static TblImage CreateTblImage(int imageId, byte[] imageData, int categoryId, global::System.DateTime insertedDateTime)
         {
-            TblImages tblImages = new TblImages();
-            tblImages.ImageId = imageId;
-            tblImages.ImageData = imageData;
-            tblImages.CategoryId = categoryId;
-            tblImages.InsertedDateTime = insertedDateTime;
-            return tblImages;
+            TblImage tblImage = new TblImage();
+            tblImage.ImageId = imageId;
+            tblImage.ImageData = imageData;
+            tblImage.CategoryId = categoryId;
+            tblImage.InsertedDateTime = insertedDateTime;
+            return tblImage;
         }
         /// <summary>
-        /// 画像ID
+        /// スキーマのプロパティ ImageId にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
@@ -472,7 +472,7 @@ namespace SO.PictManager.DataModel
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         partial void OnImageIdChanged();
         /// <summary>
-        /// 画像データ
+        /// スキーマのプロパティ ImageData にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
@@ -499,7 +499,7 @@ namespace SO.PictManager.DataModel
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         partial void OnImageDataChanged();
         /// <summary>
-        /// カテゴリID
+        /// スキーマのプロパティ CategoryId にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
@@ -526,7 +526,7 @@ namespace SO.PictManager.DataModel
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         partial void OnCategoryIdChanged();
         /// <summary>
-        /// タグID1
+        /// スキーマのプロパティ TagId1 にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
@@ -553,7 +553,7 @@ namespace SO.PictManager.DataModel
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         partial void OnTagId1Changed();
         /// <summary>
-        /// タグID2
+        /// スキーマのプロパティ TagId2 にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
@@ -580,7 +580,7 @@ namespace SO.PictManager.DataModel
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         partial void OnTagId2Changed();
         /// <summary>
-        /// タグID3
+        /// スキーマのプロパティ TagId3 にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
@@ -607,7 +607,7 @@ namespace SO.PictManager.DataModel
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         partial void OnTagId3Changed();
         /// <summary>
-        /// タグID4
+        /// スキーマのプロパティ TagId4 にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
@@ -634,7 +634,7 @@ namespace SO.PictManager.DataModel
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         partial void OnTagId4Changed();
         /// <summary>
-        /// タグID5
+        /// スキーマのプロパティ TagId5 にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
@@ -661,7 +661,7 @@ namespace SO.PictManager.DataModel
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         partial void OnTagId5Changed();
         /// <summary>
-        /// タグID6
+        /// スキーマのプロパティ TagId6 にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
@@ -688,7 +688,7 @@ namespace SO.PictManager.DataModel
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         partial void OnTagId6Changed();
         /// <summary>
-        /// タグID7
+        /// スキーマのプロパティ TagId7 にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
@@ -715,7 +715,7 @@ namespace SO.PictManager.DataModel
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         partial void OnTagId7Changed();
         /// <summary>
-        /// タグID8
+        /// スキーマのプロパティ TagId8 にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
@@ -742,7 +742,7 @@ namespace SO.PictManager.DataModel
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         partial void OnTagId8Changed();
         /// <summary>
-        /// タグID9
+        /// スキーマのプロパティ TagId9 にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
@@ -769,7 +769,7 @@ namespace SO.PictManager.DataModel
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         partial void OnTagId9Changed();
         /// <summary>
-        /// 画像セットID
+        /// スキーマのプロパティ SetId にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
@@ -796,7 +796,7 @@ namespace SO.PictManager.DataModel
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         partial void OnSetIdChanged();
         /// <summary>
-        /// 画像セット内並び順
+        /// スキーマのプロパティ SetOrder にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
@@ -823,7 +823,7 @@ namespace SO.PictManager.DataModel
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         partial void OnSetOrderChanged();
         /// <summary>
-        /// 説明
+        /// スキーマのプロパティ Description にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
@@ -850,7 +850,7 @@ namespace SO.PictManager.DataModel
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         partial void OnDescriptionChanged();
         /// <summary>
-        /// 登録日時
+        /// スキーマのプロパティ InsertedDateTime にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
@@ -877,7 +877,7 @@ namespace SO.PictManager.DataModel
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         partial void OnInsertedDateTimeChanged();
         /// <summary>
-        /// 登録日時
+        /// スキーマのプロパティ UpdatedDateTime にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
@@ -905,31 +905,31 @@ namespace SO.PictManager.DataModel
         partial void OnUpdatedDateTimeChanged();
     }
     /// <summary>
-    /// 画像セットテーブル
+    /// スキーマの SO.PictManager.DataModel.TblSet にはコメントがありません。
     /// </summary>
     /// <KeyProperties>
     /// SetId
     /// </KeyProperties>
-    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName="PictManagerModel", Name="TblSets")]
+    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName="SO.PictManager.DataModel", Name="TblSet")]
     [global::System.Runtime.Serialization.DataContractAttribute(IsReference=true)]
     [global::System.Serializable()]
-    public partial class TblSets : global::System.Data.Objects.DataClasses.EntityObject
+    public partial class TblSet : global::System.Data.Objects.DataClasses.EntityObject
     {
         /// <summary>
-        /// 新しい TblSets オブジェクトを作成します。
+        /// 新しい TblSet オブジェクトを作成します。
         /// </summary>
         /// <param name="setId">SetId の初期値。</param>
         /// <param name="insertedDateTime">InsertedDateTime の初期値。</param>
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
-        public static TblSets CreateTblSets(int setId, global::System.DateTime insertedDateTime)
+        public static TblSet CreateTblSet(int setId, global::System.DateTime insertedDateTime)
         {
-            TblSets tblSets = new TblSets();
-            tblSets.SetId = setId;
-            tblSets.InsertedDateTime = insertedDateTime;
-            return tblSets;
+            TblSet tblSet = new TblSet();
+            tblSet.SetId = setId;
+            tblSet.InsertedDateTime = insertedDateTime;
+            return tblSet;
         }
         /// <summary>
-        /// 画像セットID
+        /// スキーマのプロパティ SetId にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
@@ -956,7 +956,7 @@ namespace SO.PictManager.DataModel
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         partial void OnSetIdChanged();
         /// <summary>
-        /// 説明
+        /// スキーマのプロパティ Description にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
@@ -983,7 +983,7 @@ namespace SO.PictManager.DataModel
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         partial void OnDescriptionChanged();
         /// <summary>
-        /// 登録日時
+        /// スキーマのプロパティ InsertedDateTime にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
@@ -1010,7 +1010,7 @@ namespace SO.PictManager.DataModel
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         partial void OnInsertedDateTimeChanged();
         /// <summary>
-        /// 更新日時
+        /// スキーマのプロパティ UpdatedDateTime にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]

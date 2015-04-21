@@ -95,7 +95,7 @@ namespace SO.PictManager.Forms
                 // カテゴリ読込
                 using (var entity = new PictManagerEntities())
                 {
-                    cmbCategories.DataSource = entity.MstCategories.OrderBy(c => c.CategoryName);
+                    cmbCategories.DataSource = entity.MstCategories.OrderBy(c => c.CategoryName).ToList();
                     cmbCategories.DisplayMember = "CategoryName";
                 }
             }
@@ -193,6 +193,13 @@ namespace SO.PictManager.Forms
                 var mainteForm = new MaintenanceForm();
                 mainteForm.FormClosed += (sender2, e2) =>
                 {
+                    // カテゴリ読込
+                    using (var entity = new PictManagerEntities())
+                    {
+                        cmbCategories.DataSource = entity.MstCategories.OrderBy(c => c.CategoryName).ToList();
+                        cmbCategories.DisplayMember = "CategoryName";
+                    }
+
                     this.ShowInTaskbar = true;
                     this.WindowState = FormWindowState.Normal;
                     this.Activate();
@@ -316,7 +323,8 @@ namespace SO.PictManager.Forms
             try
             {
                 // 対象チェック、状態更新
-                if (!ValidateTargetDirectory()) return;
+                if (Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.File)
+                    if (!ValidateTargetDirectory()) return;
 
                 // 対象ディレクトリの内容を展開
                 bool includeSub = Utilities.Config.CommonInfo.IsIncludeSubDirectory;

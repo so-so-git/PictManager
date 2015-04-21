@@ -72,10 +72,14 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Setup|AnyCPU' ">
     <OutputPath>bin\Setup\</OutputPath>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>PictManager.exe.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="Microsoft.DirectX.DirectInput, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -220,6 +224,7 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>PictManager.Designer.cs</LastGenOutput>
     </EntityDeploy>
+    <None Include="PictManager.exe.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

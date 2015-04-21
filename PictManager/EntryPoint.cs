@@ -24,9 +24,6 @@ namespace SO.PictManager
     {
         #region クラス変数宣言・定義
 
-        /// <summary>一時ディレクトリパス</summary>
-        internal static readonly string _tmpDirPath;
-
         /// <summary>オプション：暗号化モード</summary>
         private const string PARAM_CRYPT_MODE = "-c";
 
@@ -42,8 +39,14 @@ namespace SO.PictManager
         /// <summary>オプション：指定単一画像表示</summary>
         private const string PARAM_VIEW_IMAGE = "-f";
 
+        /// <summary>一時ディレクトリパス</summary>
+        internal static readonly string _tmpDirPath;
+
         /// <summary>SQLServerサービス名</summary>
-        private const string SQL_SERVICE_NAME = "MSSQL$SQLEXPRESS";
+        private static readonly string _sqlServiceName;
+
+        /// <summary>終了時にSQLServerサービスを停止するかのフラグ</summary>
+        private static bool _isSqlServiceNonStop = false;
 
         #endregion
 
@@ -57,6 +60,9 @@ namespace SO.PictManager
             // 削除ファイル一時ディレクトリパス生成
             _tmpDirPath = Path.Combine(
                     Path.GetTempPath(), typeof(EntryPoint).Assembly.GetName().Name);
+
+            // SQLServerサービス名取得
+            _sqlServiceName = ConfigurationManager.AppSettings["SqlServiceName"];
 
             // メッセージ定義ファイル初期化
             MessageXml.MessageFilePath = ConfigurationManager.AppSettings["MessageFilePath"];
@@ -93,8 +99,6 @@ namespace SO.PictManager
             // デバッグモードでビルドされたモジュールの為、警告表示
             FormUtilities.ShowMessage("W026", "Debug");
 #endif
-
-#pragma warning disable 0162
 
             try
             {
@@ -139,8 +143,6 @@ namespace SO.PictManager
 
                 mutex.ReleaseMutex();
             }
-
-#pragma warning restore 0162
         }
 
         #endregion
@@ -237,11 +239,13 @@ namespace SO.PictManager
         /// </summary>
         private static void StartSQLServerService()
         {
-            var sc = new ServiceController(SQL_SERVICE_NAME);
+            var sc = new ServiceController(_sqlServiceName);
             if (sc.Status == ServiceControllerStatus.Stopped)
                 sc.Start();
             else if (sc.Status == ServiceControllerStatus.Paused)
                 sc.Continue();
+            else if (sc.Status == ServiceControllerStatus.Running)
+                _isSqlServiceNonStop = true;
         }
 
         #endregion
@@ -253,9 +257,12 @@ namespace SO.PictManager
         /// </summary>
         private static void StopSQLServerService()
         {
-            var sc = new ServiceController(SQL_SERVICE_NAME);
-            if (sc.Status == ServiceControllerStatus.Running)
-                sc.Stop();
+            if (!_isSqlServiceNonStop)
+            {
+                var sc = new ServiceController(_sqlServiceName);
+                if (sc.Status == ServiceControllerStatus.Running)
+                    sc.Stop();
+            }
         }
 
         #endregion

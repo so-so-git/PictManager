@@ -42,8 +42,8 @@
 	<msg id="I010" caption="ファイル表示順ソート実行中" buttons="OK" icon="Information">
 		ファイル表示順ソート中...
 	</msg>
-  <msg id="I011" caption="インポート完了" buttons="OK" icon="Information">
-    インポートが完了しました。
+  <msg id="I011" caption="処理完了" buttons="OK" icon="Information">
+    {0}が完了しました。
   </msg>
 
   <!-- コンフォームメッセージ -->
@@ -82,6 +82,9 @@
 	</msg>
   <msg id="Q011" caption="編集内容破棄確認" buttons="YesNo" icon="Question">
     全ての編集内容を破棄し、最後に適用した時点へ戻してよろしいですか？
+  </msg>
+  <msg id="Q012" caption="カテゴリー削除確認" buttons="YesNo" icon="Question">
+    カテゴリー[{0}]を削除してもよろしいですか？
   </msg>
 
   <!-- ワーニングメッセージ -->
@@ -195,7 +198,7 @@
 	<msg id="E008" caption="フォルダ監視エラー" buttons="OK" icon="Error">
 		フォルダ監視中に、ファイル "{0}" のリネームに失敗しました。
 	</msg>
-  <msg id="E009" caption="重複するカテゴリ名" buttons="OK" icon="Error">
-    入力されたカテゴリ名 [{0}] は既に存在します。
+  <msg id="E009" caption="重複するカテゴリー名" buttons="OK" icon="Error">
+    入力されたカテゴリー名 [{0}] は既に存在します。
   </msg>
 </root>

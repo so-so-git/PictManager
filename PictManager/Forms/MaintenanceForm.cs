@@ -35,8 +35,7 @@ namespace SO.PictManager.Forms
                 // カテゴリ読込
                 using (var entity = new PictManagerEntities())
                 {
-                    cmbCategories.DataSource = entity.MstCategories.OrderBy(c => c.CategoryName);
-                    cmbCategories.DisplayMember = "CategoryName";
+                    RefreshCategoriesComboBox(entity);
                 }
 
                 // 対象ファイルフィルタ作成
@@ -61,6 +60,39 @@ namespace SO.PictManager.Forms
 
         #endregion
 
+        #region RefreshCategoriesComboBox - カテゴリー表示系コンボボックス内容更新
+
+        /// <summary>
+        /// カテゴリー表示系のコンボボックスの内容を最新の状態に更新します。
+        /// </summary>
+        /// <param name="entity">エンティティオブジェクト</param>
+        private void RefreshCategoriesComboBox(PictManagerEntities entity)
+        {
+            var categories = entity.MstCategories.OrderBy(c => c.CategoryName).ToList();
+
+            cmbDeleteCategory.DataSource = categories;
+            cmbDeleteCategory.DisplayMember = "CategoryName";
+
+            cmbImportCategory.DataSource = categories;
+            cmbImportCategory.DisplayMember = "CategoryName";
+
+            if (categories.Any())
+            {
+                cmbDeleteCategory.SelectedIndex = 0;
+                cmbImportCategory.SelectedIndex = 0;
+
+                btnDeleteCategory.Enabled = true;
+                btnImport.Enabled = true;
+            }
+            else
+            {
+                btnDeleteCategory.Enabled = false;
+                btnImport.Enabled = false;
+            }
+        }
+
+        #endregion
+
         #region ImportFileToDatabase - ファイルをデータベースにインポート
 
         /// <summary>
@@ -70,25 +102,127 @@ namespace SO.PictManager.Forms
         /// <param name="filePath">インポートするファイルのパス</param>
         private void ImportFileToDatabase(string filePath)
         {
+            var dto = new TblImage();
+
+            // 画像データ取得
+            using (var img = Image.FromFile(filePath))
+            {
+                dto.ImageData = new ImageConverter().ConvertTo(img, typeof(byte[])) as byte[];
+            }
+
+            // その他のカラム
+            dto.CategoryId = (cmbImportCategory.SelectedValue as MstCategory).CategoryId;
+
+            DateTime now = DateTime.Now;
+            dto.InsertedDateTime = now;
+            dto.UpdatedDateTime = now;
+
             using (var entity = new PictManagerEntities())
             {
-                var dto = new TblImages();
-
-                // 画像データ取得
-                using (var img = Image.FromFile(filePath))
-                {
-                    dto.ImageData = new ImageConverter().ConvertTo(img, typeof(byte[])) as byte[];
-                }
-
-                // その他のカラム
-                dto.CategoryId = (cmbCategories.SelectedValue as MstCategories).CategoryId;
-                DateTime now = DateTime.Now;
-                dto.InsertedDateTime = now;
-                dto.UpdatedDateTime = now;
-
                 entity.AddToTblImages(dto);
                 entity.SaveChanges();
             }
+        }
+
+        #endregion
+
+        #region btnEntryCategory_Click - カテゴリー登録ボタンクリック時
+
+        /// <summary>
+        /// カテゴリー登録ボタンがクリックされた際に実行される処理です。
+        /// テキストボックスに入力されたカテゴリーをデータベースに登録します。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void btnEntryCategory_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // カテゴリー名入力チェック
+                string categoryName = txtEntryCategory.Text.Trim();
+                if (string.IsNullOrEmpty(categoryName))
+                {
+                    FormUtilities.ShowMessage("W000", "カテゴリー名");
+                    return;
+                }
+
+                using (var entity = new PictManagerEntities())
+                {
+                    // カテゴリー名重複チェック
+                    if (entity.MstCategories.Any(c => c.CategoryName == categoryName))
+                    {
+                        FormUtilities.ShowMessage("E009", categoryName);
+                        return;
+                    }
+
+                    // カテゴリー登録
+                    var dto = new MstCategory();
+                    dto.CategoryName = categoryName;
+
+                    DateTime now = DateTime.Now;
+                    dto.InsertedDateTime = now;
+                    dto.UpdatedDateTime = now;
+
+                    entity.AddToMstCategories(dto);
+                    entity.SaveChanges();
+
+                    // コンボボックス内容を更新
+                    RefreshCategoriesComboBox(entity);
+                }
+
+                txtEntryCategory.Text = string.Empty;
+
+                FormUtilities.ShowMessage("I011", "カテゴリーの登録");
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
+        }
+
+        #endregion
+
+        #region btnDeleteCategory_Click - カテゴリー削除ボタンクリック時
+
+        /// <summary>
+        /// カテゴリー削除ボタンがクリックされた際に実行される処理です。
+        /// 選択されたカテゴリーをデータベースから削除します。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void btnDeleteCategory_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var category = cmbDeleteCategory.SelectedItem as MstCategory;
+
+                // 削除確認
+                if (FormUtilities.ShowMessage("Q012", category.CategoryName) == DialogResult.No)
+                {
+                    return;
+                }
+
+                using (var entity = new PictManagerEntities())
+                {
+                    // 選択されたカテゴリーを削除
+                    var deleteObj = (from c in entity.MstCategories
+                                     where c.CategoryId == category.CategoryId
+                                     select c).First();
+
+                    entity.DeleteObject(deleteObj);
+                    entity.SaveChanges();
+
+                    // コンボボックス内容を更新
+                    RefreshCategoriesComboBox(entity);
+                }
+
+                FormUtilities.ShowMessage("I011", "カテゴリーの削除");
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
+
         }
 
         #endregion
@@ -99,8 +233,8 @@ namespace SO.PictManager.Forms
         /// インポート対象ラジオボタンの状態が変更された際に実行される処理です。
         /// 選択されたインポート対象の種類に応じてフォームの状態を切り替えます。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void rdoImportKinds_CheckedChanged(object sender, EventArgs e)
         {
             try
@@ -122,8 +256,8 @@ namespace SO.PictManager.Forms
         /// インポート対象がディレクトリの場合はディレクトリ選択ダイアログを、
         /// インポート対象がファイルの場合はファイル選択ダイアログを表示します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void btnRef_Click(object sender, EventArgs e)
         {
             try
@@ -161,8 +295,8 @@ namespace SO.PictManager.Forms
         /// インポートボタンがクリックされた際に実行される処理です。
         /// 指定された対象をデータベースにインポートします。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void btnImport_Click(object sender, EventArgs e)
         {
             try
@@ -224,7 +358,7 @@ namespace SO.PictManager.Forms
                         }
                     }
 
-                    FormUtilities.ShowMessage("I011");
+                    FormUtilities.ShowMessage("I011", "インポート");
                 }
                 finally
                 {
