@@ -32,10 +32,15 @@ namespace SO.PictManager.Forms.Database
 
             if (Utilities.Config.CommonInfo.TargetExtensions.Any())
             {
-                // カテゴリ読込
                 using (var entity = new PictManagerEntities())
                 {
+                    // カテゴリ読込
                     RefreshCategoriesComboBox(entity);
+
+                    // 物理削除済み画像数取得
+                    var deletedCount = entity.TblImages.Where(i => i.DeleteFlag).Count();
+                    lblDeletedCount.Text = deletedCount.ToString("#,0");
+                    btnApplyDelete.Enabled = deletedCount > 0;
                 }
 
                 // 対象ファイルフィルタ作成
@@ -384,6 +389,50 @@ namespace SO.PictManager.Forms.Database
                 {
                     Cursor = Cursors.Default;
                 }
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
+        }
+
+        #endregion
+
+        #region btnApplyDelete_Click - 完全に削除ボタンクリック
+
+        /// <summary>
+        /// 完全に削除ボタンがクリックされた際に実行される処理です。
+        /// 論理削除済みの画像データを物理削除します。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void btnApplyDelete_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // 削除確認
+                if (FormUtilities.ShowMessage("Q014") == DialogResult.No)
+                {
+                    return;
+                }
+
+                // 物理削除実行
+                using (var entity = new PictManagerEntities())
+                {
+                    var deletedImages = entity.TblImages.Where(i => i.DeleteFlag);
+
+                    foreach (var img in deletedImages)
+                    {
+                        entity.TblImages.Remove(img);
+                    }
+
+                    entity.SaveChanges();
+                }
+
+                lblDeletedCount.Text = "0";
+                btnApplyDelete.Enabled = false;
+
+                FormUtilities.ShowMessage("I011", "削除画像の完全消去");
             }
             catch (Exception ex)
             {

@@ -89,6 +89,9 @@
   <msg id="Q013" caption="カテゴリー削除確認" buttons="YesNo" icon="Question">
     カテゴリー[{0}]に属している画像が存在します。\nカテゴリーを削除してもよろしいですか？\n(属していた画像は未分類カテゴリーになります)
   </msg>
+  <msg id="Q014" caption="画像完全消去確認" buttons="YesNo" icon="Question">
+    仮削除の状態の画像データを完全に消去してよろしいですか？
+  </msg>
 
   <!-- ワーニングメッセージ -->
 	<msg id="W000" caption="未入力エラー" buttons="OK" icon="Warning">

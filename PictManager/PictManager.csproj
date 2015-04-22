@@ -77,8 +77,9 @@
     <OutputPath>bin\Setup\</OutputPath>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup>
-    <ApplicationManifest>PictManager.exe.manifest</ApplicationManifest>
+    <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework">
@@ -222,7 +223,9 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FileSystem\FileSlideForm.cs" />
+    <Compile Include="Forms\FileSystem\FileSlideForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\FileSystem\FileSlideForm.Designer.cs">
       <DependentUpon>FileSlideForm.cs</DependentUpon>
     </Compile>
@@ -255,7 +258,6 @@
     </None>
     <None Include="ClassDiagram.cd" />
     <None Include="packages.config" />
-    <None Include="PictManager.exe.manifest" />
     <EntityDeploy Include="DataModel\PictManagerEntity.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>PictManagerEntity.Designer.cs</LastGenOutput>

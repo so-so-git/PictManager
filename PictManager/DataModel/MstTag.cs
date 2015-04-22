@@ -17,6 +17,6 @@ namespace SO.PictManager.DataModel
         public int TagId { get; set; }
         public string TagName { get; set; }
         public System.DateTime InsertedDateTime { get; set; }
-        public Nullable<System.DateTime> UpdatedDateTime { get; set; }
+        public System.DateTime UpdatedDateTime { get; set; }
     }
 }

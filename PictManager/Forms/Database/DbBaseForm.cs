@@ -181,49 +181,34 @@ namespace SO.PictManager.Forms.Database
 
         #endregion
 
-        #region DeleteFile - 指定ファイル削除
+        #region DeleteImage - 指定画像データ論理削除
 
         /// <summary>
-        /// 指定したパスに存在するファイルを削除ディレクトリに移動します。
+        /// 指定された画像データを論理削除します。
         /// </summary>
-        /// <param orderName="path">削除するファイルのパス</param>
+        /// <param orderName="imageId">削除する画像データのID</param>
         /// <returns>正常終了時:true、異常終了時:false</returns>
-        protected bool DeleteFile(string path)
+        protected bool DeleteImage(int imageId)
         {
             try
             {
-                // 一時退避ディレクトリが未作成の場合は作成
-                string storeDir = Path.Combine(EntryPoint._tmpDirPath, STORE_DIR_NAME);
-                if (!Directory.Exists(storeDir))
-                    Directory.CreateDirectory(storeDir);
-
-                // ファイルの読み取り専用属性を解除
-                var info = new FileInfo(path);
-                info.Attributes = info.Attributes & ~FileAttributes.ReadOnly;
-
-                // 既に同名ファイルが存在する場合は前にアンダーバーを追加
-                string movePath = Path.Combine(storeDir, Path.GetFileName(path));
-                while (File.Exists(movePath))
+                // 指定されたIDの画像データを論理削除
+                using (var entity = new PictManagerEntities())
                 {
-                    movePath = Path.Combine(storeDir, Path.GetFileName(movePath).Insert(0, "_"));
-                }
+                    var image = entity.TblImages.Where(i => i.ImageId == imageId).First();
+                    image.DeleteFlag = true;
+                    image.UpdatedDateTime = DateTime.Now;
 
-                // 対象ファイルを一時退避ディレクトリへ移動
-                File.Move(path, movePath);
-
-                // 削除済ファイルリストに追記
-                string delListPath = Path.Combine(storeDir, DEL_LIST_NAME);
-                using (var sw = new StreamWriter(delListPath, true))
-                {
-                    sw.WriteLine(Path.GetFileName(movePath) + DEL_LIST_SEPARATOR + path);
+                    entity.SaveChanges();
                 }
 
                 // ログ出力
-                Utilities.Logger.WriteLog(GetType().FullName, MethodBase.GetCurrentMethod().Name, "[DELETE]" + path);
+                Utilities.Logger.WriteLog(GetType().FullName, MethodBase.GetCurrentMethod().Name,
+                    "[LogicalDelete] ImageId: " + imageId.ToString());
             }
             catch (Exception ex)
             {
-                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod(), "削除ファイル：" + path);
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod(), "ImageId: " + imageId.ToString());
                 return false;
             }
 

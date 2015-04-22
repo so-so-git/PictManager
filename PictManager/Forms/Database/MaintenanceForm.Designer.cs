@@ -46,8 +46,13 @@
             this.btnEntryCategory = new System.Windows.Forms.Button();
             this.cmbDeleteCategory = new System.Windows.Forms.ComboBox();
             this.btnClose = new System.Windows.Forms.Button();
+            this.grpDeletedImages = new System.Windows.Forms.GroupBox();
+            this.lblDeletedCount = new System.Windows.Forms.Label();
+            this.btnApplyDelete = new System.Windows.Forms.Button();
+            this.lblDeletedCountHeader = new System.Windows.Forms.Label();
             this.grpImport.SuspendLayout();
             this.grpCategories.SuspendLayout();
+            this.grpDeletedImages.SuspendLayout();
             this.SuspendLayout();
             // 
             // grpImport
@@ -234,20 +239,62 @@
             // btnClose
             // 
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClose.Location = new System.Drawing.Point(368, 278);
+            this.btnClose.Location = new System.Drawing.Point(368, 300);
             this.btnClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(87, 29);
-            this.btnClose.TabIndex = 9;
+            this.btnClose.TabIndex = 3;
             this.btnClose.Text = "閉じる";
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            // 
+            // grpDeletedImages
+            // 
+            this.grpDeletedImages.Controls.Add(this.lblDeletedCount);
+            this.grpDeletedImages.Controls.Add(this.btnApplyDelete);
+            this.grpDeletedImages.Controls.Add(this.lblDeletedCountHeader);
+            this.grpDeletedImages.Location = new System.Drawing.Point(13, 276);
+            this.grpDeletedImages.Name = "grpDeletedImages";
+            this.grpDeletedImages.Size = new System.Drawing.Size(307, 55);
+            this.grpDeletedImages.TabIndex = 2;
+            this.grpDeletedImages.TabStop = false;
+            this.grpDeletedImages.Text = "削除済み画像";
+            // 
+            // lblDeletedCount
+            // 
+            this.lblDeletedCount.AutoSize = true;
+            this.lblDeletedCount.Location = new System.Drawing.Point(92, 23);
+            this.lblDeletedCount.Name = "lblDeletedCount";
+            this.lblDeletedCount.Size = new System.Drawing.Size(53, 15);
+            this.lblDeletedCount.TabIndex = 1;
+            this.lblDeletedCount.Text = "999,999";
+            // 
+            // btnApplyDelete
+            // 
+            this.btnApplyDelete.Location = new System.Drawing.Point(215, 18);
+            this.btnApplyDelete.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnApplyDelete.Name = "btnApplyDelete";
+            this.btnApplyDelete.Size = new System.Drawing.Size(80, 25);
+            this.btnApplyDelete.TabIndex = 2;
+            this.btnApplyDelete.Text = "完全に削除";
+            this.btnApplyDelete.UseVisualStyleBackColor = true;
+            this.btnApplyDelete.Click += new System.EventHandler(this.btnApplyDelete_Click);
+            // 
+            // lblDeletedCountHeader
+            // 
+            this.lblDeletedCountHeader.AutoSize = true;
+            this.lblDeletedCountHeader.Location = new System.Drawing.Point(7, 23);
+            this.lblDeletedCountHeader.Name = "lblDeletedCountHeader";
+            this.lblDeletedCountHeader.Size = new System.Drawing.Size(79, 15);
+            this.lblDeletedCountHeader.TabIndex = 0;
+            this.lblDeletedCountHeader.Text = "削除画像数：";
             // 
             // MaintenanceForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(471, 320);
+            this.ClientSize = new System.Drawing.Size(471, 342);
+            this.Controls.Add(this.grpDeletedImages);
             this.Controls.Add(this.grpCategories);
             this.Controls.Add(this.grpImport);
             this.Controls.Add(this.btnClose);
@@ -259,6 +306,8 @@
             this.grpImport.PerformLayout();
             this.grpCategories.ResumeLayout(false);
             this.grpCategories.PerformLayout();
+            this.grpDeletedImages.ResumeLayout(false);
+            this.grpDeletedImages.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -283,5 +332,9 @@
         private System.Windows.Forms.Button btnDeleteCategory;
         private System.Windows.Forms.ComboBox cmbDeleteCategory;
         private System.Windows.Forms.Button btnClose;
+        private System.Windows.Forms.GroupBox grpDeletedImages;
+        private System.Windows.Forms.Label lblDeletedCount;
+        private System.Windows.Forms.Button btnApplyDelete;
+        private System.Windows.Forms.Label lblDeletedCountHeader;
     }
 }

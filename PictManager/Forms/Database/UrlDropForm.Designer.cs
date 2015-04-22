@@ -51,7 +51,7 @@
             this.btnAddCategory.Name = "btnAddCategory";
             this.btnAddCategory.Size = new System.Drawing.Size(89, 29);
             this.btnAddCategory.TabIndex = 1;
-            this.btnAddCategory.Text = "カテゴリ追加";
+            this.btnAddCategory.Text = "カテゴリー追加";
             this.btnAddCategory.UseVisualStyleBackColor = true;
             this.btnAddCategory.Click += new System.EventHandler(this.btnAddCategory_Click);
             // 

@@ -30,6 +30,7 @@ namespace SO.PictManager.DataModel
         public Nullable<int> SetOrder { get; set; }
         public string Description { get; set; }
         public System.DateTime InsertedDateTime { get; set; }
-        public Nullable<System.DateTime> UpdatedDateTime { get; set; }
+        public System.DateTime UpdatedDateTime { get; set; }
+        public bool DeleteFlag { get; set; }
     }
 }

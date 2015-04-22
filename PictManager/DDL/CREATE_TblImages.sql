@@ -30,8 +30,9 @@ CREATE TABLE [dbo].[TblImages] (
   [SetId]             INT                 NULL,
   [SetOrder]          INT                 NULL,
   [Description]       VARCHAR(256)        NULL,
+  [DeleteFlag]        BIT                 NOT NULL DEFAULT 0,
   [InsertedDateTime]  DATETIME            NOT NULL,
-  [UpdatedDateTime]   DATETIME            NULL           
+  [UpdatedDateTime]   DATETIME            NOT NULL           
   CONSTRAINT [PK_TblImages] PRIMARY KEY NONCLUSTERED 
   (
     [ImageId] ASC

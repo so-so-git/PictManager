@@ -203,13 +203,13 @@ namespace SO.PictManager.Forms
                     }
 
                     this.ShowInTaskbar = true;
-                    this.WindowState = FormWindowState.Normal;
+                    this.Show();
                     this.Activate();
                 };
 
                 // 自フォーム非表示
                 this.ShowInTaskbar = false;
-                this.WindowState = FormWindowState.Minimized;
+                this.Hide();
 
                 mainteForm.Show();
                 mainteForm.Activate();
@@ -294,13 +294,13 @@ namespace SO.PictManager.Forms
                 urlDropForm.FormClosed += (sender2, e2) =>
                 {
                     this.ShowInTaskbar = true;
-                    this.WindowState = FormWindowState.Normal;
+                    this.Show();
                     this.Activate();
                 };
 
                 // 自フォーム非表示
                 this.ShowInTaskbar = false;
-                this.WindowState = FormWindowState.Minimized;
+                this.Hide();
 
                 urlDropForm.Show();
             }
