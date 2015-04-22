@@ -18,12 +18,12 @@ using SO.PictManager.Forms.Info;
 using CursorFace = System.Windows.Forms.Cursor;
 using Config = System.Configuration.ConfigurationManager;
 
-namespace SO.PictManager.Forms
+namespace SO.PictManager.Forms.FileSystem
 {
     /// <summary>
     /// 基底フォームクラス
     /// </summary>
-    public partial class BaseForm : Form
+    public partial class FileBaseForm : Form
     {
         #region クラス定数
 
@@ -137,7 +137,7 @@ namespace SO.PictManager.Forms
         /// <summary>
         /// デフォルトのコンストラクタです。
         /// </summary>
-        protected BaseForm()
+        protected FileBaseForm()
         {
             // コンポーネント初期化
             InitializeComponent();
@@ -151,7 +151,7 @@ namespace SO.PictManager.Forms
         /// </summary>
         /// <param orderName="targetPath">対象ディレクトリパス</param>
         /// <param orderName="includeSubFlg">サブディレクトリ処理フラグ</param>
-        public BaseForm(string targetPath, bool includeSubFlg)
+        public FileBaseForm(string targetPath, bool includeSubFlg)
         {
             // コンポーネント初期化
             InitializeComponent();

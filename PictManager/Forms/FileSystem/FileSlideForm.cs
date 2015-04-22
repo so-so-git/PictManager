@@ -21,12 +21,12 @@ using SO.PictManager.Forms.Info;
 using CursorFace = System.Windows.Forms.Cursor;
 using Config = System.Configuration.ConfigurationManager;
 
-namespace SO.PictManager.Forms
+namespace SO.PictManager.Forms.FileSystem
 {
     /// <summary>
     /// スライドショー表示フォームクラス
     /// </summary>
-    public sealed partial class SlideForm : ViewImageForm
+    public sealed partial class FileSlideForm : FileViewImageForm
     {
         #region クラス定数
 
@@ -49,10 +49,10 @@ namespace SO.PictManager.Forms
         private int _slideInterval;
 
         /// <summary>類似画像表示用サムネイルフォーム</summary>
-        private ThumbnailForm _thumbnailForm;
+        private FileThumbnailForm _thumbnailForm;
 
         /// <summary>ブックマークフォーム</summary>
-        private BookmarkForm _bookmarkForm;
+        private FileBookmarkForm _bookmarkForm;
 
         /// <summary>操作用コントローラ</summary>
         private JoystickWrapper _pad;
@@ -66,7 +66,7 @@ namespace SO.PictManager.Forms
         /// </summary>
         /// <param orderName="targetPath">対象ディレクトリパス</param>
         /// <param orderName="includeSubFlg">サブディレクトリ以下を含むかを示すフラグ</param>
-        public SlideForm(string targetPath, bool includeSubFlg)
+        public FileSlideForm(string targetPath, bool includeSubFlg)
         {
             // コンポーネント初期化
             InitializeComponent();
@@ -504,7 +504,7 @@ namespace SO.PictManager.Forms
 
                 try
                 {
-                    _bookmarkForm = new BookmarkForm((FileSortOrder)cmbSort.SelectedValue);
+                    _bookmarkForm = new FileBookmarkForm((FileSortOrder)cmbSort.SelectedValue);
                     _bookmarkForm.BookmarkJump += (sender, e) => DisplayPictureByIndex(e.Bookmark.FileNo - 1);
                     _bookmarkForm.FormClosed += (sender, e) => _bookmarkForm = null;
 
@@ -1146,7 +1146,7 @@ namespace SO.PictManager.Forms
                     }
                     else
                     {
-                        _thumbnailForm = new ThumbnailForm(similarImages);
+                        _thumbnailForm = new FileThumbnailForm(similarImages);
                         _thumbnailForm.Text = string.Format("PictManager - 類似画像検索結果 [{0}]",
                                 FilePathes[CurrentIndex]);
                         _thumbnailForm.StatusBarText = string.Format("[{0}] の類似画像を表示中 - {1}件",

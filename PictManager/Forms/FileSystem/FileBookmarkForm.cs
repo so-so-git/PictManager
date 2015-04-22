@@ -14,12 +14,12 @@ using SO.PictManager.Forms.Info;
 
 using Config = System.Configuration.ConfigurationManager;
 
-namespace SO.PictManager.Forms
+namespace SO.PictManager.Forms.FileSystem
 {
     /// <summary>
     /// ブックマーク管理フォームクラス
     /// </summary>
-    public sealed partial class BookmarkForm : Form
+    public sealed partial class FileBookmarkForm : Form
     {
         #region メンバ変数
 
@@ -68,7 +68,7 @@ namespace SO.PictManager.Forms
         /// <summary>
         /// 唯一のコンストラクタです。
         /// </summary>
-        public BookmarkForm(FileSortOrder order)
+        public FileBookmarkForm(FileSortOrder order)
         {
             // コンポーネント初期化
             InitializeComponent();

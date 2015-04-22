@@ -16,12 +16,12 @@ using SO.PictManager.Common;
 
 using CursorFace = System.Windows.Forms.Cursor;
 
-namespace SO.PictManager.Forms
+namespace SO.PictManager.Forms.FileSystem
 {
     /// <summary>
     /// ファイル一覧表示フォームクラス
     /// </summary>
-    public partial class ListForm : BaseForm
+    public partial class FileListForm : FileBaseForm
     {
         #region クラス定数
 
@@ -56,7 +56,7 @@ namespace SO.PictManager.Forms
         /// </summary>
         /// <param orderName="targetPath">対象ディレクトリパス</param>
         /// <param orderName="includeSubFlg">処理対象にサブディレクトリ以下を含むかを示すフラグ</param>
-        public ListForm(string targetPath, bool includeSubFlg)
+        public FileListForm(string targetPath, bool includeSubFlg)
                 : base(targetPath, includeSubFlg)
         {
             try
@@ -565,7 +565,7 @@ namespace SO.PictManager.Forms
             }
             else
             {
-                var form = new ThumbnailForm(similarImages);
+                var form = new FileThumbnailForm(similarImages);
                 form.Text = string.Format("PictManager - 類似画像検索結果 [{0}]", path);
                 form.StatusBarText = string.Format("[{0}] の類似画像を表示中 - {1}件", path, similarImages.Count);
 
@@ -691,7 +691,7 @@ namespace SO.PictManager.Forms
                     && e.ColumnIndex != IDX_SIMILAR_BTN)
                 {
                     // イメージ閲覧
-                    new ViewImageForm(this, GetImagePath(e.RowIndex)).Show(this);
+                    new FileViewImageForm(this, GetImagePath(e.RowIndex)).Show(this);
                 }
             }
             catch (Exception ex)
@@ -1175,7 +1175,7 @@ namespace SO.PictManager.Forms
                             FormUtilities.ShowMessage("W006");
                         else
                             // イメージ閲覧
-                            new ViewImageForm(this, GetImagePath(rowIndex)).Show(this);
+                            new FileViewImageForm(this, GetImagePath(rowIndex)).Show(this);
                     }
                 }
             }

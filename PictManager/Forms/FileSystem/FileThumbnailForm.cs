@@ -17,12 +17,12 @@ using SO.PictManager.Components;
 
 using CursorFace = System.Windows.Forms.Cursor;
 
-namespace SO.PictManager.Forms
+namespace SO.PictManager.Forms.FileSystem
 {
     /// <summary>
     /// サムネイル表示フォームクラス
     /// </summary>
-    public sealed partial class ThumbnailForm : BaseForm
+    public sealed partial class FileThumbnailForm : FileBaseForm
     {
         #region クラス定数
 
@@ -68,7 +68,7 @@ namespace SO.PictManager.Forms
         /// </summary>
         /// <param orderName="targetPath">対象ディレクトリパス</param>
         /// <param orderName="includeSubFlg">サブディレクトリ以下を含むかを示すフラグ</param>
-        public ThumbnailForm(string targetPath, bool includeSubFlg)
+        public FileThumbnailForm(string targetPath, bool includeSubFlg)
                 : base(targetPath, includeSubFlg)
         {
             // コンポーネント初期化
@@ -87,7 +87,7 @@ namespace SO.PictManager.Forms
         /// 対象ファイルパスのリストを指定して表示する際に使用するコンストラクタです。
         /// </summary>
         /// <param orderName="pathList">対象ディレクトリパス</param>
-        public ThumbnailForm(List<string> pathList)
+        public FileThumbnailForm(List<string> pathList)
         {
             // コンポーネント初期化
             InitializeComponent();
@@ -612,7 +612,7 @@ namespace SO.PictManager.Forms
                     // 複数選択モード時、シングルクリックでボーダーが消える可能性が有るので再設定
                     clicked.BorderStyle = BorderStyle.FixedSingle;
 
-                new ViewImageForm(this, clicked.FilePath).ShowDialog(this);
+                new FileViewImageForm(this, clicked.FilePath).ShowDialog(this);
 
                 // 子フォーム側でファイルが削除された場合
                 if (!File.Exists(clicked.FilePath))

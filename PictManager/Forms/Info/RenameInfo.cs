@@ -2,7 +2,7 @@
 
 using SO.PictManager.Common;
 
-using EnumOrignalPosition = SO.PictManager.Forms.OriginalPosition;
+using EnumOrignalPosition = SO.PictManager.Forms.FileSystem.OriginalPosition;
 
 namespace SO.PictManager.Forms.Info
 {

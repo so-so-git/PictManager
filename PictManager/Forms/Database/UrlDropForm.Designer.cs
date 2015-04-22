@@ -1,4 +1,4 @@
-﻿namespace SO.PictManager.Forms
+﻿namespace SO.PictManager.Forms.Database
 {
     partial class UrlDropForm
     {

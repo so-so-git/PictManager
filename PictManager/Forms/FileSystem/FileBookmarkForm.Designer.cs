@@ -1,6 +1,6 @@
-﻿namespace SO.PictManager.Forms
+﻿namespace SO.PictManager.Forms.FileSystem
 {
-    partial class BookmarkForm
+    partial class FileBookmarkForm
     {
         /// <summary>
         /// Required designer variable.

@@ -18,12 +18,12 @@ using SO.PictManager.Forms.Info;
 
 using Config = System.Configuration.ConfigurationManager;
 
-namespace SO.PictManager.Forms
+namespace SO.PictManager.Forms.FileSystem
 {
     /// <summary>
     /// 単体画像表示フォームクラス
     /// </summary>
-    public partial class ViewImageForm : BaseForm
+    public partial class FileViewImageForm : FileBaseForm
     {
         #region クラス定数
 
@@ -57,7 +57,7 @@ namespace SO.PictManager.Forms
         /// デフォルトのコンストラクタです。
         /// クラス継承時にのみ利用可能です。
         /// </summary>
-        protected ViewImageForm()
+        protected FileViewImageForm()
         {
             // コンポーネント初期化
             InitializeComponent();
@@ -71,7 +71,7 @@ namespace SO.PictManager.Forms
         /// </summary>
         /// <param orderName="owner">親フォーム</param>
         /// <param orderName="newPath">表示対象ファイルの絶対パス</param>
-        public ViewImageForm(Form owner, string filePath)
+        public FileViewImageForm(Form owner, string filePath)
         {
             // コンポーネント初期化
             InitializeComponent();
@@ -93,7 +93,7 @@ namespace SO.PictManager.Forms
         /// </summary>
         /// <param name="owner">親フォーム</param>
         /// <param name="imageData">画像データ</param>
-        public ViewImageForm(Form owner, byte[] imageData)
+        public FileViewImageForm(Form owner, byte[] imageData)
         {
             // コンポーネント初期化
             InitializeComponent();

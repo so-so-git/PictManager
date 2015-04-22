@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 using SO.Library.Drawing;
 using SO.Library.Forms;
-using SO.PictManager.Forms;
+using SO.PictManager.Forms.FileSystem;
 
 namespace SO.PictManager.Common
 {
@@ -31,6 +31,7 @@ namespace SO.PictManager.Common
         #endregion
 
         #region GetSimilarImagePathes - 類似画像パスリスト取得
+
         /// <summary>
         /// 指定されたフォームが持つ表示対象パスリスト内から、
         /// 基準となる画像と類似した画像を検索し、そのパスのリストを取得します。
@@ -38,7 +39,7 @@ namespace SO.PictManager.Common
         /// <param orderName="form">フォーム</param>
         /// <param orderName="criterionPath">基準となる画像のパス</param>
         /// <returns>類似画像パスリスト</returns>
-        internal static List<string> GetSimilarImagePathes(BaseForm form, string criterionPath)
+        internal static List<string> GetSimilarImagePathes(FileBaseForm form, string criterionPath)
         {
             return GetSimilarImagePathes(form, criterionPath, null);
         }
@@ -52,7 +53,7 @@ namespace SO.PictManager.Common
         /// <param orderName="criterionPath">基準となる画像のパス</param>
         /// <param orderName="message">プログレスダイアログに追加表示するメッセージ</param>
         /// <returns>類似画像パスリスト</returns>
-        internal static List<string> GetSimilarImagePathes(BaseForm form, string criterionPath, string message)
+        internal static List<string> GetSimilarImagePathes(FileBaseForm form, string criterionPath, string message)
         {
             try
             {
@@ -157,6 +158,7 @@ namespace SO.PictManager.Common
                 Cursor.Current = Cursors.Default;
             }
         }
+
         #endregion
 
         #region GetBlockColorAverage - 指定ブロックのピクセル色値の平均値を取得

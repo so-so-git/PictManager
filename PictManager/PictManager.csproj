@@ -130,17 +130,17 @@
     <Compile Include="Forms\BaseDialog.Designer.cs">
       <DependentUpon>BaseDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\BaseForm.cs">
+    <Compile Include="Forms\FileSystem\FileBaseForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\BaseForm.Designer.cs">
-      <DependentUpon>BaseForm.cs</DependentUpon>
+    <Compile Include="Forms\FileSystem\FileBaseForm.Designer.cs">
+      <DependentUpon>FileBaseForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\BookmarkForm.cs">
+    <Compile Include="Forms\FileSystem\FileBookmarkForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\BookmarkForm.Designer.cs">
-      <DependentUpon>BookmarkForm.cs</DependentUpon>
+    <Compile Include="Forms\FileSystem\FileBookmarkForm.Designer.cs">
+      <DependentUpon>FileBookmarkForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ConfigDialog.cs">
       <SubType>Form</SubType>
@@ -148,11 +148,17 @@
     <Compile Include="Forms\ConfigDialog.Designer.cs">
       <DependentUpon>ConfigDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Info\BookmarkInfo.cs" />
-    <Compile Include="Forms\MaintenanceForm.cs">
+    <Compile Include="Forms\Database\DbBaseForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\MaintenanceForm.Designer.cs">
+    <Compile Include="Forms\Database\DbBaseForm.Designer.cs">
+      <DependentUpon>DbBaseForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Info\BookmarkInfo.cs" />
+    <Compile Include="Forms\Database\MaintenanceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Database\MaintenanceForm.Designer.cs">
       <DependentUpon>MaintenanceForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\StartForm.cs">
@@ -165,23 +171,23 @@
     <Compile Include="Forms\Info\StateInfo.cs" />
     <Compile Include="Forms\Info\RenameInfo.cs" />
     <Compile Include="Forms\Info\ConfigInfo.cs" />
-    <Compile Include="Forms\RenameDialog.cs">
+    <Compile Include="Forms\FileSystem\RenameDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\RenameDialog.Designer.cs">
+    <Compile Include="Forms\FileSystem\RenameDialog.Designer.cs">
       <DependentUpon>RenameDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Common\Utilities.cs" />
-    <Compile Include="Forms\ListForm.cs">
+    <Compile Include="Forms\FileSystem\FileListForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\ListForm.Designer.cs">
-      <DependentUpon>ListForm.cs</DependentUpon>
+    <Compile Include="Forms\FileSystem\FileListForm.Designer.cs">
+      <DependentUpon>FileListForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\UrlDropForm.cs">
+    <Compile Include="Forms\Database\UrlDropForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\UrlDropForm.Designer.cs">
+    <Compile Include="Forms\Database\UrlDropForm.Designer.cs">
       <DependentUpon>UrlDropForm.cs</DependentUpon>
     </Compile>
     <Compile Include="DataModel\MstCategory.cs">
@@ -216,11 +222,9 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SlideForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\SlideForm.Designer.cs">
-      <DependentUpon>SlideForm.cs</DependentUpon>
+    <Compile Include="Forms\FileSystem\FileSlideForm.cs" />
+    <Compile Include="Forms\FileSystem\FileSlideForm.Designer.cs">
+      <DependentUpon>FileSlideForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Components\KeyPrevButton.cs">
       <SubType>Component</SubType>
@@ -228,17 +232,17 @@
     <Compile Include="Components\KeyPrevCheckBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Forms\ThumbnailForm.cs">
+    <Compile Include="Forms\FileSystem\FileThumbnailForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\ThumbnailForm.Designer.cs">
-      <DependentUpon>ThumbnailForm.cs</DependentUpon>
+    <Compile Include="Forms\FileSystem\FileThumbnailForm.Designer.cs">
+      <DependentUpon>FileThumbnailForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ViewImageForm.cs">
+    <Compile Include="Forms\FileSystem\FileViewImageForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\ViewImageForm.Designer.cs">
-      <DependentUpon>ViewImageForm.cs</DependentUpon>
+    <Compile Include="Forms\FileSystem\FileViewImageForm.Designer.cs">
+      <DependentUpon>FileViewImageForm.cs</DependentUpon>
     </Compile>
     <Compile Include="DataModel\TblImage.cs">
       <DependentUpon>PictManagerEntity.tt</DependentUpon>
@@ -279,29 +283,33 @@
     <None Include="DDL\CREATE_TblSets.sql" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Forms\BaseForm.resx">
+    <EmbeddedResource Include="Forms\FileSystem\FileBaseForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>BaseForm.cs</DependentUpon>
+      <DependentUpon>FileBaseForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Database\DbBaseForm.resx">
+      <DependentUpon>DbBaseForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\StartForm.resx">
       <SubType>Designer</SubType>
       <DependentUpon>StartForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ListForm.resx">
+    <EmbeddedResource Include="Forms\FileSystem\FileListForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>ListForm.cs</DependentUpon>
+      <DependentUpon>FileListForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <SubType>Designer</SubType>
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SlideForm.resx">
+    <EmbeddedResource Include="Forms\FileSystem\FileSlideForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>SlideForm.cs</DependentUpon>
+      <DependentUpon>FileSlideForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ViewImageForm.resx">
-      <DependentUpon>ViewImageForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\FileSystem\FileViewImageForm.resx">
+      <DependentUpon>FileViewImageForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
@@ -315,26 +323,26 @@
       <SubType>Designer</SubType>
       <DependentUpon>BaseDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\BookmarkForm.resx">
-      <DependentUpon>BookmarkForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\FileSystem\FileBookmarkForm.resx">
+      <DependentUpon>FileBookmarkForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ConfigDialog.resx">
       <DependentUpon>ConfigDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\MaintenanceForm.resx">
+    <EmbeddedResource Include="Forms\Database\MaintenanceForm.resx">
       <DependentUpon>MaintenanceForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\RenameDialog.resx">
+    <EmbeddedResource Include="Forms\FileSystem\RenameDialog.resx">
       <SubType>Designer</SubType>
       <DependentUpon>RenameDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ThumbnailForm.resx">
+    <EmbeddedResource Include="Forms\FileSystem\FileThumbnailForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>ThumbnailForm.cs</DependentUpon>
+      <DependentUpon>FileThumbnailForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\UrlDropForm.resx">
+    <EmbeddedResource Include="Forms\Database\UrlDropForm.resx">
       <DependentUpon>UrlDropForm.cs</DependentUpon>
     </EmbeddedResource>
     <Content Include="Xml\Bookmark.xml" />

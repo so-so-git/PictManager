@@ -14,6 +14,7 @@ using SO.Library.Text;
 using SO.PictManager.Common;
 using SO.PictManager.DataModel;
 using SO.PictManager.Forms;
+using SO.PictManager.Forms.FileSystem;
 using SO.PictManager.Forms.Info;
 
 namespace SO.PictManager
@@ -100,12 +101,10 @@ namespace SO.PictManager
                 FormUtilities.ShowMessage("W023");
                 return;
             }
-
 #if DEBUG
             // デバッグモードでビルドされたモジュールの為、警告表示
             FormUtilities.ShowMessage("W026", "Debug");
 #endif
-
             try
             {
                 if (args.Any())
@@ -127,27 +126,32 @@ namespace SO.PictManager
             {
                 try
                 {
-                    // 一時ディレクトリ削除
-                    if (Directory.Exists(_tmpDirPath))
+                    if (Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.File)
                     {
-                        // 読み取り専用属性解除
-                        (from f in Directory.GetFiles(_tmpDirPath)
-                         where (File.GetAttributes(f) & FileAttributes.ReadOnly) == FileAttributes.ReadOnly
-                         select new FileInfo(f)
-                        ).ToList().ForEach(f => f.IsReadOnly = false);
+                        // 一時ディレクトリ削除
+                        if (Directory.Exists(_tmpDirPath))
+                        {
+                            // 読み取り専用属性解除
+                            (from f in Directory.GetFiles(_tmpDirPath)
+                                where (File.GetAttributes(f) & FileAttributes.ReadOnly) == FileAttributes.ReadOnly
+                                select new FileInfo(f)
+                            ).ToList().ForEach(f => f.IsReadOnly = false);
 
-                        Directory.Delete(_tmpDirPath, true);
+                            Directory.Delete(_tmpDirPath, true);
+                        }
                     }
+                    else
+                    {
+                        // SQLServerサービス停止
+                        StopSQLServerService();
+                    }
+
+                    mutex.ReleaseMutex();
                 }
                 catch (Exception ex)
                 {
                     ex.DoDefault(typeof(EntryPoint).FullName, MethodBase.GetCurrentMethod());
                 }
-
-                // SQLServerサービス停止
-                StopSQLServerService();
-
-                mutex.ReleaseMutex();
             }
         }
 
@@ -179,7 +183,7 @@ namespace SO.PictManager
 
                         string listPath = args[i + 1];
                         if (Directory.Exists(listPath))
-                            Application.Run(new ListForm(listPath, false));
+                            Application.Run(new FileListForm(listPath, false));
                         else
                             FormUtilities.ShowMessage("E006");
 
@@ -194,7 +198,7 @@ namespace SO.PictManager
 
                         string thumbnailPath = args[i + 1];
                         if (Directory.Exists(thumbnailPath))
-                            Application.Run(new ThumbnailForm(thumbnailPath, false));
+                            Application.Run(new FileThumbnailForm(thumbnailPath, false));
                         else
                             FormUtilities.ShowMessage("E006");
 
@@ -209,7 +213,7 @@ namespace SO.PictManager
 
                         string slidePath = args[i + 1];
                         if (Directory.Exists(slidePath))
-                            Application.Run(new SlideForm(slidePath, false));
+                            Application.Run(new FileSlideForm(slidePath, false));
                         else
                             FormUtilities.ShowMessage("E006");
 
@@ -224,7 +228,7 @@ namespace SO.PictManager
 
                         string viewFilePath = args[i + 1];
                         if (Utilities.IsAvailableFormat(viewFilePath, true))
-                            Application.Run(new ViewImageForm(null, viewFilePath));
+                            Application.Run(new FileViewImageForm(null, viewFilePath));
                         else
                             FormUtilities.ShowMessage("E007", viewFilePath);
 
