@@ -12,6 +12,7 @@ using SO.Library.Forms;
 using SO.Library.IO;
 using SO.Library.Text;
 using SO.PictManager.Common;
+using SO.PictManager.DataModel;
 using SO.PictManager.Forms;
 using SO.PictManager.Forms.Info;
 
@@ -79,9 +80,14 @@ namespace SO.PictManager
         [STAThread]
         public static void Main(string[] args)
         {
-            // SQLServerサービス開始
             if (Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.Database)
+            {
+                // SQLServerサービス開始
                 StartSQLServerService();
+
+                // 未分類カテゴリの初期登録
+                EntryUnClassifiedCategory();
+            }
 
             // 概観設定
             Application.EnableVisualStyles();
@@ -241,11 +247,19 @@ namespace SO.PictManager
         {
             var sc = new ServiceController(_sqlServiceName);
             if (sc.Status == ServiceControllerStatus.Stopped)
+            {
                 sc.Start();
+                sc.WaitForStatus(ServiceControllerStatus.Running);
+            }
             else if (sc.Status == ServiceControllerStatus.Paused)
+            {
                 sc.Continue();
+                sc.WaitForStatus(ServiceControllerStatus.Running);
+            }
             else if (sc.Status == ServiceControllerStatus.Running)
+            {
                 _isSqlServiceNonStop = true;
+            }
         }
 
         #endregion
@@ -260,8 +274,64 @@ namespace SO.PictManager
             if (!_isSqlServiceNonStop)
             {
                 var sc = new ServiceController(_sqlServiceName);
-                if (sc.Status == ServiceControllerStatus.Running)
+                if (sc.CanStop)
+                {
                     sc.Stop();
+                    sc.WaitForStatus(ServiceControllerStatus.Stopped);
+                }
+            }
+        }
+
+        #endregion
+
+        #region EntryUnClassifiedCategory - 未分類カテゴリー登録
+
+        /// <summary>
+        /// 未分類カテゴリーが登録されていない場合、それを登録します。
+        /// </summary>
+        private static void EntryUnClassifiedCategory()
+        {
+            using (var entity = new PictManagerEntities())
+            {
+                var isExistsUnClassified = (from c in entity.MstCategories
+                                            where c.CategoryName == Constants.UN_CLASSIFIED_CATEGORY_NAME
+                                            select c).Any();
+
+                // 登録済みの場合は処理不要
+                if (isExistsUnClassified) return;
+
+                // 現在の最大IDを取得
+                int maxId;
+                if (entity.MstCategories.Any())
+                {
+                    maxId = (from c in entity.MstCategories
+                             select c.CategoryId).Max();
+                }
+                else
+                {
+                    maxId = 0;
+                }
+
+                // ID振り直し
+                entity.Database.ExecuteSqlCommand(
+                    "DBCC CHECKIDENT('MstCategories', RESEED, "
+                    + (Constants.UN_CLASSIFIED_CATEGORY_ID) + ");");
+                entity.SaveChanges();
+
+                // 未分類カテゴリを登録
+                DateTime now = DateTime.Now;
+                var dto = new MstCategory();
+                dto.CategoryName = Constants.UN_CLASSIFIED_CATEGORY_NAME;
+                dto.InsertedDateTime = now;
+                dto.UpdatedDateTime = now;
+
+                entity.MstCategories.Add(dto);
+                entity.SaveChanges();
+
+                // IDを戻す
+                entity.Database.ExecuteSqlCommand(
+                    "DBCC CHECKIDENT('MstCategories', RESEED, " + maxId + ");");
+                entity.SaveChanges();
             }
         }
 

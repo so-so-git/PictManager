@@ -42,9 +42,10 @@
             this.dlgImportDirectory = new System.Windows.Forms.FolderBrowserDialog();
             this.grpCategories = new System.Windows.Forms.GroupBox();
             this.txtEntryCategory = new System.Windows.Forms.TextBox();
+            this.btnDeleteCategory = new System.Windows.Forms.Button();
             this.btnEntryCategory = new System.Windows.Forms.Button();
             this.cmbDeleteCategory = new System.Windows.Forms.ComboBox();
-            this.btnDeleteCategory = new System.Windows.Forms.Button();
+            this.btnClose = new System.Windows.Forms.Button();
             this.grpImport.SuspendLayout();
             this.grpCategories.SuspendLayout();
             this.SuspendLayout();
@@ -65,7 +66,7 @@
             this.grpImport.Name = "grpImport";
             this.grpImport.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.grpImport.Size = new System.Drawing.Size(449, 159);
-            this.grpImport.TabIndex = 0;
+            this.grpImport.TabIndex = 1;
             this.grpImport.TabStop = false;
             this.grpImport.Text = "画像ファイルインポート";
             // 
@@ -185,7 +186,7 @@
             this.grpCategories.Location = new System.Drawing.Point(13, 13);
             this.grpCategories.Name = "grpCategories";
             this.grpCategories.Size = new System.Drawing.Size(307, 90);
-            this.grpCategories.TabIndex = 1;
+            this.grpCategories.TabIndex = 0;
             this.grpCategories.TabStop = false;
             this.grpCategories.Text = "カテゴリー管理";
             // 
@@ -196,7 +197,18 @@
             this.txtEntryCategory.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtEntryCategory.Name = "txtEntryCategory";
             this.txtEntryCategory.Size = new System.Drawing.Size(230, 23);
-            this.txtEntryCategory.TabIndex = 3;
+            this.txtEntryCategory.TabIndex = 0;
+            // 
+            // btnDeleteCategory
+            // 
+            this.btnDeleteCategory.Location = new System.Drawing.Point(245, 52);
+            this.btnDeleteCategory.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnDeleteCategory.Name = "btnDeleteCategory";
+            this.btnDeleteCategory.Size = new System.Drawing.Size(50, 25);
+            this.btnDeleteCategory.TabIndex = 3;
+            this.btnDeleteCategory.Text = "削除";
+            this.btnDeleteCategory.UseVisualStyleBackColor = true;
+            this.btnDeleteCategory.Click += new System.EventHandler(this.btnDeleteCategory_Click);
             // 
             // btnEntryCategory
             // 
@@ -204,7 +216,7 @@
             this.btnEntryCategory.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnEntryCategory.Name = "btnEntryCategory";
             this.btnEntryCategory.Size = new System.Drawing.Size(50, 25);
-            this.btnEntryCategory.TabIndex = 4;
+            this.btnEntryCategory.TabIndex = 1;
             this.btnEntryCategory.Text = "登録";
             this.btnEntryCategory.UseVisualStyleBackColor = true;
             this.btnEntryCategory.Click += new System.EventHandler(this.btnEntryCategory_Click);
@@ -217,26 +229,28 @@
             this.cmbDeleteCategory.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cmbDeleteCategory.Name = "cmbDeleteCategory";
             this.cmbDeleteCategory.Size = new System.Drawing.Size(230, 23);
-            this.cmbDeleteCategory.TabIndex = 6;
+            this.cmbDeleteCategory.TabIndex = 2;
             // 
-            // btnDeleteCategory
+            // btnClose
             // 
-            this.btnDeleteCategory.Location = new System.Drawing.Point(245, 52);
-            this.btnDeleteCategory.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.btnDeleteCategory.Name = "btnDeleteCategory";
-            this.btnDeleteCategory.Size = new System.Drawing.Size(50, 25);
-            this.btnDeleteCategory.TabIndex = 4;
-            this.btnDeleteCategory.Text = "削除";
-            this.btnDeleteCategory.UseVisualStyleBackColor = true;
-            this.btnDeleteCategory.Click += new System.EventHandler(this.btnDeleteCategory_Click);
+            this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnClose.Location = new System.Drawing.Point(368, 278);
+            this.btnClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(87, 29);
+            this.btnClose.TabIndex = 9;
+            this.btnClose.Text = "閉じる";
+            this.btnClose.UseVisualStyleBackColor = true;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // MaintenanceForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(471, 278);
+            this.ClientSize = new System.Drawing.Size(471, 320);
             this.Controls.Add(this.grpCategories);
             this.Controls.Add(this.grpImport);
+            this.Controls.Add(this.btnClose);
             this.Font = new System.Drawing.Font("Meiryo UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "MaintenanceForm";
@@ -268,5 +282,6 @@
         private System.Windows.Forms.Button btnEntryCategory;
         private System.Windows.Forms.Button btnDeleteCategory;
         private System.Windows.Forms.ComboBox cmbDeleteCategory;
+        private System.Windows.Forms.Button btnClose;
     }
 }

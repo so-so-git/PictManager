@@ -1,22 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx">
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
   <!-- EF Runtime content -->
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="SO.PictManager.PictManagerModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2006/04/edm/ssdl">
-        <EntityContainer Name="SOPictManagerPictManagerModelStoreContainer">
-          <EntitySet Name="MstCategories" EntityType="SO.PictManager.PictManagerModel.Store.MstCategories" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="MstTags" EntityType="SO.PictManager.PictManagerModel.Store.MstTags" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="TblImages" EntityType="SO.PictManager.PictManagerModel.Store.TblImages" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="TblSets" EntityType="SO.PictManager.PictManagerModel.Store.TblSets" store:Type="Tables" Schema="dbo" />
-        </EntityContainer>
+      <Schema Namespace="SO.PictManager.DataModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
         <EntityType Name="MstCategories">
           <Key>
             <PropertyRef Name="CategoryId" />
           </Key>
-          <Property Name="CategoryId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="CategoryName" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="CategoryId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CategoryName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="InsertedDateTime" Type="datetime" Nullable="false" />
           <Property Name="UpdatedDateTime" Type="datetime" />
         </EntityType>
@@ -24,8 +18,8 @@
           <Key>
             <PropertyRef Name="TagId" />
           </Key>
-          <Property Name="TagId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="TagName" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="TagId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TagName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="InsertedDateTime" Type="datetime" Nullable="false" />
           <Property Name="UpdatedDateTime" Type="datetime" />
         </EntityType>
@@ -33,7 +27,7 @@
           <Key>
             <PropertyRef Name="ImageId" />
           </Key>
-          <Property Name="ImageId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ImageId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ImageData" Type="varbinary(max)" Nullable="false" />
           <Property Name="CategoryId" Type="int" Nullable="false" />
           <Property Name="TagId1" Type="int" />
@@ -55,46 +49,46 @@
           <Key>
             <PropertyRef Name="SetId" />
           </Key>
-          <Property Name="SetId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="SetId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Description" Type="varchar" MaxLength="256" />
           <Property Name="InsertedDateTime" Type="datetime" Nullable="false" />
           <Property Name="UpdatedDateTime" Type="datetime" />
         </EntityType>
+        <EntityContainer Name="SOPictManagerDataModelStoreContainer">
+          <EntitySet Name="MstCategories" EntityType="Self.MstCategories" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MstTags" EntityType="Self.MstTags" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TblImages" EntityType="Self.TblImages" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TblSets" EntityType="Self.TblSets" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
       </Schema>
     </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="SO.PictManager.DataModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2006/04/edm">
-        <EntityContainer Name="PictManagerEntities">
-          <EntitySet Name="MstCategories" EntityType="SO.PictManager.DataModel.MstCategory" />
-          <EntitySet Name="MstTags" EntityType="SO.PictManager.DataModel.MstTag" />
-          <EntitySet Name="TblImages" EntityType="SO.PictManager.DataModel.TblImage" />
-          <EntitySet Name="TblSets" EntityType="SO.PictManager.DataModel.TblSet" />
-        </EntityContainer>
+      <Schema Namespace="SO.PictManager.DataModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
         <EntityType Name="MstCategory">
           <Key>
             <PropertyRef Name="CategoryId" />
           </Key>
           <Property Name="CategoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CategoryName" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
-          <Property Name="InsertedDateTime" Type="DateTime" Nullable="false" />
-          <Property Name="UpdatedDateTime" Type="DateTime" />
+          <Property Name="CategoryName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="InsertedDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedDateTime" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="MstTag">
           <Key>
             <PropertyRef Name="TagId" />
           </Key>
           <Property Name="TagId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="TagName" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
-          <Property Name="InsertedDateTime" Type="DateTime" Nullable="false" />
-          <Property Name="UpdatedDateTime" Type="DateTime" />
+          <Property Name="TagName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="InsertedDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedDateTime" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="TblImage">
           <Key>
             <PropertyRef Name="ImageId" />
           </Key>
           <Property Name="ImageId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ImageData" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="ImageData" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
           <Property Name="CategoryId" Type="Int32" Nullable="false" />
           <Property Name="TagId1" Type="Int32" />
           <Property Name="TagId2" Type="Int32" />
@@ -107,25 +101,31 @@
           <Property Name="TagId9" Type="Int32" />
           <Property Name="SetId" Type="Int32" />
           <Property Name="SetOrder" Type="Int32" />
-          <Property Name="Description" Type="String" MaxLength="256" Unicode="false" FixedLength="false" />
-          <Property Name="InsertedDateTime" Type="DateTime" Nullable="false" />
-          <Property Name="UpdatedDateTime" Type="DateTime" />
+          <Property Name="Description" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
+          <Property Name="InsertedDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedDateTime" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="TblSet">
           <Key>
             <PropertyRef Name="SetId" />
           </Key>
           <Property Name="SetId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Description" Type="String" MaxLength="256" Unicode="false" FixedLength="false" />
-          <Property Name="InsertedDateTime" Type="DateTime" Nullable="false" />
-          <Property Name="UpdatedDateTime" Type="DateTime" />
+          <Property Name="Description" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
+          <Property Name="InsertedDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedDateTime" Type="DateTime" Precision="3" />
         </EntityType>
+        <EntityContainer Name="PictManagerEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="MstCategories" EntityType="Self.MstCategory" />
+          <EntitySet Name="MstTags" EntityType="Self.MstTag" />
+          <EntitySet Name="TblImages" EntityType="Self.TblImage" />
+          <EntitySet Name="TblSets" EntityType="Self.TblSet" />
+        </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
-      <Mapping Space="C-S" xmlns="urn:schemas-microsoft-com:windows:storage:mapping:CS">
-        <EntityContainerMapping StorageEntityContainer="SOPictManagerPictManagerModelStoreContainer" CdmEntityContainer="PictManagerEntities">
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SOPictManagerDataModelStoreContainer" CdmEntityContainer="PictManagerEntities">
           <EntitySetMapping Name="MstCategories">
             <EntityTypeMapping TypeName="SO.PictManager.DataModel.MstCategory">
               <MappingFragment StoreEntitySet="MstCategories">
@@ -184,7 +184,7 @@
     </edmx:Mappings>
   </edmx:Runtime>
   <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
-  <Designer xmlns="http://schemas.microsoft.com/ado/2007/06/edmx">
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
     <Connection>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
@@ -193,18 +193,13 @@
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="True" />
-        <DesignerProperty Name="IncludeForeignKeysInModel" Value="False" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="なし" />
       </DesignerInfoPropertySet>
     </Options>
     <!-- Diagram content (shape and connector positions) -->
-    <Diagrams>
-      <Diagram Name="PictManager">
-        <EntityTypeShape EntityType="SO.PictManager.DataModel.MstCategory" Width="1.5" PointX="0.75" PointY="0.75" Height="1.936666666666667" IsExpanded="true" />
-        <EntityTypeShape EntityType="SO.PictManager.DataModel.MstTag" Width="1.5" PointX="2.75" PointY="0.75" Height="1.9366666666666674" IsExpanded="true" />
-        <EntityTypeShape EntityType="SO.PictManager.DataModel.TblImage" Width="1.5" PointX="0.75" PointY="3.75" Height="4.7127083333333335" IsExpanded="true" />
-        <EntityTypeShape EntityType="SO.PictManager.DataModel.TblSet" Width="1.5" PointX="2.75" PointY="3.75" Height="1.9366666666666657" IsExpanded="true" />
-      </Diagram>
-    </Diagrams>
+    <Diagrams></Diagrams>
   </Designer>
 </edmx:Edmx>

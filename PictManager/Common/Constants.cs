@@ -10,6 +10,10 @@ namespace SO.PictManager.Common
     /// </summary>
     public static class Constants
     {
+        /// <summary>カテゴリーID：未分類</summary>
+        public const int UN_CLASSIFIED_CATEGORY_ID = 0;
 
+        /// <summary>カテゴリー名：未分類</summary>
+        public const string UN_CLASSIFIED_CATEGORY_NAME = "(未分類)";
     }
 }

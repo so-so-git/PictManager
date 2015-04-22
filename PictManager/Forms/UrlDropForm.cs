@@ -37,7 +37,7 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region InitializeCategoryComboBox - カテゴリコンボボックス初期化
+        #region RefreshCategoryComboBox - カテゴリコンボボックス最新化
 
         /// <summary>
         /// カテゴリコンボボックスを最新化します。
@@ -101,7 +101,7 @@ namespace SO.PictManager.Forms
                     dto.CategoryName = dlg.InputString;
                     dto.InsertedDateTime = DateTime.Now;
 
-                    entity.AddToMstCategories(dto);
+                    entity.MstCategories.Add(dto);
                     entity.SaveChanges();
 
                     // カテゴリコンボボックスリフレッシュ
@@ -160,7 +160,7 @@ namespace SO.PictManager.Forms
                 dto.CategoryId = (cmbCategory.SelectedItem as MstCategory).CategoryId;
                 dto.InsertedDateTime = DateTime.Now;
 
-                entity.AddToTblImages(dto);
+                entity.TblImages.Add(dto);
                 entity.SaveChanges();
             }
         }

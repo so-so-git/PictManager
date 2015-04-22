@@ -68,26 +68,27 @@ namespace SO.PictManager.Forms
         /// <param name="entity">エンティティオブジェクト</param>
         private void RefreshCategoriesComboBox(PictManagerEntities entity)
         {
-            var categories = entity.MstCategories.OrderBy(c => c.CategoryName).ToList();
+            // インポート先カテゴリ
+            var allCategories = entity.MstCategories.OrderBy(c => c.CategoryName).ToList();
 
-            cmbDeleteCategory.DataSource = categories;
+            cmbImportCategory.DataSource = allCategories;
+            cmbImportCategory.DisplayMember = "CategoryName";
+            cmbImportCategory.SelectedIndex = 0;
+
+            // 削除カテゴリ
+            var deletableCategories = allCategories.Where(c => c.CategoryId != Constants.UN_CLASSIFIED_CATEGORY_ID).ToList();
+
+            cmbDeleteCategory.DataSource = deletableCategories;
             cmbDeleteCategory.DisplayMember = "CategoryName";
 
-            cmbImportCategory.DataSource = categories;
-            cmbImportCategory.DisplayMember = "CategoryName";
-
-            if (categories.Any())
+            if (deletableCategories.Any())
             {
                 cmbDeleteCategory.SelectedIndex = 0;
-                cmbImportCategory.SelectedIndex = 0;
-
                 btnDeleteCategory.Enabled = true;
-                btnImport.Enabled = true;
             }
             else
             {
                 btnDeleteCategory.Enabled = false;
-                btnImport.Enabled = false;
             }
         }
 
@@ -119,7 +120,7 @@ namespace SO.PictManager.Forms
 
             using (var entity = new PictManagerEntities())
             {
-                entity.AddToTblImages(dto);
+                entity.TblImages.Add(dto);
                 entity.SaveChanges();
             }
         }
@@ -163,7 +164,7 @@ namespace SO.PictManager.Forms
                     dto.InsertedDateTime = now;
                     dto.UpdatedDateTime = now;
 
-                    entity.AddToMstCategories(dto);
+                    entity.MstCategories.Add(dto);
                     entity.SaveChanges();
 
                     // コンボボックス内容を更新
@@ -194,22 +195,41 @@ namespace SO.PictManager.Forms
         {
             try
             {
-                var category = cmbDeleteCategory.SelectedItem as MstCategory;
-
-                // 削除確認
-                if (FormUtilities.ShowMessage("Q012", category.CategoryName) == DialogResult.No)
-                {
-                    return;
-                }
+                var selectedCategory = cmbDeleteCategory.SelectedItem as MstCategory;
 
                 using (var entity = new PictManagerEntities())
                 {
+                    // 削除対象のカテゴリーに属している画像を検索
+                    var relationImages = from i in entity.TblImages
+                                         where i.CategoryId == selectedCategory.CategoryId
+                                         select i;
+
+                    // 削除確認
+                    if (relationImages.Any())
+                    {
+                        if (FormUtilities.ShowMessage("Q013", selectedCategory.CategoryName) == DialogResult.No)
+                        {
+                            return;
+                        }
+                    }
+                    else if (FormUtilities.ShowMessage("Q012", selectedCategory.CategoryName) == DialogResult.No)
+                    {
+                        return;
+                    }
+
                     // 選択されたカテゴリーを削除
                     var deleteObj = (from c in entity.MstCategories
-                                     where c.CategoryId == category.CategoryId
+                                     where c.CategoryId == selectedCategory.CategoryId
                                      select c).First();
 
-                    entity.DeleteObject(deleteObj);
+                    entity.MstCategories.Remove(deleteObj);
+
+                    // 削除したカテゴリーに属していた画像を未分類に更新
+                    foreach (var img in relationImages)
+                    {
+                        img.CategoryId = Constants.UN_CLASSIFIED_CATEGORY_ID;
+                    }
+
                     entity.SaveChanges();
 
                     // コンボボックス内容を更新
@@ -369,6 +389,21 @@ namespace SO.PictManager.Forms
             {
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
+        }
+
+        #endregion
+
+        #region btnClose_Click -  閉じるボタンクリック時
+
+        /// <summary>
+        /// 閉じるボタンがクリックされた際に実行される処理です。
+        /// 画面を閉じます。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
 
         #endregion

@@ -86,6 +86,9 @@
   <msg id="Q012" caption="カテゴリー削除確認" buttons="YesNo" icon="Question">
     カテゴリー[{0}]を削除してもよろしいですか？
   </msg>
+  <msg id="Q013" caption="カテゴリー削除確認" buttons="YesNo" icon="Question">
+    カテゴリー[{0}]に属している画像が存在します。\nカテゴリーを削除してもよろしいですか？\n(属していた画像は未分類カテゴリーになります)
+  </msg>
 
   <!-- ワーニングメッセージ -->
 	<msg id="W000" caption="未入力エラー" buttons="OK" icon="Warning">
