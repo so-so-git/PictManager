@@ -54,9 +54,6 @@ namespace SO.PictManager.Forms
         /// <summary>ブックマークフォーム</summary>
         private BookmarkForm _bookmarkForm;
 
-        /// <summary>操作用コントローラ</summary>
-        private JoystickWrapper _pad;
-
         #endregion
 
         #region コンストラクタ
@@ -101,12 +98,6 @@ namespace SO.PictManager.Forms
 
             // UI制御
             InitializeAccessibility();
-
-            // コントローラ初期化
-            if (Utilities.Config.CommonInfo.IsUseJoystick)
-            {
-                InitializeJoystick();
-            }
         }
 
         #endregion
@@ -201,29 +192,6 @@ namespace SO.PictManager.Forms
                 btnPrevious.Enabled = false;
                 txtIndex.Enabled = false;
                 cmbPicMode.Enabled = false;
-            }
-        }
-
-        #endregion
-
-        #region InitializeJoystick - コントローラ初期化
-
-        /// <summary>
-        /// 操作用のコントローラを初期化します。
-        /// </summary>
-        private void InitializeJoystick()
-        {
-            _pad = new JoystickWrapper(this);
-            if (_pad.Enabled)
-            {
-                _pad.LeftKeyDown += () => SendKeys.SendWait("{LEFT}");
-                _pad.RightKeyDown += () => SendKeys.SendWait("{RIGHT}");
-                _pad.UpKeyDown += () => SendKeys.SendWait("{UP}");
-                _pad.DownKeyDown += () => SendKeys.SendWait("{DOWN}");
-            }
-            else
-            {
-                _pad = null;
             }
         }
 
@@ -559,8 +527,6 @@ namespace SO.PictManager.Forms
                 _thumbnailForm.Dispose();
             if (_bookmarkForm != null)
                 _bookmarkForm.Dispose();
-            if (_pad != null)
-                _pad.Dispose();
             if (_slideThread != null)
                 _slideThread.Abort();
 
@@ -614,8 +580,6 @@ namespace SO.PictManager.Forms
                     _thumbnailForm.Dispose();
                 if (_bookmarkForm != null)
                     _bookmarkForm.Dispose();
-                if (_pad != null)
-                    _pad.Dispose();
                 if (_slideThread != null)
                     _slideThread.Abort();
 
