@@ -17,12 +17,12 @@ using SO.PictManager.Components;
 
 using CursorFace = System.Windows.Forms.Cursor;
 
-namespace SO.PictManager.Forms.FileSystem
+namespace SO.PictManager.Forms
 {
     /// <summary>
     /// サムネイル表示フォームクラス
     /// </summary>
-    public sealed partial class FileThumbnailForm : FileBaseForm
+    public sealed partial class ThumbnailForm : BaseForm
     {
         #region クラス定数
 
@@ -63,12 +63,13 @@ namespace SO.PictManager.Forms.FileSystem
         #endregion
 
         #region コンストラクタ
+
         /// <summary>
         /// 対象フォルダを指定して表示する際に使用するコンストラクタです。
         /// </summary>
         /// <param orderName="targetPath">対象ディレクトリパス</param>
         /// <param orderName="includeSubFlg">サブディレクトリ以下を含むかを示すフラグ</param>
-        public FileThumbnailForm(string targetPath, bool includeSubFlg)
+        public ThumbnailForm(string targetPath, bool includeSubFlg)
                 : base(targetPath, includeSubFlg)
         {
             // コンポーネント初期化
@@ -87,7 +88,7 @@ namespace SO.PictManager.Forms.FileSystem
         /// 対象ファイルパスのリストを指定して表示する際に使用するコンストラクタです。
         /// </summary>
         /// <param orderName="pathList">対象ディレクトリパス</param>
-        public FileThumbnailForm(List<string> pathList)
+        public ThumbnailForm(List<string> pathList)
         {
             // コンポーネント初期化
             InitializeComponent();
@@ -407,7 +408,7 @@ namespace SO.PictManager.Forms.FileSystem
 
                 if (pnlThumbnail.VerticalScroll.Visible)
                 {
-                    int delta = e.Delta / WHEEL_DELTA * pnlThumbnail.VerticalScroll.SmallChange * -1;
+                    int delta = e.Delta / Constants.WHEEL_DELTA * pnlThumbnail.VerticalScroll.SmallChange * -1;
                     if (delta < 0)
                     {
                         if (-pnlThumbnail.AutoScrollPosition.Y + delta < pnlThumbnail.VerticalScroll.Minimum)
@@ -432,7 +433,7 @@ namespace SO.PictManager.Forms.FileSystem
                 }
                 else if (pnlThumbnail.HorizontalScroll.Visible)
                 {
-                    int delta = e.Delta / WHEEL_DELTA * pnlThumbnail.HorizontalScroll.SmallChange * -1;
+                    int delta = e.Delta / Constants.WHEEL_DELTA * pnlThumbnail.HorizontalScroll.SmallChange * -1;
                     if (delta < 0)
                     {
                         if (-pnlThumbnail.AutoScrollPosition.X + delta < pnlThumbnail.HorizontalScroll.Minimum)
@@ -612,7 +613,7 @@ namespace SO.PictManager.Forms.FileSystem
                     // 複数選択モード時、シングルクリックでボーダーが消える可能性が有るので再設定
                     clicked.BorderStyle = BorderStyle.FixedSingle;
 
-                new FileViewImageForm(this, clicked.FilePath).ShowDialog(this);
+                new ViewImageForm(this, clicked.FilePath).ShowDialog(this);
 
                 // 子フォーム側でファイルが削除された場合
                 if (!File.Exists(clicked.FilePath))

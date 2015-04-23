@@ -11,8 +11,7 @@ using SO.Library.Forms;
 using SO.Library.IO;
 using SO.Library.Text;
 using SO.PictManager.Common;
-using SO.PictManager.Forms.Database;
-using SO.PictManager.Forms.FileSystem;
+using SO.PictManager.Forms;
 using SO.PictManager.Forms.Info;
 using SO.PictManager.DataModel;
 
@@ -332,11 +331,11 @@ namespace SO.PictManager.Forms
                 bool includeSub = Utilities.Config.CommonInfo.IsIncludeSubDirectory;
                 Form frmViewer = null;
                 if (rdoSlide.Checked)
-                    frmViewer = new FileSlideForm(txtTargetDirectory.Text, includeSub);       // スライドショー表示
+                    frmViewer = new SlideForm(txtTargetDirectory.Text, includeSub);       // スライドショー表示
                 else if (rdoList.Checked)
-                    frmViewer = new FileListForm(txtTargetDirectory.Text, includeSub);        // 一覧表示
+                    frmViewer = new ListForm(txtTargetDirectory.Text, includeSub);        // 一覧表示
                 else if (rdoThumbnail.Checked)
-                    frmViewer = new FileThumbnailForm(txtTargetDirectory.Text, includeSub);   // サムネール表示
+                    frmViewer = new ThumbnailForm(txtTargetDirectory.Text, includeSub);   // サムネール表示
 
                 frmViewer.Show(this);
                 Visible = false;

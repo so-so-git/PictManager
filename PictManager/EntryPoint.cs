@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Configuration;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -14,7 +16,6 @@ using SO.Library.Text;
 using SO.PictManager.Common;
 using SO.PictManager.DataModel;
 using SO.PictManager.Forms;
-using SO.PictManager.Forms.FileSystem;
 using SO.PictManager.Forms.Info;
 
 namespace SO.PictManager
@@ -48,7 +49,7 @@ namespace SO.PictManager
         private static readonly string _sqlServiceName;
 
         /// <summary>終了時にSQLServerサービスを停止するかのフラグ</summary>
-        private static bool _isSqlServiceNonStop = false;
+        private static bool _isSqlServiceStop = false;
 
         #endregion
 
@@ -81,19 +82,6 @@ namespace SO.PictManager
         [STAThread]
         public static void Main(string[] args)
         {
-            if (Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.Database)
-            {
-                // SQLServerサービス開始
-                StartSQLServerService();
-
-                // 未分類カテゴリの初期登録
-                EntryUnClassifiedCategory();
-            }
-
-            // 概観設定
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-
             // 多重起動抑制
             var mutex = new Mutex(false, Assembly.GetExecutingAssembly().GetName().Name);
             if (!mutex.WaitOne(0, false))
@@ -101,12 +89,25 @@ namespace SO.PictManager
                 FormUtilities.ShowMessage("W023");
                 return;
             }
-#if DEBUG
-            // デバッグモードでビルドされたモジュールの為、警告表示
-            FormUtilities.ShowMessage("W026", "Debug");
-#endif
+
             try
             {
+                // 概観設定
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+
+                if (Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.Database)
+                {
+                    // SQLServerサービス開始
+                    if (!StartSQLServerService()) return;
+
+                    // 未分類カテゴリの初期登録
+                    EntryUnClassifiedCategory();
+                }
+#if DEBUG
+                // デバッグモードでビルドされたモジュールの為、警告表示
+                FormUtilities.ShowMessage("W026", "Debug");
+#endif
                 if (args.Any())
                 {
                     // コマンドライン引数を解析して実行
@@ -145,12 +146,14 @@ namespace SO.PictManager
                         // SQLServerサービス停止
                         StopSQLServerService();
                     }
-
-                    mutex.ReleaseMutex();
                 }
                 catch (Exception ex)
                 {
                     ex.DoDefault(typeof(EntryPoint).FullName, MethodBase.GetCurrentMethod());
+                }
+                finally
+                {
+                    mutex.ReleaseMutex();
                 }
             }
         }
@@ -183,7 +186,7 @@ namespace SO.PictManager
 
                         string listPath = args[i + 1];
                         if (Directory.Exists(listPath))
-                            Application.Run(new FileListForm(listPath, false));
+                            Application.Run(new ListForm(listPath, false));
                         else
                             FormUtilities.ShowMessage("E006");
 
@@ -198,7 +201,7 @@ namespace SO.PictManager
 
                         string thumbnailPath = args[i + 1];
                         if (Directory.Exists(thumbnailPath))
-                            Application.Run(new FileThumbnailForm(thumbnailPath, false));
+                            Application.Run(new ThumbnailForm(thumbnailPath, false));
                         else
                             FormUtilities.ShowMessage("E006");
 
@@ -213,7 +216,7 @@ namespace SO.PictManager
 
                         string slidePath = args[i + 1];
                         if (Directory.Exists(slidePath))
-                            Application.Run(new FileSlideForm(slidePath, false));
+                            Application.Run(new SlideForm(slidePath, false));
                         else
                             FormUtilities.ShowMessage("E006");
 
@@ -228,7 +231,7 @@ namespace SO.PictManager
 
                         string viewFilePath = args[i + 1];
                         if (Utilities.IsAvailableFormat(viewFilePath, true))
-                            Application.Run(new FileViewImageForm(null, viewFilePath));
+                            Application.Run(new ViewImageForm(null, viewFilePath));
                         else
                             FormUtilities.ShowMessage("E007", viewFilePath);
 
@@ -247,23 +250,53 @@ namespace SO.PictManager
         /// <summary>
         /// SQLServerのサービスを開始します。
         /// </summary>
-        private static void StartSQLServerService()
+        /// <returns>true:正常終了 / false:異常終了</returns>
+        private static bool StartSQLServerService()
         {
             var sc = new ServiceController(_sqlServiceName);
+            if (sc.Status == ServiceControllerStatus.Running)
+            {
+                return true;
+            }
+            else if (sc.Status != ServiceControllerStatus.Stopped
+                && sc.Status != ServiceControllerStatus.Paused)
+            {
+                return true;
+            }
+
+            var psi = new ProcessStartInfo();
+            psi.UseShellExecute = true;
+            psi.FileName = "sc";
+            psi.Verb = "runas";
+
             if (sc.Status == ServiceControllerStatus.Stopped)
             {
-                sc.Start();
-                sc.WaitForStatus(ServiceControllerStatus.Running);
+                psi.Arguments = "start " + _sqlServiceName;
             }
             else if (sc.Status == ServiceControllerStatus.Paused)
             {
-                sc.Continue();
-                sc.WaitForStatus(ServiceControllerStatus.Running);
+                psi.Arguments = "continue " + _sqlServiceName;
             }
-            else if (sc.Status == ServiceControllerStatus.Running)
+
+            try
             {
-                _isSqlServiceNonStop = true;
+                var proc = Process.Start(psi);
+                proc.WaitForExit(60000);
+
+                // プログラム内で起動した場合のみ停止処理を行う
+                _isSqlServiceStop = true;
+
+                using (var entity = new PictManagerEntities())
+                {
+                }
             }
+            catch (Win32Exception)
+            {
+                FormUtilities.ShowMessage("E010", _sqlServiceName);
+                return false;
+            }
+
+            return true;
         }
 
         #endregion
@@ -273,17 +306,33 @@ namespace SO.PictManager
         /// <summary>
         /// SQLServerのサービスを停止します。
         /// </summary>
-        private static void StopSQLServerService()
+        /// <returns>true:正常終了 / false:異常終了</returns>
+        private static bool StopSQLServerService()
         {
-            if (!_isSqlServiceNonStop)
+            var sc = new ServiceController(_sqlServiceName);
+            if (!_isSqlServiceStop || !sc.CanStop)
             {
-                var sc = new ServiceController(_sqlServiceName);
-                if (sc.CanStop)
-                {
-                    sc.Stop();
-                    sc.WaitForStatus(ServiceControllerStatus.Stopped);
-                }
+                return true;
             }
+
+            var psi = new ProcessStartInfo();
+            psi.UseShellExecute = true;
+            psi.FileName = "sc";
+            psi.Verb = "runas";
+            psi.Arguments = "stop " + _sqlServiceName;
+
+            try
+            {
+                var proc = Process.Start(psi);
+                proc.WaitForExit(60000);
+            }
+            catch (Win32Exception)
+            {
+                FormUtilities.ShowMessage("W027", _sqlServiceName);
+                return false;
+            }
+
+            return true;
         }
 
         #endregion

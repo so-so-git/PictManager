@@ -18,12 +18,12 @@ using SO.PictManager.Forms.Info;
 
 using Config = System.Configuration.ConfigurationManager;
 
-namespace SO.PictManager.Forms.FileSystem
+namespace SO.PictManager.Forms
 {
     /// <summary>
     /// 単体画像表示フォームクラス
     /// </summary>
-    public partial class FileViewImageForm : FileBaseForm
+    public partial class ViewImageForm : BaseForm
     {
         #region クラス定数
 
@@ -57,7 +57,7 @@ namespace SO.PictManager.Forms.FileSystem
         /// デフォルトのコンストラクタです。
         /// クラス継承時にのみ利用可能です。
         /// </summary>
-        protected FileViewImageForm()
+        protected ViewImageForm()
         {
             // コンポーネント初期化
             InitializeComponent();
@@ -71,7 +71,7 @@ namespace SO.PictManager.Forms.FileSystem
         /// </summary>
         /// <param orderName="owner">親フォーム</param>
         /// <param orderName="newPath">表示対象ファイルの絶対パス</param>
-        public FileViewImageForm(Form owner, string filePath)
+        public ViewImageForm(Form owner, string filePath)
         {
             // コンポーネント初期化
             InitializeComponent();
@@ -93,7 +93,7 @@ namespace SO.PictManager.Forms.FileSystem
         /// </summary>
         /// <param name="owner">親フォーム</param>
         /// <param name="imageData">画像データ</param>
-        public FileViewImageForm(Form owner, byte[] imageData)
+        public ViewImageForm(Form owner, byte[] imageData)
         {
             // コンポーネント初期化
             InitializeComponent();
@@ -685,7 +685,7 @@ namespace SO.PictManager.Forms.FileSystem
 
                 if (pnlParent.Panel1.VerticalScroll.Visible)
                 {
-                    int delta = e.Delta / WHEEL_DELTA * pnlParent.Panel1.VerticalScroll.SmallChange * -1;
+                    int delta = e.Delta / Constants.WHEEL_DELTA * pnlParent.Panel1.VerticalScroll.SmallChange * -1;
                     if (delta < 0)
                     {
                         if (-pnlParent.Panel1.AutoScrollPosition.Y + delta
@@ -712,7 +712,7 @@ namespace SO.PictManager.Forms.FileSystem
                 }
                 else if (pnlParent.Panel1.HorizontalScroll.Visible)
                 {
-                    int delta = e.Delta / WHEEL_DELTA * pnlParent.Panel1.HorizontalScroll.SmallChange * -1;
+                    int delta = e.Delta / Constants.WHEEL_DELTA * pnlParent.Panel1.HorizontalScroll.SmallChange * -1;
                     if (delta < 0)
                     {
                         if (-pnlParent.Panel1.AutoScrollPosition.X + delta

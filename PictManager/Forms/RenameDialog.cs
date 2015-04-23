@@ -13,7 +13,7 @@ using SO.Library.Text;
 using SO.PictManager.Common;
 using SO.PictManager.Forms.Info;
 
-namespace SO.PictManager.Forms.FileSystem
+namespace SO.PictManager.Forms
 {
     /// <summary>
     /// ファイル名変更情報入力ダイアログクラス

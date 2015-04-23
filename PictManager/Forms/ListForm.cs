@@ -16,12 +16,12 @@ using SO.PictManager.Common;
 
 using CursorFace = System.Windows.Forms.Cursor;
 
-namespace SO.PictManager.Forms.FileSystem
+namespace SO.PictManager.Forms
 {
     /// <summary>
     /// ファイル一覧表示フォームクラス
     /// </summary>
-    public partial class FileListForm : FileBaseForm
+    public partial class ListForm : BaseForm
     {
         #region クラス定数
 
@@ -51,12 +51,13 @@ namespace SO.PictManager.Forms.FileSystem
         #endregion
 
         #region コンストラクタ
+
         /// <summary>
         /// 唯一のコンストラクタです。
         /// </summary>
         /// <param orderName="targetPath">対象ディレクトリパス</param>
         /// <param orderName="includeSubFlg">処理対象にサブディレクトリ以下を含むかを示すフラグ</param>
-        public FileListForm(string targetPath, bool includeSubFlg)
+        public ListForm(string targetPath, bool includeSubFlg)
                 : base(targetPath, includeSubFlg)
         {
             try
@@ -82,6 +83,7 @@ namespace SO.PictManager.Forms.FileSystem
                 this.BackToOwner();
             }
         }
+
         #endregion
 
         #region CreateMenu - メニューバー作成
@@ -565,7 +567,7 @@ namespace SO.PictManager.Forms.FileSystem
             }
             else
             {
-                var form = new FileThumbnailForm(similarImages);
+                var form = new ThumbnailForm(similarImages);
                 form.Text = string.Format("PictManager - 類似画像検索結果 [{0}]", path);
                 form.StatusBarText = string.Format("[{0}] の類似画像を表示中 - {1}件", path, similarImages.Count);
 
@@ -675,6 +677,7 @@ namespace SO.PictManager.Forms.FileSystem
         #endregion
 
         #region grdFiles_CellDoubleClick - セルダブルクリック時
+
         /// <summary>
         /// ファイル一覧グリッドのセルがダブルクリックされた際に実行される処理です。
         /// その行に関連付けられたファイルをViewImageFormで表示します。
@@ -691,7 +694,7 @@ namespace SO.PictManager.Forms.FileSystem
                     && e.ColumnIndex != IDX_SIMILAR_BTN)
                 {
                     // イメージ閲覧
-                    new FileViewImageForm(this, GetImagePath(e.RowIndex)).Show(this);
+                    new ViewImageForm(this, GetImagePath(e.RowIndex)).Show(this);
                 }
             }
             catch (Exception ex)
@@ -699,6 +702,7 @@ namespace SO.PictManager.Forms.FileSystem
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region grdFiles_CellClick - セルクリック時
@@ -1175,7 +1179,7 @@ namespace SO.PictManager.Forms.FileSystem
                             FormUtilities.ShowMessage("W006");
                         else
                             // イメージ閲覧
-                            new FileViewImageForm(this, GetImagePath(rowIndex)).Show(this);
+                            new ViewImageForm(this, GetImagePath(rowIndex)).Show(this);
                     }
                 }
             }

@@ -1,6 +1,6 @@
-﻿namespace SO.PictManager.Forms.FileSystem
+﻿namespace SO.PictManager.Forms
 {
-    public partial class FileBaseForm
+    public partial class BaseForm
     {
         /// <summary>
         /// 必要なデザイナ変数です。

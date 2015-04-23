@@ -1,6 +1,6 @@
-﻿namespace SO.PictManager.Forms.FileSystem
+﻿namespace SO.PictManager.Forms
 {
-    partial class FileThumbnailForm
+    partial class ThumbnailForm
     {
         /// <summary>
         /// 必要なデザイナ変数です。
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FileThumbnailForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ThumbnailForm));
             this.barStatus = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.pnlParent = new System.Windows.Forms.SplitContainer();

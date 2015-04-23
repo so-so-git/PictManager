@@ -14,12 +14,12 @@ using SO.PictManager.Forms.Info;
 
 using Config = System.Configuration.ConfigurationManager;
 
-namespace SO.PictManager.Forms.FileSystem
+namespace SO.PictManager.Forms
 {
     /// <summary>
     /// ブックマーク管理フォームクラス
     /// </summary>
-    public sealed partial class FileBookmarkForm : Form
+    public sealed partial class BookmarkForm : Form
     {
         #region メンバ変数
 
@@ -65,10 +65,11 @@ namespace SO.PictManager.Forms.FileSystem
         #endregion
 
         #region コンストラクタ
+
         /// <summary>
         /// 唯一のコンストラクタです。
         /// </summary>
-        public FileBookmarkForm(FileSortOrder order)
+        public BookmarkForm(FileSortOrder order)
         {
             // コンポーネント初期化
             InitializeComponent();
@@ -81,6 +82,7 @@ namespace SO.PictManager.Forms.FileSystem
             // 有効なソート順を設定
             SortOrder = order;
         }
+
         #endregion
 
         #region RefreshBookmarks - 表示されているブックマークの内容を最新状態に更新

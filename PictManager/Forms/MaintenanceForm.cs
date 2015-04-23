@@ -14,7 +14,7 @@ using SO.Library.Forms;
 using SO.PictManager.Common;
 using SO.PictManager.DataModel;
 
-namespace SO.PictManager.Forms.Database
+namespace SO.PictManager.Forms
 {
     /// <summary>
     /// データベースメンテナンスフォーム

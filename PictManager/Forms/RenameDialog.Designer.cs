@@ -1,4 +1,4 @@
-﻿namespace SO.PictManager.Forms.FileSystem
+﻿namespace SO.PictManager.Forms
 {
     partial class RenameDialog
     {

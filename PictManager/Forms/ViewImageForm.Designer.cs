@@ -1,6 +1,6 @@
-﻿namespace SO.PictManager.Forms.FileSystem
+﻿namespace SO.PictManager.Forms
 {
-    partial class FileViewImageForm
+    partial class ViewImageForm
     {
         /// <summary>
         /// 必要なデザイナ変数です。
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FileViewImageForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ViewImageForm));
             this.picViewer = new System.Windows.Forms.PictureBox();
             this.pnlParent = new System.Windows.Forms.SplitContainer();
             this.lblInfo = new System.Windows.Forms.Label();

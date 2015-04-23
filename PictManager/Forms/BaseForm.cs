@@ -18,12 +18,12 @@ using SO.PictManager.Forms.Info;
 using CursorFace = System.Windows.Forms.Cursor;
 using Config = System.Configuration.ConfigurationManager;
 
-namespace SO.PictManager.Forms.FileSystem
+namespace SO.PictManager.Forms
 {
     /// <summary>
     /// 基底フォームクラス
     /// </summary>
-    public partial class FileBaseForm : Form
+    public partial class BaseForm : Form
     {
         #region クラス定数
 
@@ -35,9 +35,6 @@ namespace SO.PictManager.Forms.FileSystem
 
         /// <summary>削除済ファイルリストのファイル名</summary>
         protected const string DEL_LIST_NAME = "DeletedFileList.txt";
-
-        /// <summary>マウスホイールの1移動量に対するデルタ値の比率</summary>
-        protected const int WHEEL_DELTA = 120;
 
         /// <summary>削除済ファイルリスト内の現ファイル名・元ファイルパス区切り文字</summary>
         protected const string DEL_LIST_SEPARATOR = "/";
@@ -137,7 +134,7 @@ namespace SO.PictManager.Forms.FileSystem
         /// <summary>
         /// デフォルトのコンストラクタです。
         /// </summary>
-        protected FileBaseForm()
+        protected BaseForm()
         {
             // コンポーネント初期化
             InitializeComponent();
@@ -151,7 +148,7 @@ namespace SO.PictManager.Forms.FileSystem
         /// </summary>
         /// <param orderName="targetPath">対象ディレクトリパス</param>
         /// <param orderName="includeSubFlg">サブディレクトリ処理フラグ</param>
-        public FileBaseForm(string targetPath, bool includeSubFlg)
+        public BaseForm(string targetPath, bool includeSubFlg)
         {
             // コンポーネント初期化
             InitializeComponent();
@@ -904,23 +901,4 @@ namespace SO.PictManager.Forms.FileSystem
 
         #endregion
     }
-
-    #region enum ResultStatus - 処理結果ステータス列挙体
-
-    /// <summary>
-    /// 子画面処理結果列挙体
-    /// </summary>
-    public enum ResultStatus
-    {
-        /// <summary>未設定状態</summary>
-        Empty,
-        /// <summary>処理キャンセル</summary>
-        Cancel,
-        /// <summary>正常終了</summary>
-        OK,
-        /// <summary>異常終了</summary>
-        Error,
-    }
-
-    #endregion
 }

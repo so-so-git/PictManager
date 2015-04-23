@@ -1,6 +1,6 @@
-﻿namespace SO.PictManager.Forms.FileSystem
+﻿namespace SO.PictManager.Forms
 {
-    partial class FileListForm
+    partial class ListForm
     {
         /// <summary>
         /// 必要なデザイナ変数です。
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FileListForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ListForm));
             this.grdFiles = new System.Windows.Forms.DataGridView();
             this.pnlParent = new System.Windows.Forms.SplitContainer();
             this.lblFileCount = new System.Windows.Forms.Label();

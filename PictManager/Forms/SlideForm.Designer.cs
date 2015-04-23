@@ -1,6 +1,6 @@
-﻿namespace SO.PictManager.Forms.FileSystem
+﻿namespace SO.PictManager.Forms
 {
-    public partial class FileSlideForm
+    public partial class SlideForm
     {
         /// <summary>
         /// 必要なデザイナ変数です。
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FileSlideForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SlideForm));
             this.btnPrevious = new SO.PictManager.Components.KeyPrevButton();
             this.btnNext = new SO.PictManager.Components.KeyPrevButton();
             this.lblCount = new System.Windows.Forms.Label();

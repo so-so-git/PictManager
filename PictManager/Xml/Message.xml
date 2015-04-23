@@ -175,6 +175,9 @@
   <msg id="W026" caption="バージョン警告" buttons="OK" icon="Warning">
     {0}モードでビルドされたモジュールです。
   </msg>
+  <msg id="W027" caption="サービス停止キャンセル" buttons="OK" icon="Error">
+    サービス[{0}]の停止がキャンセルされました。
+  </msg>
 
   <!-- エラーメッセージ -->
 	<msg id="E000" caption="バージョンエラー" buttons="OK" icon="Error">
@@ -206,5 +209,8 @@
 	</msg>
   <msg id="E009" caption="重複するカテゴリー名" buttons="OK" icon="Error">
     入力されたカテゴリー名 [{0}] は既に存在します。
+  </msg>
+  <msg id="E010" caption="サービス開始キャンセル" buttons="OK" icon="Error">
+    サービス[{0}]の開始がキャンセルされました。\nアプリケーションは起動できません。
   </msg>
 </root>

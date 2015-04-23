@@ -1,4 +1,4 @@
-﻿namespace SO.PictManager.Forms.Database
+﻿namespace SO.PictManager.Forms
 {
     partial class MaintenanceForm
     {

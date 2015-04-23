@@ -15,7 +15,7 @@ using SO.Library.Net;
 using SO.PictManager.Common;
 using SO.PictManager.DataModel;
 
-namespace SO.PictManager.Forms.Database
+namespace SO.PictManager.Forms
 {
     /// <summary>
     /// ダウンロードするURLのドラッグ＆ドロップを受け入れるフォームクラス
