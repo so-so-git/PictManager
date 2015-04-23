@@ -33,7 +33,7 @@ namespace SO.PictManager.Forms.Info
         /// <summary>ブックマークした日時を取得または設定します。</summary>
         public DateTime TimeStamp { get; set; }
         /// <summary>ブックマーク時のファイルソート順を取得または設定します。</summary>
-        public FileSortOrder SortOrder { get; set; }
+        public ImageSortOrder SortOrder { get; set; }
 
         #endregion
 
@@ -46,7 +46,7 @@ namespace SO.PictManager.Forms.Info
         /// <param orderName="fileNo">ブックマークしたファイルのNo</param>
         /// <param orderName="timeStamp">ブックマークした日時</param>
         /// <param orderName="sortOrder">ブックマーク時のファイルソート順</param>
-        public BookmarkInfo(int id, string name, int fileNo, DateTime timeStamp, FileSortOrder sortOrder)
+        public BookmarkInfo(int id, string name, int fileNo, DateTime timeStamp, ImageSortOrder sortOrder)
         {
             Id = id;
             Name = name;

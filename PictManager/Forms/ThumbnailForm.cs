@@ -14,6 +14,7 @@ using SO.Library.IO;
 using SO.Library.Text;
 using SO.PictManager.Common;
 using SO.PictManager.Components;
+using SO.PictManager.Imaging;
 
 using CursorFace = System.Windows.Forms.Cursor;
 
@@ -67,8 +68,8 @@ namespace SO.PictManager.Forms
         /// <summary>
         /// 対象フォルダを指定して表示する際に使用するコンストラクタです。
         /// </summary>
-        /// <param orderName="targetPath">対象ディレクトリパス</param>
-        /// <param orderName="includeSubFlg">サブディレクトリ以下を含むかを示すフラグ</param>
+        /// <param name="targetPath">対象ディレクトリパス</param>
+        /// <param name="includeSubFlg">サブディレクトリ以下を含むかを示すフラグ</param>
         public ThumbnailForm(string targetPath, bool includeSubFlg)
                 : base(targetPath, includeSubFlg)
         {
@@ -80,21 +81,21 @@ namespace SO.PictManager.Forms
 
             // ステータスバー更新
             lblStatus.Text = FileCount > 0
-                    ? Path.GetDirectoryName(FilePathes[0]) + string.Format(" - {0}ファイル", FileCount)
+                    ? Path.GetDirectoryName(ImageList[0].Key) + string.Format(" - {0}ファイル", FileCount)
                     : NO_IMAGE_LABEL;
         }
 
         /// <summary>
         /// 対象ファイルパスのリストを指定して表示する際に使用するコンストラクタです。
         /// </summary>
-        /// <param orderName="pathList">対象ディレクトリパス</param>
-        public ThumbnailForm(List<string> pathList)
+        /// <param name="pathList">対象ディレクトリパス</param>
+        public ThumbnailForm(List<IImage> pathList)
         {
             // コンポーネント初期化
             InitializeComponent();
 
             // 渡されたファイルパスリストを操作対象とする
-            FilePathes = pathList;
+            ImageList = pathList;
 
             // 共通構築処理
             CommonConstruction();
@@ -206,6 +207,7 @@ namespace SO.PictManager.Forms
         #endregion
 
         #region RefreshThumbnails - サムネイル表示更新
+
         /// <summary>
         /// 現在のページの表示サムネイルを、対象ディレクトリの最新状態に合わせて更新します。
         /// </summary>
@@ -238,10 +240,10 @@ namespace SO.PictManager.Forms
                         int idx = (_currentPage - 1) * _maxDispNum + i;
 
                         // プログレスメッセージ更新
-                        progDlg.Message = FilePathes[idx];
+                        progDlg.Message = ImageList[idx].Key;
 
                         ThumbnailUnit addThumbnail;
-                        if (FilePathes[idx] == DELETED_MARK)
+                        if (ImageList[idx].IsDeleted)
                         {
                             // 削除済み画像用のサムネイルユニットを作成
                             addThumbnail = new ThumbnailUnit();
@@ -250,7 +252,7 @@ namespace SO.PictManager.Forms
                         else
                         {
                             // 指定パスを表示するサムネイルユニットを作成
-                            addThumbnail = new ThumbnailUnit(FilePathes[idx]);
+                            addThumbnail = new ThumbnailUnit(ImageList[idx].Key);
                         }
 
                         // イベント定義
@@ -274,6 +276,7 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region AcceptPageNumber - 現在ページ指定入力
@@ -595,6 +598,7 @@ namespace SO.PictManager.Forms
         #endregion
 
         #region ThumbnailUnit_DoubleClick - サムネイル表示コントロールダブルクリック時
+
         /// <summary>
         /// サムネイルがダブルクリックされた際に実行される処理です。
         /// ダブルクリックされたサムネイルをViewImageFormで表示します。
@@ -618,9 +622,9 @@ namespace SO.PictManager.Forms
                 // 子フォーム側でファイルが削除された場合
                 if (!File.Exists(clicked.FilePath))
                 {
-                    // 削除済みマークを設定
+                    // 削除済みフラグを設定
                     int idx = SearchFileIndex(clicked.FilePath);
-                    FilePathes[idx] = DELETED_MARK;
+                    ImageList[idx].IsDeleted = true;
 
                     // 画像破棄、名称ラベル設定、選択マーク解除
                     if (clicked.PictureBox != null) clicked.PictureBox.Dispose();
@@ -629,6 +633,7 @@ namespace SO.PictManager.Forms
                 }
             }
         }
+
         #endregion
 
         #region btnClose_Click - 閉じるボタン押下時
@@ -694,6 +699,7 @@ namespace SO.PictManager.Forms
         #endregion
 
         #region btnDelete_Click - 削除ボタン押下時
+
         /// <summary>
         /// 削除ボタンが押下された際に実行される処理です。
         /// 選択状態の全サムネイルの実ファイルを削除します。
@@ -734,7 +740,7 @@ namespace SO.PictManager.Forms
 
                     // 削除済みマークを設定
                     int idx = SearchFileIndex(selected.FilePath);
-                    FilePathes[idx] = DELETED_MARK;
+                    ImageList[idx].IsDeleted = true;
 
                     // 選択マークを解除
                     selected.BorderStyle = BorderStyle.None;
@@ -745,6 +751,7 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region txtPage_Leave - 現在ページ表示テキストボックスロストフォーカス時

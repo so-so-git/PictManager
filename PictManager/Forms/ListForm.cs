@@ -13,6 +13,7 @@ using SO.Library.Forms.Extensions;
 using SO.Library.IO;
 using SO.Library.Text;
 using SO.PictManager.Common;
+using SO.PictManager.Imaging;
 
 using CursorFace = System.Windows.Forms.Cursor;
 
@@ -45,8 +46,8 @@ namespace SO.PictManager.Forms
         /// <summary>編集フラグ</summary>
         private int _changeCnt = 0;
 
-        /// <summary>行の画像パスと類似画像パスのマッピング</summary>
-        private Dictionary<int, List<string>> _similarMap;
+        /// <summary>行の画像と類似画像のマッピング</summary>
+        private Dictionary<int, List<IImage>> _similarMap;
 
         #endregion
 
@@ -75,7 +76,7 @@ namespace SO.PictManager.Forms
                 CreateCells();
 
                 lblStatus.Text = string.Empty;
-                lblFileCount.Text = FilePathes.Count + " files.";
+                lblFileCount.Text = ImageList.Count + " files.";
             }
             catch (Exception ex)
             {
@@ -187,16 +188,15 @@ namespace SO.PictManager.Forms
             grdFiles.SuspendLayout();
 
             int i = 0;
-            var rowList = new List<DataGridViewRow>(FilePathes.Count);
-            foreach (var f in FilePathes)
+            var rowList = new List<DataGridViewRow>(ImageList.Count);
+            foreach (var img in ImageList)
             {
                 var row = new DataGridViewRow();
-                var file = f;
+                var filePath = img.Key;
                 bool delFlg = false;
-                if (file.EndsWith(DELETED_MARK))
+                if (img.IsDeleted)
                 {
                     row.DefaultCellStyle.BackColor = Color.LightGray;
-                    file = file.Substring(0, file.Length - DELETED_MARK.Length);
                     delFlg = true;
                 }
                 row.Tag = delFlg;    // タグを削除済みフラグとして使用
@@ -212,13 +212,13 @@ namespace SO.PictManager.Forms
 
                 // ファイル名セル
                 var celFile = new DataGridViewTextBoxCell();
-                celFile.Value = Path.GetFileName(file);
+                celFile.Value = Path.GetFileName(filePath);
                 celFile.Tag = celFile.Value;
                 row.Cells.Add(celFile);
 
                 // 親ディレクトリパスセル
                 var celDir = new DataGridViewTextBoxCell();
-                celDir.Value = Path.GetDirectoryName(file);
+                celDir.Value = Path.GetDirectoryName(filePath);
                 celDir.Tag = celDir.Value;
                 row.Cells.Add(celDir);
 
@@ -245,7 +245,7 @@ namespace SO.PictManager.Forms
                     celRef.Value = "...";
 
                     // MD5セル
-                    celMD5.Value = Cryptgrapher.GetFileMD5(file);
+                    celMD5.Value = Cryptgrapher.GetFileMD5(filePath);
 
                     // 類似画像検索ボタンセル
                     celSimilar = new DataGridViewButtonCell();
@@ -380,8 +380,8 @@ namespace SO.PictManager.Forms
         /// <summary>
         /// ファイル一覧グリッドセルで入力された変更内容を各ファイルに適用します。
         /// </summary>
-        /// <param orderName="cell">変更内容が入力されたDataGridViewCell</param>
-        /// <param orderName="proceededRows">処理済の行インデックスが格納されたList</param>
+        /// <param name="cell">変更内容が入力されたDataGridViewCell</param>
+        /// <param name="proceededRows">処理済の行インデックスが格納されたList</param>
         /// <returns>処理中止フラグ</returns>
         protected virtual bool ApplyChange(DataGridViewCell cell, List<int> proceededRows)
         {
@@ -391,11 +391,10 @@ namespace SO.PictManager.Forms
             {
                 case IDX_SEL_CHK:
                     // 対象削除
-                    DeleteFile(FilePathes[listRow]);
+                    DeleteFile(ImageList[listRow].Key);
                     proceededRows.Add(listRow);
 
-                    // 削除済マーク付与
-                    FilePathes[listRow] += DELETED_MARK;
+                    ImageList[listRow].IsDeleted = true;
                     break;
 
                 case IDX_FILE_NAME:
@@ -418,10 +417,11 @@ namespace SO.PictManager.Forms
         #endregion
 
         #region ChangePath - 入力内容をファイルパスに反映
+
         /// <summary>
         /// ファイル一覧グリッドのファイル名列、ディレクトリパス列で入力された変更をファイルに対して反映します。
         /// </summary>
-        /// <param orderName="rowIndex">処理対象の行インデックス</param>
+        /// <param name="rowIndex">処理対象の行インデックス</param>
         /// <returns>処理中止フラグ</returns>
         protected virtual bool ChangePath(int rowIndex)
         {
@@ -440,11 +440,12 @@ namespace SO.PictManager.Forms
             string fileName = grdFiles[IDX_FILE_NAME, rowIndex].Value.ToString();
             string newPath = Path.Combine(dirPath, fileName);
 
-            File.Move(FilePathes[rowIndex], newPath);
-            FilePathes[rowIndex] = newPath;
+            File.Move(ImageList[rowIndex].Key, newPath);
+            ImageList[rowIndex].Key = newPath;
 
             return true;
         }
+
         #endregion
 
         #region RevertEdit - 最新の確定状態に戻す
@@ -548,18 +549,19 @@ namespace SO.PictManager.Forms
         #endregion
 
         #region ShowSimilarImages - 類似画像表示
+
         /// <summary>
         /// 指定行の画像の類似画像を検索し、サムネイルフォームで表示します。
         /// </summary>
-        /// <param orderName="rowIdx">指定行</param>
+        /// <param name="rowIdx">指定行</param>
         private void ShowSimilarImages(int rowIdx)
         {
             if (!(grdFiles[IDX_SIMILAR_BTN, rowIdx] is DataGridViewButtonCell)) return;
 
             string path = GetImagePath(rowIdx);
-            List<string> similarImages = _similarMap != null && _similarMap.ContainsKey(rowIdx)
+            List<IImage> similarImages = _similarMap != null && _similarMap.ContainsKey(rowIdx)
                     ? _similarMap[rowIdx]
-                    : ImageController.GetSimilarImagePathes(this, GetImagePath(rowIdx));
+                    : ImageController.GetSimilarImages(this, GetImagePath(rowIdx));
 
             if (!similarImages.Any())
             {
@@ -575,6 +577,7 @@ namespace SO.PictManager.Forms
                 form.Activate();
             }
         }
+
         #endregion
 
         #region イベントハンドラ
@@ -1042,19 +1045,20 @@ namespace SO.PictManager.Forms
         #endregion
 
         #region menuSearchSimilarAll_Click - 全ての行の類似画像を検索メニュー押下時
+
         /// <summary>
         /// 全ての行の類似画像を検索メニューがクリックされた際に実行される処理です。
         /// 全ての行の画像の類似画像を対象ディレクトリ内から検索し、
         /// 類似画像があった画像のSimilarボタンのみを活性化状態に設定します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void menuSearchSimilarAll_Click(object sender, EventArgs e)
         {
             try
             {
                 if (_similarMap != null) _similarMap.Clear();
-                _similarMap = new Dictionary<int, List<string>>();
+                _similarMap = new Dictionary<int, List<IImage>>();
 
                 Action<int, bool> actResetSimilarButton = (rowIdx, enable) =>
                     {
@@ -1087,8 +1091,8 @@ namespace SO.PictManager.Forms
 
                     string msg = string.Format("[{0}行目]{1} の類似画像を検索中...{2}{2}",
                             row.Index + 1, path, Environment.NewLine);
-                    List<string> similarImages =
-                            ImageController.GetSimilarImagePathes(this, path, msg);
+                    List<IImage> similarImages =
+                            ImageController.GetSimilarImages(this, path, msg);
                     if (similarImages.Count == 0)
                     {
                         // 類似画像が存在しない場合は押下不可能に設定
@@ -1109,6 +1113,7 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region menuFilterDuplicated_Click - 重複しているファイルのみを抽出メニュー押下時

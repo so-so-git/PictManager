@@ -41,6 +41,7 @@
             this.txtPage = new System.Windows.Forms.TextBox();
             this.btnClose = new System.Windows.Forms.Button();
             this.barStatus.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlParent)).BeginInit();
             this.pnlParent.Panel1.SuspendLayout();
             this.pnlParent.Panel2.SuspendLayout();
             this.pnlParent.SuspendLayout();
@@ -86,7 +87,7 @@
             this.pnlParent.Panel2.Controls.Add(this.txtPage);
             this.pnlParent.Panel2.Controls.Add(this.btnClose);
             this.pnlParent.Size = new System.Drawing.Size(737, 511);
-            this.pnlParent.SplitterDistance = 464;
+            this.pnlParent.SplitterDistance = 463;
             this.pnlParent.SplitterWidth = 5;
             this.pnlParent.TabIndex = 1;
             this.pnlParent.TabStop = false;
@@ -98,7 +99,7 @@
             this.pnlThumbnail.Location = new System.Drawing.Point(0, 0);
             this.pnlThumbnail.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.pnlThumbnail.Name = "pnlThumbnail";
-            this.pnlThumbnail.Size = new System.Drawing.Size(737, 464);
+            this.pnlThumbnail.Size = new System.Drawing.Size(737, 463);
             this.pnlThumbnail.TabIndex = 0;
             // 
             // btnNext
@@ -166,6 +167,7 @@
             // 
             // btnClose
             // 
+            this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClose.Location = new System.Drawing.Point(639, 5);
             this.btnClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnClose.Name = "btnClose";
@@ -196,6 +198,7 @@
             this.pnlParent.Panel1.ResumeLayout(false);
             this.pnlParent.Panel2.ResumeLayout(false);
             this.pnlParent.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlParent)).EndInit();
             this.pnlParent.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();

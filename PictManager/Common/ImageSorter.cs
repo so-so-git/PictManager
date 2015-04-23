@@ -6,29 +6,32 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 
-using FileSortOrderMap = System.Collections.Generic.Dictionary<SO.PictManager.Common.FileSortOrder, string>;
+using SO.PictManager.Forms.Info;
+using SO.PictManager.Imaging;
+
+using SortOrderMap = System.Collections.Generic.Dictionary<SO.PictManager.Common.ImageSortOrder, string>;
 
 namespace SO.PictManager.Common
 {
-    #region enum FileSortOrder - ファイルソート順列挙体
+    #region enum ImageSortOrder - 画像ソート順列挙体
 
     /// <summary>
-    /// ファイルソート順列挙体
+    /// 画像ソート順列挙体
     /// </summary>
-    public enum FileSortOrder
+    public enum ImageSortOrder
     {
-        /// <summary>ファイル名の昇順</summary>
-        FileNameAsc,
-        /// <summary>ファイル名の降順</summary>
-        FileNameDesc,
+        /// <summary>画像キーの昇順</summary>
+        KeyAsc,
+        /// <summary>画像キーの降順</summary>
+        KeyDesc,
         /// <summary>タイムスタンプの昇順</summary>
         TimestampAsc,
         /// <summary>タイムスタンプの降順</summary>
         TimestampDesc,
-        /// <summary>ファイルサイズの昇順</summary>
-        FileSizeAsc,
-        /// <summary>ファイルサイズの降順</summary>
-        FileSizeDesc,
+        /// <summary>画像データサイズの昇順</summary>
+        DataSizeAsc,
+        /// <summary>画像データサイズの降順</summary>
+        DataSizeDesc,
         /// <summary>ランダム表示</summary>
         Random,
     }
@@ -36,22 +39,22 @@ namespace SO.PictManager.Common
     #endregion
 
     /// <summary>
-    /// ファイル名ソート機能提供クラス
+    /// 画像ソート機能提供クラス
     /// </summary>
-    public static class FileSorter
+    public static class ImageSorter
     {
         #region メンバ変数
 
         /// <summary>ソート順コンボアイテムマッピング</summary>
-        private static readonly FileSortOrderMap _sortOrderMap = new FileSortOrderMap()
+        private static readonly SortOrderMap _sortOrderMap = new SortOrderMap()
         {
-            { FileSortOrder.FileNameAsc,   "ファイル名の昇順" },
-            { FileSortOrder.FileNameDesc,  "ファイル名の降順" },
-            { FileSortOrder.TimestampAsc,  "タイムスタンプの昇順" },
-            { FileSortOrder.TimestampDesc, "タイムスタンプの降順" },
-            { FileSortOrder.FileSizeAsc,   "ファイルサイズの昇順" },
-            { FileSortOrder.FileSizeDesc,  "ファイルサイズの降順" },
-            { FileSortOrder.Random,        "ランダム表示" },
+            { ImageSortOrder.KeyAsc,        "画像キーの昇順" },
+            { ImageSortOrder.KeyDesc,       "画像キーの降順" },
+            { ImageSortOrder.TimestampAsc,  "タイムスタンプの昇順" },
+            { ImageSortOrder.TimestampDesc, "タイムスタンプの降順" },
+            { ImageSortOrder.DataSizeAsc,   "画像データサイズの昇順" },
+            { ImageSortOrder.DataSizeDesc,  "画像データサイズの降順" },
+            { ImageSortOrder.Random,        "ランダム表示" },
         };
 
         #endregion
@@ -59,31 +62,38 @@ namespace SO.PictManager.Common
         #region Sort - ソート実施
 
         /// <summary>
-        /// 渡された文字列群を、指定されたソート順でソートして返却します。
+        /// 渡された画像データのリストを、指定されたソート順でソートして返却します。
         /// </summary>
         /// <param name="source">ソート対象の文字列群</param>
         /// <param name="order">ソート順</param>
-        /// <returns>ソートされた文字列群</returns>
-        public static IEnumerable<string> Sort(IEnumerable<string> source, FileSortOrder order)
+        /// <returns>ソートされた画像データのリスト</returns>
+        public static IEnumerable<IImage> Sort(IEnumerable<IImage> source, ImageSortOrder order)
         {
-            switch (order)
+            if (Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.File)
             {
-                case FileSortOrder.FileNameAsc:
-                    return source.OrderBy(p => Path.GetFileName(p));
-                case FileSortOrder.FileNameDesc:
-                    return source.OrderByDescending(p => Path.GetFileName(p));
-                case FileSortOrder.TimestampAsc:
-                    return source.OrderBy(p => File.GetLastWriteTime(p));
-                case FileSortOrder.TimestampDesc:
-                    return source.OrderByDescending(p => File.GetLastWriteTime(p));
-                case FileSortOrder.FileSizeAsc:
-                    return source.OrderBy(p => new FileInfo(p).Length);
-                case FileSortOrder.FileSizeDesc:
-                    return source.OrderByDescending(p => new FileInfo(p).Length);
-                case FileSortOrder.Random:
-                    return source.OrderBy(p => Guid.NewGuid());
-                default:
-                    return null;
+                switch (order)
+                {
+                    case ImageSortOrder.KeyAsc:
+                        return source.OrderBy(p => Path.GetFileName(p.Key));
+                    case ImageSortOrder.KeyDesc:
+                        return source.OrderByDescending(p => Path.GetFileName(p.Key));
+                    case ImageSortOrder.TimestampAsc:
+                        return source.OrderBy(p => p.Timestamp);
+                    case ImageSortOrder.TimestampDesc:
+                        return source.OrderByDescending(p => p.Timestamp);
+                    case ImageSortOrder.DataSizeAsc:
+                        return source.OrderBy(p => p.DataSize);
+                    case ImageSortOrder.DataSizeDesc:
+                        return source.OrderByDescending(p => p.DataSize);
+                    case ImageSortOrder.Random:
+                        return source.OrderBy(p => Guid.NewGuid());
+                    default:
+                        return null;
+                }
+            }
+            else
+            {
+                return null;
             }
         }
 
@@ -111,7 +121,7 @@ namespace SO.PictManager.Common
         /// </summary>
         /// <param orderName="order">FileSortOrderの列挙値</param>
         /// <returns>FileSortOrderの表示用名称</returns>
-        public static string GetSortOrderDisplayText(FileSortOrder order)
+        public static string GetSortOrderDisplayText(ImageSortOrder order)
         {
             return _sortOrderMap[order];
         }
@@ -126,7 +136,7 @@ namespace SO.PictManager.Common
         /// </exception>
         public static string GetSortOrderDisplayText(string orderName)
         {
-            FileSortOrder order = GetSortOrderByName(orderName);
+            ImageSortOrder order = GetSortOrderByName(orderName);
             return GetSortOrderDisplayText(order);
         }
 
@@ -139,11 +149,11 @@ namespace SO.PictManager.Common
         /// </summary>
         /// <param name="orderName">FileSortOrderの定義名称</param>
         /// <returns>FileSortOrderの列挙値</returns>
-        public static FileSortOrder GetSortOrderByName(string orderName)
+        public static ImageSortOrder GetSortOrderByName(string orderName)
         {
-            FieldInfo field = typeof(FileSortOrder).GetField(orderName,
+            FieldInfo field = typeof(ImageSortOrder).GetField(orderName,
                 BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
-            return (FileSortOrder)field.GetValue(null);
+            return (ImageSortOrder)field.GetValue(null);
         }
 
         #endregion
@@ -158,7 +168,7 @@ namespace SO.PictManager.Common
         /// <exception cref="System.ArgumentException">
         /// 指定された表示用文字列に一致するFileSortOrderが存在しない場合
         /// </exception>
-        public static FileSortOrder GetSortOrderByDisplayText(string displayText)
+        public static ImageSortOrder GetSortOrderByDisplayText(string displayText)
         {
             if (!_sortOrderMap.ContainsValue(displayText))
                 throw new ArgumentException("無効なソート順名です。");

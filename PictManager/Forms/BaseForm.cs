@@ -14,6 +14,7 @@ using SO.Library.IO;
 using SO.Library.Text;
 using SO.PictManager.Common;
 using SO.PictManager.Forms.Info;
+using SO.PictManager.Imaging;
 
 using CursorFace = System.Windows.Forms.Cursor;
 using Config = System.Configuration.ConfigurationManager;
@@ -26,9 +27,6 @@ namespace SO.PictManager.Forms
     public partial class BaseForm : Form
     {
         #region クラス定数
-
-        /// <summary>削除済マーク</summary>
-        protected const string DELETED_MARK = "|deleted|";
 
         /// <summary>仮削除ファイル格納フォルダ</summary>
         protected const string STORE_DIR_NAME = "DeletedFiles";
@@ -43,14 +41,14 @@ namespace SO.PictManager.Forms
 
         #region インスタンス変数
 
-        /// <summary>処理対象ディレクトリのパス</summary>
-        private DirectoryInfo _targetDir;
+        /// <summary>表示対象画像のリスト</summary>
+        private List<IImage> _imageList = new List<IImage>();
 
         /// <summary>現在選択しているファイルのインデックス</summary>
         private int _currentIdx = 0;
 
-        /// <summary>処理対象ディレクトリ内の画像ファイルのパスリスト</summary>
-        private List<string> _filePathes = new List<string>();
+        /// <summary>処理対象ディレクトリのパス</summary>
+        private DirectoryInfo _targetDir;
 
         /// <summary>サブフォルダ包含フラグ</summary>
         private bool _includeSubFlg = false;
@@ -69,13 +67,13 @@ namespace SO.PictManager.Forms
         }
 
         /// <summary>
-        /// 表示対象のファイルパスのリストを取得します。
+        /// 表示対象画像のリストを取得します。
         /// </summary>
         [Browsable(false)]
-        protected internal List<string> FilePathes
+        protected internal List<IImage> ImageList
         {
-            get { return _filePathes; }
-            protected set { _filePathes = value; }
+            get { return _imageList; }
+            protected set { _imageList = value; }
         }
 
         /// <summary>
@@ -84,7 +82,7 @@ namespace SO.PictManager.Forms
         [Browsable(false)]
         internal int FileCount
         {
-            get { return _filePathes.Count; }
+            get { return _imageList.Count; }
         }
 
         /// <summary>
@@ -104,7 +102,7 @@ namespace SO.PictManager.Forms
                         FormUtilities.ShowMessage("W002");
                         return;
                     }
-                    if (value > _filePathes.Count - 1)
+                    if (value > _imageList.Count - 1)
                     {
                         FormUtilities.ShowMessage("W003");
                         return;
@@ -146,15 +144,17 @@ namespace SO.PictManager.Forms
         /// <summary>
         /// 対象ディレクトリパス、サブディレクトリ処理フラグ付きのコンストラクタです。
         /// </summary>
-        /// <param orderName="targetPath">対象ディレクトリパス</param>
-        /// <param orderName="includeSubFlg">サブディレクトリ処理フラグ</param>
+        /// <param name="targetPath">対象ディレクトリパス</param>
+        /// <param name="includeSubFlg">サブディレクトリ処理フラグ</param>
         public BaseForm(string targetPath, bool includeSubFlg)
         {
             // コンポーネント初期化
             InitializeComponent();
 
             // フィールド初期化
-            if (targetPath != null) _targetDir = new DirectoryInfo(targetPath);
+            if (targetPath != null)
+                _targetDir = new DirectoryInfo(targetPath);
+
             _includeSubFlg = includeSubFlg;
 
             // メニューバー作成
@@ -177,46 +177,47 @@ namespace SO.PictManager.Forms
         #region DeleteFile - 指定ファイル削除
 
         /// <summary>
-        /// 指定したパスに存在するファイルを削除ディレクトリに移動します。
+        /// 指定されたキーの画像を削除します。
+        /// 画像モードがファイルの場合は、削除した画像ファイルを削除ディレクトリに移動します。
         /// </summary>
-        /// <param orderName="path">削除するファイルのパス</param>
+        /// <param orderName="key">削除する画像のキー</param>
         /// <returns>正常終了時:true、異常終了時:false</returns>
-        protected bool DeleteFile(string path)
+        protected bool DeleteFile(string key)
         {
             try
             {
                 // 一時退避ディレクトリが未作成の場合は作成
-                string storeDir = Path.Combine(EntryPoint._tmpDirPath, STORE_DIR_NAME);
+                string storeDir = Path.Combine(EntryPoint.TmpDirPath, STORE_DIR_NAME);
                 if (!Directory.Exists(storeDir))
                     Directory.CreateDirectory(storeDir);
 
                 // ファイルの読み取り専用属性を解除
-                var info = new FileInfo(path);
+                var info = new FileInfo(key);
                 info.Attributes = info.Attributes & ~FileAttributes.ReadOnly;
 
                 // 既に同名ファイルが存在する場合は前にアンダーバーを追加
-                string movePath = Path.Combine(storeDir, Path.GetFileName(path));
+                string movePath = Path.Combine(storeDir, Path.GetFileName(key));
                 while (File.Exists(movePath))
                 {
                     movePath = Path.Combine(storeDir, Path.GetFileName(movePath).Insert(0, "_"));
                 }
 
                 // 対象ファイルを一時退避ディレクトリへ移動
-                File.Move(path, movePath);
+                File.Move(key, movePath);
 
                 // 削除済ファイルリストに追記
                 string delListPath = Path.Combine(storeDir, DEL_LIST_NAME);
                 using (var sw = new StreamWriter(delListPath, true))
                 {
-                    sw.WriteLine(Path.GetFileName(movePath) + DEL_LIST_SEPARATOR + path);
+                    sw.WriteLine(Path.GetFileName(movePath) + DEL_LIST_SEPARATOR + key);
                 }
 
                 // ログ出力
-                Utilities.Logger.WriteLog(GetType().FullName, MethodBase.GetCurrentMethod().Name, "[DELETE]" + path);
+                Utilities.Logger.WriteLog(GetType().FullName, MethodBase.GetCurrentMethod().Name, "[DELETE]" + key);
             }
             catch (Exception ex)
             {
-                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod(), "削除ファイル：" + path);
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod(), "削除ファイル：" + key);
                 return false;
             }
 
@@ -235,7 +236,7 @@ namespace SO.PictManager.Forms
             try
             {
                 // 一時退避ディレクトリ存在確認
-                string storeDir = Path.Combine(EntryPoint._tmpDirPath, STORE_DIR_NAME);
+                string storeDir = Path.Combine(EntryPoint.TmpDirPath, STORE_DIR_NAME);
                 if (!Directory.Exists(storeDir))
                 {
                     FormUtilities.ShowMessage("I006");
@@ -266,10 +267,13 @@ namespace SO.PictManager.Forms
         public ResultStatus RenameFile()
         {
             var status = ResultStatus.Empty;
+            string oldFilePath = _imageList[CurrentIndex].Key;
+
             try
             {
+
                 // 対象ファイル存在チェック
-                if (!File.Exists(_filePathes[CurrentIndex]))
+                if (!File.Exists(_imageList[CurrentIndex].Key))
                 {
                     FormUtilities.ShowMessage("E003");
                     return status = ResultStatus.Error;
@@ -279,7 +283,7 @@ namespace SO.PictManager.Forms
                 string newName = null;
                 using (var inputDlg = new CommonInputDialog(
                     "変更後ファイル名入力", "変更後ファイル名：", true,
-                    Path.GetFileName(_filePathes[CurrentIndex])))
+                    Path.GetFileName(oldFilePath)))
                 {
                     if (inputDlg.ShowDialog(this) != DialogResult.OK)
                     {
@@ -304,22 +308,23 @@ namespace SO.PictManager.Forms
                 }
 
                 // 拡張子チェック
-                if (Path.GetExtension(newName) != Path.GetExtension(_filePathes[CurrentIndex]))
-                    newName += Path.GetExtension(_filePathes[CurrentIndex]);
+                string oldExt = Path.GetExtension(oldFilePath);
+                if (Path.GetExtension(newName) != oldExt)
+                    newName += oldExt;
 
                 // 変更後ファイルパス組立
                 string newPath = Path.Combine(
-                        Path.GetDirectoryName(_filePathes[CurrentIndex]), newName);
+                        Path.GetDirectoryName(oldFilePath), newName);
 
                 // ファイル名変更
-                var newFile = new FileInfo(_filePathes[CurrentIndex]);
+                var newFile = new FileInfo(oldFilePath);
                 newFile.MoveTo(newPath);
-                _filePathes[CurrentIndex] = newPath;
+                _imageList[CurrentIndex].Key = newPath;
 
                 // 処理ログ出力
                 var sb = new StringBuilder();
                 sb.Append("[MOVE]");
-                sb.Append(_filePathes[CurrentIndex]);
+                sb.Append(_imageList[CurrentIndex]);
                 sb.Append(" -> ");
                 sb.Append(newPath);
 
@@ -331,7 +336,7 @@ namespace SO.PictManager.Forms
             {
                 status = ResultStatus.Error;
                 string optionMsg = ex is IOException ?
-                        MessageXml.GetMessageInfo("E001", _filePathes[CurrentIndex]).message : null;
+                        MessageXml.GetMessageInfo("E001", oldFilePath).message : null;
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod(), optionMsg);
             }
             finally
@@ -356,6 +361,7 @@ namespace SO.PictManager.Forms
         {
             var status = ResultStatus.Empty;
             int idx = 0;
+
             try
             {
                 // 前回のリネーム情報を復元してリネームダイアログを表示
@@ -392,7 +398,7 @@ namespace SO.PictManager.Forms
                 {
                     MessageInfo msgInfo = MessageXml.GetMessageInfo("I002", string.Empty);
                     progDlg.StartProgress(
-                            msgInfo.caption, msgInfo.message, 0, _filePathes.Count);
+                            msgInfo.caption, msgInfo.message, 0, _imageList.Count);
 
                     // シャッフルがON場合はシャッフル最新化、OFFの場合は通常の最新化
                     if (renameInfo.IsShuffle)
@@ -405,7 +411,7 @@ namespace SO.PictManager.Forms
 
                         // ファイル名ソート
                         if (renameInfo.SortOrder.HasValue)
-                            _filePathes = FileSorter.Sort(_filePathes, renameInfo.SortOrder.Value).ToList();
+                            _imageList = ImageSorter.Sort(_imageList, renameInfo.SortOrder.Value).ToList();
                     }
 
                     // 変換前後パス格納リストを確保
@@ -417,22 +423,23 @@ namespace SO.PictManager.Forms
 
                     // ファイル名重複を避ける為、仮名称に一時一次変換
                     StringBuilder pathBuilder;
-                    string parentBuf = _filePathes.Count == 0 ? null : Path.GetDirectoryName(_filePathes[0]);
+                    string parentBuf = _imageList.Count == 0 ? null : Path.GetDirectoryName(_imageList[0].Key);
                     int fileCnt = 0;
-                    for (idx = 0; idx < _filePathes.Count; ++idx)
+                    for (idx = 0; idx < _imageList.Count; ++idx)
                     {
-                        var target = new FileInfo(_filePathes[idx]);
-                        string parentPath = Path.GetDirectoryName(_filePathes[idx]);
+                        string oldFilePath = _imageList[idx].Key;
+                        var target = new FileInfo(oldFilePath);
+                        string parentPath = Path.GetDirectoryName(oldFilePath);
                         progDlg.Message = MessageXml.GetMessageInfo("I002", parentPath).message;
 
                         pathBuilder = new StringBuilder(parentPath);
                         pathBuilder.Append(Path.DirectorySeparatorChar);
                         pathBuilder.Append("_");
-                        pathBuilder.Append(Path.GetFileName(_filePathes[idx]));
-                        File.Move(_filePathes[idx], pathBuilder.ToString());
+                        pathBuilder.Append(Path.GetFileName(oldFilePath));
+                        File.Move(oldFilePath, pathBuilder.ToString());
 
                         // 変換前後のパスを保存
-                        pathPare.Add(new { OriginalPath = _filePathes[idx], TempPath = pathBuilder.ToString() });
+                        pathPare.Add(new { OriginalPath = oldFilePath, TempPath = pathBuilder.ToString() });
 
                         // ディレクトリ単位のファイルカウント処理
                         if (parentPath == parentBuf)
@@ -544,7 +551,7 @@ namespace SO.PictManager.Forms
             {
                 status = ResultStatus.Error;
                 string optionMsg = ex is IOException ?
-                        MessageXml.GetMessageInfo("E001", _filePathes[idx]).message : null;
+                        MessageXml.GetMessageInfo("E001", _imageList[idx].Key).message : null;
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod(), optionMsg);
             }
             finally
@@ -574,10 +581,13 @@ namespace SO.PictManager.Forms
         public ResultStatus MoveFile()
         {
             var status = ResultStatus.Empty;
+            string oldFilePath = _imageList[CurrentIndex].Key;
+
             try
             {
+
                 // 対象ファイル存在チェック
-                if (!File.Exists(_filePathes[CurrentIndex]))
+                if (!File.Exists(oldFilePath))
                 {
                     FormUtilities.ShowMessage("E003");
                     return status = ResultStatus.Error;
@@ -589,20 +599,20 @@ namespace SO.PictManager.Forms
                 {
                     dlg.ShowNewFolderButton = true;
                     dlg.RootFolder = Environment.SpecialFolder.MyComputer;
-                    dlg.SelectedPath = Path.GetDirectoryName(_filePathes[CurrentIndex]);
+                    dlg.SelectedPath = Path.GetDirectoryName(oldFilePath);
                     dlg.Description = "移動先のディレクトリを選択して下さい。";
                     if (dlg.ShowDialog(this) != DialogResult.OK) return ResultStatus.Cancel;
 
                     // 変更後ファイルパス組立
                     newPath = Path.Combine(
-                            dlg.SelectedPath, Path.GetFileName(_filePathes[CurrentIndex]));
+                            dlg.SelectedPath, Path.GetFileName(oldFilePath));
                 }
 
                 // ファイル名変更
-                var newFile = new FileInfo(_filePathes[CurrentIndex]);
+                var newFile = new FileInfo(oldFilePath);
                 newFile.MoveTo(newPath);
-                _filePathes.RemoveAt(CurrentIndex);
-                if (CurrentIndex > _filePathes.Count - 2) CurrentIndex = 0;
+                _imageList.RemoveAt(CurrentIndex);
+                if (CurrentIndex > _imageList.Count - 2) CurrentIndex = 0;
 
                 status = ResultStatus.OK;
             }
@@ -610,7 +620,7 @@ namespace SO.PictManager.Forms
             {
                 status = ResultStatus.Error;
                 string optionMsg = ex is IOException ?
-                        MessageXml.GetMessageInfo("E001", _filePathes[CurrentIndex]).message : null;
+                        MessageXml.GetMessageInfo("E001", oldFilePath).message : null;
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod(), optionMsg);
             }
             finally
@@ -654,10 +664,10 @@ namespace SO.PictManager.Forms
                 }
 
                 // 指定ディレクトリへファイルを移動
-                foreach (var srcPath in _filePathes)
+                foreach (var img in _imageList)
                 {
-                    target = srcPath;   // エラー処理用に対象ファイル名を保存
-                    File.Move(srcPath, Path.Combine(destDir, Path.GetFileName(srcPath)));
+                    target = img.Key;   // エラー処理用に対象ファイル名を保存
+                    File.Move(img.Key, Path.Combine(destDir, Path.GetFileName(img.Key)));
                 }
 
                 status = ResultStatus.OK;
@@ -696,6 +706,7 @@ namespace SO.PictManager.Forms
         {
             try
             {
+                var imageList = new List<IImage>();
                 if (_targetDir != null)
                 {
                     // 表示対象拡張子リストを取得
@@ -706,12 +717,17 @@ namespace SO.PictManager.Forms
                         SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
 
                     // 対象ディレクトリ内の画像ファイルパスを全取得
-                    _filePathes.Clear();
                     foreach (var ext in extentions)
-                        _filePathes.AddRange(Directory.GetFiles(_targetDir.FullName, "*." + ext, opt));
+                    {
+                        foreach (var file in Directory.GetFiles(_targetDir.FullName, "*." + ext, opt))
+                        {
+                            imageList.Add(new FileImage(file));
+                        }
+                    }
                 }
 
-                _filePathes.Sort();
+                _imageList.Clear();
+                _imageList = imageList.OrderBy(i => i.Key).ToList();
             }
             catch (Exception ex)
             {
@@ -773,7 +789,7 @@ namespace SO.PictManager.Forms
                 var targetFiles = new List<List<string>>();
 
                 if (_targetDir == null)
-                    targetFiles.Add(_filePathes);
+                    targetFiles.Add(_imageList.Select(i => i.Key).ToList());
                 else
                     // 二重リストでディレクトリ単位に対象ファイル群を取得
                     GetChildFiles(targetFiles, _targetDir.FullName, true);
@@ -795,7 +811,11 @@ namespace SO.PictManager.Forms
                 }
 
                 // 新しいリストで既存リストを上書き
-                _filePathes = swapFiles;
+                _imageList.Clear();
+                foreach (var file in swapFiles)
+                {
+                    _imageList.Add(new FileImage(file));
+                }
             }
             catch (Exception ex)
             {
@@ -860,7 +880,7 @@ namespace SO.PictManager.Forms
             int idx = -1;
             try
             {
-                idx = _filePathes.FindIndex(x => x == searchPath);
+                idx = _imageList.FindIndex(x => x.Key == searchPath);
             }
             catch (Exception ex)
             {

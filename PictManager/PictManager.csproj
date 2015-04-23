@@ -115,8 +115,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Constants.cs" />
-    <Compile Include="Common\FileSorter.cs" />
-    <Compile Include="Common\ImageController.cs" />
+    <Compile Include="Common\ImageSorter.cs" />
+    <Compile Include="Imaging\IImage.cs" />
+    <Compile Include="Imaging\ImageController.cs" />
     <Compile Include="Components\ThumbnailUnit.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -205,6 +206,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>PictManagerEntity.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Imaging\DataImage.cs" />
+    <Compile Include="Imaging\FileImage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

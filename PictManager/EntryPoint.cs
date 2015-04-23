@@ -43,7 +43,7 @@ namespace SO.PictManager
         private const string PARAM_VIEW_IMAGE = "-f";
 
         /// <summary>一時ディレクトリパス</summary>
-        internal static readonly string _tmpDirPath;
+        private static readonly string _tmpDirPath;
 
         /// <summary>SQLServerサービス名</summary>
         private static readonly string _sqlServiceName;
@@ -70,6 +70,15 @@ namespace SO.PictManager
             // メッセージ定義ファイル初期化
             MessageXml.MessageFilePath = ConfigurationManager.AppSettings["MessageFilePath"];
         }
+
+        #endregion
+
+        #region プロパティ
+
+        /// <summary>
+        /// 一時ディレクトリパスを取得します。
+        /// </summary>
+        internal static string TmpDirPath { get { return _tmpDirPath; } }
 
         #endregion
 

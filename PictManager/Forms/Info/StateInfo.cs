@@ -26,7 +26,7 @@ namespace SO.PictManager.Forms.Info
         {
 			LastPath = null;
 			SizeMode = PictureBoxSizeMode.Zoom;
-            SortOrder = FileSortOrder.FileNameAsc;
+            SortOrder = ImageSortOrder.KeyAsc;
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace SO.PictManager.Forms.Info
 		public PictureBoxSizeMode SizeMode { get; set; }
 
         /// <summary>連続表示時のFileSortOrderを取得または設定します。</summary>
-        public FileSortOrder SortOrder { get; set; }
+        public ImageSortOrder SortOrder { get; set; }
 
         #endregion
 

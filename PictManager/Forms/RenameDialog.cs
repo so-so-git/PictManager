@@ -62,7 +62,7 @@ namespace SO.PictManager.Forms
         {
 
             // ソート順コンボボックス構築
-            FileSorter.BindSortOrderDataSource(cmbSort);
+            ImageSorter.BindSortOrderDataSource(cmbSort);
 
             // リネーム情報設定
             if (renameInfo != null)
@@ -186,7 +186,7 @@ namespace SO.PictManager.Forms
             rdoBefore.Checked = renameInfo.OriginalPosition == OriginalPosition.Before;
             rdoAfter.Checked = renameInfo.OriginalPosition == OriginalPosition.After;
             if (renameInfo.IsShuffle || !renameInfo.SortOrder.HasValue)
-                cmbSort.SelectedValue = FileSortOrder.FileNameAsc;
+                cmbSort.SelectedValue = ImageSortOrder.KeyAsc;
             else
                 cmbSort.SelectedValue = renameInfo.SortOrder.Value;
         }
@@ -219,7 +219,7 @@ namespace SO.PictManager.Forms
             if (renameInfo.IsShuffle || !chkSort.Checked)
                 renameInfo.SortOrder = null;
             else
-                renameInfo.SortOrder = (FileSortOrder)cmbSort.SelectedValue;
+                renameInfo.SortOrder = (ImageSortOrder)cmbSort.SelectedValue;
 
             return renameInfo;
         }

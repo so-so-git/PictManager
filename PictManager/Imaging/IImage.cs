@@ -1,0 +1,46 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SO.PictManager.Imaging
+{
+    /// <summary>
+    /// 画像インタフェース
+    /// </summary>
+    public interface IImage
+    {
+        /// <summary>
+        /// 画像キーを取得・設定します。
+        /// </summary>
+        string Key { get; set; }
+
+        /// <summary>
+        /// 画像のタイムスタンプを取得します。
+        /// </summary>
+        DateTime Timestamp { get; }
+
+        /// <summary>
+        /// 画像のデータサイズを取得します。
+        /// </summary>
+        long DataSize { get; }
+
+        /// <summary>
+        /// 画像が削除されているかのフラグを取得・設定します。
+        /// </summary>
+        bool IsDeleted { get; set; }
+
+        /// <summary>
+        /// 画像オブジェクトを取得します。
+        /// </summary>
+        /// <returns>画像オブジェクト</returns>
+        Image GetImage();
+
+        /// <summary>
+        /// 画像を削除します。
+        /// </summary>
+        void Delete();
+    }
+}

@@ -17,6 +17,7 @@ using SO.Library.Text;
 using SO.PictManager.Components;
 using SO.PictManager.Common;
 using SO.PictManager.Forms.Info;
+using SO.PictManager.Imaging;
 
 using CursorFace = System.Windows.Forms.Cursor;
 using Config = System.Configuration.ConfigurationManager;
@@ -79,15 +80,15 @@ namespace SO.PictManager.Forms
 
             // ソート順コンボボックス構築
             cmbSort.SelectedIndexChanged -= cmbSort_SelectedIndexChanged;
-            FileSorter.BindSortOrderDataSource(cmbSort);
+            ImageSorter.BindSortOrderDataSource(cmbSort);
             cmbSort.SelectedValue = Utilities.State.SortOrder;
-            FilePathes = FileSorter.Sort(FilePathes, Utilities.State.SortOrder).ToList();
+            ImageList = ImageSorter.Sort(ImageList, Utilities.State.SortOrder).ToList();
             cmbSort.SelectedIndexChanged += cmbSort_SelectedIndexChanged;
 
             // 最初の画像を基底クラスの表示対象ファイルプロパティに設定
             if (FileCount > 0)
             {
-                ViewFilePath = FilePathes[0];
+                ViewFilePath = ImageList[0].Key;
             }
             else
             {
@@ -263,24 +264,15 @@ namespace SO.PictManager.Forms
                 }
 
                 // PictureBox更新
-                if (FilePathes[CurrentIndex].Length >= DELETED_MARK.Length)
+                if (ImageList[CurrentIndex].IsDeleted)
                 {
-                    if (FilePathes[CurrentIndex].EndsWith(DELETED_MARK))
-                    {
-                        // 既に対象イメージが削除されている場合は非表示
-                        ShowInformationLabel(DELETED_IMAGE_LABEL);
-                    }
-                    else
-                    {
-                        // イメージ表示
-                        ViewFilePath = FilePathes[CurrentIndex]; // 基底クラスの表示ファイル指定プロパティを設定
-                        base.DisplayPicture();
-                    }
+                    // 既に対象イメージが削除されている場合は非表示
+                    ShowInformationLabel(DELETED_IMAGE_LABEL);
                 }
                 else
                 {
                     // イメージ表示
-                    ViewFilePath = FilePathes[CurrentIndex]; // 基底クラスの表示ファイル指定プロパティを設定
+                    ViewFilePath = ImageList[CurrentIndex].Key; // 基底クラスの表示ファイル指定プロパティを設定
                     base.DisplayPicture();
                 }
 
@@ -308,21 +300,15 @@ namespace SO.PictManager.Forms
             {
                 int factIdx;
                 if (idx < 0)
-                {
                     factIdx = 0;
-                }
                 else if (idx > FileCount - 1)
-                {
                     factIdx = FileCount - 1;
-                }
                 else
-                {
                     factIdx = idx;
-                }
 
                 // 表示更新
                 CurrentIndex = factIdx;
-                ViewFilePath = FilePathes[CurrentIndex];
+                ViewFilePath = ImageList[CurrentIndex].Key;
                 DisplayPicture();
             }
             catch (Exception ex)
@@ -376,30 +362,26 @@ namespace SO.PictManager.Forms
                 // 現在のインデックスから末尾までを検索
                 int i;
                 for (i = CurrentIndex; i < FileCount; ++i)
-                    if (FilePathes[i].Length >= DELETED_MARK.Length)
+                {
+                    if (!ImageList[i].IsDeleted)
                     {
-                        if (!FilePathes[i].EndsWith(DELETED_MARK))
-                        {
-                            ret = i;
-                            break;
-                        }
+                        ret = i;
+                        break;
                     }
-                    else return i;
+                }
 
                 // 末尾まで検索して見つからなかった場合は先頭から再検索
                 if (i >= FileCount)
                 {
                     int j;
                     for (j = 0; j < CurrentIndex; ++j)
-                        if (FilePathes[j].Length >= DELETED_MARK.Length)
+                    {
+                        if (!ImageList[j].IsDeleted)
                         {
-                            if (!FilePathes[j].EndsWith(DELETED_MARK))
-                            {
-                                ret = j;
-                                break;
-                            }
+                            ret = j;
+                            break;
                         }
-                        else return i;
+                    }
                 }
             }
             catch (Exception ex)
@@ -472,7 +454,7 @@ namespace SO.PictManager.Forms
 
                 try
                 {
-                    _bookmarkForm = new BookmarkForm((FileSortOrder)cmbSort.SelectedValue);
+                    _bookmarkForm = new BookmarkForm((ImageSortOrder)cmbSort.SelectedValue);
                     _bookmarkForm.BookmarkJump += (sender, e) => DisplayPictureByIndex(e.Bookmark.FileNo - 1);
                     _bookmarkForm.FormClosed += (sender, e) => _bookmarkForm = null;
 
@@ -504,7 +486,7 @@ namespace SO.PictManager.Forms
         {
             try
             {
-                Utilities.State.SortOrder = (FileSortOrder)cmbSort.SelectedValue;
+                Utilities.State.SortOrder = (ImageSortOrder)cmbSort.SelectedValue;
                 base.SaveStateInfo();
             }
             catch (Exception ex)
@@ -740,8 +722,8 @@ namespace SO.PictManager.Forms
         /// 対象ファイル再取得メニューがクリックされた際に実行される処理です。
         /// 現在の情報で対象ファイルリストを更新します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void menuRefresh_Click(object sender, EventArgs e)
         {
             try
@@ -758,7 +740,7 @@ namespace SO.PictManager.Forms
                 }
 
                 // 最終表示ファイルパスを検索用に保存
-                string lastFile = FilePathes[lastIdx];
+                string lastFile = ImageList[lastIdx].Key;
 
                 // 対象ファイルを最新化
                 RefreshTargetFiles();
@@ -784,8 +766,8 @@ namespace SO.PictManager.Forms
         /// 一括ファイル名変更メニューがクリックされた際に実行される処理です。
         /// ファイル名変更情報入力ダイアログを表示し、入力された内容に応じてファイル名を一括で変更します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void menuRenameAll_Click(object sender, EventArgs e)
         {
             // 最後に表示していたファイルを取得
@@ -800,7 +782,7 @@ namespace SO.PictManager.Forms
             }
 
             // 最終表示ファイルパスを検索用に保存
-            string lastFile = FilePathes[lastIdx];
+            string lastFile = ImageList[lastIdx].Key;
 
             // ファイル名一括変更
             if (RenameAllFiles() == ResultStatus.OK)
@@ -1011,20 +993,17 @@ namespace SO.PictManager.Forms
         /// 削除ボタンがクリックされた際に実行される処理です。
         /// 表示中の画像の削除を行ないます。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         protected override void btnDelete_Click(object sender, EventArgs e)
         {
             try
             {
                 // 既に削除済か確認
-                if (FilePathes[CurrentIndex].Length >= DELETED_MARK.Length)
+                if (ImageList[CurrentIndex].IsDeleted)
                 {
-                    if (FilePathes[CurrentIndex].EndsWith(DELETED_MARK))
-                    {
-                        FormUtilities.ShowMessage("E006");
-                        return;
-                    }
+                    FormUtilities.ShowMessage("E006");
+                    return;
                 }
 
                 // 削除確認
@@ -1037,12 +1016,8 @@ namespace SO.PictManager.Forms
                 picViewer.Image.Dispose();
 
                 // 対象ファイルを削除
-                //ViewFilePath = _filePathes[CurrentIndex];
-                if (DeleteFile(FilePathes[CurrentIndex]))
+                if (DeleteFile(ImageList[CurrentIndex].Key))
                 {
-                    // 削除済みラベル追加
-                    FilePathes[CurrentIndex] += DELETED_MARK;
-
                     // 次の有効イメージを表示
                     if ((CurrentIndex = SearchNextValidIndex()) == -1)
                     {
@@ -1093,8 +1068,8 @@ namespace SO.PictManager.Forms
         /// 類似画像表示チェックボックスが変更された際に実行される処理です。
         /// 表示中の画像と類似したものをパスリストから検索してサムネイルフォームで表示します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void chkSimilar_CheckedChanged(object sender, EventArgs e)
         {
             try
@@ -1102,7 +1077,8 @@ namespace SO.PictManager.Forms
                 if (chkSimilar.Checked)
                 {
                     // 類似画像を検索しサムネイルリストで表示
-                    List<string> similarImages = ImageController.GetSimilarImagePathes(this, FilePathes[CurrentIndex]);
+                    List<IImage> similarImages =
+                        ImageController.GetSimilarImages(this, ImageList[CurrentIndex].Key);
                     if (!similarImages.Any())
                     {
                         FormUtilities.ShowMessage("I008");
@@ -1112,9 +1088,9 @@ namespace SO.PictManager.Forms
                     {
                         _thumbnailForm = new ThumbnailForm(similarImages);
                         _thumbnailForm.Text = string.Format("PictManager - 類似画像検索結果 [{0}]",
-                                FilePathes[CurrentIndex]);
+                                ImageList[CurrentIndex]);
                         _thumbnailForm.StatusBarText = string.Format("[{0}] の類似画像を表示中 - {1}件",
-                                FilePathes[CurrentIndex], similarImages.Count);
+                                ImageList[CurrentIndex], similarImages.Count);
                         _thumbnailForm.Disposed += new EventHandler(
                             (obj, fce) =>
                             {
@@ -1199,7 +1175,7 @@ namespace SO.PictManager.Forms
                     _thumbnailForm.Dispose();
 
                 // 一つ前のインデックスの画像を表示(最初の場合は末尾を表示)
-                if (CurrentIndex == 0) CurrentIndex = FilePathes.Count - 1;
+                if (CurrentIndex == 0) CurrentIndex = ImageList.Count - 1;
                 else --CurrentIndex;
                 DisplayPicture();
             }
@@ -1330,7 +1306,7 @@ namespace SO.PictManager.Forms
                 CursorFace.Current = Cursors.WaitCursor;
 
                 // ソート用メソッドセット
-                FileSortOrder order = (FileSortOrder)cmbSort.SelectedValue;
+                ImageSortOrder order = (ImageSortOrder)cmbSort.SelectedValue;
 
                 // プログレスダイアログ表示
                 using (var progDlg = new ProgressDialog(this))
@@ -1339,7 +1315,7 @@ namespace SO.PictManager.Forms
                     progDlg.StartProgressWithMarquee(msgInfo.caption, msgInfo.message);
 
                     // ファイル名ソート
-                    FilePathes = FileSorter.Sort(FilePathes, order).ToList();
+                    ImageList = ImageSorter.Sort(ImageList, order).ToList();
 
                     // 先頭の画像を再表示
                     DisplayPictureByIndex(0);

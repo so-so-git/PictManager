@@ -10,7 +10,7 @@ using SO.Library.Drawing;
 using SO.Library.Forms;
 using SO.PictManager.Forms;
 
-namespace SO.PictManager.Common
+namespace SO.PictManager.Imaging
 {
     /// <summary>
     /// 共通画像処理クラス
@@ -30,36 +30,36 @@ namespace SO.PictManager.Common
 
         #endregion
 
-        #region GetSimilarImagePathes - 類似画像パスリスト取得
+        #region GetSimilarImages - 類似画像リスト取得
 
         /// <summary>
-        /// 指定されたフォームが持つ表示対象パスリスト内から、
-        /// 基準となる画像と類似した画像を検索し、そのパスのリストを取得します。
+        /// 指定されたフォームが持つ表示対象画像リスト内から、
+        /// 基準となる画像と類似した画像を検索し、そのリストを取得します。
         /// </summary>
-        /// <param orderName="form">フォーム</param>
-        /// <param orderName="criterionPath">基準となる画像のパス</param>
-        /// <returns>類似画像パスリスト</returns>
-        internal static List<string> GetSimilarImagePathes(BaseForm form, string criterionPath)
+        /// <param name="form">フォーム</param>
+        /// <param name="criterionKey">基準となる画像のキー</param>
+        /// <returns>類似画像のリスト</returns>
+        internal static List<IImage> GetSimilarImages(BaseForm form, string criterionKey)
         {
-            return GetSimilarImagePathes(form, criterionPath, null);
+            return GetSimilarImages(form, criterionKey, null);
         }
 
         /// <summary>
-        /// 指定されたフォームが持つ表示対象パスリスト内から、
-        /// 基準となる画像と類似した画像を検索し、そのパスのリストを取得します。
+        /// 指定されたフォームが持つ表示対象画像リスト内から、
+        /// 基準となる画像と類似した画像を検索し、そのリストを取得します。
         /// (プログレスダイアログに追加表示するメッセージを指定します)
         /// </summary>
-        /// <param orderName="form">フォーム</param>
-        /// <param orderName="criterionPath">基準となる画像のパス</param>
-        /// <param orderName="message">プログレスダイアログに追加表示するメッセージ</param>
-        /// <returns>類似画像パスリスト</returns>
-        internal static List<string> GetSimilarImagePathes(BaseForm form, string criterionPath, string message)
+        /// <param name="form">フォーム</param>
+        /// <param name="criterionKey">基準となる画像のキー</param>
+        /// <param name="message">プログレスダイアログに追加表示するメッセージ</param>
+        /// <returns>類似画像のリスト</returns>
+        internal static List<IImage> GetSimilarImages(BaseForm form, string criterionKey, string message)
         {
             try
             {
                 bool useGray = false;
 
-                var similarFiles = new List<string>();
+                var similarImages = new List<IImage>();
 
                 // マウスカーソル変更(待機)
                 Cursor.Current = Cursors.WaitCursor;
@@ -75,7 +75,7 @@ namespace SO.PictManager.Common
                     int xPos;
                     int yPos = 0;
                     int[,] viewAvgs = new int[DIVIDE_HORISONTAL, DIVIDE_VERTICAL];
-                    using (Image img = Image.FromFile(criterionPath))
+                    using (Image img = Image.FromFile(criterionKey))
                     using (Bitmap colorBmp = new Bitmap(img))
                     using (Bitmap bmp = useGray ? ImageUtilities.ToGrayScale(colorBmp, GrayScaleMethod.NTSC) : colorBmp)
                     {
@@ -103,15 +103,15 @@ namespace SO.PictManager.Common
 
                     int proceedCount = 0;
                     var similarList = new List<string>();
-                    foreach (var compPath in form.FilePathes)
+                    foreach (var compImage in form.ImageList)
                     {
                         // プログレスメッセージ更新
                         progDlg.Message = string.Format("{0}({1}/{2}) {3}",
-                                message ?? string.Empty, ++proceedCount, form.FileCount, compPath);
+                                message ?? string.Empty, ++proceedCount, form.FileCount, compImage);
 
-                        if (compPath == criterionPath) continue;
+                        if (compImage.Key == criterionKey) continue;
 
-                        using (Image img = Image.FromFile(compPath))
+                        using (Image img = compImage.GetImage())
                         using (Bitmap colorBmp = new Bitmap(img))
                         using (Bitmap bmp = useGray ? ImageUtilities.ToGrayScale(colorBmp, GrayScaleMethod.NTSC) : colorBmp)
                         {
@@ -142,7 +142,7 @@ namespace SO.PictManager.Common
                             }
                         }
 
-                        similarFiles.Add(compPath);
+                        similarImages.Add(compImage);
 
                     NextImage:
                         // プログレスバー更新
@@ -150,7 +150,7 @@ namespace SO.PictManager.Common
                     }
                 }
 
-                return similarFiles;
+                return similarImages;
             }
             finally
             {

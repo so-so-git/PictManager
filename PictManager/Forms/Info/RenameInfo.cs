@@ -47,7 +47,7 @@ namespace SO.PictManager.Forms.Info
 		#region プロパティ
 
         /// <summary>ソート順を取得・設定します。</summary>
-        public FileSortOrder? SortOrder { get; set; }
+        public ImageSortOrder? SortOrder { get; set; }
 
         /// <summary>親ディレクトリ名をファイル名に含めるかを取得・設定します。</summary>
 		public bool IsAddParentDirName { get; set; }

@@ -477,7 +477,7 @@ namespace SO.PictManager.Forms
                 if (ImageMode == ConfigInfo.ImageDataMode.File
                     && FormUtilities.ShowMessage("Q007") == DialogResult.Yes)
                 {
-                    picViewer.Image.Save(FilePathes[CurrentIndex]);
+                    picViewer.Image.Save(ImageList[CurrentIndex].Key);
                 }
                 else
                 {
@@ -895,7 +895,7 @@ namespace SO.PictManager.Forms
             if (RenameFile() != ResultStatus.OK) return;
 
             // ステータスバー更新
-            lblStatus.Text = FilePathes[CurrentIndex];
+            lblStatus.Text = ImageList[CurrentIndex].Key;
         }
 
         #endregion

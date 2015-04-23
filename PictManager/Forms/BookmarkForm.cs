@@ -27,7 +27,7 @@ namespace SO.PictManager.Forms
         private readonly string _bookmarkFilePath;
 
         /// <summary>有効なファイルソート順</summary>
-        private FileSortOrder _sortOrder;
+        private ImageSortOrder _sortOrder;
 
         #endregion
 
@@ -36,7 +36,7 @@ namespace SO.PictManager.Forms
         /// <summary>
         /// 有効なファイルソート順を取得または設定します。
         /// </summary>
-        public FileSortOrder SortOrder
+        public ImageSortOrder SortOrder
         {
             get { return _sortOrder; }
             set
@@ -69,7 +69,7 @@ namespace SO.PictManager.Forms
         /// <summary>
         /// 唯一のコンストラクタです。
         /// </summary>
-        public BookmarkForm(FileSortOrder order)
+        public BookmarkForm(ImageSortOrder order)
         {
             // コンポーネント初期化
             InitializeComponent();
@@ -97,7 +97,7 @@ namespace SO.PictManager.Forms
 
             foreach (var xelm in XDocument.Load(_bookmarkFilePath).Root.Descendants())
             {
-                string order = FileSorter.GetSortOrderDisplayText(xelm.Attribute("SortOrder").Value);
+                string order = ImageSorter.GetSortOrderDisplayText(xelm.Attribute("SortOrder").Value);
 
                 dgvBookmarks.Rows.Add(
                     xelm.Attribute("Id").Value,
@@ -145,7 +145,7 @@ namespace SO.PictManager.Forms
                     Convert.ToInt32(selectedRow.Cells["colFileNo"].Value),
                     DateTime.ParseExact(selectedRow.Cells["colTimestamp"].Value.ToString(),
                         BookmarkInfo.TIMESTAMP_FORMAT, null),
-                    FileSorter.GetSortOrderByDisplayText(selectedRow.Cells["colSortOrder"].Value.ToString()));
+                    ImageSorter.GetSortOrderByDisplayText(selectedRow.Cells["colSortOrder"].Value.ToString()));
                 BookmarkJump(this, new BookmarkEventArgs(info));
             }
         }
@@ -208,8 +208,8 @@ namespace SO.PictManager.Forms
         {
             foreach (DataGridViewRow row in dgvBookmarks.Rows)
             {
-                FileSortOrder order =
-                    FileSorter.GetSortOrderByDisplayText(row.Cells["colSortOrder"].Value.ToString());
+                ImageSortOrder order =
+                    ImageSorter.GetSortOrderByDisplayText(row.Cells["colSortOrder"].Value.ToString());
                 if (order == _sortOrder)
                 {
                     row.DefaultCellStyle.BackColor = SystemColors.Window;
@@ -232,8 +232,8 @@ namespace SO.PictManager.Forms
         /// <returns>ブックマークの有効状態</returns>
         private bool IsBookmarkEnabled(DataGridViewRow row)
         {
-            FileSortOrder order =
-                FileSorter.GetSortOrderByDisplayText(row.Cells["colSortOrder"].Value.ToString());
+            ImageSortOrder order =
+                ImageSorter.GetSortOrderByDisplayText(row.Cells["colSortOrder"].Value.ToString());
             return order == _sortOrder;
         }
         #endregion
@@ -421,7 +421,7 @@ namespace SO.PictManager.Forms
         /// <param orderName="fileNo">ブックマークしたファイルのNo</param>
         /// <param orderName="timeStamp">ブックマークした日時</param>
         /// <param orderName="sortOrder">ブックマーク時のファイルソート順</param>
-        public BookmarkEventArgs(int id, string name, int fileNo, DateTime timeStamp, FileSortOrder sortOrder)
+        public BookmarkEventArgs(int id, string name, int fileNo, DateTime timeStamp, ImageSortOrder sortOrder)
         {
             Bookmark = new BookmarkInfo(id, name, fileNo, timeStamp, sortOrder);
         }
