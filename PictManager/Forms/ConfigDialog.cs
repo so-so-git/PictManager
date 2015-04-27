@@ -90,8 +90,8 @@ namespace SO.PictManager.Forms
         /// 適用ボタンをクリックした際に実行される処理です。
         /// 入力したシステム設定情報を保存します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void btnApply_Click(object sender, EventArgs e)
         {
             SaveConfigInfo();
@@ -106,8 +106,8 @@ namespace SO.PictManager.Forms
         /// OKボタンをクリックした際に実行される処理です。
         /// 入力したシステム設定情報を保存し、画面を閉じます。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         protected override void btnOk_Click(object sender, EventArgs e)
         {
             SaveConfigInfo();

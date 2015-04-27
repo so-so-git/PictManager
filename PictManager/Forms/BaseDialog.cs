@@ -24,8 +24,8 @@ namespace SO.PictManager.Forms
         /// OKボタン押下時の処理です。
         /// 入力チェックを実施し、OKなら呼出元へ制御を返します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         protected virtual void btnOk_Click(object sender, EventArgs e)
         {
             // 入力チェック、相関チェックOKなら呼出元へOKを返す
@@ -59,7 +59,7 @@ namespace SO.PictManager.Forms
         /// (Form.Show(IWin32Window)を隠蔽します)
         /// オーナーウィンドウを指定し、ダイアログをモーダル状態で表示します。
         /// </summary>
-        /// <param orderName="owner">オーナーウィンドウ</param>
+        /// <param name="owner">オーナーウィンドウ</param>
         /// <returns>ダイアログ処理結果</returns>
         public new virtual DialogResult Show(IWin32Window owner)
         {

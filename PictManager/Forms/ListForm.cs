@@ -13,6 +13,8 @@ using SO.Library.Forms.Extensions;
 using SO.Library.IO;
 using SO.Library.Text;
 using SO.PictManager.Common;
+using SO.PictManager.DataModel;
+using SO.PictManager.Forms.Info;
 using SO.PictManager.Imaging;
 
 using CursorFace = System.Windows.Forms.Cursor;
@@ -54,10 +56,10 @@ namespace SO.PictManager.Forms
         #region コンストラクタ
 
         /// <summary>
-        /// 唯一のコンストラクタです。
+        /// ファイルモード用のコンストラクタです。
         /// </summary>
-        /// <param orderName="targetPath">対象ディレクトリパス</param>
-        /// <param orderName="includeSubFlg">処理対象にサブディレクトリ以下を含むかを示すフラグ</param>
+        /// <param name="targetPath">対象ディレクトリパス</param>
+        /// <param name="includeSubFlg">処理対象にサブディレクトリ以下を含むかを示すフラグ</param>
         public ListForm(string targetPath, bool includeSubFlg)
                 : base(targetPath, includeSubFlg)
         {
@@ -66,23 +68,59 @@ namespace SO.PictManager.Forms
                 // コンポーネント初期化
                 InitializeComponent();
 
-                // ファイル取得
-                RefreshTargetFiles();
-
-                // グリッド列生成
-                CreateColumns();
-
-                // グリッドセル生成
-                CreateCells();
-
-                lblStatus.Text = string.Empty;
-                lblFileCount.Text = ImageList.Count + " files.";
+                // 共通処理
+                ConstructCommon();
             }
             catch (Exception ex)
             {
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
                 this.BackToOwner();
             }
+        }
+
+        /// <summary>
+        /// データベースモード用のコンストラクタです。
+        /// </summary>
+        /// <param name="category">対象カテゴリー</param>
+        public ListForm(MstCategory category)
+            : base(category)
+        {
+            try
+            {
+                // コンポーネント初期化
+                InitializeComponent();
+
+                // 共通処理
+                ConstructCommon();
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+                this.BackToOwner();
+            }
+        }
+
+        #endregion
+
+        #region ConstructCommon - 共通コンストラクション
+
+        /// <summary>
+        /// インスタンス構築時の共通処理を実行します。
+        /// </summary>
+        private void ConstructCommon()
+        {
+            // ファイル取得
+            RefreshImageList();
+
+            // グリッド列生成
+            CreateColumns();
+
+            // グリッドセル生成
+            CreateCells();
+
+            // ステータスバー更新
+            lblStatus.Text = string.Empty;
+            lblFileCount.Text = ImageList.Count + " files.";
         }
 
         #endregion
@@ -290,7 +328,7 @@ namespace SO.PictManager.Forms
         /// <summary>
         /// 指定された行の画像ファイルのパスを取得します。
         /// </summary>
-        /// <param orderName="rowIdx">指定行</param>
+        /// <param name="rowIdx">指定行</param>
         /// <returns>画像ファイルのパス</returns>
         private string GetImagePath(int rowIdx)
         {
@@ -307,7 +345,7 @@ namespace SO.PictManager.Forms
         /// <summary>
         /// セルに入力された内容の妥当性を検証します。
         /// </summary>
-        /// <param orderName="cell">検証対象のDetaGridViewCell</param>
+        /// <param name="cell">検証対象のDetaGridViewCell</param>
         /// <returns>検証結果OK:true / 検証結果NG:false</returns>
         protected virtual bool IsValidValue(DataGridViewCell cell)
         {
@@ -391,10 +429,8 @@ namespace SO.PictManager.Forms
             {
                 case IDX_SEL_CHK:
                     // 対象削除
-                    DeleteFile(ImageList[listRow].Key);
+                    ImageList[listRow].Delete();
                     proceededRows.Add(listRow);
-
-                    ImageList[listRow].IsDeleted = true;
                     break;
 
                 case IDX_FILE_NAME:
@@ -526,7 +562,7 @@ namespace SO.PictManager.Forms
         /// <summary>
         /// 指定行の画像の変更後のディレクトリを選択するダイアログを表示します。
         /// </summary>
-        /// <param orderName="rowIdx">指定行</param>
+        /// <param name="rowIdx">指定行</param>
         private void SelectDirectoryForChange(int rowIdx)
         {
             if (!(bool)grdFiles.Rows[rowIdx].Tag)
@@ -587,8 +623,8 @@ namespace SO.PictManager.Forms
         /// フォームが表示された際に実行される処理です。
         /// ファイル一覧グリッドの各列幅を初期化します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void Form_Shown(object sender, EventArgs e)
         {
             try
@@ -615,8 +651,8 @@ namespace SO.PictManager.Forms
         /// ×ボタンがクリックされた際に実行される処理です。
         /// 終了確認後、アプリケーションを終了します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void Form_FormClosing(object sender, FormClosingEventArgs e)
         {
             try
@@ -646,8 +682,8 @@ namespace SO.PictManager.Forms
         /// フォーム上でキーが押下された際に実行される処理です。
         /// 特殊なキーが押下された場合に固有の処理を実行します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         protected override void Form_KeyDown(object sender, KeyEventArgs e)
         {
             try
@@ -685,8 +721,8 @@ namespace SO.PictManager.Forms
         /// ファイル一覧グリッドのセルがダブルクリックされた際に実行される処理です。
         /// その行に関連付けられたファイルをViewImageFormで表示します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void grdFiles_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             try
@@ -697,7 +733,7 @@ namespace SO.PictManager.Forms
                     && e.ColumnIndex != IDX_SIMILAR_BTN)
                 {
                     // イメージ閲覧
-                    new ViewImageForm(this, GetImagePath(e.RowIndex)).Show(this);
+                    new ViewImageForm(this, new FileImage(GetImagePath(e.RowIndex))).Show(this);
                 }
             }
             catch (Exception ex)
@@ -715,8 +751,8 @@ namespace SO.PictManager.Forms
         /// ・ファイル名列、ディレクトリパス列がクリックされた場合：変更前後の内容をステータスバーに表示します。
         /// ・参照ボタン列がクリックされた場合：移動先ディレクトリを選択する為の台ログを表示します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void grdFiles_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             try
@@ -767,8 +803,8 @@ namespace SO.PictManager.Forms
         /// ファイル一覧グリッドのセルの入力内容検証時に実行される処理です。
         /// IsValidInputの実装内容に基づき、セルの入力内容を検証します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void grdFiles_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
             try
@@ -796,8 +832,8 @@ namespace SO.PictManager.Forms
         /// ファイル一覧グリッドのセルの内容が変更された際に実行される処理です。
         /// 
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void grdFiles_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             try
@@ -858,8 +894,8 @@ namespace SO.PictManager.Forms
         /// 終了ボタンがクリックされた際に実行される処理です。
         /// 自フォームを破棄し、親フォームを再表示します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void btnClose_Click(object sender, EventArgs e)
         {
             // 自フォームを破棄し親フォームを表示
@@ -876,8 +912,8 @@ namespace SO.PictManager.Forms
         /// 適用ボタンがクリックされた際に実行される処理です。
         /// ファイル一覧グリッドに入力された内容を各ファイルに適用します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void btnApply_Click(object sender, EventArgs e)
         {
             try
@@ -932,8 +968,8 @@ namespace SO.PictManager.Forms
         /// ファイル一覧グリッドの選択チェックボックスがONの行の内容を、
         /// 最後に適用が実行された状態に戻します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void btnRevertSelection_Click(object sender, EventArgs e)
         {
             try
@@ -958,8 +994,8 @@ namespace SO.PictManager.Forms
         /// ファイル一覧グリッドの全てのの行の内容を、
         /// 最後に適用が実行された状態に戻します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void btnRevertAll_Click(object sender, EventArgs e)
         {
             try
@@ -983,8 +1019,8 @@ namespace SO.PictManager.Forms
         /// 対象ファイル再取得メニューがクリックされた際に実行される処理です。
         /// 現在の情報で対象ファイルリストを更新します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void menuRefresh_Click(object sender, EventArgs e)
         {
             try
@@ -1005,8 +1041,8 @@ namespace SO.PictManager.Forms
         /// 一括ファイル名変更メニューがクリックされた際に実行される処理です。
         /// ファイル名変更情報入力ダイアログを表示し、入力された内容に応じてファイル名を一括で変更します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void menuRenameAll_Click(object sender, EventArgs e)
         {
             try
@@ -1027,14 +1063,14 @@ namespace SO.PictManager.Forms
         /// 一括ファイル移動メニューがクリックされた際に実行される処理です。
         /// 移動先ディレクトリ指定ダイアログを表示し、入力された内容に応じてファイルを一括で移動します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void menuMoveAll_Click(object sender, EventArgs e)
         {
             try
             {
                 // ファイル移動実行、正常終了時はディレクトリ選択フォームへ戻る
-                RefreshTargetFiles();
+                RefreshImageList();
                 if (MoveAllFiles() == ResultStatus.OK) this.BackToOwner();
             }
             catch (Exception ex)
@@ -1121,8 +1157,8 @@ namespace SO.PictManager.Forms
         /// 重複しているファイルのみを抽出メニューがクリックされた際に実行される処理です。
         /// 重複が発生しているファイルの行のみを表示し、それ以外の行を非表示に設定します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void menuFilterDuplicated_Click(object sender, EventArgs e)
         {
             try
@@ -1164,12 +1200,13 @@ namespace SO.PictManager.Forms
         #endregion
 
         #region menuViewImage_Click - 選択行の画像を表示メニュー押下時
+
         /// <summary>
         /// 選択行の画像を表示メニューがクリックされた際に実行される処理です。
         /// 選択中の行の画像を表示します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void menuViewImage_Click(object sender, EventArgs e)
         {
             try
@@ -1184,7 +1221,7 @@ namespace SO.PictManager.Forms
                             FormUtilities.ShowMessage("W006");
                         else
                             // イメージ閲覧
-                            new ViewImageForm(this, GetImagePath(rowIndex)).Show(this);
+                            new ViewImageForm(this, new FileImage(GetImagePath(rowIndex))).Show(this);
                     }
                 }
             }
@@ -1193,6 +1230,7 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region menuSimilar_Click - 選択行の類似画像を表示メニュー押下時
@@ -1200,8 +1238,8 @@ namespace SO.PictManager.Forms
         /// 選択行の類似画像を表示メニューがクリックされた際に実行される処理です。
         /// 選択中の行の画像の類似画像を表示します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void menuSimilar_Click(object sender, EventArgs e)
         {
             try

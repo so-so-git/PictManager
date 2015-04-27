@@ -41,11 +41,11 @@ namespace SO.PictManager.Forms.Info
         /// <summary>
         /// 各フィールドの値を指定してインスタンスを作成するコンストラクタです。
         /// </summary>
-        /// <param orderName="id">ブックマークのID</param>
-        /// <param orderName="orderName">ブックマーク名</param>
-        /// <param orderName="fileNo">ブックマークしたファイルのNo</param>
-        /// <param orderName="timeStamp">ブックマークした日時</param>
-        /// <param orderName="sortOrder">ブックマーク時のファイルソート順</param>
+        /// <param name="id">ブックマークのID</param>
+        /// <param name="orderName">ブックマーク名</param>
+        /// <param name="fileNo">ブックマークしたファイルのNo</param>
+        /// <param name="timeStamp">ブックマークした日時</param>
+        /// <param name="sortOrder">ブックマーク時のファイルソート順</param>
         public BookmarkInfo(int id, string name, int fileNo, DateTime timeStamp, ImageSortOrder sortOrder)
         {
             Id = id;
@@ -58,7 +58,7 @@ namespace SO.PictManager.Forms.Info
         /// <summary>
         /// コピー元のインスタンスを指定してインスタンスを作成するコンストラクタです。
         /// </summary>
-        /// <param orderName="src">コピー元のインスタンス</param>
+        /// <param name="src">コピー元のインスタンス</param>
         public BookmarkInfo(BookmarkInfo src)
         {
             Id = src.Id;

@@ -81,7 +81,7 @@ namespace SO.PictManager.Common
         /// <summary>
         /// 指定されたパスをエクスプローラで開きます。
         /// </summary>
-        /// <param orderName="path">ディレクトリパス</param>
+        /// <param name="path">ディレクトリパス</param>
         public static void OpenExplorer(string path)
         {
             var procInfo = new ProcessStartInfo("explorer", path);
@@ -109,7 +109,7 @@ namespace SO.PictManager.Common
         /// <summary>
         /// 渡されたシステム設定情報をシリアライズしてXMLファイルとして保存します。
         /// </summary>
-        /// <param orderName="configInfo">保存するシステム設定情報</param>
+        /// <param name="configInfo">保存するシステム設定情報</param>
         public static void SaveConfigInfo(ConfigInfo configInfo)
         {
             string path = ConfigurationManager.AppSettings[ConfigInfo.SAVE_PATH_KEY];
@@ -147,7 +147,7 @@ namespace SO.PictManager.Common
         /// <summary>
         /// 渡された状態情報をシリアライズしてXMLファイルとして保存します。
         /// </summary>
-        /// <param orderName="stateInfo">保存する状態情報</param>
+        /// <param name="stateInfo">保存する状態情報</param>
         public static void SaveStateInfo(StateInfo stateInfo)
         {
             string path = ConfigurationManager.AppSettings[StateInfo.SAVE_PATH_KEY];
@@ -185,7 +185,7 @@ namespace SO.PictManager.Common
         /// <summary>
         /// 渡されたファイルリネーム情報をシリアライズしてXMLファイルとして保存します。
         /// </summary>
-        /// <param orderName="renameInfo">保存するファイルリネーム情報</param>
+        /// <param name="renameInfo">保存するファイルリネーム情報</param>
         public static void SaveRenameInfo(RenameInfo renameInfo)
         {
             string path = ConfigurationManager.AppSettings[RenameInfo.SAVE_PATH_KEY];

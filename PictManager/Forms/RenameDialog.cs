@@ -334,8 +334,8 @@ namespace SO.PictManager.Forms
         /// クリアボタンがクリックされた際に実行される処理です。
         /// ダイアログに入力された内容を全て消去します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void btnClear_Click(object sender, EventArgs e)
         {
             try
@@ -360,8 +360,8 @@ namespace SO.PictManager.Forms
         /// 順番シャッフルチェックボックスが変更された際に実行される処理です。
         /// チェックボックスの状態に応じて入力可能項目の変更を行います。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void chkShuffle_CheckedChanged(object sender, EventArgs e)
         {
             try
@@ -380,8 +380,8 @@ namespace SO.PictManager.Forms
         /// ソート順チェックボックスが変更された際に実行される処理です。
         /// チェックボックスの状態に応じて入力可能項目の変更を行います。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void chkSort_CheckedChanged(object sender, EventArgs e)
         {
             try
@@ -400,8 +400,8 @@ namespace SO.PictManager.Forms
         /// 親ディレクトリ名変更チェックボックスが変更された際に実行される処理です。
         /// チェックボックスの状態に応じて入力可能項目の変更を行います。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void chkAddDirName_CheckedChanged(object sender, EventArgs e)
         {
             try
@@ -423,8 +423,8 @@ namespace SO.PictManager.Forms
         /// 元ファイル名を含むチェックボックスが変更された際に実行される処理です。
         /// チェックボックスの状態に応じて入力可能項目の変更を行います。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void chkOriginal_CheckedChanged(object sender, EventArgs e)
         {
             try
@@ -446,8 +446,8 @@ namespace SO.PictManager.Forms
         /// 通し番号付加チェックボックスが変更された際に実行される処理です。
         /// チェックボックスの状態に応じて入力可能項目の変更を行います。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void chkAddSeq_CheckedChanged(object sender, EventArgs e)
         {
             try
@@ -469,8 +469,8 @@ namespace SO.PictManager.Forms
         /// 各TextBoxの入力内容が変更された際に実行される処理です。
         /// 入力された内容に基づいてサンプルファイル名表示内容を更新します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void TextBoxes_TextChanged(object sender, EventArgs e)
         {
             try
@@ -492,8 +492,8 @@ namespace SO.PictManager.Forms
         /// 元ファイル名位置指定ラジオボタンのチェックが変更された際の処理です。
         /// チェックされた内容に基づいてサンプルファイル名表示内容を更新します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void OriginalPosRadio_CheckedChanged(object sender, EventArgs e)
         {
             try

@@ -17,6 +17,7 @@ using SO.PictManager.Common;
 using SO.PictManager.DataModel;
 using SO.PictManager.Forms;
 using SO.PictManager.Forms.Info;
+using SO.PictManager.Imaging;
 
 namespace SO.PictManager
 {
@@ -87,7 +88,7 @@ namespace SO.PictManager
         /// <summary>
         /// アプリケーションのメインエントリポイントです。
         /// </summary>
-        /// <param orderName="args">コマンドライン引数</param>
+        /// <param name="args">コマンドライン引数</param>
         [STAThread]
         public static void Main(string[] args)
         {
@@ -174,7 +175,7 @@ namespace SO.PictManager
         /// <summary>
         /// コマンドラインの解析を行い、適切なモードでプログラムを起動します。
         /// </summary>
-        /// <param orderName="args">コマンドライン引数</param>
+        /// <param name="args">コマンドライン引数</param>
         private static void ParseCommandLine(string[] args)
         {
             for (int i = 0; i < args.Length; ++i)
@@ -240,7 +241,8 @@ namespace SO.PictManager
 
                         string viewFilePath = args[i + 1];
                         if (Utilities.IsAvailableFormat(viewFilePath, true))
-                            Application.Run(new ViewImageForm(null, viewFilePath));
+                            Application.Run(new ViewImageForm(
+                                null, new FileImage(viewFilePath), ConfigInfo.ImageDataMode.File));
                         else
                             FormUtilities.ShowMessage("E007", viewFilePath);
 

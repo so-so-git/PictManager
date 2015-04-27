@@ -18,7 +18,7 @@ namespace SO.PictManager.Components
         /// <summary>
         /// 押下されたキーがプリプロセス対象かを判別します。
         /// </summary>
-        /// <param orderName="keyData">押下されたキーの情報</param>
+        /// <param name="keyData">押下されたキーの情報</param>
         /// <returns>プリプロセス対象の場合:true、プリプロセス対象外の場合:false</returns>
         protected override bool IsInputKey(Keys keyData)
         {

@@ -18,6 +18,15 @@ namespace SO.PictManager.Common
 
         /// <summary>マウスホイールの1移動量に対するデルタ値の比率</summary>
         public const int WHEEL_DELTA = 120;
+
+        /// <summary>仮削除ファイル格納フォルダ</summary>
+        public const string STORE_DIR_NAME = "DeletedFiles";
+
+        /// <summary>削除済ファイルリストのファイル名</summary>
+        public const string DEL_LIST_NAME = "DeletedFileList.txt";
+
+        /// <summary>削除済ファイルリスト内の現ファイル名・元ファイルパス区切り文字</summary>
+        public const string DEL_LIST_SEPARATOR = "/";
     }
 
     #region enum ResultStatus - 処理結果ステータス列挙体

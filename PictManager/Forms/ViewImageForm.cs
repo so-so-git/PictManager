@@ -14,7 +14,9 @@ using SO.Library.IO;
 using SO.Library.Text;
 using SO.PictManager.Components;
 using SO.PictManager.Common;
+using SO.PictManager.DataModel;
 using SO.PictManager.Forms.Info;
+using SO.PictManager.Imaging;
 
 using Config = System.Configuration.ConfigurationManager;
 
@@ -62,45 +64,28 @@ namespace SO.PictManager.Forms
             // コンポーネント初期化
             InitializeComponent();
 
-            // 共通コンストラクション
-            ConstructCommon();
-        }
-
-        /// <summary>
-        /// 親フォーム、表示対象ファイルパス指定付きのコンストラクタです。
-        /// </summary>
-        /// <param orderName="owner">親フォーム</param>
-        /// <param orderName="newPath">表示対象ファイルの絶対パス</param>
-        public ViewImageForm(Form owner, string filePath)
-        {
-            // コンポーネント初期化
-            InitializeComponent();
-
             // フィールド初期化
-            Owner = owner;
             ImageMode = ConfigInfo.ImageDataMode.File;
-            ViewFilePath = filePath;
-
-            // UI制御
-            InitializeAccessibility();
 
             // 共通コンストラクション
             ConstructCommon();
         }
 
         /// <summary>
-        /// 親フォーム、画像データ指定付きのコンストラクタです。
+        /// 親フォーム、画像情報、画像モードを指定可能なコンストラクタです。
         /// </summary>
         /// <param name="owner">親フォーム</param>
-        /// <param name="imageData">画像データ</param>
-        public ViewImageForm(Form owner, byte[] imageData)
+        /// <param name="imageData">画像情報</param>
+        /// <param name="mode">画像モード(省略時：File)</param>
+        public ViewImageForm(Form owner, IImage imageData,
+            ConfigInfo.ImageDataMode mode = ConfigInfo.ImageDataMode.File)
         {
             // コンポーネント初期化
             InitializeComponent();
 
             // フィールド初期化
             Owner = owner;
-            ImageMode = ConfigInfo.ImageDataMode.Database;
+            ImageMode = mode;
             ImageData = imageData;
 
             // UI制御
@@ -115,19 +100,9 @@ namespace SO.PictManager.Forms
         #region プロパティ
 
         /// <summary>
-        /// 画像モードを取得・設定します。
+        /// 画像情報を取得・設定します。
         /// </summary>
-        protected ConfigInfo.ImageDataMode ImageMode { get; set; }
-
-        /// <summary>
-        /// 表示画像のファイルパスを取得・設定します。
-        /// </summary>
-        protected string ViewFilePath { get; set; }
-
-        /// <summary>
-        /// 画像データを取得・設定します。
-        /// </summary>
-        protected byte[] ImageData { get; set; }
+        protected IImage ImageData { get; set; }
 
         #endregion
 
@@ -152,7 +127,7 @@ namespace SO.PictManager.Forms
                 menuFile.DropDownItems.Add(new ToolStripMenuItem("表示画像削除", null, btnDelete_Click));
                 menuFile.DropDownItems.Add(new ToolStripSeparator());
                 menuFile.DropDownItems.Add(new ToolStripMenuItem("ディレクトリを開く", null,
-                        (s, e) => Utilities.OpenExplorer(Path.GetDirectoryName(ViewFilePath))));
+                        (s, e) => Utilities.OpenExplorer(Path.GetDirectoryName(ImageData.Key))));
                 menuFile.DropDownItems.Add(new ToolStripSeparator());
                 menuFile.DropDownItems.Add(new ToolStripMenuItem("終了", null,
                         (s, e) => Form_FormClosing(s, new FormClosingEventArgs(CloseReason.UserClosing, false))));
@@ -185,14 +160,18 @@ namespace SO.PictManager.Forms
         /// </summary>
         protected void ShowImageInfoByStatusBar()
         {
-            if (!string.IsNullOrEmpty(ViewFilePath))
+            if (ImageData != null)
             {
-                using (Image img = Image.FromFile(ViewFilePath))
+                using (Image img = ImageData.GetImage())
                 {
                     lblStatus.Text = string.Format("パス：{0}    サイズ：{1}×{2}    更新日時：{3}",
-                            ViewFilePath, img.Width, img.Height,
-                            File.GetLastWriteTime(ViewFilePath).ToString("yyyy/MM/dd HH:mm:ss"));
+                        ImageData.Key, img.Width, img.Height,
+                        ImageData.Timestamp.ToString("yyyy/MM/dd HH:mm:ss"));
                 }
+            }
+            else
+            {
+                lblStatus.Text = string.Empty;
             }
         }
 
@@ -206,63 +185,29 @@ namespace SO.PictManager.Forms
         protected virtual void InitializeAccessibility()
         {
             // 表示対象ファイルが無い場合は削除ボタン押下不可
-            if (ViewFilePath.BlankToNull() == null) btnDelete.Enabled = false;
+            if (ImageData.Key.BlankToNull() == null) btnDelete.Enabled = false;
         }
 
         #endregion
 
-        #region DisplayPicture - 指定画像表示
+        #region DisplayImage - 指定画像表示
 
         /// <summary>
-        /// ViewImagePathで指定されたファイルを表示します。
+        /// 指定された画像を表示します。
         /// </summary>
-        protected virtual void DisplayPicture()
+        protected virtual void DisplayImage()
         {
             try
             {
                 // 現在表示中のイメージがある場合はそのリソースを解放
                 if (picViewer.Image != null) picViewer.Image.Dispose();
 
-                Image img;
-                Action actRestoreFileAttr = () => { };
-                if (ImageMode == ConfigInfo.ImageDataMode.File) // ファイルモード
-                {
-                    // 表示対象対象が読み取り専用の場合、それを一時的に解除
-                    var target = new FileInfo(ViewFilePath);
-                    bool readOnlyFlg = false;
-                    if (readOnlyFlg = target.IsReadOnly) // ←比較では無く代入
-                        target.Attributes = target.Attributes ^ FileAttributes.ReadOnly;
-
-                    // 表示対象イメージをストリームから読み込み
-                    using (var fs = new FileStream(ViewFilePath, FileMode.Open))
-                    using (Image imgTemp = Image.FromStream(fs))
-                    {
-                        // GDI+汎用エラー回避の為、ストリームの受け皿のImageから新規Imageのインスタンスを作成
-                        img = new Bitmap(imgTemp);
-                    }
-
-                    // 読み取り専用を解除した場合の再設定処理
-                    actRestoreFileAttr = () =>
-                    {
-                        if (readOnlyFlg)
-                        {
-                            readOnlyFlg = false;
-                            target.Attributes = target.Attributes | FileAttributes.ReadOnly;
-                        }
-                    };
-                }
-                else // DBモード
-                {
-                    var ic = new ImageConverter();
-                    img = ic.ConvertFrom(ImageData) as Image;
-                }
-
                 // ズーム中フラグ、倍率初期化
                 _zoomed = false;
                 _magnify = 100;
 
                 // イメージ設定、サイズ再設定
-                picViewer.Image = img;
+                picViewer.Image = ImageData.GetImage();
                 ResizeImageRect();
 
                 lblInfo.Hide();
@@ -270,9 +215,6 @@ namespace SO.PictManager.Forms
 
                 // スクロール設定
                 ResetScrollProperties();
-
-                // 読み取り専用を解除した場合、再設定を行う
-                actRestoreFileAttr();
             }
             catch (Exception ex)
             {
@@ -340,7 +282,7 @@ namespace SO.PictManager.Forms
         /// <summary>
         /// 情報通知ラベルを表示します。
         /// </summary>
-        /// <param orderName="text">ラベルに表示するメッセージ</param>
+        /// <param name="text">ラベルに表示するメッセージ</param>
         protected void ShowInformationLabel(string text)
         {
             // 表示画像がnullの場合、PictureBoxのサイズ未確定エラー回避の為、
@@ -401,7 +343,7 @@ namespace SO.PictManager.Forms
         /// <summary>
         /// 画像の表示倍率を変更します。
         /// </summary>
-        /// <param orderName="magnify">画像表示倍率</param>
+        /// <param name="magnify">画像表示倍率</param>
         /// <returns>倍率が変更された場合:true / 倍率が変更されなかった場合:false</returns>
         protected bool ZoomImage(int magnify)
         {
@@ -439,7 +381,7 @@ namespace SO.PictManager.Forms
         /// <summary>
         /// 表示されている画像を回転させます。
         /// </summary>
-        /// <param orderName="rotate">回転種類</param>
+        /// <param name="rotate">回転種類</param>
         protected void RotateImage(RotateFlipType rotate)
         {
             try
@@ -501,26 +443,11 @@ namespace SO.PictManager.Forms
         {
             if (picViewer.Image != null)
             {
-                Bitmap bmp;
-                if (ImageMode == ConfigInfo.ImageDataMode.File)
-                {
-                    using (var fs = new FileStream(ViewFilePath, FileMode.Open))
-                    using (Image img = Image.FromStream(fs))
-                    {
-                        // GDI+汎用エラー回避の為、ストリームの受け皿のImageから新規Imageのインスタンスを作成
-                        bmp = new Bitmap(img);
-                    }
-                }
-                else
-                {
-                    var ic = new ImageConverter();
-                    bmp = new Bitmap(ic.ConvertFrom(ImageData) as Image);
-                }
-
                 // 現在表示中のイメージのリソースを解放
                 picViewer.Image.Dispose();
 
                 // NTSC係数を用いた加重平均法でグレースケール化
+                Bitmap bmp = new Bitmap(ImageData.GetImage());
                 picViewer.Image = ImageUtilities.ToGrayScale(bmp, GrayScaleMethod.NTSC);
             }
         }
@@ -578,11 +505,9 @@ namespace SO.PictManager.Forms
             lblInfo.Hide();
 
             // タイトルバー表示
-            this.Text = "PictManager - イメージビューア";
-            if (ImageMode == ConfigInfo.ImageDataMode.File)
-            {
-                this.Text += string.Format(" [{0}]", ViewFilePath);
-            }
+            this.Text = string.Format("PictManager - イメージビューア [{0}:{1}]",
+                ImageMode == ConfigInfo.ImageDataMode.File ? "画像パス" : "画像ID",
+                ImageData == null ? string.Empty : ImageData.Key);
 
             // ステータスバーに画像情報を表示
             ShowImageInfoByStatusBar();
@@ -611,8 +536,8 @@ namespace SO.PictManager.Forms
         /// ×ボタンがクリックされた際に実行される処理です。
         /// 自フォームを破棄し、親フォームを表示します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         protected virtual void Form_FormClosing(object sender, FormClosingEventArgs e)
         {
             // 自フォームを破棄し親フォームをアクティブ化
@@ -627,12 +552,12 @@ namespace SO.PictManager.Forms
         /// フォームが表示された際に実行される処理です。
         /// コンストラクタで指定されたパスに存在する画像ファイルを表示します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         protected virtual void Form_Shown(object sender, EventArgs e)
         {
             // picViewerの初期化後クライアントサイズが必要なのでコンストラクタではなくこっち
-            if (ViewFilePath != null || ImageData != null) DisplayPicture();
+            if (ImageData != null) DisplayImage();
         }
 
         #endregion
@@ -643,8 +568,8 @@ namespace SO.PictManager.Forms
         /// フォームのサイズ変更が終了した際に実行される処理です。
         /// フォームのピクチャボックスのサイズを、フォームのサイズに合わせて調整します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         protected void Form_ResizeEnd(object sender, EventArgs e)
         {
             // PitureBoxのサイズを再設定(ズーム表示中は設定無し)
@@ -659,8 +584,8 @@ namespace SO.PictManager.Forms
         /// フォームのサイズが変更された際に実行される処理です。
         /// ピクチャボックスのサイズモードを再設定します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         protected virtual void Form_Resize(object sender, EventArgs e)
         {
             // PitureBoxのサイズを再設定(ズーム表示中は設定無し)
@@ -675,8 +600,8 @@ namespace SO.PictManager.Forms
         /// フォーム上でマウスホイールが回された際に実行される処理です。
         /// 表示中の画像をスクロールします。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void Form_MouseWheel(object sender, MouseEventArgs e)
         {
             try
@@ -752,8 +677,8 @@ namespace SO.PictManager.Forms
         /// フォーム上でキーが押下された際に実行される処理です。
         /// 特殊なキーが押下された場合に固有の処理を実行します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         protected override void Form_KeyDown(object sender, KeyEventArgs e)
         {
             try
@@ -792,8 +717,8 @@ namespace SO.PictManager.Forms
         /// 閉じるボタンがクリックされた際に実行される処理です。
         /// 自フォームを破棄し、親フォームを表示します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         protected void btnClose_Click(object sender, EventArgs e)
         {
             CloseForm();
@@ -807,22 +732,15 @@ namespace SO.PictManager.Forms
         /// 削除ボタンがクリックされた際に実行される処理です。
         /// 表示中の画像を削除します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         protected virtual void btnDelete_Click(object sender, EventArgs e)
         {
             // PictureBoxリソース解放
             picViewer.Image.Dispose();
 
             // 表示中の画像を削除
-            if (ImageMode == ConfigInfo.ImageDataMode.File)
-            {
-                if (DeleteFile(ViewFilePath)) btnClose_Click(sender, e);
-            }
-            else
-            {
-                //TODO 画像削除(DBモード時)
-            }
+            ImageData.Delete();
         }
 
         #endregion
@@ -834,8 +752,8 @@ namespace SO.PictManager.Forms
         /// 表示中の画像を25%拡大します。
         /// 拡大上限に達した場合は何もしません。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void btnZoomIn_Click(object sender, EventArgs e)
         {
             // ズーム倍率25%増加
@@ -851,8 +769,8 @@ namespace SO.PictManager.Forms
         /// 表示中の画像を25%縮小します。
         /// 縮小後のサイズが0になる場合は何もしません。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void btnZoomOut_Click(object sender, EventArgs e)
         {
             // ズーム倍率25%減少
@@ -867,8 +785,8 @@ namespace SO.PictManager.Forms
         /// 画像サイズモード選択コンボの選択値が変更された場合に実行される処理です。
         /// 選択されたモードに応じて、画像の表示タイプを変更します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void cmbPicMode_SelectedIndexChanged(object sender, EventArgs e)
         {
             // ズーム中フラグ、倍率初期化
@@ -887,10 +805,12 @@ namespace SO.PictManager.Forms
         /// 表示画像ファイル名変更メニューがクリックされた際に実行される処理です。
         /// 表示中の画像のファイル名を、入力ダイアログで指定された内容に変更します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         protected virtual void menuRename_Click(object sender, EventArgs e)
         {
+            System.Diagnostics.Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.File);
+
             // ファイル名変更
             if (RenameFile() != ResultStatus.OK) return;
 
@@ -906,10 +826,12 @@ namespace SO.PictManager.Forms
         /// 表示画像移動メニューがクリックされた際に実行される処理です。
         /// 表示中の画像を指定ディレクトリに移動し、前画面へ戻ります。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         protected virtual void menuMove_Click(object sender, EventArgs e)
         {
+            System.Diagnostics.Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.File);
+
             // ファイル名変更
             MoveFile();
 

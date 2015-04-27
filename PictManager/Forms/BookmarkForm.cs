@@ -53,8 +53,8 @@ namespace SO.PictManager.Forms
         /// <summary>
         /// ブックマークジャンプイベントのハンドラです。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         public delegate void BookmarkEventHandler(object sender, BookmarkEventArgs e);
 
         /// <summary>
@@ -245,8 +245,8 @@ namespace SO.PictManager.Forms
         /// フォームがロードされた際の処理です。
         /// フォームの表示関連の初期設定を行います。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void BookmarkForm_Load(object sender, EventArgs e)
         {
             // 設定情報から常に前面表示するかの設定を読込
@@ -260,8 +260,8 @@ namespace SO.PictManager.Forms
         /// 選択されているブックマークのブックマークジャンプイベントを発生させます。
         /// 複数のブックマークが選択されている場合、最も上のものが対象となります。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void btnJump_Click(object sender, EventArgs e)
         {
             try
@@ -280,8 +280,8 @@ namespace SO.PictManager.Forms
         /// 削除ボタンが押下された際の処理です。
         /// 選択されているブックマークを削除します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void btnDelete_Click(object sender, EventArgs e)
         {
             try
@@ -300,8 +300,8 @@ namespace SO.PictManager.Forms
         /// クリアボタンが押下された際の処理です。
         /// 全てのブックマークを削除します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void btnClear_Click(object sender, EventArgs e)
         {
             try
@@ -320,8 +320,8 @@ namespace SO.PictManager.Forms
         /// 最前面表示チェックボックス変更時のチェックが変更された際の処理です。
         /// チェックが付いている場合、常にウィンドウを最前面に表示するよう設定します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void chkTopMost_CheckedChanged(object sender, EventArgs e)
         {
             try
@@ -348,8 +348,8 @@ namespace SO.PictManager.Forms
         /// ブックマークグリッドのセルがダブルクリックされた際の処理です。
         /// 選択されたブックマークのブックマークジャンプイベントを発生させます。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void dgvBookmarks_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             try
@@ -369,8 +369,8 @@ namespace SO.PictManager.Forms
         /// ブックマークグリッドのセルが編集された際の処理です。
         /// 編集された内容をブックマーク情報に反映します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void dgvBookmarks_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             try
@@ -416,11 +416,11 @@ namespace SO.PictManager.Forms
         /// <summary>
         /// ブックマーク情報の各フィールドの値を指定してインスタンスを作成するコンストラクタです。
         /// </summary>
-        /// <param orderName="id">ブックマークのID</param>
-        /// <param orderName="orderName">ブックマーク名</param>
-        /// <param orderName="fileNo">ブックマークしたファイルのNo</param>
-        /// <param orderName="timeStamp">ブックマークした日時</param>
-        /// <param orderName="sortOrder">ブックマーク時のファイルソート順</param>
+        /// <param name="id">ブックマークのID</param>
+        /// <param name="orderName">ブックマーク名</param>
+        /// <param name="fileNo">ブックマークしたファイルのNo</param>
+        /// <param name="timeStamp">ブックマークした日時</param>
+        /// <param name="sortOrder">ブックマーク時のファイルソート順</param>
         public BookmarkEventArgs(int id, string name, int fileNo, DateTime timeStamp, ImageSortOrder sortOrder)
         {
             Bookmark = new BookmarkInfo(id, name, fileNo, timeStamp, sortOrder);
@@ -429,7 +429,7 @@ namespace SO.PictManager.Forms
         /// <summary>
         /// ブックマーク情報自体を指定してインスタンスを作成するコンストラクタです。
         /// </summary>
-        /// <param orderName="info">ブックマーク情報</param>
+        /// <param name="info">ブックマーク情報</param>
         public BookmarkEventArgs(BookmarkInfo info)
         {
             Bookmark = info;

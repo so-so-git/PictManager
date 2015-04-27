@@ -70,8 +70,8 @@ namespace SO.PictManager.Forms
         /// カテゴリー追加ボタンをクリックした際に実行される処理です。
         /// カテゴリー名を入力し、新規登録します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void btnAddCategory_Click(object sender, EventArgs e)
         {
             try
@@ -122,8 +122,8 @@ namespace SO.PictManager.Forms
         /// ドロップエリアにドラッグエンターした際の処理です。
         /// ドラッグされたデータが処理可能形式の画像URLかを判定します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void lblDropArea_DragEnter(object sender, DragEventArgs e)
         {
             // URL形式でない場合はNG
@@ -147,8 +147,8 @@ namespace SO.PictManager.Forms
         /// ドロップエリアに画像URLをドロップした際の処理です。
         /// ドロップされたURLの画像をダウンロードし、TblImagesに登録します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void lblDropArea_DragDrop(object sender, DragEventArgs e)
         {
             string uri = e.Data.GetData(DataFormats.Text).ToString();

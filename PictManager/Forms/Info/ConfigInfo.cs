@@ -68,7 +68,7 @@ namespace SO.PictManager.Forms.Info
             /// <summary>
             /// コピー元インスタンス指定付きのコンストラクタです。
             /// </summary>
-            /// <param orderName="original">コピー元インスタンス</param>
+            /// <param name="original">コピー元インスタンス</param>
             public CommonConfig(CommonConfig original)
 		    {
                 var newObj = new CommonConfig();
@@ -121,7 +121,7 @@ namespace SO.PictManager.Forms.Info
             /// <summary>
             /// コピー元インスタンス指定付きのコンストラクタです。
             /// </summary>
-            /// <param orderName="original">コピー元インスタンス</param>
+            /// <param name="original">コピー元インスタンス</param>
             public SlideConfig(SlideConfig original)
             {
                 var newObj = new SlideConfig();
@@ -168,7 +168,7 @@ namespace SO.PictManager.Forms.Info
             /// <summary>
             /// コピー元インスタンス指定付きのコンストラクタです。
             /// </summary>
-            /// <param orderName="original">コピー元インスタンス</param>
+            /// <param name="original">コピー元インスタンス</param>
             public ListConfig(ListConfig original)
             {
                 var newObj = new ListConfig();
@@ -214,7 +214,7 @@ namespace SO.PictManager.Forms.Info
             /// <summary>
             /// コピー元インスタンス指定付きのコンストラクタです。
             /// </summary>
-            /// <param orderName="original">コピー元インスタンス</param>
+            /// <param name="original">コピー元インスタンス</param>
             public ThumbnailConfig(ThumbnailConfig original)
             {
                 var newObj = new ThumbnailConfig();
@@ -271,7 +271,7 @@ namespace SO.PictManager.Forms.Info
         /// <summary>
         /// コピー元インスタンス指定付きのコンストラクタです。
         /// </summary>
-        /// <param orderName="original">コピー元インスタンス</param>
+        /// <param name="original">コピー元インスタンス</param>
         public ConfigInfo(ConfigInfo original)
 		{
             var newObj = new ConfigInfo();

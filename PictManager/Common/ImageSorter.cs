@@ -66,34 +66,35 @@ namespace SO.PictManager.Common
         /// </summary>
         /// <param name="source">ソート対象の文字列群</param>
         /// <param name="order">ソート順</param>
+        /// <param name="mode">画像モード</param>
         /// <returns>ソートされた画像データのリスト</returns>
-        public static IEnumerable<IImage> Sort(IEnumerable<IImage> source, ImageSortOrder order)
+        public static IEnumerable<IImage> Sort(
+            IEnumerable<IImage> source, ImageSortOrder order, ConfigInfo.ImageDataMode mode)
         {
-            if (Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.File)
-            {
-                switch (order)
-                {
-                    case ImageSortOrder.KeyAsc:
-                        return source.OrderBy(p => Path.GetFileName(p.Key));
-                    case ImageSortOrder.KeyDesc:
-                        return source.OrderByDescending(p => Path.GetFileName(p.Key));
-                    case ImageSortOrder.TimestampAsc:
-                        return source.OrderBy(p => p.Timestamp);
-                    case ImageSortOrder.TimestampDesc:
-                        return source.OrderByDescending(p => p.Timestamp);
-                    case ImageSortOrder.DataSizeAsc:
-                        return source.OrderBy(p => p.DataSize);
-                    case ImageSortOrder.DataSizeDesc:
-                        return source.OrderByDescending(p => p.DataSize);
-                    case ImageSortOrder.Random:
-                        return source.OrderBy(p => Guid.NewGuid());
-                    default:
-                        return null;
-                }
-            }
+            Func<string, string> keyGetter;
+            if (mode == ConfigInfo.ImageDataMode.File)
+                keyGetter = Path.GetFileName;
             else
+                keyGetter = k => k;
+
+            switch (order)
             {
-                return null;
+                case ImageSortOrder.KeyAsc:
+                    return source.OrderBy(p => keyGetter(p.Key));
+                case ImageSortOrder.KeyDesc:
+                    return source.OrderByDescending(p => keyGetter(p.Key));
+                case ImageSortOrder.TimestampAsc:
+                    return source.OrderBy(p => p.Timestamp);
+                case ImageSortOrder.TimestampDesc:
+                    return source.OrderByDescending(p => p.Timestamp);
+                case ImageSortOrder.DataSizeAsc:
+                    return source.OrderBy(p => p.DataSize);
+                case ImageSortOrder.DataSizeDesc:
+                    return source.OrderByDescending(p => p.DataSize);
+                case ImageSortOrder.Random:
+                    return source.OrderBy(p => Guid.NewGuid());
+                default:
+                    return null;
             }
         }
 
@@ -104,7 +105,7 @@ namespace SO.PictManager.Common
         /// <summary>
         /// ソート順マッピングをコンボボックスにバインドします。
         /// </summary>
-        /// <param orderName="cmb">バインド先のコンボボックス</param>
+        /// <param name="cmb">バインド先のコンボボックス</param>
         public static void BindSortOrderDataSource(ComboBox cmb)
         {
             cmb.DataSource = _sortOrderMap.ToList();
@@ -119,7 +120,7 @@ namespace SO.PictManager.Common
         /// <summary>
         /// FileSortOrderの列挙値を指定して表示用名称を取得します。
         /// </summary>
-        /// <param orderName="order">FileSortOrderの列挙値</param>
+        /// <param name="order">FileSortOrderの列挙値</param>
         /// <returns>FileSortOrderの表示用名称</returns>
         public static string GetSortOrderDisplayText(ImageSortOrder order)
         {
@@ -163,7 +164,7 @@ namespace SO.PictManager.Common
         /// <summary>
         /// FileSortOrderの表示用文字列を指定して列挙値を取得します。
         /// </summary>
-        /// <param orderName="displayText">FileSortOrderの表示用文字列</param>
+        /// <param name="displayText">FileSortOrderの表示用文字列</param>
         /// <returns>FileSortOrderの列挙値</returns>
         /// <exception cref="System.ArgumentException">
         /// 指定された表示用文字列に一致するFileSortOrderが存在しない場合

@@ -88,7 +88,7 @@ namespace SO.PictManager.Components
         /// <summary>
         /// 表示対象ファイルパス指定付きのコンストラクタです。
         /// </summary>
-        /// <param orderName="newPath">表示対象ファイルパス</param>
+        /// <param name="newPath">表示対象ファイルパス</param>
         public ThumbnailUnit(string filePath)
         {
             // コンポーネント初期化
@@ -190,8 +190,8 @@ namespace SO.PictManager.Components
         /// 表示画像をクリックした際に実行される処理です。
         /// UnitClickアクションを実行します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void picThumbnail_Click(object sender, EventArgs e)
         {
             UnitClick(this, e);
@@ -203,8 +203,8 @@ namespace SO.PictManager.Components
         /// 画像の下の文字列をクリックした際に実行される処理です。
         /// UnitClickアクションを実行します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void lblFileName_Click(object sender, EventArgs e)
         {
             UnitClick(this, e);
@@ -216,8 +216,8 @@ namespace SO.PictManager.Components
         /// コントロール本体をクリックした際に実行される処理です。
         /// UnitClickアクションを実行します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void ThumbnailUnit_Click(object sender, EventArgs e)
         {
             UnitClick(sender, e);
@@ -229,8 +229,8 @@ namespace SO.PictManager.Components
         /// 表示画像をダブルクリックした際に実行される処理です。
         /// UnitDoubleClickアクションを実行します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void picThumbnail_DoubleClick(object sender, EventArgs e)
         {
             UnitDoubleClick(this, e);
@@ -242,8 +242,8 @@ namespace SO.PictManager.Components
         /// 画像の下の文字列をダブルクリックした際に実行される処理です。
         /// UnitDoubleClickアクションを実行します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void lblFileName_DoubleClick(object sender, EventArgs e)
         {
             UnitDoubleClick(this, e);
@@ -255,8 +255,8 @@ namespace SO.PictManager.Components
         /// コントロール本体をダブルクリックした際に実行される処理です。
         /// UnitDoubleClickアクションを実行します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void ThumbnailUnit_DoubleClick(object sender, EventArgs e)
         {
             UnitDoubleClick(sender, e);

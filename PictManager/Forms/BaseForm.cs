@@ -13,6 +13,7 @@ using SO.Library.Forms;
 using SO.Library.IO;
 using SO.Library.Text;
 using SO.PictManager.Common;
+using SO.PictManager.DataModel;
 using SO.PictManager.Forms.Info;
 using SO.PictManager.Imaging;
 
@@ -28,15 +29,6 @@ namespace SO.PictManager.Forms
     {
         #region クラス定数
 
-        /// <summary>仮削除ファイル格納フォルダ</summary>
-        protected const string STORE_DIR_NAME = "DeletedFiles";
-
-        /// <summary>削除済ファイルリストのファイル名</summary>
-        protected const string DEL_LIST_NAME = "DeletedFileList.txt";
-
-        /// <summary>削除済ファイルリスト内の現ファイル名・元ファイルパス区切り文字</summary>
-        protected const string DEL_LIST_SEPARATOR = "/";
-
         #endregion
 
         #region インスタンス変数
@@ -47,8 +39,11 @@ namespace SO.PictManager.Forms
         /// <summary>現在選択しているファイルのインデックス</summary>
         private int _currentIdx = 0;
 
-        /// <summary>処理対象ディレクトリのパス</summary>
+        /// <summary>表示対象ディレクトリのパス</summary>
         private DirectoryInfo _targetDir;
+
+        /// <summary>表示対象カテゴリー</summary>
+        private MstCategory _targetCategory;
 
         /// <summary>サブフォルダ包含フラグ</summary>
         private bool _includeSubFlg = false;
@@ -58,12 +53,28 @@ namespace SO.PictManager.Forms
         #region プロパティ
 
         /// <summary>
-        /// 処理対象ディレクトリのパスを取得・設定します。
+        /// 画像モードを取得・設定します。
         /// </summary>
+        internal ConfigInfo.ImageDataMode ImageMode { get; set; }
+
+        /// <summary>
+        /// 表示対象ディレクトリのパスを取得・設定します。
+        /// </summary>
+        [Browsable(false)]
         protected internal DirectoryInfo TargetDirectory
         {
             get { return _targetDir; }
             protected set { _targetDir = value; }
+        }
+
+        /// <summary>
+        /// 表示対象カテゴリーを取得・設定します。
+        /// </summary>
+        [Browsable(false)]
+        protected internal MstCategory TargetCategory
+        {
+            get { return _targetCategory; }
+            protected set { _targetCategory = value; }
         }
 
         /// <summary>
@@ -77,10 +88,10 @@ namespace SO.PictManager.Forms
         }
 
         /// <summary>
-        /// 表示対象のファイルの数を取得します。
+        /// 表示対象画像の数を取得します。
         /// </summary>
         [Browsable(false)]
-        internal int FileCount
+        internal int ImageCount
         {
             get { return _imageList.Count; }
         }
@@ -142,7 +153,7 @@ namespace SO.PictManager.Forms
         }
 
         /// <summary>
-        /// 対象ディレクトリパス、サブディレクトリ処理フラグ付きのコンストラクタです。
+        /// ファイルモード用のコンストラクタです。
         /// </summary>
         /// <param name="targetPath">対象ディレクトリパス</param>
         /// <param name="includeSubFlg">サブディレクトリ処理フラグ</param>
@@ -152,10 +163,28 @@ namespace SO.PictManager.Forms
             InitializeComponent();
 
             // フィールド初期化
+            ImageMode = ConfigInfo.ImageDataMode.File;
             if (targetPath != null)
                 _targetDir = new DirectoryInfo(targetPath);
 
             _includeSubFlg = includeSubFlg;
+
+            // メニューバー作成
+            CreateMenu();
+        }
+
+        /// <summary>
+        /// データベースモード用のコンストラクタです。
+        /// </summary>
+        /// <param name="category">対象カテゴリー</param>
+        public BaseForm(MstCategory category)
+        {
+            // コンポーネント初期化
+            InitializeComponent();
+
+            // フィールド初期化
+            ImageMode = ConfigInfo.ImageDataMode.Database;
+            _targetCategory = category;
 
             // メニューバー作成
             CreateMenu();
@@ -174,58 +203,6 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region DeleteFile - 指定ファイル削除
-
-        /// <summary>
-        /// 指定されたキーの画像を削除します。
-        /// 画像モードがファイルの場合は、削除した画像ファイルを削除ディレクトリに移動します。
-        /// </summary>
-        /// <param orderName="key">削除する画像のキー</param>
-        /// <returns>正常終了時:true、異常終了時:false</returns>
-        protected bool DeleteFile(string key)
-        {
-            try
-            {
-                // 一時退避ディレクトリが未作成の場合は作成
-                string storeDir = Path.Combine(EntryPoint.TmpDirPath, STORE_DIR_NAME);
-                if (!Directory.Exists(storeDir))
-                    Directory.CreateDirectory(storeDir);
-
-                // ファイルの読み取り専用属性を解除
-                var info = new FileInfo(key);
-                info.Attributes = info.Attributes & ~FileAttributes.ReadOnly;
-
-                // 既に同名ファイルが存在する場合は前にアンダーバーを追加
-                string movePath = Path.Combine(storeDir, Path.GetFileName(key));
-                while (File.Exists(movePath))
-                {
-                    movePath = Path.Combine(storeDir, Path.GetFileName(movePath).Insert(0, "_"));
-                }
-
-                // 対象ファイルを一時退避ディレクトリへ移動
-                File.Move(key, movePath);
-
-                // 削除済ファイルリストに追記
-                string delListPath = Path.Combine(storeDir, DEL_LIST_NAME);
-                using (var sw = new StreamWriter(delListPath, true))
-                {
-                    sw.WriteLine(Path.GetFileName(movePath) + DEL_LIST_SEPARATOR + key);
-                }
-
-                // ログ出力
-                Utilities.Logger.WriteLog(GetType().FullName, MethodBase.GetCurrentMethod().Name, "[DELETE]" + key);
-            }
-            catch (Exception ex)
-            {
-                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod(), "削除ファイル：" + key);
-                return false;
-            }
-
-            return true;
-        }
-
-        #endregion
-
         #region ViewDeletedFiles - 一時退避ディレクトリをエクスプローラで閲覧
 
         /// <summary>
@@ -236,7 +213,7 @@ namespace SO.PictManager.Forms
             try
             {
                 // 一時退避ディレクトリ存在確認
-                string storeDir = Path.Combine(EntryPoint.TmpDirPath, STORE_DIR_NAME);
+                string storeDir = Path.Combine(EntryPoint.TmpDirPath, Constants.STORE_DIR_NAME);
                 if (!Directory.Exists(storeDir))
                 {
                     FormUtilities.ShowMessage("I006");
@@ -407,11 +384,11 @@ namespace SO.PictManager.Forms
                     }
                     else
                     {
-                        RefreshTargetFiles();
+                        RefreshImageList();
 
                         // ファイル名ソート
                         if (renameInfo.SortOrder.HasValue)
-                            _imageList = ImageSorter.Sort(_imageList, renameInfo.SortOrder.Value).ToList();
+                            _imageList = ImageSorter.Sort(_imageList, renameInfo.SortOrder.Value, ImageMode).ToList();
                     }
 
                     // 変換前後パス格納リストを確保
@@ -557,7 +534,7 @@ namespace SO.PictManager.Forms
             finally
             {
                 // 対象ファイルリストをリフレッシュ
-                RefreshTargetFiles();
+                RefreshImageList();
 
                 // マウスカーソル変更(通常)
                 CursorFace.Current = Cursors.Default;
@@ -682,7 +659,7 @@ namespace SO.PictManager.Forms
             finally
             {
                 // 対象ファイルリストをリフレッシュ
-                RefreshTargetFiles();
+                RefreshImageList();
 
                 // マウスカーソル変更(通常)
                 CursorFace.Current = Cursors.Default;
@@ -697,31 +674,50 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region RefreshTargetFiles - 対象ファイルリスト最新化
+        #region RefreshImageList - 表示対象画像リスト最新化
 
         /// <summary>
         /// 表示中ディレクトリの現在の状態を再取得します。
         /// </summary>
-        protected virtual void RefreshTargetFiles()
+        protected virtual void RefreshImageList()
         {
             try
             {
                 var imageList = new List<IImage>();
-                if (_targetDir != null)
+                
+                if (ImageMode == ConfigInfo.ImageDataMode.File)
                 {
-                    // 表示対象拡張子リストを取得
-                    List<string> extentions = Utilities.Config.CommonInfo.TargetExtensions;
-
-                    // サーチオプション設定
-                    SearchOption opt = _includeSubFlg ?
-                        SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
-
-                    // 対象ディレクトリ内の画像ファイルパスを全取得
-                    foreach (var ext in extentions)
+                    if (_targetDir != null)
                     {
-                        foreach (var file in Directory.GetFiles(_targetDir.FullName, "*." + ext, opt))
+                        // 表示対象拡張子リストを取得
+                        List<string> extentions = Utilities.Config.CommonInfo.TargetExtensions;
+
+                        // サーチオプション設定
+                        SearchOption opt = _includeSubFlg ?
+                            SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+
+                        // 対象ディレクトリ内の画像ファイルパスを全取得
+                        foreach (var ext in extentions)
                         {
-                            imageList.Add(new FileImage(file));
+                            foreach (var file in Directory.GetFiles(_targetDir.FullName, "*." + ext, opt))
+                            {
+                                imageList.Add(new FileImage(file));
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    // 画像テーブルから対象画像データを取得
+                    using (var entity = new PictManagerEntities())
+                    {
+                        var imageIds = from i in entity.TblImages
+                                       where i.CategoryId == TargetCategory.CategoryId
+                                       select i.ImageId;
+
+                        foreach (var imageId in imageIds)
+                        {
+                            imageList.Add(new DataImage(imageId));
                         }
                     }
                 }
@@ -742,8 +738,8 @@ namespace SO.PictManager.Forms
         /// <summary>
         /// Enterキーの押下を検出し、指定されたボタンのClickイベントを発行します。
         /// </summary>
-        /// <param orderName="e">キーイベント引数</param>
-        /// <param orderName="target">Clickイベント発行対象のボタンオブジェクト</param>
+        /// <param name="e">キーイベント引数</param>
+        /// <param name="target">Clickイベント発行対象のボタンオブジェクト</param>
         protected void DoButtonClickWhenEnter(KeyEventArgs e, Button target)
         {
             try
@@ -832,9 +828,9 @@ namespace SO.PictManager.Forms
         /// Listには、更に子としてディレクトリ単位でファイルを保持したListが格納されます。
         /// 再帰検索フラグがtrueの場合、サブディレクトリ内を再帰的に検索し、その配下のファイルも追加対象とします。
         /// </summary>
-        /// <param orderName="fileList">取得したファイルを追加するList</param>
-        /// <param orderName="dirPath">検索対象ディレクトリパス</param>
-        /// <param orderName="reflexive">再帰検索フラグ</param>
+        /// <param name="fileList">取得したファイルを追加するList</param>
+        /// <param name="dirPath">検索対象ディレクトリパス</param>
+        /// <param name="reflexive">再帰検索フラグ</param>
         protected void GetChildFiles(List<List<string>> fileList, string dirPath, bool reflexive)
         {
             try
@@ -873,7 +869,7 @@ namespace SO.PictManager.Forms
         /// 指定されたファイルのインデックスを取得します。
         /// 指定されたファイルが存在しない場合や、処理中に例外が発生した場合は-1が返されます。
         /// </summary>
-        /// <param orderName="searchPath">インデックス検索対象ファイルのパス</param>
+        /// <param name="searchPath">インデックス検索対象ファイルのパス</param>
         /// <returns>ファイルパスのインデックス</returns>
         protected int SearchFileIndex(string searchPath)
         {
@@ -912,8 +908,8 @@ namespace SO.PictManager.Forms
         /// フォーム上でキーが押下された際に実行される処理です。
         /// 特殊なキーが押下された場合に固有の処理を実行します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         protected virtual void Form_KeyDown(object sender, KeyEventArgs e)
         {
             // 継承クラスでのオーバーライド用に用意

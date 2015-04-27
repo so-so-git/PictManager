@@ -16,6 +16,7 @@ using SO.Library.IO;
 using SO.Library.Text;
 using SO.PictManager.Components;
 using SO.PictManager.Common;
+using SO.PictManager.DataModel;
 using SO.PictManager.Forms.Info;
 using SO.PictManager.Imaging;
 
@@ -60,39 +61,71 @@ namespace SO.PictManager.Forms
         #region コンストラクタ
 
         /// <summary>
-        /// 唯一のコンストラクタです。
+        /// ファイルモード用のコンストラクタです。
         /// </summary>
-        /// <param orderName="targetPath">対象ディレクトリパス</param>
-        /// <param orderName="includeSubFlg">サブディレクトリ以下を含むかを示すフラグ</param>
+        /// <param name="targetPath">対象ディレクトリパス</param>
+        /// <param name="includeSubFlg">サブディレクトリ以下を含むかを示すフラグ</param>
         public SlideForm(string targetPath, bool includeSubFlg)
         {
             // コンポーネント初期化
             InitializeComponent();
 
             // フィールド初期化
+            ImageMode = ConfigInfo.ImageDataMode.File;
             TargetDirectory = new DirectoryInfo(targetPath);
             IncludeSubFlg = includeSubFlg;
 
+            // 共通処理
+            ConstructCommon();
+        }
+
+        /// <summary>
+        /// データベースモード用のコンストラクタです。
+        /// </summary>
+        /// <param name="category">対象カテゴリー</param>
+        public SlideForm(MstCategory category)
+        {
+            // コンポーネント初期化
+            InitializeComponent();
+
+            // フィールド初期化
+            ImageMode = ConfigInfo.ImageDataMode.Database;
+            TargetCategory = category;
+
+            // 共通処理
+            ConstructCommon();
+        }
+
+        #endregion
+
+        #region ConstructCommon - 共通コンストラクション
+
+        /// <summary>
+        /// インスタンス構築時の共通処理を実行します。
+        /// </summary>
+        private void ConstructCommon()
+        {
             // ファイル取得
-            RefreshTargetFiles();
-            lblCount.Text = FileCount.ToString();
-            txtIndex.MaxLength = FileCount.ToString().Length;
+            RefreshImageList();
+            lblCount.Text = ImageCount.ToString();
+            txtIndex.MaxLength = lblCount.Text.Length;
 
             // ソート順コンボボックス構築
             cmbSort.SelectedIndexChanged -= cmbSort_SelectedIndexChanged;
             ImageSorter.BindSortOrderDataSource(cmbSort);
             cmbSort.SelectedValue = Utilities.State.SortOrder;
-            ImageList = ImageSorter.Sort(ImageList, Utilities.State.SortOrder).ToList();
+            ImageList = ImageSorter.Sort(ImageList, Utilities.State.SortOrder, ImageMode).ToList();
             cmbSort.SelectedIndexChanged += cmbSort_SelectedIndexChanged;
 
             // 最初の画像を基底クラスの表示対象ファイルプロパティに設定
-            if (FileCount > 0)
+            if (ImageCount > 0)
             {
-                ViewFilePath = ImageList[0].Key;
+                ImageData = ImageList.First();
             }
             else
             {
-                txtIndex.Text = "0";
+                txtIndex.Text = string.Empty;
+                txtIndex.Enabled = false;
                 lblStatus.Text = string.Empty;
                 ShowInformationLabel(NO_IMAGE_LABEL);
             }
@@ -111,28 +144,32 @@ namespace SO.PictManager.Forms
         /// </summary>
         protected override void CreateMenu()
         {
-            // ファイル
-            var menuTemp = new ToolStripMenuItem("ファイル(&F)", null, null, "menuFile");
-            menuTemp.ShortcutKeys = Keys.Alt | Keys.F;
-            menuTemp.DropDownItems.Add(new ToolStripMenuItem("戻る", null, btnClose_Click));
-            menuTemp.DropDownItems.Add(new ToolStripMenuItem("上書き保存", null, (s, e) => SaveImage()));
-            menuTemp.DropDownItems.Add(new ToolStripMenuItem("対象ファイル再取得", null, menuRefresh_Click));
-            menuTemp.DropDownItems.Add(new ToolStripSeparator());
-            menuTemp.DropDownItems.Add(new ToolStripMenuItem("ディレクトリを開く", null, (s, e) => Utilities.OpenExplorer(TargetDirectory.FullName)));
-            menuTemp.DropDownItems.Add(new ToolStripSeparator());
-            menuTemp.DropDownItems.Add(new ToolStripMenuItem("表示画像ファイル名変更", null, menuRename_Click));
-            menuTemp.DropDownItems.Add(new ToolStripMenuItem("一括ファイル名変更", null, menuRenameAll_Click));
-            menuTemp.DropDownItems.Add(new ToolStripSeparator());
-            menuTemp.DropDownItems.Add(new ToolStripMenuItem("表示画像移動", null, menuMove_Click));
-            menuTemp.DropDownItems.Add(new ToolStripMenuItem("一括ファイル移動", null, menuMoveAll_Click));
-            menuTemp.DropDownItems.Add(new ToolStripSeparator());
-            menuTemp.DropDownItems.Add(new ToolStripMenuItem("表示画像削除", null, btnDelete_Click));
-            menuTemp.DropDownItems.Add(new ToolStripMenuItem("削除済画像確認", null, 
-                    (s, e) => ViewDeletedFiles()));
-            menuTemp.DropDownItems.Add(new ToolStripSeparator());
-            menuTemp.DropDownItems.Add(new ToolStripMenuItem("終了", null,
-                    (s, e) => Form_FormClosing(s, new FormClosingEventArgs(CloseReason.UserClosing, false))));
-            barMenu.Items.Add(menuTemp);
+            ToolStripMenuItem menuTemp;
+            if (ImageMode == ConfigInfo.ImageDataMode.File)
+            {
+                // ファイル
+                menuTemp = new ToolStripMenuItem("ファイル(&F)", null, null, "menuFile");
+                menuTemp.ShortcutKeys = Keys.Alt | Keys.F;
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("戻る", null, btnClose_Click));
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("上書き保存", null, (s, e) => SaveImage()));
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("対象ファイル再取得", null, menuRefresh_Click));
+                menuTemp.DropDownItems.Add(new ToolStripSeparator());
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("ディレクトリを開く", null, (s, e) => Utilities.OpenExplorer(TargetDirectory.FullName)));
+                menuTemp.DropDownItems.Add(new ToolStripSeparator());
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("表示画像ファイル名変更", null, menuRename_Click));
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("一括ファイル名変更", null, menuRenameAll_Click));
+                menuTemp.DropDownItems.Add(new ToolStripSeparator());
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("表示画像移動", null, menuMove_Click));
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("一括ファイル移動", null, menuMoveAll_Click));
+                menuTemp.DropDownItems.Add(new ToolStripSeparator());
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("表示画像削除", null, btnDelete_Click));
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("削除済画像確認", null,
+                        (s, e) => ViewDeletedFiles()));
+                menuTemp.DropDownItems.Add(new ToolStripSeparator());
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("終了", null,
+                        (s, e) => Form_FormClosing(s, new FormClosingEventArgs(CloseReason.UserClosing, false))));
+                barMenu.Items.Add(menuTemp);
+            }
 
             // 操作
             menuTemp = new ToolStripMenuItem("操作(&O)", null, null, "menuOpe");
@@ -186,7 +223,7 @@ namespace SO.PictManager.Forms
         /// </summary>
         protected override void InitializeAccessibility()
         {
-            if (FileCount == 0)
+            if (ImageCount == 0)
             {
                 btnDelete.Enabled = false;
                 btnNext.Enabled = false;
@@ -203,12 +240,12 @@ namespace SO.PictManager.Forms
         /// <summary>
         /// 表示中ディレクトリの現在の状態を再取得します。
         /// </summary>
-        protected override void RefreshTargetFiles()
+        protected override void RefreshImageList()
         {
-            base.RefreshTargetFiles();
+            base.RefreshImageList();
 
             // ファイル総数を更新
-            lblCount.Text = FileCount.ToString();
+            lblCount.Text = ImageCount.ToString();
         }
 
         #endregion
@@ -218,7 +255,7 @@ namespace SO.PictManager.Forms
         /// <summary>
         /// フォーム項目のアクセス可不可を設定します。
         /// </summary>
-        /// <param orderName="accessible">アクセス可不可を示すフラグ</param>
+        /// <param name="accessible">アクセス可不可を示すフラグ</param>
         private void ChangeAccessibility(bool accessible)
         {
             try
@@ -245,7 +282,7 @@ namespace SO.PictManager.Forms
         /// 現在のインデックスが指し示す画像を表示します。
         /// ファイルが削除済みの場合は、それを示すメッセージを表示します。
         /// </summary>
-        protected override void DisplayPicture()
+        protected override void DisplayImage()
         {
             try
             {
@@ -256,7 +293,7 @@ namespace SO.PictManager.Forms
                     pnlParent.Panel1.HorizontalScroll.Value = 0;
 
                 // イメージファイルがあるか確認
-                if (FileCount == 0)
+                if (ImageCount == 0)
                 {
                     lblStatus.Text = string.Empty;
                     ShowInformationLabel(NO_IMAGE_LABEL);
@@ -272,8 +309,8 @@ namespace SO.PictManager.Forms
                 else
                 {
                     // イメージ表示
-                    ViewFilePath = ImageList[CurrentIndex].Key; // 基底クラスの表示ファイル指定プロパティを設定
-                    base.DisplayPicture();
+                    ImageData = ImageList[CurrentIndex];
+                    base.DisplayImage();
                 }
 
                 // 表示中情報更新
@@ -301,15 +338,15 @@ namespace SO.PictManager.Forms
                 int factIdx;
                 if (idx < 0)
                     factIdx = 0;
-                else if (idx > FileCount - 1)
-                    factIdx = FileCount - 1;
+                else if (idx > ImageCount - 1)
+                    factIdx = ImageCount - 1;
                 else
                     factIdx = idx;
 
                 // 表示更新
                 CurrentIndex = factIdx;
-                ViewFilePath = ImageList[CurrentIndex].Key;
-                DisplayPicture();
+                ImageData = ImageList[CurrentIndex];
+                DisplayImage();
             }
             catch (Exception ex)
             {
@@ -361,7 +398,7 @@ namespace SO.PictManager.Forms
             {
                 // 現在のインデックスから末尾までを検索
                 int i;
-                for (i = CurrentIndex; i < FileCount; ++i)
+                for (i = CurrentIndex; i < ImageCount; ++i)
                 {
                     if (!ImageList[i].IsDeleted)
                     {
@@ -371,7 +408,7 @@ namespace SO.PictManager.Forms
                 }
 
                 // 末尾まで検索して見つからなかった場合は先頭から再検索
-                if (i >= FileCount)
+                if (i >= ImageCount)
                 {
                     int j;
                     for (j = 0; j < CurrentIndex; ++j)
@@ -526,8 +563,8 @@ namespace SO.PictManager.Forms
         /// フォームが表示された際に実行される処理です。
         /// 画面レイアウトを初期化します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         protected override void Form_Shown(object sender, EventArgs e)
         {
             base.Form_Shown(sender, e);
@@ -543,8 +580,8 @@ namespace SO.PictManager.Forms
         /// ×ボタンがクリックされた際に実行される処理です。
         /// 終了確認後、アプリケーションを終了します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         protected override void Form_FormClosing(object sender, FormClosingEventArgs e)
         {
             try
@@ -581,8 +618,8 @@ namespace SO.PictManager.Forms
         /// フォーム上でキーが押下された際に実行される処理です。
         /// 特殊なキーが押下された場合に固有の処理を実行します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         protected override void Form_KeyDown(object sender, KeyEventArgs e)
         {
             try
@@ -660,8 +697,8 @@ namespace SO.PictManager.Forms
         /// フォームのサイズが変更された際に実行される処理です。
         /// 各ボタン、コントロールの配置を再設定します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         protected override void Form_Resize(object sender, EventArgs e)
         {
             base.Form_Resize(sender, e);
@@ -734,8 +771,8 @@ namespace SO.PictManager.Forms
                 if ((lastIdx = SearchNextValidIndex()) == -1)
                 {
                     // 有効なイメージが無い場合は対象ファイル無しのキャプションを表示
-                    RefreshTargetFiles();
-                    DisplayPicture();
+                    RefreshImageList();
+                    DisplayImage();
                     return;
                 }
 
@@ -743,14 +780,14 @@ namespace SO.PictManager.Forms
                 string lastFile = ImageList[lastIdx].Key;
 
                 // 対象ファイルを最新化
-                RefreshTargetFiles();
+                RefreshImageList();
 
                 // 最後に表示していたファイルを再表示
                 int idx = SearchFileIndex(lastFile);
                 CurrentIndex = idx == -1 ? 0 : idx;
 
-                lblCount.Text = (FileCount + 1).ToString();
-                DisplayPicture();
+                lblCount.Text = (ImageCount + 1).ToString();
+                DisplayImage();
             }
             catch (Exception ex)
             {
@@ -776,8 +813,8 @@ namespace SO.PictManager.Forms
             if ((lastIdx = SearchNextValidIndex()) == -1)
             {
                 // 有効なイメージが無い場合は対象ファイル無しのキャプションを表示
-                RefreshTargetFiles();
-                DisplayPicture();
+                RefreshImageList();
+                DisplayImage();
                 return;
             }
 
@@ -796,8 +833,8 @@ namespace SO.PictManager.Forms
                 int idx = SearchFileIndex(lastFile);
                 CurrentIndex = idx == -1 ? 0 : idx;
             }
-            lblCount.Text = (FileCount + 1).ToString();
-            DisplayPicture();
+            lblCount.Text = (ImageCount + 1).ToString();
+            DisplayImage();
         }
 
         #endregion
@@ -808,12 +845,12 @@ namespace SO.PictManager.Forms
         /// 一括ファイル移動メニューがクリックされた際に実行される処理です。
         /// 移動先ディレクトリ指定ダイアログを表示し、入力された内容に応じてファイルを一括で移動します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void menuMoveAll_Click(object sender, EventArgs e)
         {
             // 対象ファイル最新化
-            RefreshTargetFiles();
+            RefreshImageList();
 
             // ファイル移動実行、正常終了時はディレクトリ選択フォームへ戻る
             if (MoveAllFiles() == ResultStatus.OK) this.BackToOwner();
@@ -828,8 +865,8 @@ namespace SO.PictManager.Forms
         /// 表示画像移動メニューがクリックされた際に実行される処理です。
         /// 表示中の画像を指定ディレクトリに移動し、ファイルリストを最新化します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         protected override void menuMove_Click(object sender, EventArgs e)
         {
             // ファイル名変更
@@ -847,8 +884,8 @@ namespace SO.PictManager.Forms
         /// スライド表示メニューがクリックされた際に実行される処理です。
         /// ファイルリストの全画像をスライドショーで表示します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void menuChkSlide_Click(object sender, EventArgs e)
         {
             var menuChklide = (ToolStripMenuItem)sender;
@@ -952,8 +989,8 @@ namespace SO.PictManager.Forms
         /// 画像切替間隔メニューでキーが押下された際に実行される処理です。
         /// Enterキーが押下された場合、スライドショー表示を開始します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void menuTxtInterval_KeyDown(object sender, KeyEventArgs e)
         {
             try
@@ -1016,20 +1053,19 @@ namespace SO.PictManager.Forms
                 picViewer.Image.Dispose();
 
                 // 対象ファイルを削除
-                if (DeleteFile(ImageList[CurrentIndex].Key))
+                ImageList[CurrentIndex].Delete();
+
+                // 次の有効イメージを表示
+                if ((CurrentIndex = SearchNextValidIndex()) == -1)
                 {
-                    // 次の有効イメージを表示
-                    if ((CurrentIndex = SearchNextValidIndex()) == -1)
-                    {
-                        FormUtilities.ShowMessage("I005");
-                        this.BackToOwner();
-                    }
-                    else
-                    {
-                        if (CurrentIndex == 0)
-                            FormUtilities.ShowMessage("I000");
-                        DisplayPicture();
-                    }
+                    FormUtilities.ShowMessage("I005");
+                    this.BackToOwner();
+                }
+                else
+                {
+                    if (CurrentIndex == 0)
+                        FormUtilities.ShowMessage("I000");
+                    DisplayImage();
                 }
             }
             catch (Exception ex)
@@ -1046,8 +1082,8 @@ namespace SO.PictManager.Forms
         /// ブックマークボタンが押下された際に実行される処理です。
         /// 表示中の画像をブックマークに追加します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void btnBookmark_Clicked(object sender, EventArgs e)
         {
             try
@@ -1095,7 +1131,7 @@ namespace SO.PictManager.Forms
                             (obj, fce) =>
                             {
                                 chkSimilar.Checked = false;
-                                RefreshTargetFiles();
+                                RefreshImageList();
                             });
 
                         _thumbnailForm.Show(this);
@@ -1123,8 +1159,8 @@ namespace SO.PictManager.Forms
         /// ルーペ表示チェックボックスが変更された際に実行される処理です。
         /// 部分拡大鏡を表示します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void chkLupe_CheckedChanged(object sender, EventArgs e)
         {
             try
@@ -1164,8 +1200,8 @@ namespace SO.PictManager.Forms
         /// 前へボタンがクリックされた際に実行される処理です。
         /// 前のインデックスの画像を表示します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void btnPrevious_Click(object sender, EventArgs e)
         {
             try
@@ -1177,7 +1213,7 @@ namespace SO.PictManager.Forms
                 // 一つ前のインデックスの画像を表示(最初の場合は末尾を表示)
                 if (CurrentIndex == 0) CurrentIndex = ImageList.Count - 1;
                 else --CurrentIndex;
-                DisplayPicture();
+                DisplayImage();
             }
             catch (Exception ex)
             {
@@ -1193,8 +1229,8 @@ namespace SO.PictManager.Forms
         /// 次へボタンがクリックされた際に実行される処理です。
         /// 次のインデックスの画像を表示します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void btnNext_Click(object sender, EventArgs e)
         {
             try
@@ -1204,7 +1240,7 @@ namespace SO.PictManager.Forms
                     _thumbnailForm.Dispose();
 
                 // 一つ後のインデックスの画像を表示(末尾の場合は最初を表示)
-                if (CurrentIndex == FileCount - 1)
+                if (CurrentIndex == ImageCount - 1)
                 {
                     CurrentIndex = 0;
                     if (!_slideFlg)
@@ -1213,7 +1249,7 @@ namespace SO.PictManager.Forms
                 }
                 else ++CurrentIndex;
 
-                DisplayPicture();
+                DisplayImage();
             }
             catch (Exception ex)
             {
@@ -1229,8 +1265,8 @@ namespace SO.PictManager.Forms
         /// 画像インデックス指定テキストボックスの内容が変更された際に実行される処理です。
         /// 画像切替間隔メニューとの間で入力された内容の同期を取ります。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void txtIndex_TextChanged(object sender, EventArgs e)
         {
             try
@@ -1257,8 +1293,8 @@ namespace SO.PictManager.Forms
         /// 画像インデックス指定テキストボックスでキーが押下された際に実行される処理です。
         /// Enterキーが押下された場合、入力されたインデックスの画像を表示します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void txtIndex_KeyDown(object sender, KeyEventArgs e)
         {
             try
@@ -1296,8 +1332,8 @@ namespace SO.PictManager.Forms
         /// ソート順コンボボックスの選択内容が変更された際に実行される処理です。
         /// ファイルの表示順を選択内容に応じてソートし、先頭から再表示します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void cmbSort_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
@@ -1315,7 +1351,7 @@ namespace SO.PictManager.Forms
                     progDlg.StartProgressWithMarquee(msgInfo.caption, msgInfo.message);
 
                     // ファイル名ソート
-                    ImageList = ImageSorter.Sort(ImageList, order).ToList();
+                    ImageList = ImageSorter.Sort(ImageList, order, ImageMode).ToList();
 
                     // 先頭の画像を再表示
                     DisplayPictureByIndex(0);

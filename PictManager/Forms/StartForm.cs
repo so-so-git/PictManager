@@ -100,6 +100,8 @@ namespace SO.PictManager.Forms
                     cmbCategories.DisplayMember = "CategoryName";
                 }
             }
+
+            this.Update();
         }
 
         #endregion
@@ -113,6 +115,8 @@ namespace SO.PictManager.Forms
         /// <returns>true:有効なパス / false:無効なパス</returns>
         private bool ValidateTargetDirectory()
         {
+            System.Diagnostics.Debug.Assert(Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.File);
+
             // 対象ディレクトリ入力チェック
             if (txtTargetDirectory.Text.Trim() == string.Empty)
             {
@@ -158,8 +162,8 @@ namespace SO.PictManager.Forms
         /// 参照ボタンをクリックした際に実行される処理です。
         /// 対象ディレクトリ選択ダイアログを表示します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void btnRef_Click(object sender, EventArgs e)
         {
             try
@@ -185,8 +189,8 @@ namespace SO.PictManager.Forms
         /// メンテナンスボタンをクリックした際に実行される処理です。
         /// データベースメンテナンスフォームを表示します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void btnMaintenance_Click(object sender, EventArgs e)
         {
             try
@@ -227,8 +231,8 @@ namespace SO.PictManager.Forms
         /// システム設定ボタンをクリックした際に実行される処理です。
         /// システム設定ダイアログを表示します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void btnConfig_Click(object sender, EventArgs e)
         {
             using (var dialog = new ConfigDialog())
@@ -248,8 +252,8 @@ namespace SO.PictManager.Forms
         /// ディレクトリ監視ボタンを押下した際に実行される処理です。
         /// ウィンドウをタスクトレイに格納し、指定フォルダの監視を開始します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void btnDirectoryWatch_Click(object sender, EventArgs e)
         {
             try
@@ -283,8 +287,8 @@ namespace SO.PictManager.Forms
         /// URL受付ボタンをクリックした際に実行される処理です。
         /// URL受付フォームを表示します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void btnOpenUrlDrop_Click(object sender, EventArgs e)
         {
             try
@@ -317,25 +321,37 @@ namespace SO.PictManager.Forms
         /// 閲覧ボタンをクリックした際に実行される処理です。
         /// 選択したモードで対象ディレクトリ内のファイルを操作する為の子フォームを表示します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void btnView_Click(object sender, EventArgs e)
         {
             try
             {
-                // 対象チェック、状態更新
+                Form frmViewer;
                 if (Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.File)
+                {
+                    // 対象チェック、状態更新
                     if (!ValidateTargetDirectory()) return;
 
-                // 対象ディレクトリの内容を展開
-                bool includeSub = Utilities.Config.CommonInfo.IsIncludeSubDirectory;
-                Form frmViewer = null;
-                if (rdoSlide.Checked)
-                    frmViewer = new SlideForm(txtTargetDirectory.Text, includeSub);       // スライドショー表示
-                else if (rdoList.Checked)
-                    frmViewer = new ListForm(txtTargetDirectory.Text, includeSub);        // 一覧表示
-                else if (rdoThumbnail.Checked)
-                    frmViewer = new ThumbnailForm(txtTargetDirectory.Text, includeSub);   // サムネール表示
+                    // 対象ディレクトリの内容を展開
+                    bool includeSub = Utilities.Config.CommonInfo.IsIncludeSubDirectory;
+                    if (rdoSlide.Checked)
+                        frmViewer = new SlideForm(txtTargetDirectory.Text, includeSub);       // スライドショー表示
+                    else if (rdoList.Checked)
+                        frmViewer = new ListForm(txtTargetDirectory.Text, includeSub);        // 一覧表示
+                    else
+                        frmViewer = new ThumbnailForm(txtTargetDirectory.Text, includeSub);   // サムネール表示
+                }
+                else
+                {
+                    var category = cmbCategories.SelectedItem as MstCategory;
+                    if (rdoSlide.Checked)
+                        frmViewer = new SlideForm(category);        // スライドショー表示
+                    else if (rdoList.Checked)
+                        frmViewer = new ListForm(category);         // 一覧表示
+                    else
+                        frmViewer = new ThumbnailForm(category);    // サムネール表示
+                }
 
                 frmViewer.Show(this);
                 Visible = false;
@@ -354,8 +370,8 @@ namespace SO.PictManager.Forms
         /// 終了ボタンをクリックした際に実行される処理です。
         /// 終了確認後、全ての実行中リソースを破棄してアプリケーションを終了します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void btnQuit_Click(object sender, EventArgs e)
         {
             try
@@ -381,8 +397,8 @@ namespace SO.PictManager.Forms
         /// ×ボタンをクリックした際に実行される処理です。
         /// 終了確認後、全ての実行中リソースを破棄してアプリケーションを終了します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void Form_FormClosing(object sender, FormClosingEventArgs e)
         {
             try
@@ -416,8 +432,8 @@ namespace SO.PictManager.Forms
         /// 対象ディレクトリ指定テキストボックスにファイルがドラッグアンドドロップされた際に実行される処理です。
         /// ドラッグアンドドロップされたファイルの絶対パスをTextBoxに表示します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void txtTargetFolder_DragDrop(object sender, DragEventArgs e)
         {
             // ファイルドロップのみ許可
@@ -443,8 +459,8 @@ namespace SO.PictManager.Forms
         /// 対象ディレクトリ指定テキストボックスにドラッグアンドドロップ時のマウスカーソルが入った際に実行される処理です。
         /// マウスカーソルをファイル追加時カーソルに変更します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void txtTargetDirectory_DragEnter(object sender, DragEventArgs e)
         {
             // ファイルドロップのみ許可
@@ -459,8 +475,8 @@ namespace SO.PictManager.Forms
         /// 対象ディレクトリ指定テキストボックスにフォーカスが与えられた際に実行される処理です。
         /// TextBox内の全てのテキストを選択状態にします。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void txtTargetDirectory_Enter(object sender, EventArgs e)
         {
             // テキスト全選択
@@ -475,8 +491,8 @@ namespace SO.PictManager.Forms
         /// 監視中のフォルダにファイルが作成された際に実行される処理です。
         /// 作成されたファイルに対して、自動的にリネームを行います。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void fileWatcher_Created(object sender, FileSystemEventArgs e)
         {
             try
@@ -538,8 +554,8 @@ namespace SO.PictManager.Forms
         /// ファイル監視イベントの重複発生監視用タイマーの処理です。
         /// 指定時間が経過した後、イベント重複チェックに使用するファイルパスをクリアします。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void watchDupliTimer_Tick(object sender, EventArgs e)
         {
             _lastRenameByWatch = null;
@@ -553,8 +569,8 @@ namespace SO.PictManager.Forms
         /// タスクトレイアイコンダブルクリック時の処理です。
         /// 監視を終了し、ウィンドウを表示します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             try
@@ -575,8 +591,8 @@ namespace SO.PictManager.Forms
         /// 監視対象のフォルダを開くメニューアイテム選択時の処理です。
         /// 監視対象のフォルダを開きます。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void menuOpenFolder_Click(object sender, EventArgs e)
         {
             try
@@ -597,8 +613,8 @@ namespace SO.PictManager.Forms
         /// 監視終了メニューアイテム選択時の処理です。
         /// 監視を終了し、ウィンドウを表示します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void menuEndWatch_Click(object sender, EventArgs e)
         {
             try
@@ -619,8 +635,8 @@ namespace SO.PictManager.Forms
         /// アプリケーション終了メニューアイテム選択時の処理です。
         /// アプリケーションを終了します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void menuQuit_Click(object sender, EventArgs e)
         {
             try

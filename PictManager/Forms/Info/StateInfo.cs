@@ -32,7 +32,7 @@ namespace SO.PictManager.Forms.Info
         /// <summary>
         /// コピー元インスタンス指定付きのコンストラクタです。
         /// </summary>
-        /// <param orderName="original">コピー元インスタンス</param>
+        /// <param name="original">コピー元インスタンス</param>
 		public StateInfo(StateInfo original)
 		{
 			StateInfo newObj = new StateInfo();

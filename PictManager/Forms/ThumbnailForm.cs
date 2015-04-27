@@ -14,6 +14,7 @@ using SO.Library.IO;
 using SO.Library.Text;
 using SO.PictManager.Common;
 using SO.PictManager.Components;
+using SO.PictManager.DataModel;
 using SO.PictManager.Imaging;
 
 using CursorFace = System.Windows.Forms.Cursor;
@@ -66,7 +67,7 @@ namespace SO.PictManager.Forms
         #region コンストラクタ
 
         /// <summary>
-        /// 対象フォルダを指定して表示する際に使用するコンストラクタです。
+        /// ファイルモード用のコンストラクタです。
         /// </summary>
         /// <param name="targetPath">対象ディレクトリパス</param>
         /// <param name="includeSubFlg">サブディレクトリ以下を含むかを示すフラグ</param>
@@ -80,8 +81,27 @@ namespace SO.PictManager.Forms
             CommonConstruction();
 
             // ステータスバー更新
-            lblStatus.Text = FileCount > 0
-                    ? Path.GetDirectoryName(ImageList[0].Key) + string.Format(" - {0}ファイル", FileCount)
+            lblStatus.Text = ImageCount > 0
+                    ? Path.GetDirectoryName(ImageList.First().Key) + string.Format(" - {0}ファイル", ImageCount)
+                    : NO_IMAGE_LABEL;
+        }
+
+        /// <summary>
+        /// データベースモード用のコンストラクタです。
+        /// </summary>
+        /// <param name="category">対象カテゴリー</param>
+        public ThumbnailForm(MstCategory category)
+            : base(category)
+        {
+            // コンポーネント初期化
+            InitializeComponent();
+
+            // 共通構築処理
+            CommonConstruction();
+
+            // ステータスバー更新
+            lblStatus.Text = ImageCount > 0
+                    ? Path.GetDirectoryName(ImageList.First().Key) + string.Format(" - {0}ファイル", ImageCount)
                     : NO_IMAGE_LABEL;
         }
 
@@ -118,13 +138,13 @@ namespace SO.PictManager.Forms
             _thumbnails.Clear();
 
             // ファイル取得
-            RefreshTargetFiles();
+            RefreshImageList();
 
             // ページ表示初期化
             txtPage.Text = _currentPage.ToString();
-            lblPageMax.Text = FileCount % _maxDispNum == 0
-                    ? (FileCount / _maxDispNum).ToString()
-                    : (FileCount / _maxDispNum + 1).ToString();
+            lblPageMax.Text = ImageCount % _maxDispNum == 0
+                    ? (ImageCount / _maxDispNum).ToString()
+                    : (ImageCount / _maxDispNum + 1).ToString();
 
             // 初期表示時のコントロール配置更新用に最大化前のサイズを保管
             _beforeResize = Size;
@@ -195,11 +215,11 @@ namespace SO.PictManager.Forms
         /// ディレクトリを対象に操作を行っている場合はディレクトリの現在の状態を再取得します。
         /// ファイルパスリストを対象に操作を行っている場合は何も行ないません。
         /// </summary>
-        protected override void  RefreshTargetFiles()
+        protected override void  RefreshImageList()
         {
             if (TargetDirectory != null)
             {
-                base.RefreshTargetFiles();
+                base.RefreshImageList();
                 _currentPage = 1;
                 RefreshThumbnails();
             }
@@ -231,10 +251,10 @@ namespace SO.PictManager.Forms
                 using (var progDlg = new ProgressDialog(this))
                 {
                     progDlg.StartProgress(string.Format("ページ{0}表示中...", _currentPage.ToString()), string.Empty, 0,
-                            _currentPage == int.Parse(lblPageMax.Text) ? FileCount % _maxDispNum : _maxDispNum);
+                            _currentPage == int.Parse(lblPageMax.Text) ? ImageCount % _maxDispNum : _maxDispNum);
                     Update();
 
-                    for (int i = 0; i < _maxDispNum && (_currentPage - 1) * _maxDispNum + i < FileCount; ++i)
+                    for (int i = 0; i < _maxDispNum && (_currentPage - 1) * _maxDispNum + i < ImageCount; ++i)
                     {
                         // 対象ファイルインデックス算出
                         int idx = (_currentPage - 1) * _maxDispNum + i;
@@ -326,8 +346,8 @@ namespace SO.PictManager.Forms
         /// フォームが表示された際に実行される処理です。
         /// 最初のページのサムネイル表示を初期化します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void Form_Shown(object sender, EventArgs e)
         {
             // サムネイル表示を初期化
@@ -340,8 +360,8 @@ namespace SO.PictManager.Forms
         /// フォームのサイズが変更された際に実行される処理です。
         /// 各ボタン、コントロールの配置を再設定します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void Form_Resize(object sender, EventArgs e)
         {
             if (!Size.Equals(_beforeResize))
@@ -364,8 +384,8 @@ namespace SO.PictManager.Forms
         /// ×ボタンがクリックされた際に実行される処理です。
         /// 終了確認後、アプリケーションを終了します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void Form_FormClosing(object sender, FormClosingEventArgs e)
         {
             try
@@ -401,8 +421,8 @@ namespace SO.PictManager.Forms
         /// フォーム上でマウスホイールが回された際に実行される処理です。
         /// フォーム内容をスクロールします。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void Form_MouseWheel(object sender, MouseEventArgs e)
         {
             try
@@ -472,8 +492,8 @@ namespace SO.PictManager.Forms
         /// 選択ファイル移動メニューがクリックされた際に実行される処理です。
         /// 選択されたサムネイルを指定されたフォルダに移動します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void menuMoveSelected_Click(object sender, EventArgs e)
         {
             var status = ResultStatus.Empty;
@@ -504,7 +524,7 @@ namespace SO.PictManager.Forms
                     File.Move(srcPath, Path.Combine(destDir, Path.GetFileName(srcPath)));
                 }
 
-                RefreshTargetFiles();
+                RefreshImageList();
 
                 status = ResultStatus.OK;
             }
@@ -518,7 +538,7 @@ namespace SO.PictManager.Forms
             finally
             {
                 // 対象ファイルリストをリフレッシュ
-                RefreshTargetFiles();
+                RefreshImageList();
 
                 // マウスカーソル変更(通常)
                 CursorFace.Current = Cursors.Default;
@@ -536,8 +556,8 @@ namespace SO.PictManager.Forms
         /// 選択されたサムネイルをViewImageFormで表示します。
         /// ViewImageForm側で削除された場合は、サムネイルを削除済み状態に設定します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void menuViewImage_Clicked(object sender, EventArgs e)
         {
             try
@@ -560,8 +580,8 @@ namespace SO.PictManager.Forms
         /// クリックされたサムネイルを選択状態にします。
         /// 既に選択状態の場合は、選択を解除します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void ThumbnailUnit_Click(object sender, EventArgs e)
         {
             ThumbnailUnit clicked = (ThumbnailUnit)sender;
@@ -604,8 +624,8 @@ namespace SO.PictManager.Forms
         /// ダブルクリックされたサムネイルをViewImageFormで表示します。
         /// ViewImageForm側で削除された場合は、サムネイルを削除済み状態に設定します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void ThumbnailUnit_DoubleClick(object sender, EventArgs e)
         {
             ThumbnailUnit clicked = (ThumbnailUnit)sender;
@@ -617,7 +637,7 @@ namespace SO.PictManager.Forms
                     // 複数選択モード時、シングルクリックでボーダーが消える可能性が有るので再設定
                     clicked.BorderStyle = BorderStyle.FixedSingle;
 
-                new ViewImageForm(this, clicked.FilePath).ShowDialog(this);
+                new ViewImageForm(this, new FileImage(clicked.FilePath)).ShowDialog(this);
 
                 // 子フォーム側でファイルが削除された場合
                 if (!File.Exists(clicked.FilePath))
@@ -641,8 +661,8 @@ namespace SO.PictManager.Forms
         /// 閉じるボタンがクリックされた際に実行される処理です。
         /// 自フォームを破棄し、親フォームを再表示します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void btnClose_Click(object sender, EventArgs e)
         {
             // 全サムネイルのリソース破棄
@@ -659,8 +679,8 @@ namespace SO.PictManager.Forms
         /// 前ページボタンがクリックされた際に実行される処理です。
         /// 前のページを表示します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void btnPrevious_Click(object sender, EventArgs e)
         {
             // ページ更新
@@ -681,8 +701,8 @@ namespace SO.PictManager.Forms
         /// 次ページボタンがクリックされた際に実行される処理です。
         /// 次のページを表示します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void btnNext_Click(object sender, EventArgs e)
         {
             // ページ更新
@@ -704,8 +724,8 @@ namespace SO.PictManager.Forms
         /// 削除ボタンが押下された際に実行される処理です。
         /// 選択状態の全サムネイルの実ファイルを削除します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void btnDelete_Click(object sender, EventArgs e)
         {
             try
@@ -733,7 +753,8 @@ namespace SO.PictManager.Forms
                 foreach (var selected in selectedList)
                 {
                     // 対象ファイルを削除
-                    if (!DeleteFile(selected.FilePath)) return;
+                    var image = new FileImage(selected.FilePath);
+                    image.Delete();
 
                     // 名称ラベルを設定
                     selected.NameLabel = ThumbnailUnit.DELETED_NAME_LABEL; ;
@@ -759,8 +780,8 @@ namespace SO.PictManager.Forms
         /// 現在ページ表示テキストボックスからフォーカスが外れた際に実行される処理です。
         /// テキストボックスに入力されている番号のページを表示します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void txtPage_Leave(object sender, EventArgs e)
         {
             // 指定されたページを表示
@@ -773,8 +794,8 @@ namespace SO.PictManager.Forms
         /// 現在ページ表示テキストボックスでキーが押下された際に実行される処理です。
         /// Enterキーが押下された場合、テキストボックスに入力されている番号のページを表示します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void txtPage_KeyDown(object sender, KeyEventArgs e)
         {
             try
@@ -810,8 +831,8 @@ namespace SO.PictManager.Forms
         /// 現在ページ表示テキストボックスの内容が変更された際に実行される処理です。
         /// 現在ページ表示メニューと内容の同期します。
         /// </summary>
-        /// <param orderName="sender">イベント発生元オブジェクト</param>
-        /// <param orderName="e">イベント引数</param>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
         private void txtPage_TextChanged(object sender, EventArgs e)
         {
             // メニューとメイン画面の同期を取る

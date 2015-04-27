@@ -67,7 +67,7 @@ namespace SO.PictManager.Imaging
                 // プログレスダイアログ表示
                 using (var progDlg = new ProgressDialog(form))
                 {
-                    progDlg.StartProgress("類似画像検索中...", string.Empty, 0, form.FileCount);
+                    progDlg.StartProgress("類似画像検索中...", string.Empty, 0, form.ImageCount);
                     form.Update();
 
                     int blockWidth;
@@ -107,7 +107,7 @@ namespace SO.PictManager.Imaging
                     {
                         // プログレスメッセージ更新
                         progDlg.Message = string.Format("{0}({1}/{2}) {3}",
-                                message ?? string.Empty, ++proceedCount, form.FileCount, compImage);
+                                message ?? string.Empty, ++proceedCount, form.ImageCount, compImage);
 
                         if (compImage.Key == criterionKey) continue;
 
@@ -165,8 +165,8 @@ namespace SO.PictManager.Imaging
         /// <summary>
         /// 対象画像内の指定された矩形内のピクセル色値の平均値を取得します。
         /// </summary>
-        /// <param orderName="bmp">対象画像</param>
-        /// <param orderName="rect">対象画像内の処理対象矩形</param>
+        /// <param name="bmp">対象画像</param>
+        /// <param name="rect">対象画像内の処理対象矩形</param>
         /// <returns>指定されたブロックのピクセル色値の平均値</returns>
         private static int GetBlockColorAverage(Bitmap bmp, Rectangle rect)
         {
