@@ -201,7 +201,7 @@ namespace SO.PictManager.Forms
             // 操作
             menuTemp = new ToolStripMenuItem("操作(&O)", null, null, "menuOpe");
             menuTemp.ShortcutKeys = Keys.Alt | Keys.O;
-            menuTemp.DropDownItems.Add(new ToolStripMenuItem("全ての変更を適用", null, btnApply_Click));
+            menuTemp.DropDownItems.Add(new ToolStripMenuItem("全ての変更を適用", null, btnApplyChanges_Click));
             menuTemp.DropDownItems.Add(new ToolStripMenuItem("全ての変更を戻す", null, btnRevertSelection_Click));
             menuTemp.DropDownItems.Add(new ToolStripSeparator());
             menuTemp.DropDownItems.Add(new ToolStripMenuItem("重複しているファイルのみを抽出", null, menuFilterDuplicated_Click));
@@ -336,9 +336,18 @@ namespace SO.PictManager.Forms
                 row.HeaderCell.Style.Font = new Font(this.Font, FontStyle.Regular);
 
                 // 選択チェックボックスセル
-                var celChk = new DataGridViewCheckBoxCell();
-                celChk.Value = false;
-                celChk.Tag = false;
+                DataGridViewCell celChk;
+                if (delFlg)
+                {
+                    celChk = new DataGridViewTextBoxCell();
+                    celChk.Value = string.Empty;
+                }
+                else
+                {
+                    celChk = new DataGridViewCheckBoxCell();
+                    celChk.Value = false;
+                }
+                celChk.Tag = celChk.Value;
                 row.Cells.Add(celChk);
 
                 if (ImageMode == ConfigInfo.ImageDataMode.File)
@@ -599,7 +608,7 @@ namespace SO.PictManager.Forms
         /// <param name="cell">変更内容が入力されたDataGridViewCell</param>
         /// <param name="proceededRows">処理済の行インデックスが格納されたList</param>
         /// <returns>処理中止フラグ</returns>
-        protected virtual bool ApplyChangeInFileMode(DataGridViewCell cell, List<int> proceededRows)
+        protected virtual bool ApplyChangesInFileMode(DataGridViewCell cell, List<int> proceededRows)
         {
             Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.File);
 
@@ -607,12 +616,6 @@ namespace SO.PictManager.Forms
             int listRow = int.Parse(grdImages.Rows[cell.RowIndex].HeaderCell.Value.ToString()) - 1;
             switch (cell.ColumnIndex)
             {
-                case FileColumnIndexes.SELECT_CHECK:
-                    // 対象削除
-                    ImageList[listRow].Delete();
-                    proceededRows.Add(listRow);
-                    break;
-
                 case FileColumnIndexes.FILE_NAME:
                 case FileColumnIndexes.FOLDER_PATH:
                     // 既に対象が処理済の場合はスキップ
@@ -641,7 +644,7 @@ namespace SO.PictManager.Forms
         /// <param name="row">変更内容が入力されたDataGridViewRow</param>
         /// <param name="entity">データベースエンティティ</param>
         /// <returns>処理中止フラグ</returns>
-        protected virtual bool ApplyChangeInDatabaseMode(DataGridViewRow row, PictManagerEntities entity)
+        protected virtual bool ApplyChangesInDatabaseMode(DataGridViewRow row, PictManagerEntities entity)
         {
             Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.Database);
 
@@ -783,7 +786,11 @@ namespace SO.PictManager.Forms
                 }
             }
 
-            btnApply.Enabled = btnRevertSelection.Enabled = btnRevertAll.Enabled = _changeCnt > 0;
+            bool isButtonsEnabled = _changeCnt > 0;
+            btnApplyChanges.Enabled = isButtonsEnabled;
+            btnDeleteSelection.Enabled = isButtonsEnabled;
+            btnRevertSelection.Enabled = isButtonsEnabled;
+            btnRevertAll.Enabled = isButtonsEnabled;
         }
 
         #endregion
@@ -1119,13 +1126,6 @@ namespace SO.PictManager.Forms
                 {
                     switch (e.ColumnIndex)
                     {
-                        case FileColumnIndexes.SELECT_CHECK:
-                            // チェック切り替え
-                            var delChk = grdImages[e.ColumnIndex, e.RowIndex] as DataGridViewCheckBoxCell;
-                            delChk.Value = !Convert.ToBoolean(delChk.Value);
-                            grdImages.CommitEdit(DataGridViewDataErrorContexts.Commit);
-                            break;
-
                         case FileColumnIndexes.FILE_NAME:
                         case FileColumnIndexes.FOLDER_PATH:
                             // 変更前後の内容をステータスバーに表示
@@ -1150,13 +1150,6 @@ namespace SO.PictManager.Forms
                 {
                     switch (e.ColumnIndex)
                     {
-                        case DatabaseColumnIndexes.SELECT_CHECK:
-                            // チェック切り替え
-                            var delChk = grdImages[e.ColumnIndex, e.RowIndex] as DataGridViewCheckBoxCell;
-                            delChk.Value = !Convert.ToBoolean(delChk.Value);
-                            grdImages.CommitEdit(DataGridViewDataErrorContexts.Commit);
-                            break;
-
                         case DatabaseColumnIndexes.CATEGORY:
                             // 変更前後の内容をステータスバーに表示
                             ShowHistoryByStatusBar(grdImages[e.ColumnIndex, e.RowIndex]);
@@ -1291,7 +1284,11 @@ namespace SO.PictManager.Forms
                         rhCell.Style.Font = new Font(rhCell.Style.Font, FontStyle.Bold);
                 }
 
-                btnApply.Enabled = btnRevertSelection.Enabled = btnRevertAll.Enabled = _changeCnt > 0;
+                bool isButtonsEnabled = _changeCnt > 0;
+                btnApplyChanges.Enabled = isButtonsEnabled;
+                btnDeleteSelection.Enabled = isButtonsEnabled;
+                btnRevertSelection.Enabled = isButtonsEnabled;
+                btnRevertAll.Enabled = isButtonsEnabled;
             }
             catch (Exception ex)
             {
@@ -1318,15 +1315,15 @@ namespace SO.PictManager.Forms
         }
         #endregion
 
-        #region btnApply_Click - 適用ボタン押下時
+        #region btnApplyChanges_Click - 変更適用ボタン押下時
 
         /// <summary>
-        /// 適用ボタンがクリックされた際に実行される処理です。
+        /// 変更適用ボタンがクリックされた際に実行される処理です。
         /// ファイル一覧グリッドに入力された内容を各ファイルに適用します。
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>
-        private void btnApply_Click(object sender, EventArgs e)
+        private void btnApplyChanges_Click(object sender, EventArgs e)
         {
             try
             {
@@ -1349,7 +1346,7 @@ namespace SO.PictManager.Forms
                     foreach (var cell in editedCells)
                     {
                         // 変更を適用
-                        if (!ApplyChangeInFileMode(cell, proceededRows))
+                        if (!ApplyChangesInFileMode(cell, proceededRows))
                         {
                             RevertEdit(true);
                             Console.WriteLine("Apply break.");
@@ -1369,7 +1366,7 @@ namespace SO.PictManager.Forms
                         // 変更を適用
                         foreach (var row in editedRows)
                         {
-                            if (!ApplyChangeInDatabaseMode(row, entity))
+                            if (!ApplyChangesInDatabaseMode(row, entity))
                             {
                                 RevertEdit(true);
                                 Console.WriteLine("Apply break.");
@@ -1383,6 +1380,56 @@ namespace SO.PictManager.Forms
 
                 // 表示を最新状態に更新
                 RevertEdit(true);
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+                this.BackToOwner();
+            }
+            finally
+            {
+                CursorFace.Current = Cursors.Default;
+            }
+        }
+
+        #endregion
+
+        #region btnDeleteSelection_Click - 選択行の画像削除ボタン押下時
+
+        /// <summary>
+        /// 選択行の画像削除ボタンがクリックされた際に実行される処理です。
+        /// 選択されている行の画像を論理削除します。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void btnDeleteSelection_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                CursorFace.Current = Cursors.WaitCursor;
+
+                // 削除確認
+                if (FormUtilities.ShowMessage("Q016") == DialogResult.No) return;
+
+                // 選択行抽出
+                int selChkColIdx = ImageMode == ConfigInfo.ImageDataMode.File
+                    ? FileColumnIndexes.SELECT_CHECK : DatabaseColumnIndexes.SELECT_CHECK;
+
+                var selectedRows = from r in grdImages.Rows.Cast<DataGridViewRow>()
+                                   where Convert.ToBoolean(r.Cells[selChkColIdx].Value)
+                                   select r;
+
+                // 選択行の画像を削除
+                foreach (var row in selectedRows)
+                {
+                    int listIndex = int.Parse(row.HeaderCell.Value.ToString()) - 1;
+                    ImageList[listIndex].Delete();
+                }
+
+                // 表示内容更新
+                RevertEdit(true);
+
+                FormUtilities.ShowMessage("I011", "削除");
             }
             catch (Exception ex)
             {

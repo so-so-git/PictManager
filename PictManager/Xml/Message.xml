@@ -24,8 +24,8 @@
 	<msg id="I004" caption="処理完了" buttons="OK" icon="Information">
 		ファイル移動が完了しました。
 	</msg>
-	<msg id="I005" caption="全画像ファイル削除済" buttons="OK" icon="Information">
-		フォルダ内の全てのファイルが削除されました。
+	<msg id="I005" caption="全画像削除済み" buttons="OK" icon="Information">
+		全ての画像が削除されました。
 	</msg>
 	<msg id="I006" caption="削除済みファイル無し" buttons="OK" icon="Information">
 		削除済みのファイルはありません。
@@ -71,8 +71,8 @@
 	<msg id="Q007" caption="上書き保存確認" buttons="YesNo" icon="Question">
 		表示中の内容でファイルを上書きしてよろしいですか？
 	</msg>
-	<msg id="Q008" caption="変更適用確認" buttons="YesNo" icon="Question">
-		変更内容を適用してよろしいですか？
+	<msg id="Q008" caption="変更確定確認" buttons="YesNo" icon="Question">
+		変更内容を確定してよろしいですか？
 	</msg>
 	<msg id="Q009" caption="フォルダ作成確認" buttons="YesNo" icon="Question">
 		移動先のフォルダ[{0}]が存在しません。\n作成してよろしいですか？
@@ -95,6 +95,9 @@
   <msg id="Q015" caption="ファイル上書き確認" buttons="YesNo" icon="Question">
     移動先に同名のファイル[{0}]が存在します。\n上書きしてもよろしいですか？
   </msg>
+	<msg id="Q016" caption="画像削除確認" buttons="YesNo" icon="Question">
+		選択されている画像を削除してよろしいですか？
+	</msg>
 
   <!-- ワーニングメッセージ -->
 	<msg id="W000" caption="未入力エラー" buttons="OK" icon="Warning">

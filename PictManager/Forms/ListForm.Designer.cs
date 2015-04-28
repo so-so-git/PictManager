@@ -34,10 +34,11 @@
             this.lblFileCount = new System.Windows.Forms.Label();
             this.btnRevertAll = new SO.PictManager.Components.KeyPrevButton();
             this.btnRevertSelection = new SO.PictManager.Components.KeyPrevButton();
-            this.btnApply = new SO.PictManager.Components.KeyPrevButton();
+            this.btnApplyChanges = new SO.PictManager.Components.KeyPrevButton();
             this.btnClose = new SO.PictManager.Components.KeyPrevButton();
             this.barStatus = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.btnDeleteSelection = new SO.PictManager.Components.KeyPrevButton();
             ((System.ComponentModel.ISupportInitialize)(this.grdImages)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pnlParent)).BeginInit();
             this.pnlParent.Panel1.SuspendLayout();
@@ -59,7 +60,7 @@
             this.grdImages.Name = "grdImages";
             this.grdImages.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.grdImages.RowTemplate.Height = 21;
-            this.grdImages.Size = new System.Drawing.Size(737, 462);
+            this.grdImages.Size = new System.Drawing.Size(737, 461);
             this.grdImages.TabIndex = 0;
             this.grdImages.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdImages_CellClick);
             this.grdImages.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdImages_CellDoubleClick);
@@ -86,19 +87,20 @@
             // 
             this.pnlParent.Panel2.Controls.Add(this.lblFileCount);
             this.pnlParent.Panel2.Controls.Add(this.btnRevertAll);
+            this.pnlParent.Panel2.Controls.Add(this.btnDeleteSelection);
             this.pnlParent.Panel2.Controls.Add(this.btnRevertSelection);
-            this.pnlParent.Panel2.Controls.Add(this.btnApply);
+            this.pnlParent.Panel2.Controls.Add(this.btnApplyChanges);
             this.pnlParent.Panel2.Controls.Add(this.btnClose);
             this.pnlParent.Panel2.Controls.Add(this.barStatus);
             this.pnlParent.Size = new System.Drawing.Size(737, 534);
-            this.pnlParent.SplitterDistance = 462;
+            this.pnlParent.SplitterDistance = 461;
             this.pnlParent.SplitterWidth = 5;
             this.pnlParent.TabIndex = 2;
             // 
             // lblFileCount
             // 
             this.lblFileCount.AutoSize = true;
-            this.lblFileCount.Location = new System.Drawing.Point(349, 12);
+            this.lblFileCount.Location = new System.Drawing.Point(539, 12);
             this.lblFileCount.Name = "lblFileCount";
             this.lblFileCount.Size = new System.Drawing.Size(59, 15);
             this.lblFileCount.TabIndex = 5;
@@ -107,7 +109,7 @@
             // btnRevertAll
             // 
             this.btnRevertAll.Enabled = false;
-            this.btnRevertAll.Location = new System.Drawing.Point(231, 5);
+            this.btnRevertAll.Location = new System.Drawing.Point(421, 5);
             this.btnRevertAll.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnRevertAll.Name = "btnRevertAll";
             this.btnRevertAll.Size = new System.Drawing.Size(112, 29);
@@ -119,7 +121,7 @@
             // btnRevertSelection
             // 
             this.btnRevertSelection.Enabled = false;
-            this.btnRevertSelection.Location = new System.Drawing.Point(93, 5);
+            this.btnRevertSelection.Location = new System.Drawing.Point(283, 5);
             this.btnRevertSelection.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnRevertSelection.Name = "btnRevertSelection";
             this.btnRevertSelection.Size = new System.Drawing.Size(132, 29);
@@ -128,17 +130,17 @@
             this.btnRevertSelection.UseVisualStyleBackColor = true;
             this.btnRevertSelection.Click += new System.EventHandler(this.btnRevertSelection_Click);
             // 
-            // btnApply
+            // btnApplyChanges
             // 
-            this.btnApply.Enabled = false;
-            this.btnApply.Location = new System.Drawing.Point(14, 5);
-            this.btnApply.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.btnApply.Name = "btnApply";
-            this.btnApply.Size = new System.Drawing.Size(73, 29);
-            this.btnApply.TabIndex = 0;
-            this.btnApply.Text = "適用";
-            this.btnApply.UseVisualStyleBackColor = true;
-            this.btnApply.Click += new System.EventHandler(this.btnApply_Click);
+            this.btnApplyChanges.Enabled = false;
+            this.btnApplyChanges.Location = new System.Drawing.Point(14, 5);
+            this.btnApplyChanges.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnApplyChanges.Name = "btnApplyChanges";
+            this.btnApplyChanges.Size = new System.Drawing.Size(87, 29);
+            this.btnApplyChanges.TabIndex = 0;
+            this.btnApplyChanges.Text = "変更を確定";
+            this.btnApplyChanges.UseVisualStyleBackColor = true;
+            this.btnApplyChanges.Click += new System.EventHandler(this.btnApplyChanges_Click);
             // 
             // btnClose
             // 
@@ -156,7 +158,7 @@
             // 
             this.barStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblStatus});
-            this.barStatus.Location = new System.Drawing.Point(0, 44);
+            this.barStatus.Location = new System.Drawing.Point(0, 45);
             this.barStatus.Name = "barStatus";
             this.barStatus.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
             this.barStatus.Size = new System.Drawing.Size(737, 23);
@@ -168,6 +170,18 @@
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(102, 18);
             this.lblStatus.Text = "[ステータス表示]";
+            // 
+            // btnDeleteSelection
+            // 
+            this.btnDeleteSelection.Enabled = false;
+            this.btnDeleteSelection.Location = new System.Drawing.Point(128, 5);
+            this.btnDeleteSelection.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnDeleteSelection.Name = "btnDeleteSelection";
+            this.btnDeleteSelection.Size = new System.Drawing.Size(132, 29);
+            this.btnDeleteSelection.TabIndex = 1;
+            this.btnDeleteSelection.Text = "選択行の画像を削除";
+            this.btnDeleteSelection.UseVisualStyleBackColor = true;
+            this.btnDeleteSelection.Click += new System.EventHandler(this.btnDeleteSelection_Click);
             // 
             // ListForm
             // 
@@ -203,11 +217,12 @@
 		private System.Windows.Forms.SplitContainer pnlParent;
 		private System.Windows.Forms.StatusStrip barStatus;
 		private System.Windows.Forms.ToolStripStatusLabel lblStatus;
-		private SO.PictManager.Components.KeyPrevButton btnApply;
+		private SO.PictManager.Components.KeyPrevButton btnApplyChanges;
 		private SO.PictManager.Components.KeyPrevButton btnClose;
 		private SO.PictManager.Components.KeyPrevButton btnRevertSelection;
         private SO.PictManager.Components.KeyPrevButton btnRevertAll;
         private System.Windows.Forms.Label lblFileCount;
+        private Components.KeyPrevButton btnDeleteSelection;
 
     }
 }
