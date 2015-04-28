@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
@@ -15,6 +16,7 @@ using SO.Library.Text;
 using SO.PictManager.Common;
 using SO.PictManager.Components;
 using SO.PictManager.DataModel;
+using SO.PictManager.Forms.Info;
 using SO.PictManager.Imaging;
 
 using CursorFace = System.Windows.Forms.Cursor;
@@ -101,7 +103,7 @@ namespace SO.PictManager.Forms
 
             // ステータスバー更新
             lblStatus.Text = ImageCount > 0
-                    ? Path.GetDirectoryName(ImageList.First().Key) + string.Format(" - {0}ファイル", ImageCount)
+                    ? category.CategoryName + string.Format(" - {0}ファイル", ImageCount)
                     : NO_IMAGE_LABEL;
         }
 
@@ -124,6 +126,7 @@ namespace SO.PictManager.Forms
         #endregion
 
         #region CommonConstruction - 共通構築処理
+
         /// <summary>
         /// コンストラクタ共通の構築処理を行ないます。
         /// </summary>
@@ -159,29 +162,35 @@ namespace SO.PictManager.Forms
                 ClientSize = new Size(sample.Width * unitInLine + (unitInLine + 1) * xMargin, formHeight);
             }
         }
+
         #endregion
 
         #region CreateMenu - メニューバー作成
+
         /// <summary>
         /// (BaseForm.CreateMenu()をオーバーライドします)
         /// メニューバーを生成します。
         /// </summary>
         protected override void CreateMenu()
         {
-            // ファイル
-            var menuTemp = new ToolStripMenuItem("ファイル(&F)", null, null, "menuFile");
-            menuTemp.ShortcutKeys = Keys.Alt | Keys.F;
-            menuTemp.DropDownItems.Add(new ToolStripMenuItem("戻る", null, btnClose_Click));
-            menuTemp.DropDownItems.Add(new ToolStripMenuItem("ページ再表示", null, (s, e) => RefreshThumbnails()));
-            menuTemp.DropDownItems.Add(new ToolStripSeparator());
-            menuTemp.DropDownItems.Add(new ToolStripMenuItem("選択ファイル移動", null, menuMoveSelected_Click));
-            menuTemp.DropDownItems.Add(new ToolStripMenuItem("選択ファイル削除", null, btnDelete_Click));
-            menuTemp.DropDownItems.Add(new ToolStripSeparator());
-            menuTemp.DropDownItems.Add(new ToolStripMenuItem("ディレクトリを開く", null, (s, e) => Utilities.OpenExplorer(TargetDirectory.FullName)));
-            menuTemp.DropDownItems.Add(new ToolStripSeparator());
-            menuTemp.DropDownItems.Add(new ToolStripMenuItem("終了", null,
-                    (s, e) => Form_FormClosing(s, new FormClosingEventArgs(CloseReason.UserClosing, false))));
-            barMenu.Items.Add(menuTemp);
+            ToolStripMenuItem menuTemp;
+            if (ImageMode == Info.ConfigInfo.ImageDataMode.File)
+            {
+                // ファイル
+                menuTemp = new ToolStripMenuItem("ファイル(&F)", null, null, "menuFile");
+                menuTemp.ShortcutKeys = Keys.Alt | Keys.F;
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("戻る", null, btnClose_Click));
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("ページ再表示", null, (s, e) => RefreshThumbnails()));
+                menuTemp.DropDownItems.Add(new ToolStripSeparator());
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("選択ファイル移動", null, menuMoveSelected_Click));
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("選択ファイル削除", null, btnDelete_Click));
+                menuTemp.DropDownItems.Add(new ToolStripSeparator());
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("ディレクトリを開く", null, (s, e) => Utilities.OpenExplorer(TargetDirectory.FullName)));
+                menuTemp.DropDownItems.Add(new ToolStripSeparator());
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("終了", null,
+                        (s, e) => Form_FormClosing(s, new FormClosingEventArgs(CloseReason.UserClosing, false))));
+                barMenu.Items.Add(menuTemp);
+            }
 
             // 操作
             menuTemp = new ToolStripMenuItem("操作(&O)", null, null, "menuOpe");
@@ -208,28 +217,34 @@ namespace SO.PictManager.Forms
             menuTemp.DropDownItems.Add(new ToolStripMenuItem("選択画像表示", null, menuViewImage_Clicked, "menuViewImage"));
             barMenu.Items.Add(menuTemp);
         }
+
         #endregion
 
         #region RefreshTargetFiles - 対象ファイルリスト最新化
+
         /// <summary>
-        /// ディレクトリを対象に操作を行っている場合はディレクトリの現在の状態を再取得します。
-        /// ファイルパスリストを対象に操作を行っている場合は何も行ないません。
+        /// 表示対象画像リストを最新の内容に更新します。
+        /// 画像リストを対象に操作を行っている場合は何も行ないません。
         /// </summary>
         protected override void  RefreshImageList()
         {
-            if (TargetDirectory != null)
+            if (ImageMode == Info.ConfigInfo.ImageDataMode.File
+                && TargetDirectory == null)
             {
-                base.RefreshImageList();
-                _currentPage = 1;
-                RefreshThumbnails();
+                return;
             }
+
+            base.RefreshImageList();
+            _currentPage = 1;
+            RefreshThumbnails();
         }
+
         #endregion
 
         #region RefreshThumbnails - サムネイル表示更新
 
         /// <summary>
-        /// 現在のページの表示サムネイルを、対象ディレクトリの最新状態に合わせて更新します。
+        /// 現在のページの表示サムネイルを、表示対象の最新状態に合わせて更新します。
         /// </summary>
         private void RefreshThumbnails()
         {
@@ -267,12 +282,12 @@ namespace SO.PictManager.Forms
                         {
                             // 削除済み画像用のサムネイルユニットを作成
                             addThumbnail = new ThumbnailUnit();
-                            addThumbnail.NameLabel = ThumbnailUnit.DELETED_NAME_LABEL;
+                            addThumbnail.ImageKey = ThumbnailUnit.DELETED_NAME_LABEL;
                         }
                         else
                         {
                             // 指定パスを表示するサムネイルユニットを作成
-                            addThumbnail = new ThumbnailUnit(ImageList[idx].Key);
+                            addThumbnail = new ThumbnailUnit(ImageList[idx]);
                         }
 
                         // イベント定義
@@ -300,6 +315,7 @@ namespace SO.PictManager.Forms
         #endregion
 
         #region AcceptPageNumber - 現在ページ指定入力
+
         /// <summary>
         /// 指定されたページを表示します。
         /// </summary>
@@ -337,11 +353,13 @@ namespace SO.PictManager.Forms
             _currentPage = page;
             RefreshThumbnails();
         }
+
         #endregion
 
         #region イベントハンドラ
 
         #region Form_Shown - フォーム表示時
+
         /// <summary>
         /// フォームが表示された際に実行される処理です。
         /// 最初のページのサムネイル表示を初期化します。
@@ -353,9 +371,11 @@ namespace SO.PictManager.Forms
             // サムネイル表示を初期化
             RefreshThumbnails();
         }
+
         #endregion
 
         #region Form_Resize - フォームサイズ変更時
+
         /// <summary>
         /// フォームのサイズが変更された際に実行される処理です。
         /// 各ボタン、コントロールの配置を再設定します。
@@ -377,9 +397,11 @@ namespace SO.PictManager.Forms
                 _beforeResize = Size;
             }
         }
+
         #endregion
 
         #region Form_FormClosing - ×ボタン押下時
+
         /// <summary>
         /// ×ボタンがクリックされた際に実行される処理です。
         /// 終了確認後、アプリケーションを終了します。
@@ -414,9 +436,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region Form_MouseWheel - フォーム上マウスホイール回転時
+
         /// <summary>
         /// フォーム上でマウスホイールが回された際に実行される処理です。
         /// フォーム内容をスクロールします。
@@ -485,9 +509,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region menuMoveSelected_Click - 選択ファイル移動メニュー押下時
+
         /// <summary>
         /// 選択ファイル移動メニューがクリックされた際に実行される処理です。
         /// 選択されたサムネイルを指定されたフォルダに移動します。
@@ -496,6 +522,8 @@ namespace SO.PictManager.Forms
         /// <param name="e">イベント引数</param>
         private void menuMoveSelected_Click(object sender, EventArgs e)
         {
+            Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.File);
+
             var status = ResultStatus.Empty;
             string target = null;   // 処理対象ファイルパス
             try
@@ -508,7 +536,7 @@ namespace SO.PictManager.Forms
                 using (var dlg = new FolderBrowserDialog())
                 {
                     dlg.RootFolder = Environment.SpecialFolder.Desktop;
-                    dlg.Description = "ファイルの移動先ディレクトリを指定して下さい。";
+                    dlg.Description = "ファイルの移動先フォルダを指定して下さい。";
                     if (dlg.ShowDialog(this) != DialogResult.OK)
                     {
                         return;
@@ -518,7 +546,7 @@ namespace SO.PictManager.Forms
 
                 // 指定ディレクトリへファイルを移動
                 foreach (var srcPath in _thumbnails.Where(
-                    t => t.BorderStyle == BorderStyle.FixedSingle).Select(t => t.FilePath))
+                    t => t.BorderStyle == BorderStyle.FixedSingle).Select(t => t.ImageData.Key))
                 {
                     target = srcPath;   // エラー処理用に対象ファイル名を保存
                     File.Move(srcPath, Path.Combine(destDir, Path.GetFileName(srcPath)));
@@ -548,9 +576,11 @@ namespace SO.PictManager.Forms
                     FormUtilities.ShowMessage("I004");
             }
         }
+
         #endregion
 
         #region menuViewImage_Clicked - 選択画像表示メニュー押下時
+
         /// <summary>
         /// 選択画像表示メニューがクリックされた際に実行される処理です。
         /// 選択されたサムネイルをViewImageFormで表示します。
@@ -562,7 +592,7 @@ namespace SO.PictManager.Forms
         {
             try
             {
-                // 選択中の画像をViewImageFormdで表示
+                // 選択中の画像をViewImageFormで表示
                 ThumbnailUnit_DoubleClick(
                         _thumbnails.Single(t => t.BorderStyle == BorderStyle.FixedSingle),
                         new EventArgs());
@@ -572,9 +602,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region ThumbnailUnit_Click - サムネイル表示コントロールクリック時
+
         /// <summary>
         /// サムネイルがクリックされた際に実行される処理です。
         /// クリックされたサムネイルを選択状態にします。
@@ -584,8 +616,8 @@ namespace SO.PictManager.Forms
         /// <param name="e">イベント引数</param>
         private void ThumbnailUnit_Click(object sender, EventArgs e)
         {
-            ThumbnailUnit clicked = (ThumbnailUnit)sender;
-            if (clicked.NameLabel != ThumbnailUnit.DELETED_NAME_LABEL)
+            var clicked = sender as ThumbnailUnit;
+            if (clicked.ImageKey != ThumbnailUnit.DELETED_NAME_LABEL)
             {
                 var menuChkMulti = FormUtilities.GetMenuItem<ToolStripMenuItem>(
                         barMenu.Items, "menuOpe/menuChkMulti");
@@ -615,6 +647,7 @@ namespace SO.PictManager.Forms
             FormUtilities.GetMenuItem<ToolStripMenuItem>(barMenu.Items, "menuView/menuViewImage").Enabled =
                     _thumbnails.Count(t => t.BorderStyle == BorderStyle.FixedSingle) == 1;
         }
+
         #endregion
 
         #region ThumbnailUnit_DoubleClick - サムネイル表示コントロールダブルクリック時
@@ -628,8 +661,8 @@ namespace SO.PictManager.Forms
         /// <param name="e">イベント引数</param>
         private void ThumbnailUnit_DoubleClick(object sender, EventArgs e)
         {
-            ThumbnailUnit clicked = (ThumbnailUnit)sender;
-            if (clicked.NameLabel != ThumbnailUnit.DELETED_NAME_LABEL)
+            var clicked = sender as ThumbnailUnit;
+            if (clicked.ImageKey != ThumbnailUnit.DELETED_NAME_LABEL)
             {
                 var menuChkMulti = FormUtilities.GetMenuItem<ToolStripMenuItem>(
                         barMenu.Items, "menuOpe/menuChkMulti");
@@ -637,18 +670,16 @@ namespace SO.PictManager.Forms
                     // 複数選択モード時、シングルクリックでボーダーが消える可能性が有るので再設定
                     clicked.BorderStyle = BorderStyle.FixedSingle;
 
-                new ViewImageForm(this, new FileImage(clicked.FilePath)).ShowDialog(this);
+                new ViewImageForm(this, clicked.ImageData).ShowDialog(this);
 
                 // 子フォーム側でファイルが削除された場合
-                if (!File.Exists(clicked.FilePath))
+                if (clicked.ImageData.IsDeleted)
                 {
-                    // 削除済みフラグを設定
-                    int idx = SearchFileIndex(clicked.FilePath);
-                    ImageList[idx].IsDeleted = true;
-
                     // 画像破棄、名称ラベル設定、選択マーク解除
-                    if (clicked.PictureBox != null) clicked.PictureBox.Dispose();
-                    clicked.NameLabel = ThumbnailUnit.DELETED_NAME_LABEL;
+                    if (clicked.PictureBox != null)
+                        clicked.PictureBox.Dispose();
+
+                    clicked.ImageKey = ThumbnailUnit.DELETED_NAME_LABEL;
                     clicked.BorderStyle = BorderStyle.None;
                 }
             }
@@ -657,6 +688,7 @@ namespace SO.PictManager.Forms
         #endregion
 
         #region btnClose_Click - 閉じるボタン押下時
+
         /// <summary>
         /// 閉じるボタンがクリックされた際に実行される処理です。
         /// 自フォームを破棄し、親フォームを再表示します。
@@ -672,9 +704,11 @@ namespace SO.PictManager.Forms
             // 自フォームを破棄し親フォームを表示
             this.BackToOwner();
         }
+
         #endregion
 
         #region btnPrevious_Click - 前ページボタン押下時
+
         /// <summary>
         /// 前ページボタンがクリックされた際に実行される処理です。
         /// 前のページを表示します。
@@ -694,9 +728,11 @@ namespace SO.PictManager.Forms
             // サムネイル表示更新
             RefreshThumbnails();
         }
+
         #endregion
 
         #region btnNext_Click - 次ページボタン押下時
+
         /// <summary>
         /// 次ページボタンがクリックされた際に実行される処理です。
         /// 次のページを表示します。
@@ -716,13 +752,14 @@ namespace SO.PictManager.Forms
             // サムネイル表示更新
             RefreshThumbnails();
         }
+
         #endregion
 
         #region btnDelete_Click - 削除ボタン押下時
 
         /// <summary>
         /// 削除ボタンが押下された際に実行される処理です。
-        /// 選択状態の全サムネイルの実ファイルを削除します。
+        /// 選択状態のサムネイルの画像を削除します。
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>
@@ -731,13 +768,12 @@ namespace SO.PictManager.Forms
             try
             {
                 // 全ての選択中ユニットを取得
-                var selectedList = (from s in _thumbnails
-                                    where s.BorderStyle == BorderStyle.FixedSingle
-                                    select s).ToList();
+                var selectedList = from s in _thumbnails
+                                   where s.BorderStyle == BorderStyle.FixedSingle
+                                   select s;
 
-
-                // ファイルが一つも選択されていない場合
-                if (selectedList.Count == 0)
+                // 画像が一つも選択されていない場合
+                if (!selectedList.Any())
                 {
                     FormUtilities.ShowMessage("W009");
                     return;
@@ -745,23 +781,20 @@ namespace SO.PictManager.Forms
 
                 // 削除確認
                 var menuChkConfirm = FormUtilities.GetMenuItem<ToolStripMenuItem>(
-                        barMenu.Items, "menuOpe/menuChkConfirm");
+                    barMenu.Items, "menuOpe/menuChkConfirm");
+
                 if (!menuChkConfirm.Checked)
-                    if (FormUtilities.ShowMessage("Q004") == DialogResult.No)
-                        return;
+                {
+                    if (FormUtilities.ShowMessage("Q004") == DialogResult.No) return;
+                }
 
                 foreach (var selected in selectedList)
                 {
-                    // 対象ファイルを削除
-                    var image = new FileImage(selected.FilePath);
-                    image.Delete();
+                    // 対象画像を削除
+                    selected.ImageData.Delete();
 
-                    // 名称ラベルを設定
-                    selected.NameLabel = ThumbnailUnit.DELETED_NAME_LABEL; ;
-
-                    // 削除済みマークを設定
-                    int idx = SearchFileIndex(selected.FilePath);
-                    ImageList[idx].IsDeleted = true;
+                    // 画像キーラベルを設定
+                    selected.ImageKey = ThumbnailUnit.DELETED_NAME_LABEL;
 
                     // 選択マークを解除
                     selected.BorderStyle = BorderStyle.None;
@@ -776,6 +809,7 @@ namespace SO.PictManager.Forms
         #endregion
 
         #region txtPage_Leave - 現在ページ表示テキストボックスロストフォーカス時
+
         /// <summary>
         /// 現在ページ表示テキストボックスからフォーカスが外れた際に実行される処理です。
         /// テキストボックスに入力されている番号のページを表示します。
@@ -787,9 +821,11 @@ namespace SO.PictManager.Forms
             // 指定されたページを表示
             AcceptPageNumber();
         }
+
         #endregion
 
         #region txtPage_KeyDown - 現在ページ表示テキストボックスでのキー押下時
+
         /// <summary>
         /// 現在ページ表示テキストボックスでキーが押下された際に実行される処理です。
         /// Enterキーが押下された場合、テキストボックスに入力されている番号のページを表示します。
@@ -824,9 +860,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region txtPage_TextChanged - 現在ページ表示テキストボックス値変更時
+
         /// <summary>
         /// 現在ページ表示テキストボックスの内容が変更された際に実行される処理です。
         /// 現在ページ表示メニューと内容の同期します。
@@ -838,11 +876,13 @@ namespace SO.PictManager.Forms
             // メニューとメイン画面の同期を取る
             ToolStripTextBox menuTxtPage =
                     FormUtilities.GetMenuItem<ToolStripTextBox>(barMenu.Items, "menuOpe/menuTxtPage");
+
             if (sender == txtPage)
                 menuTxtPage.Text = txtPage.Text;
             else
                 txtPage.Text = menuTxtPage.Text;
         }
+
         #endregion
 
         #endregion

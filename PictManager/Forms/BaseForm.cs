@@ -677,7 +677,7 @@ namespace SO.PictManager.Forms
         #region RefreshImageList - 表示対象画像リスト最新化
 
         /// <summary>
-        /// 表示中ディレクトリの現在の状態を再取得します。
+        /// 表示対象画像リストを最新の内容に更新します。
         /// </summary>
         protected virtual void RefreshImageList()
         {

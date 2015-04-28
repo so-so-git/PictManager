@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.picThumbnail = new System.Windows.Forms.PictureBox();
-            this.lblFileName = new System.Windows.Forms.Label();
+            this.lblImageKey = new System.Windows.Forms.Label();
             this.tipInfo = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.picThumbnail)).BeginInit();
             this.SuspendLayout();
@@ -42,20 +42,20 @@
             this.picThumbnail.Size = new System.Drawing.Size(80, 80);
             this.picThumbnail.TabIndex = 0;
             this.picThumbnail.TabStop = false;
-            this.picThumbnail.DoubleClick += new System.EventHandler(this.picThumbnail_DoubleClick);
             this.picThumbnail.Click += new System.EventHandler(this.picThumbnail_Click);
+            this.picThumbnail.DoubleClick += new System.EventHandler(this.picThumbnail_DoubleClick);
             // 
-            // lblFileName
+            // lblImageKey
             // 
-            this.lblFileName.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.lblFileName.Location = new System.Drawing.Point(0, 100);
-            this.lblFileName.Name = "lblFileName";
-            this.lblFileName.Size = new System.Drawing.Size(104, 23);
-            this.lblFileName.TabIndex = 1;
-            this.lblFileName.Text = "[表示ファイル名]";
-            this.lblFileName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblFileName.DoubleClick += new System.EventHandler(this.lblFileName_DoubleClick);
-            this.lblFileName.Click += new System.EventHandler(this.lblFileName_Click);
+            this.lblImageKey.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.lblImageKey.Location = new System.Drawing.Point(0, 100);
+            this.lblImageKey.Name = "lblImageKey";
+            this.lblImageKey.Size = new System.Drawing.Size(104, 23);
+            this.lblImageKey.TabIndex = 1;
+            this.lblImageKey.Text = "[表示画像キー]";
+            this.lblImageKey.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblImageKey.Click += new System.EventHandler(this.lblImageKey_Click);
+            this.lblImageKey.DoubleClick += new System.EventHandler(this.lblImageKey_DoubleClick);
             // 
             // tipInfo
             // 
@@ -67,12 +67,12 @@
             // ThumbnailUnit
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.Controls.Add(this.lblFileName);
+            this.Controls.Add(this.lblImageKey);
             this.Controls.Add(this.picThumbnail);
             this.Name = "ThumbnailUnit";
             this.Size = new System.Drawing.Size(106, 127);
-            this.DoubleClick += new System.EventHandler(this.ThumbnailUnit_DoubleClick);
             this.Click += new System.EventHandler(this.ThumbnailUnit_Click);
+            this.DoubleClick += new System.EventHandler(this.ThumbnailUnit_DoubleClick);
             ((System.ComponentModel.ISupportInitialize)(this.picThumbnail)).EndInit();
             this.ResumeLayout(false);
 
@@ -81,7 +81,7 @@
         #endregion
 
         private System.Windows.Forms.PictureBox picThumbnail;
-        private System.Windows.Forms.Label lblFileName;
+        private System.Windows.Forms.Label lblImageKey;
         private System.Windows.Forms.ToolTip tipInfo;
     }
 }

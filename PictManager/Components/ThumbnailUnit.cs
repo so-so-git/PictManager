@@ -8,6 +8,8 @@ using System.IO;
 using SO.Library.Forms;
 using SO.Library.Text;
 using SO.PictManager.Common;
+using SO.PictManager.DataModel;
+using SO.PictManager.Imaging;
 
 namespace SO.PictManager.Components
 {
@@ -16,13 +18,7 @@ namespace SO.PictManager.Components
     /// </summary>
     public partial class ThumbnailUnit : UserControl
     {
-        #region クラス変数宣言・定義
-
-        /// <summary>画像表示幅</summary>
-        private int _picWidth;
-
-        /// <summary>画像表示高さ</summary>
-        private int _picHeight;
+        #region クラス定数定義
 
         /// <summary>削除済名称ラベル</summary>
         public const string DELETED_NAME_LABEL = "Deleted.";
@@ -32,7 +28,17 @@ namespace SO.PictManager.Components
 
         #endregion
 
-        #region 自動定義プロパティ
+        #region インスタンス変数定義
+
+        /// <summary>画像表示幅</summary>
+        private int _picWidth;
+
+        /// <summary>画像表示高さ</summary>
+        private int _picHeight;
+
+        #endregion
+
+        #region プロパティ
 
         /// <summary>
         /// コンポーネントクリック時のアクションを取得または設定します。
@@ -45,24 +51,19 @@ namespace SO.PictManager.Components
         public Action<object, EventArgs> UnitDoubleClick { get; set; }
 
         /// <summary>
-        /// 表示対象ファイルのパスを取得または設定します。
+        /// 表示対象画像情報を取得または設定します。
         /// </summary>
-        public string FilePath { get; set; }
+        public IImage ImageData { get; set; }
 
-        #endregion
-
-        #region NameLabel - 名称ラベル取得・設定プロパティ
         /// <summary>
-        /// 画像の下に表示する文字列を取得または設定します。
+        /// 画像キーを取得または設定します。
         /// </summary>
-        public string NameLabel
+        public string ImageKey
         {
-            get { return lblFileName.Text; }
-            set { lblFileName.Text = value; }
+            get { return lblImageKey.Text; }
+            set { lblImageKey.Text = value; }
         }
-        #endregion
 
-        #region PictureBox - ファイル表示用PictureBox取得プロパティ
         /// <summary>
         /// 画像を表示するPictureBoxを取得します。
         /// </summary>
@@ -70,9 +71,11 @@ namespace SO.PictManager.Components
         {
             get { return picThumbnail; }
         }
+
         #endregion
 
         #region コンストラクタ
+
         /// <summary>
         /// デフォルトのコンストラクタです。
         /// </summary>
@@ -86,53 +89,46 @@ namespace SO.PictManager.Components
         }
 
         /// <summary>
-        /// 表示対象ファイルパス指定付きのコンストラクタです。
+        /// 表示対象画像情報付きのコンストラクタです。
         /// </summary>
-        /// <param name="newPath">表示対象ファイルパス</param>
-        public ThumbnailUnit(string filePath)
+        /// <param name="imageData">表示対象画像情報</param>
+        public ThumbnailUnit(IImage imageData)
         {
             // コンポーネント初期化
             InitializeComponent();
 
             // ファイルパス格納
-            FilePath = filePath;
+            ImageData = imageData;
 
             // ピクチャボックスのサイズ初期化
             _picWidth = _picHeight = 80;
 
-            // ファイル名をラベルに表示
-            lblFileName.Text = Path.GetFileName(filePath);
+            // 画像キーをラベルに表示
+            lblImageKey.Text = Path.GetFileName(ImageData.Key);
 
             // 指定パスの画像表示
             RefreshPicture();
         }
+
         #endregion
 
-        #region RefreshPicture - 指定パスで画像表示を更新
+        #region RefreshPicture - 画像表示を更新
+
         /// <summary>
-        /// FilePathで指定された画像を表示します。
+        /// 画像表示を更新します。
         /// </summary>
         public void RefreshPicture()
         {
             // 表示対象ファイル確認
-            if (FilePath == null)
+            if (ImageData == null)
             {
                 FormUtilities.ShowMessage("E005");
                 return;
             }
 
-            // 表示対象対象が読み取り専用の場合、それを一時的に解除
-            var target = new FileInfo(FilePath);
-            bool readOnlyFlg;
-            if (readOnlyFlg = target.IsReadOnly)   // ←比較では無く代入
-            {
-                target.Attributes = target.Attributes ^ FileAttributes.ReadOnly;
-            }
-
             // 表示対象イメージをストリームから読み込み
             Image img;
-            using (var fs = new FileStream(FilePath, FileMode.Open))
-            using (Image imgTemp = Image.FromStream(fs))
+            using (Image imgTemp = ImageData.GetImage())
             {
                 // GDI+汎用エラー回避の為、ストリームの受け皿のImageから新規Imageのインスタンスを作成
                 img = new Bitmap(imgTemp);
@@ -141,51 +137,51 @@ namespace SO.PictManager.Components
             picThumbnail.Size = new Size(_picWidth, _picHeight);
             picThumbnail.Image = img;
 
-            // 読み取り専用を解除した場合、再設定を行う
-            if (readOnlyFlg)
-            {
-                target.Attributes = target.Attributes | FileAttributes.ReadOnly;
-                readOnlyFlg = false;
-            }
-
             ResetToolTip();
         }
+
         #endregion
 
         #region ResetToolTip - ツールチップ表示再設定
+
         /// <summary>
         /// ツールチップに表示する内容を再設定します。
         /// </summary>
         private void ResetToolTip()
         {
-            if (string.IsNullOrEmpty(FilePath))
+            if (ImageData == null)
             {
                 tipInfo.RemoveAll();
             }
             else
             {
-                StringBuilder caption = new StringBuilder();
-                caption.Append("パス　　：");
-                caption.Append(FilePath);
+                var caption = new StringBuilder();
+                if (ImageData is FileImage)
+                    caption.Append("ファイルパス：");
+                else
+                    caption.Append("画像ID　　　：");
+                caption.Append(ImageData.Key);
 
                 caption.AppendLine();
 
-                caption.Append("サイズ　：");
+                caption.Append("サイズ　　　：");
                 caption.Append(picThumbnail.Image.Width);
                 caption.Append("×");
                 caption.Append(picThumbnail.Image.Height);
 
                 caption.AppendLine();
 
-                caption.Append("更新日時：");
-                caption.Append(File.GetLastWriteTime(FilePath).ToString("yyyy/MM/dd HH:mm:ss"));
+                caption.Append("更新日時　　：");
+                caption.Append(ImageData.Timestamp.ToString("yyyy/MM/dd HH:mm:ss"));
 
                 tipInfo.SetToolTip(picThumbnail, caption.ToString());
             }
         }
+
         #endregion
 
         #region picThumbnail_Click - 表示画像クリック時
+
         /// <summary>
         /// 表示画像をクリックした際に実行される処理です。
         /// UnitClickアクションを実行します。
@@ -196,22 +192,26 @@ namespace SO.PictManager.Components
         {
             UnitClick(this, e);
         }
+
         #endregion
 
-        #region lblFileName_Click - 表示画像名クリック時
+        #region lblImageKey_Click - 表示画像キークリック時
+
         /// <summary>
         /// 画像の下の文字列をクリックした際に実行される処理です。
         /// UnitClickアクションを実行します。
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>
-        private void lblFileName_Click(object sender, EventArgs e)
+        private void lblImageKey_Click(object sender, EventArgs e)
         {
             UnitClick(this, e);
         }
+
         #endregion
 
         #region ThumbnailUnit_Click - コントロール本体クリック時
+
         /// <summary>
         /// コントロール本体をクリックした際に実行される処理です。
         /// UnitClickアクションを実行します。
@@ -222,9 +222,11 @@ namespace SO.PictManager.Components
         {
             UnitClick(sender, e);
         }
+
         #endregion
 
         #region picThumbnail_DoubleClick - 表示画像ダブルクリック時
+
         /// <summary>
         /// 表示画像をダブルクリックした際に実行される処理です。
         /// UnitDoubleClickアクションを実行します。
@@ -235,22 +237,26 @@ namespace SO.PictManager.Components
         {
             UnitDoubleClick(this, e);
         }
+
         #endregion
 
-        #region lblFileName_DoubleClick - 表示画像名ダブルクリック時
+        #region lblImageKey_DoubleClick - 表示画像キーダブルクリック時
+
         /// <summary>
         /// 画像の下の文字列をダブルクリックした際に実行される処理です。
         /// UnitDoubleClickアクションを実行します。
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>
-        private void lblFileName_DoubleClick(object sender, EventArgs e)
+        private void lblImageKey_DoubleClick(object sender, EventArgs e)
         {
             UnitDoubleClick(this, e);
         }
+
         #endregion
 
         #region ThumbnailUnit_DoubleClick - コントロール本体ダブルクリック時
+
         /// <summary>
         /// コントロール本体をダブルクリックした際に実行される処理です。
         /// UnitDoubleClickアクションを実行します。
@@ -261,6 +267,7 @@ namespace SO.PictManager.Components
         {
             UnitDoubleClick(sender, e);
         }
+
         #endregion
     }
 }
