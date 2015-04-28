@@ -25,7 +25,7 @@
 		ファイル移動が完了しました。
 	</msg>
 	<msg id="I005" caption="全画像ファイル削除済" buttons="OK" icon="Information">
-		ディレクトリ内の全てのファイルが削除されました。
+		フォルダ内の全てのファイルが削除されました。
 	</msg>
 	<msg id="I006" caption="削除済みファイル無し" buttons="OK" icon="Information">
 		削除済みのファイルはありません。
@@ -74,8 +74,8 @@
 	<msg id="Q008" caption="変更適用確認" buttons="YesNo" icon="Question">
 		変更内容を適用してよろしいですか？
 	</msg>
-	<msg id="Q009" caption="ディレクトリ作成確認" buttons="YesNo" icon="Question">
-		移動先のディレクトリが存在しません。\n作成してよろしいですか？
+	<msg id="Q009" caption="フォルダ作成確認" buttons="YesNo" icon="Question">
+		移動先のフォルダ[{0}]が存在しません。\n作成してよろしいですか？
 	</msg>
 	<msg id="Q010" caption="ブックマーク全削除確認" buttons="YesNo" icon="Question">
 		全てのブックマークを削除してよろしいですか？
@@ -92,13 +92,16 @@
   <msg id="Q014" caption="画像完全消去確認" buttons="YesNo" icon="Question">
     仮削除の状態の画像データを完全に消去してよろしいですか？
   </msg>
+  <msg id="Q015" caption="ファイル上書き確認" buttons="YesNo" icon="Question">
+    移動先に同名のファイル[{0}]が存在します。\n上書きしてもよろしいですか？
+  </msg>
 
   <!-- ワーニングメッセージ -->
 	<msg id="W000" caption="未入力エラー" buttons="OK" icon="Warning">
 		{0} が未入力です。
 	</msg>
-	<msg id="W001" caption="不正な対象ディレクトリ" buttons="OK" icon="Warning">
-		対象ディレクトリが不正です。\n正しいディレクトリを入力して下さい。
+	<msg id="W001" caption="不正な対象フォルダ" buttons="OK" icon="Warning">
+		対象フォルダが不正です。\n正しいフォルダを入力して下さい。
 	</msg>
 	<msg id="W002" caption="不正な入力" buttons="OK" icon="Warning">
 		プラス値で入力して下さい。
@@ -143,7 +146,7 @@
 		{0} にファイル名に使用出来ない文字が含まれています。
 	</msg>
 	<msg id="W016" caption="パス区切り文字有り" buttons="OK" icon="Warning">
-		パス区切り文字が含まれています。\n異なるディレクトリへの移動は出来ません。
+		パス区切り文字が含まれています。\n異なるフォルダへの移動は出来ません。
 	</msg>
 	<msg id="W017" caption="禁則文字有り" buttons="OK" icon="Warning">
 		使用出来ない文字が含まれています。\n再入力するか、Escキーで変更を破棄して編集を終了して下さい。
@@ -160,8 +163,8 @@
 	<msg id="W021" caption="不正なボリューム区切り文字位置" buttons="OK" icon="Warning">
 		ボリューム区切り文字の位置が不正です。\n再入力するか、Escキーで変更を破棄して編集を終了して下さい。
 	</msg>
-	<msg id="W022" caption="空のディレクトリ名有り" buttons="OK" icon="Warning">
-		パス中にディレクトリ名が空の箇所があります。\n再入力するか、Escキーで変更を破棄して編集を終了して下さい。
+	<msg id="W022" caption="空のフォルダ名有り" buttons="OK" icon="Warning">
+		パス中にフォルダ名が空の箇所があります。\n再入力するか、Escキーで変更を破棄して編集を終了して下さい。
 	</msg>
 	<msg id="W023" caption="多重起動" buttons="OK" icon="Warning">
 		既に起動しています。
@@ -198,8 +201,8 @@
 	<msg id="E005" caption="表示対象未指定" buttons="OK" icon="Error">
 		表示対象のパスが指定されていません。
 	</msg>
-	<msg id="E006" caption="表示対象ディレクトリ無し" buttons="OK" icon="Error">
-		表示対象のディレクトリが存在しません。
+	<msg id="E006" caption="表示対象フォルダ無し" buttons="OK" icon="Error">
+		表示対象のフォルダが存在しません。
 	</msg>
 	<msg id="E007" caption="ファイルオープンエラー" buttons="OK" icon="Error">
 		{0} を開けません。

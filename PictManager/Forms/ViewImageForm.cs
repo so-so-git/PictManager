@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -809,7 +810,7 @@ namespace SO.PictManager.Forms
         /// <param name="e">イベント引数</param>
         protected virtual void menuRename_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.File);
+            Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.File);
 
             // ファイル名変更
             if (RenameFile() != ResultStatus.OK) return;
@@ -830,7 +831,7 @@ namespace SO.PictManager.Forms
         /// <param name="e">イベント引数</param>
         protected virtual void menuMove_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.File);
+            Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.File);
 
             // ファイル名変更
             MoveFile();

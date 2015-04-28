@@ -1114,7 +1114,7 @@ namespace SO.PictManager.Forms
                 {
                     // 類似画像を検索しサムネイルリストで表示
                     List<IImage> similarImages =
-                        ImageController.GetSimilarImages(this, ImageList[CurrentIndex].Key);
+                        ImageController.GetSimilarImages(this, ImageList[CurrentIndex]);
                     if (!similarImages.Any())
                     {
                         FormUtilities.ShowMessage("I008");

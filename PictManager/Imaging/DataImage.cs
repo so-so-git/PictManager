@@ -66,6 +66,40 @@ namespace SO.PictManager.Imaging
             set { _image.DeleteFlag = value; }
         }
 
+        /// <summary>
+        /// カテゴリーIDを取得・設定します。
+        /// </summary>
+        public int CategoryId
+        {
+            get { return _image.CategoryId; }
+            set { _image.CategoryId = value; }
+        }
+
+        /// <summary>
+        /// 画像の説明を取得・設定します。
+        /// </summary>
+        public string Description
+        {
+            get { return _image.Description; }
+            set { _image.Description = value; }
+        }
+
+        /// <summary>
+        /// 画像のバイトデータを取得します。
+        /// </summary>
+        public byte[] ImageBytes
+        {
+            get
+            {
+                using (var entity = new PictManagerEntities())
+                {
+                    return (from i in entity.TblImages
+                            where i.ImageId == _image.ImageId
+                            select i.ImageData).First();
+                }
+            }
+        }
+
         #endregion
 
         #region コンストラクタ

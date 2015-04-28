@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ListForm));
-            this.grdFiles = new System.Windows.Forms.DataGridView();
+            this.grdImages = new System.Windows.Forms.DataGridView();
             this.pnlParent = new System.Windows.Forms.SplitContainer();
             this.lblFileCount = new System.Windows.Forms.Label();
             this.btnRevertAll = new SO.PictManager.Components.KeyPrevButton();
@@ -38,32 +38,34 @@
             this.btnClose = new SO.PictManager.Components.KeyPrevButton();
             this.barStatus = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            ((System.ComponentModel.ISupportInitialize)(this.grdFiles)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.grdImages)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlParent)).BeginInit();
             this.pnlParent.Panel1.SuspendLayout();
             this.pnlParent.Panel2.SuspendLayout();
             this.pnlParent.SuspendLayout();
             this.barStatus.SuspendLayout();
             this.SuspendLayout();
             // 
-            // grdFiles
+            // grdImages
             // 
-            this.grdFiles.AllowUserToAddRows = false;
-            this.grdFiles.AllowUserToDeleteRows = false;
-            this.grdFiles.AllowUserToResizeRows = false;
-            this.grdFiles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.grdFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grdFiles.Location = new System.Drawing.Point(0, 0);
-            this.grdFiles.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.grdFiles.MultiSelect = false;
-            this.grdFiles.Name = "grdFiles";
-            this.grdFiles.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.grdFiles.RowTemplate.Height = 21;
-            this.grdFiles.Size = new System.Drawing.Size(737, 463);
-            this.grdFiles.TabIndex = 0;
-            this.grdFiles.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdFiles_CellClick);
-            this.grdFiles.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdFiles_CellDoubleClick);
-            this.grdFiles.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.grdFiles_CellValidating);
-            this.grdFiles.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdFiles_CellValueChanged);
+            this.grdImages.AllowUserToAddRows = false;
+            this.grdImages.AllowUserToDeleteRows = false;
+            this.grdImages.AllowUserToResizeRows = false;
+            this.grdImages.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.grdImages.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grdImages.Location = new System.Drawing.Point(0, 0);
+            this.grdImages.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.grdImages.MultiSelect = false;
+            this.grdImages.Name = "grdImages";
+            this.grdImages.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.grdImages.RowTemplate.Height = 21;
+            this.grdImages.Size = new System.Drawing.Size(737, 462);
+            this.grdImages.TabIndex = 0;
+            this.grdImages.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdImages_CellClick);
+            this.grdImages.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdImages_CellDoubleClick);
+            this.grdImages.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdImages_CellEnter);
+            this.grdImages.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.grdImages_CellValidating);
+            this.grdImages.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdImages_CellValueChanged);
             // 
             // pnlParent
             // 
@@ -78,7 +80,7 @@
             // pnlParent.Panel1
             // 
             this.pnlParent.Panel1.AutoScroll = true;
-            this.pnlParent.Panel1.Controls.Add(this.grdFiles);
+            this.pnlParent.Panel1.Controls.Add(this.grdImages);
             // 
             // pnlParent.Panel2
             // 
@@ -89,7 +91,7 @@
             this.pnlParent.Panel2.Controls.Add(this.btnClose);
             this.pnlParent.Panel2.Controls.Add(this.barStatus);
             this.pnlParent.Size = new System.Drawing.Size(737, 534);
-            this.pnlParent.SplitterDistance = 463;
+            this.pnlParent.SplitterDistance = 462;
             this.pnlParent.SplitterWidth = 5;
             this.pnlParent.TabIndex = 2;
             // 
@@ -154,7 +156,7 @@
             // 
             this.barStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblStatus});
-            this.barStatus.Location = new System.Drawing.Point(0, 43);
+            this.barStatus.Location = new System.Drawing.Point(0, 44);
             this.barStatus.Name = "barStatus";
             this.barStatus.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
             this.barStatus.Size = new System.Drawing.Size(737, 23);
@@ -182,10 +184,11 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_FormClosing);
             this.Shown += new System.EventHandler(this.Form_Shown);
             this.Controls.SetChildIndex(this.pnlParent, 0);
-            ((System.ComponentModel.ISupportInitialize)(this.grdFiles)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.grdImages)).EndInit();
             this.pnlParent.Panel1.ResumeLayout(false);
             this.pnlParent.Panel2.ResumeLayout(false);
             this.pnlParent.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlParent)).EndInit();
             this.pnlParent.ResumeLayout(false);
             this.barStatus.ResumeLayout(false);
             this.barStatus.PerformLayout();
@@ -196,7 +199,7 @@
 
         #endregion
 
-        private System.Windows.Forms.DataGridView grdFiles;
+        private System.Windows.Forms.DataGridView grdImages;
 		private System.Windows.Forms.SplitContainer pnlParent;
 		private System.Windows.Forms.StatusStrip barStatus;
 		private System.Windows.Forms.ToolStripStatusLabel lblStatus;

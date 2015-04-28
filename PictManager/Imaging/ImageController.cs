@@ -37,11 +37,11 @@ namespace SO.PictManager.Imaging
         /// 基準となる画像と類似した画像を検索し、そのリストを取得します。
         /// </summary>
         /// <param name="form">フォーム</param>
-        /// <param name="criterionKey">基準となる画像のキー</param>
+        /// <param name="criterionKey">基準となる画像</param>
         /// <returns>類似画像のリスト</returns>
-        internal static List<IImage> GetSimilarImages(BaseForm form, string criterionKey)
+        internal static List<IImage> GetSimilarImages(BaseForm form, IImage criterion)
         {
-            return GetSimilarImages(form, criterionKey, null);
+            return GetSimilarImages(form, criterion, null);
         }
 
         /// <summary>
@@ -50,10 +50,10 @@ namespace SO.PictManager.Imaging
         /// (プログレスダイアログに追加表示するメッセージを指定します)
         /// </summary>
         /// <param name="form">フォーム</param>
-        /// <param name="criterionKey">基準となる画像のキー</param>
+        /// <param name="criterion">基準となる画像</param>
         /// <param name="message">プログレスダイアログに追加表示するメッセージ</param>
         /// <returns>類似画像のリスト</returns>
-        internal static List<IImage> GetSimilarImages(BaseForm form, string criterionKey, string message)
+        internal static List<IImage> GetSimilarImages(BaseForm form, IImage criterion, string message)
         {
             try
             {
@@ -75,7 +75,7 @@ namespace SO.PictManager.Imaging
                     int xPos;
                     int yPos = 0;
                     int[,] viewAvgs = new int[DIVIDE_HORISONTAL, DIVIDE_VERTICAL];
-                    using (Image img = Image.FromFile(criterionKey))
+                    using (Image img = criterion.GetImage())
                     using (Bitmap colorBmp = new Bitmap(img))
                     using (Bitmap bmp = useGray ? ImageUtilities.ToGrayScale(colorBmp, GrayScaleMethod.NTSC) : colorBmp)
                     {
@@ -109,7 +109,7 @@ namespace SO.PictManager.Imaging
                         progDlg.Message = string.Format("{0}({1}/{2}) {3}",
                                 message ?? string.Empty, ++proceedCount, form.ImageCount, compImage);
 
-                        if (compImage.Key == criterionKey) continue;
+                        if (compImage.Key == criterion.Key) continue;
 
                         using (Image img = compImage.GetImage())
                         using (Bitmap colorBmp = new Bitmap(img))

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -26,20 +27,63 @@ namespace SO.PictManager.Forms
     /// </summary>
     public partial class ListForm : BaseForm
     {
-        #region クラス定数
+        #region class FileColumnIndexes - ファイルモード用グリッド列インデックス定義クラス
 
-        /// <summary>グリッド列インデックス：選択チェック</summary>
-        private const int IDX_SEL_CHK = 0;
-        /// <summary>グリッド列インデックス：ファイル名</summary>
-        private const int IDX_FILE_NAME = 1;
-        /// <summary>グリッド列インデックス：ディレクトリパス</summary>
-        private const int IDX_DIR_PATH = 2;
-        /// <summary>グリッド列インデックス：ディレクトリ参照ボタン</summary>
-        private const int IDX_REF_BTN = 3;
-        /// <summary>グリッド列インデックス：MD5</summary>
-        private const int IDX_MD5 = 4;
-        /// <summary>グリッド列インデックス：類似画像検索ボタン</summary>
-        private const int IDX_SIMILAR_BTN = 5;
+        /// <summary>
+        /// ファイルモード用グリッド列インデックス定義クラス
+        /// </summary>
+        private static class FileColumnIndexes
+        {
+            /// <summary>選択チェックの列インデックス</summary>
+            public const int SELECT_CHECK = 0;
+
+            /// <summary>ファイル名の列インデックス</summary>
+            public const int FILE_NAME = 1;
+
+            /// <summary>フォルダパスの列インデックス</summary>
+            public const int FOLDER_PATH = 2;
+
+            /// <summary>フォルダ参照ボタンの列インデックス</summary>
+            public const int REFERENCE_BUTTON = 3;
+
+            /// <summary>MD5の列インデックス</summary>
+            public const int MD5 = 4;
+
+            /// <summary>類似画像検索ボタンの列インデックス</summary>
+            public const int SIMILAR_BUTTON = 5;
+        }
+
+        #endregion
+
+        #region class DatabaseColumnIndexes - データベースモード用グリッド列インデックス定義クラス
+
+        /// <summary>
+        /// データベースモード用グリッド列インデックス定義クラス
+        /// </summary>
+        private static class DatabaseColumnIndexes
+        {
+            /// <summary>選択チェックの列インデックス</summary>
+            public const int SELECT_CHECK = 0;
+
+            /// <summary>画像IDの列インデックス</summary>
+            public const int IMAGE_ID = 1;
+
+            /// <summary>カテゴリーの列インデックス</summary>
+            public const int CATEGORY = 2;
+
+            /// <summary>説明文の列インデックス</summary>
+            public const int DESCRIPTION = 3;
+
+            /// <summary>MD5の列インデックス</summary>
+            public const int MD5 = 4;
+
+            /// <summary>類似画像検索ボタンの列インデックス</summary>
+            public const int SIMILAR_BUTTON = 5;
+        }
+
+        #endregion
+
+        #region クラス定数
 
         #endregion
 
@@ -126,28 +170,33 @@ namespace SO.PictManager.Forms
         #endregion
 
         #region CreateMenu - メニューバー作成
+
         /// <summary>
         /// (BaseForm.CreateMenu()をオーバーライドします)
         /// メニューバーを生成します。
         /// </summary>
         protected override void CreateMenu()
         {
-            // ファイル
-            var menuTemp = new ToolStripMenuItem("ファイル(&F)", null, null, "menuFile");
-            menuTemp.ShortcutKeys = Keys.Alt | Keys.F;
-            menuTemp.DropDownItems.Add(new ToolStripMenuItem("戻る", null, btnClose_Click));
-            menuTemp.DropDownItems.Add(new ToolStripMenuItem("対象ファイル再取得", null, menuRefresh_Click));
-            menuTemp.DropDownItems.Add(new ToolStripSeparator());
-            menuTemp.DropDownItems.Add(new ToolStripMenuItem("一括ファイル名変更", null, menuRenameAll_Click));
-            menuTemp.DropDownItems.Add(new ToolStripMenuItem("一括ファイル移動", null, menuMoveAll_Click));
-            menuTemp.DropDownItems.Add(new ToolStripMenuItem("削除済画像確認", null,
-                    (s, e) => ViewDeletedFiles()));
-            menuTemp.DropDownItems.Add(new ToolStripSeparator());
-            menuTemp.DropDownItems.Add(new ToolStripMenuItem("ディレクトリを開く", null, (s, e) => Utilities.OpenExplorer(TargetDirectory.FullName)));
-            menuTemp.DropDownItems.Add(new ToolStripSeparator());
-            menuTemp.DropDownItems.Add(new ToolStripMenuItem("終了", null,
-                    (s, e) => Form_FormClosing(s, new FormClosingEventArgs(CloseReason.UserClosing, false))));
-            barMenu.Items.Add(menuTemp);
+            ToolStripMenuItem menuTemp;
+            if (ImageMode == ConfigInfo.ImageDataMode.File)
+            {
+                // ファイル
+                menuTemp = new ToolStripMenuItem("ファイル(&F)", null, null, "menuFile");
+                menuTemp.ShortcutKeys = Keys.Alt | Keys.F;
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("戻る", null, btnClose_Click));
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("対象ファイル再取得", null, menuRefresh_Click));
+                menuTemp.DropDownItems.Add(new ToolStripSeparator());
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("一括ファイル名変更", null, menuRenameAll_Click));
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("一括ファイル移動", null, menuMoveAll_Click));
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("削除済画像確認", null,
+                        (s, e) => ViewDeletedFiles()));
+                menuTemp.DropDownItems.Add(new ToolStripSeparator());
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("ディレクトリを開く", null, (s, e) => Utilities.OpenExplorer(TargetDirectory.FullName)));
+                menuTemp.DropDownItems.Add(new ToolStripSeparator());
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("終了", null,
+                        (s, e) => Form_FormClosing(s, new FormClosingEventArgs(CloseReason.UserClosing, false))));
+                barMenu.Items.Add(menuTemp);
+            }
 
             // 操作
             menuTemp = new ToolStripMenuItem("操作(&O)", null, null, "menuOpe");
@@ -167,9 +216,11 @@ namespace SO.PictManager.Forms
             menuTemp.DropDownItems.Add(new ToolStripMenuItem("選択行の類似画像を表示", null, menuSimilar_Click));
             barMenu.Items.Add(menuTemp);
         }
+
         #endregion
 
         #region CreateColumns - グリッド列生成
+
         /// <summary>
         /// ファイル一覧グリッドの列を生成します。
         /// </summary>
@@ -180,40 +231,67 @@ namespace SO.PictManager.Forms
             colChk.HeaderText = "選択";
             colChk.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             colChk.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            grdFiles.Columns.Add(colChk);
+            grdImages.Columns.Add(colChk);
 
-            // ファイル名列
-            var colFile = new DataGridViewTextBoxColumn();
-            colFile.HeaderText = "ファイル名";
-            colFile.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            grdFiles.Columns.Add(colFile);
+            if (ImageMode == ConfigInfo.ImageDataMode.File)
+            {
+                // ファイル名列
+                var colFile = new DataGridViewTextBoxColumn();
+                colFile.HeaderText = "ファイル名";
+                colFile.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+                grdImages.Columns.Add(colFile);
 
-            // 親ディレクトリパス列
-            var colDir = new DataGridViewTextBoxColumn();
-            colDir.HeaderText = "ディレクトリ";
-            colDir.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            colDir.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            grdFiles.Columns.Add(colDir);
+                // 親フォルダパス列
+                var colDir = new DataGridViewTextBoxColumn();
+                colDir.HeaderText = "フォルダ";
+                colDir.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                colDir.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+                grdImages.Columns.Add(colDir);
 
-            // ディレクトリ参照ボタン列
-            var colRef = new DataGridViewButtonColumn();
-            colRef.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            colRef.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            grdFiles.Columns.Add(colRef);
+                // ディレクトリ参照ボタン列
+                var colRef = new DataGridViewButtonColumn();
+                colRef.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                colRef.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                grdImages.Columns.Add(colRef);
+            }
+            else
+            {
+                // 画像ID列
+                var colImageId = new DataGridViewTextBoxColumn();
+                colImageId.HeaderText = "画像ID";
+                colImageId.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                colImageId.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                grdImages.Columns.Add(colImageId);
+
+                // カテゴリー列
+                var colCategory = new DataGridViewComboBoxColumn();
+                colCategory.HeaderText = "カテゴリー";
+                colCategory.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                colCategory.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+                grdImages.Columns.Add(colCategory);
+
+                // 説明文列
+                var colDescription = new DataGridViewTextBoxColumn();
+                colDescription.HeaderText = "説明";
+                colDescription.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                colDescription.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+                grdImages.Columns.Add(colDescription);
+            }
 
             // MD5列
             var colMD5 = new DataGridViewTextBoxColumn();
             colMD5.HeaderText = "MD5";
             colMD5.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             colMD5.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            grdFiles.Columns.Add(colMD5);
+            grdImages.Columns.Add(colMD5);
 
             // 類似画像検索ボタン列
             var colSimilar = new DataGridViewButtonColumn();
             colSimilar.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             colSimilar.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            grdFiles.Columns.Add(colSimilar);
+            grdImages.Columns.Add(colSimilar);
         }
+
         #endregion
 
         #region CreateCells - グリッドセル生成
@@ -223,14 +301,29 @@ namespace SO.PictManager.Forms
         /// </summary>
         protected virtual void CreateCells()
         {
-            grdFiles.SuspendLayout();
+            grdImages.SuspendLayout();
+
+            List<MstCategory> categoryList;
+            if (ImageMode == ConfigInfo.ImageDataMode.Database)
+            {
+                using (var entity = new PictManagerEntities())
+                {
+                    categoryList = (from c in entity.MstCategories
+                                    orderby c.CategoryName
+                                    select c).ToList();
+                }
+            }
+            else
+            {
+                categoryList = null;
+            }
 
             int i = 0;
             var rowList = new List<DataGridViewRow>(ImageList.Count);
             foreach (var img in ImageList)
             {
                 var row = new DataGridViewRow();
-                var filePath = img.Key;
+
                 bool delFlg = false;
                 if (img.IsDeleted)
                 {
@@ -248,27 +341,67 @@ namespace SO.PictManager.Forms
                 celChk.Tag = false;
                 row.Cells.Add(celChk);
 
-                // ファイル名セル
-                var celFile = new DataGridViewTextBoxCell();
-                celFile.Value = Path.GetFileName(filePath);
-                celFile.Tag = celFile.Value;
-                row.Cells.Add(celFile);
+                if (ImageMode == ConfigInfo.ImageDataMode.File)
+                {
+                    // ファイル名セル
+                    var celFile = new DataGridViewTextBoxCell();
+                    celFile.Value = Path.GetFileName(img.Key);
+                    celFile.Tag = celFile.Value;
+                    row.Cells.Add(celFile);
 
-                // 親ディレクトリパスセル
-                var celDir = new DataGridViewTextBoxCell();
-                celDir.Value = Path.GetDirectoryName(filePath);
-                celDir.Tag = celDir.Value;
-                row.Cells.Add(celDir);
+                    // 親フォルダパスセル
+                    var celDir = new DataGridViewTextBoxCell();
+                    celDir.Value = Path.GetDirectoryName(img.Key);
+                    celDir.Tag = celDir.Value;
+                    row.Cells.Add(celDir);
 
-                DataGridViewCell celRef;
+                    // フォルダ参照ボタンセル
+                    DataGridViewCell celRef;
+                    if (delFlg)
+                    {
+                        celRef = new DataGridViewTextBoxCell();
+                        celRef.Value = string.Empty;
+                    }
+                    else
+                    {
+                        celRef = new DataGridViewButtonCell();
+                        celRef.Value = "...";
+                    }
+                    row.Cells.Add(celRef);
+                    celRef.ReadOnly = delFlg;
+                }
+                else
+                {
+                    var dataImg = img as DataImage;
+
+                    // 画像IDセル
+                    var celFile = new DataGridViewTextBoxCell();
+                    celFile.Value = img.Key;
+                    celFile.Tag = celFile.Value;
+                    row.Cells.Add(celFile);
+                    celFile.ReadOnly = true;
+
+                    // カテゴリーセル
+                    var celCategory = new DataGridViewComboBoxCell();
+                    celCategory.DataSource = categoryList;
+                    celCategory.DisplayMember = "CategoryName";
+                    celCategory.ValueMember = "CategoryId";
+                    celCategory.Value = dataImg.CategoryId;
+                    celCategory.Tag = celCategory.Value;
+                    celCategory.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
+                    row.Cells.Add(celCategory);
+
+                    // 説明文セル
+                    var celDescription = new DataGridViewTextBoxCell();
+                    celDescription.Value = dataImg.Description ?? string.Empty; 
+                    celDescription.Tag = celDescription.Value;
+                    row.Cells.Add(celDescription);
+                }
+
                 DataGridViewCell celSimilar;
                 DataGridViewCell celMD5 = new DataGridViewTextBoxCell();
                 if (delFlg)
                 {
-                    // ディレクトリ参照ボタンセル
-                    celRef = new DataGridViewTextBoxCell();
-                    celRef.Value = string.Empty;
-
                     // MD5セル
                     celMD5.Value = string.Empty;
 
@@ -278,33 +411,29 @@ namespace SO.PictManager.Forms
                 }
                 else
                 {
-                    // ディレクトリ参照ボタンセル
-                    celRef = new DataGridViewButtonCell();
-                    celRef.Value = "...";
-
                     // MD5セル
-                    celMD5.Value = Cryptgrapher.GetFileMD5(filePath);
+                    celMD5.Value = ImageMode == ConfigInfo.ImageDataMode.File
+                        ? Cryptgrapher.GetFileMD5(img.Key)
+                        : Cryptgrapher.GetBytesMD5((img as DataImage).ImageBytes);
 
                     // 類似画像検索ボタンセル
                     celSimilar = new DataGridViewButtonCell();
                     celSimilar.Value = "類似";
                 }
-                row.Cells.Add(celRef);
                 row.Cells.Add(celMD5);
                 row.Cells.Add(celSimilar);
 
                 celMD5.ReadOnly = true;
-                celRef.ReadOnly = delFlg;
                 celSimilar.ReadOnly = delFlg;
 
                 if (!delFlg)
                 {
                     // MD5重複チェック
-                    for (int j = 0; j < grdFiles.RowCount; ++j)
+                    for (int j = 0; j < grdImages.RowCount; ++j)
                     {
-                        if (Convert.ToBoolean(grdFiles[IDX_SEL_CHK, j].Tag)) continue;
+                        if (Convert.ToBoolean(grdImages[FileColumnIndexes.SELECT_CHECK, j].Tag)) continue;
 
-                        DataGridViewCell targetCell = grdFiles[IDX_MD5, j];
+                        DataGridViewCell targetCell = grdImages[FileColumnIndexes.MD5, j];
                         if (celMD5.Value.Equals(targetCell.Value))
                         {
                             celMD5.Style.BackColor = Color.Bisque;
@@ -317,8 +446,8 @@ namespace SO.PictManager.Forms
                 rowList.Add(row);
             }
 
-            grdFiles.Rows.AddRange(rowList.ToArray());
-            grdFiles.ResumeLayout();
+            grdImages.Rows.AddRange(rowList.ToArray());
+            grdImages.ResumeLayout();
         }
 
         #endregion
@@ -327,50 +456,81 @@ namespace SO.PictManager.Forms
 
         /// <summary>
         /// 指定された行の画像ファイルのパスを取得します。
+        /// (ファイルモード時のみ利用可)
         /// </summary>
         /// <param name="rowIdx">指定行</param>
         /// <returns>画像ファイルのパス</returns>
         private string GetImagePath(int rowIdx)
         {
-            string dirName = grdFiles[IDX_DIR_PATH, rowIdx].Tag.ToSafeString();
-            string fileName = grdFiles[IDX_FILE_NAME, rowIdx].Tag.ToSafeString();
+            Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.File);
+
+            string dirName = grdImages[FileColumnIndexes.FOLDER_PATH, rowIdx].Tag.ToSafeString();
+            string fileName = grdImages[FileColumnIndexes.FILE_NAME, rowIdx].Tag.ToSafeString();
 
             return Path.Combine(dirName, fileName);
         }
 
         #endregion
 
-        #region IsValidValue - 入力内容検証
+        #region GetImageId - 画像ID取得
 
         /// <summary>
-        /// セルに入力された内容の妥当性を検証します。
+        /// 指定された行の画像IDを取得します。
+        /// (データベースモード時のみ利用可)
+        /// </summary>
+        /// <param name="rowIdx">指定行</param>
+        /// <returns>画像ID</returns>
+        private int GetImageId(int rowIdx)
+        {
+            Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.Database);
+
+            object imageId = grdImages[DatabaseColumnIndexes.IMAGE_ID, rowIdx].Value;
+
+            return Convert.ToInt32(imageId);
+        }
+
+        #endregion
+
+        #region IsValidValueInFileMode - 入力内容検証(ファイルモード用)
+
+        /// <summary>
+        /// セルに入力された内容の妥当性を検証します。(ファイルモード用)
         /// </summary>
         /// <param name="cell">検証対象のDetaGridViewCell</param>
         /// <returns>検証結果OK:true / 検証結果NG:false</returns>
-        protected virtual bool IsValidValue(DataGridViewCell cell)
+        protected virtual bool IsValidValueInFileMode(DataGridViewCell cell)
         {
-            if (cell.ColumnIndex != IDX_FILE_NAME && cell.ColumnIndex != IDX_DIR_PATH)
+            Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.File);
+
+            if (cell.ColumnIndex != FileColumnIndexes.FILE_NAME
+                && cell.ColumnIndex != FileColumnIndexes.FOLDER_PATH)
+            {
                 return true;
+            }
 
             char[] allowChars;
-            if (cell.ColumnIndex == IDX_FILE_NAME)
+            if (cell.ColumnIndex == FileColumnIndexes.FILE_NAME)
+            {
                 allowChars = new char[] { };
+            }
             else
-                // ディレクトリパスの場合はパス区切り文字とボリューム区切り文字は許容
+            {
+                // フォルダパスの場合はパス区切り文字とボリューム区切り文字は許容
                 allowChars = new char[]
                     {
                         Path.DirectorySeparatorChar,
                         Path.VolumeSeparatorChar
                     };
+            }
 
             Predicate<string> ErrHandling = (msg) =>
                 {
                     // 編集モードを継続、エラー通知表示
-                    foreach (DataGridViewCell selCell in grdFiles.SelectedCells)
+                    foreach (DataGridViewCell selCell in grdImages.SelectedCells)
                         selCell.Selected = false;
 
-                    grdFiles.CurrentCell = cell;
-                    grdFiles.BeginEdit(true);
+                    grdImages.CurrentCell = cell;
+                    grdImages.BeginEdit(true);
                     FormUtilities.ShowMessage(msg);
                     return false;
                 };
@@ -380,7 +540,7 @@ namespace SO.PictManager.Forms
             if (editVal.HasInvalidPathChar(allowChars))
                 return ErrHandling("W017");
 
-            if (cell.ColumnIndex == IDX_FILE_NAME)
+            if (cell.ColumnIndex == FileColumnIndexes.FILE_NAME)
             {
                 // 拡張子変更チェック
                 if (Path.GetExtension(editVal) != Path.GetExtension(cell.Value.ToString()))
@@ -413,28 +573,48 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region ApplyChange - 入力された変更を適用
+        #region IsValidValueInDatabaseMode - 入力内容検証(データベースモード用)
 
         /// <summary>
-        /// ファイル一覧グリッドセルで入力された変更内容を各ファイルに適用します。
+        /// セルに入力された内容の妥当性を検証します。(データベースモード用)
+        /// </summary>
+        /// <param name="cell">検証対象のDetaGridViewCell</param>
+        /// <returns>検証結果OK:true / 検証結果NG:false</returns>
+        protected virtual bool IsValidValueInDatabaseMode(DataGridViewCell cell)
+        {
+            Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.Database);
+
+            // 現状、常にOK
+            return true;
+        }
+
+        #endregion
+
+        #region ApplyChangeInFileMode - 入力された変更を適用(ファイルモード用)
+
+        /// <summary>
+        /// 画像一覧グリッドセルで入力された変更内容を各ファイルに適用します。
+        /// (ファイルモードの場合のみ使用可)
         /// </summary>
         /// <param name="cell">変更内容が入力されたDataGridViewCell</param>
         /// <param name="proceededRows">処理済の行インデックスが格納されたList</param>
         /// <returns>処理中止フラグ</returns>
-        protected virtual bool ApplyChange(DataGridViewCell cell, List<int> proceededRows)
+        protected virtual bool ApplyChangeInFileMode(DataGridViewCell cell, List<int> proceededRows)
         {
+            Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.File);
+
             bool ret = true;
-            int listRow = int.Parse(grdFiles.Rows[cell.RowIndex].HeaderCell.Value.ToString()) - 1;
+            int listRow = int.Parse(grdImages.Rows[cell.RowIndex].HeaderCell.Value.ToString()) - 1;
             switch (cell.ColumnIndex)
             {
-                case IDX_SEL_CHK:
+                case FileColumnIndexes.SELECT_CHECK:
                     // 対象削除
                     ImageList[listRow].Delete();
                     proceededRows.Add(listRow);
                     break;
 
-                case IDX_FILE_NAME:
-                case IDX_DIR_PATH:
+                case FileColumnIndexes.FILE_NAME:
+                case FileColumnIndexes.FOLDER_PATH:
                     // 既に対象が処理済の場合はスキップ
                     if (proceededRows.Contains(listRow)) break;
 
@@ -452,6 +632,44 @@ namespace SO.PictManager.Forms
 
         #endregion
 
+        #region ApplyChangeInDatabaseMode - 入力された変更を適用(データベースモード用)
+
+        /// <summary>
+        /// 画像一覧グリッドセルで入力された変更内容を各ファイルに適用します。
+        /// (データベースモードの場合のみ使用可)
+        /// </summary>
+        /// <param name="row">変更内容が入力されたDataGridViewRow</param>
+        /// <param name="entity">データベースエンティティ</param>
+        /// <returns>処理中止フラグ</returns>
+        protected virtual bool ApplyChangeInDatabaseMode(DataGridViewRow row, PictManagerEntities entity)
+        {
+            Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.Database);
+
+            int imageId = Convert.ToInt32(row.Cells[DatabaseColumnIndexes.IMAGE_ID].Value);
+
+            // データベースに変更を反映
+            var img = (from i in entity.TblImages
+                       where i.ImageId == imageId
+                       select i).FirstOrDefault();
+
+            if (img == null) return true;
+
+            img.CategoryId = Convert.ToInt32(row.Cells[DatabaseColumnIndexes.CATEGORY].Value);
+            img.Description = row.Cells[DatabaseColumnIndexes.DESCRIPTION].Value.ToSafeString();
+            img.UpdatedDateTime = DateTime.Now;
+
+            // 保持しているリスト内の要素にも同様の内容を反映
+            int index = ImageList.FindIndex(i => int.Parse(i.Key) == imageId);
+            var imgInList = ImageList[index] as DataImage;
+
+            imgInList.CategoryId = img.CategoryId;
+            imgInList.Description = img.Description;
+
+            return true;
+        }
+
+        #endregion
+
         #region ChangePath - 入力内容をファイルパスに反映
 
         /// <summary>
@@ -461,11 +679,14 @@ namespace SO.PictManager.Forms
         /// <returns>処理中止フラグ</returns>
         protected virtual bool ChangePath(int rowIndex)
         {
+            Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.File);
+
             // ファイル移動
-            string dirPath = grdFiles[IDX_DIR_PATH, rowIndex].Value.ToString();
+            string dirPath = grdImages[FileColumnIndexes.FOLDER_PATH, rowIndex].Value.ToString();
             if (!Directory.Exists(dirPath))
             {
-                if (FormUtilities.ShowMessage("Q009") == DialogResult.No)
+                // フォルダ作成確認
+                if (FormUtilities.ShowMessage("Q009", dirPath) == DialogResult.No)
                 {
                     FormUtilities.ShowMessage("I007");
                     return false;
@@ -473,8 +694,20 @@ namespace SO.PictManager.Forms
                 Directory.CreateDirectory(dirPath);
             }
 
-            string fileName = grdFiles[IDX_FILE_NAME, rowIndex].Value.ToString();
+            string fileName = grdImages[FileColumnIndexes.FILE_NAME, rowIndex].Value.ToString();
             string newPath = Path.Combine(dirPath, fileName);
+
+            if (File.Exists(newPath))
+            {
+                // ファイル上書き確認
+                if (FormUtilities.ShowMessage("Q015", fileName) == DialogResult.No)
+                {
+                    FormUtilities.ShowMessage("I007");
+                    return false;
+                }
+
+                File.Delete(newPath);
+            }
 
             File.Move(ImageList[rowIndex].Key, newPath);
             ImageList[rowIndex].Key = newPath;
@@ -492,31 +725,44 @@ namespace SO.PictManager.Forms
         /// <param name="isAllRevert">true:全ての対象を戻す / false:選択された対象のみ戻す</param>
         private void RevertEdit(bool isAllRevert)
         {
-            foreach (DataGridViewColumn col in grdFiles.Columns)
+            foreach (DataGridViewColumn col in grdImages.Columns)
                 col.HeaderCell.SortGlyphDirection = SortOrder.None;
 
             if (isAllRevert)
             {
                 // セルを再作成
-                grdFiles.Rows.Clear();
+                grdImages.Rows.Clear();
                 CreateCells();
 
                 _changeCnt = 0;
             }
             else
             {
+                int selChkColIdx;
+                int revertEndColIdx;
+                if (ImageMode == ConfigInfo.ImageDataMode.File)
+                {
+                    selChkColIdx = FileColumnIndexes.SELECT_CHECK;
+                    revertEndColIdx = FileColumnIndexes.FOLDER_PATH;
+                }
+                else
+                {
+                    selChkColIdx = DatabaseColumnIndexes.SELECT_CHECK;
+                    revertEndColIdx = DatabaseColumnIndexes.DESCRIPTION;
+                }
+
                 // 選択されている行を取得
-                var selectedRows = from r in grdFiles.Rows.Cast<DataGridViewRow>()
-                                   where Convert.ToBoolean(r.Cells[IDX_SEL_CHK].Value)
+                var selectedRows = from r in grdImages.Rows.Cast<DataGridViewRow>()
+                                   where Convert.ToBoolean(r.Cells[selChkColIdx].Value)
                                    select r;
 
-                for (int rowIndex = 0; rowIndex < grdFiles.Rows.Count; rowIndex++)
+                for (int rowIndex = 0; rowIndex < grdImages.Rows.Count; rowIndex++)
                 {
-                    DataGridViewRow row = grdFiles.Rows[rowIndex];
+                    DataGridViewRow row = grdImages.Rows[rowIndex];
 
-                    if (!Convert.ToBoolean(row.Cells[IDX_SEL_CHK].Value)) continue;
+                    if (!Convert.ToBoolean(row.Cells[selChkColIdx].Value)) continue;
 
-                    for (int colIndex = IDX_SEL_CHK; colIndex < IDX_REF_BTN; colIndex++)
+                    for (int colIndex = selChkColIdx; colIndex <= revertEndColIdx; colIndex++)
                     {
                         DataGridViewCell cell = row.Cells[colIndex];
                         if (!cell.Value.Equals(cell.Tag))    // セル内容が表示時と異なる場合
@@ -527,12 +773,12 @@ namespace SO.PictManager.Forms
                             // 変更カウントをデクリメント、変更判別色クリア
                             if (cell.Style.BackColor == Color.Yellow) --_changeCnt;
                             cell.Style.BackColor =
-                                    grdFiles.Columns[colIndex].DefaultCellStyle.BackColor;
+                                grdImages.Columns[colIndex].DefaultCellStyle.BackColor;
                         }
                     }
 
                     // 行ヘッダの変更スタイルをクリア
-                    DataGridViewRowHeaderCell rhCell = grdFiles.Rows[rowIndex].HeaderCell;
+                    DataGridViewRowHeaderCell rhCell = grdImages.Rows[rowIndex].HeaderCell;
                     rhCell.Style.Font = new Font(rhCell.Style.Font, FontStyle.Regular);
                 }
             }
@@ -550,26 +796,55 @@ namespace SO.PictManager.Forms
         /// <param name="cell">変更内容を表示するセル</param>
         private void ShowHistoryByStatusBar(DataGridViewCell cell)
         {
-            lblStatus.Text = cell.Tag.ToString();
+            string statusText;
+            if (ImageMode == ConfigInfo.ImageDataMode.Database
+                && cell.ColumnIndex == DatabaseColumnIndexes.CATEGORY)
+            {
+                using (var entity = new PictManagerEntities())
+                {
+                    int oldId = Convert.ToInt32(cell.Tag);
+                    statusText = (from c in entity.MstCategories
+                                  where c.CategoryId == oldId
+                                  select c).First().CategoryName;
 
-            if (cell.Style.BackColor == Color.Yellow)
-                lblStatus.Text += " -> " + cell.Value.ToString();
+                    if (cell.Style.BackColor == Color.Yellow)
+                    {
+                        int newId = Convert.ToInt32(cell.Value);
+                        statusText += " -> "
+                            + (from c in entity.MstCategories
+                               where c.CategoryId == newId
+                               select c).First().CategoryName;
+                    }
+                }
+            }
+            else
+            {
+                statusText = cell.Tag.ToString();
+
+                if (cell.Style.BackColor == Color.Yellow)
+                    statusText += " -> " + cell.Value.ToString();
+            }
+
+            lblStatus.Text = statusText;
         }
 
         #endregion
 
         #region SelectDirectoryForChange - 変更後ディレクトリ選択
+
         /// <summary>
         /// 指定行の画像の変更後のディレクトリを選択するダイアログを表示します。
         /// </summary>
         /// <param name="rowIdx">指定行</param>
         private void SelectDirectoryForChange(int rowIdx)
         {
-            if (!(bool)grdFiles.Rows[rowIdx].Tag)
+            Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.File);
+
+            if (!(bool)grdImages.Rows[rowIdx].Tag)
             {
                 using (var dlg = new FolderBrowserDialog())
                 {
-                    DataGridViewCell cell = grdFiles[IDX_DIR_PATH, rowIdx];
+                    DataGridViewCell cell = grdImages[FileColumnIndexes.FOLDER_PATH, rowIdx];
 
                     dlg.Description = "変更後のディレクトリを選択して下さい。";
                     dlg.RootFolder = Environment.SpecialFolder.Desktop;
@@ -582,6 +857,7 @@ namespace SO.PictManager.Forms
                 }
             }
         }
+
         #endregion
 
         #region ShowSimilarImages - 類似画像表示
@@ -592,12 +868,31 @@ namespace SO.PictManager.Forms
         /// <param name="rowIdx">指定行</param>
         private void ShowSimilarImages(int rowIdx)
         {
-            if (!(grdFiles[IDX_SIMILAR_BTN, rowIdx] is DataGridViewButtonCell)) return;
+            int colIdx = ImageMode == ConfigInfo.ImageDataMode.File
+                ? FileColumnIndexes.SIMILAR_BUTTON
+                : DatabaseColumnIndexes.SIMILAR_BUTTON;
 
-            string path = GetImagePath(rowIdx);
-            List<IImage> similarImages = _similarMap != null && _similarMap.ContainsKey(rowIdx)
-                    ? _similarMap[rowIdx]
-                    : ImageController.GetSimilarImages(this, GetImagePath(rowIdx));
+            if (!(grdImages[colIdx, rowIdx] is DataGridViewButtonCell)) return;
+
+            string key = ImageMode == ConfigInfo.ImageDataMode.File
+                ? GetImagePath(rowIdx)
+                : grdImages[DatabaseColumnIndexes.IMAGE_ID, rowIdx].Value.ToSafeString();
+
+            List<IImage> similarImages;
+            if (_similarMap != null && _similarMap.ContainsKey(rowIdx))
+            {
+                similarImages = _similarMap[rowIdx];
+            }
+            else
+            {
+                IImage criterion;
+                if (ImageMode == ConfigInfo.ImageDataMode.File)
+                    criterion = new FileImage(key);
+                else
+                    criterion = new DataImage(int.Parse(key));
+
+                similarImages = ImageController.GetSimilarImages(this, new FileImage(key));
+            }
 
             if (!similarImages.Any())
             {
@@ -606,8 +901,8 @@ namespace SO.PictManager.Forms
             else
             {
                 var form = new ThumbnailForm(similarImages);
-                form.Text = string.Format("PictManager - 類似画像検索結果 [{0}]", path);
-                form.StatusBarText = string.Format("[{0}] の類似画像を表示中 - {1}件", path, similarImages.Count);
+                form.Text = string.Format("PictManager - 類似画像検索結果 [{0}]", key);
+                form.StatusBarText = string.Format("[{0}] の類似画像を表示中 - {1}件", key, similarImages.Count);
 
                 form.Show(this);
                 form.Activate();
@@ -619,6 +914,7 @@ namespace SO.PictManager.Forms
         #region イベントハンドラ
 
         #region Form_Shown - フォーム表示時
+
         /// <summary>
         /// フォームが表示された際に実行される処理です。
         /// ファイル一覧グリッドの各列幅を初期化します。
@@ -630,23 +926,29 @@ namespace SO.PictManager.Forms
             try
             {
                 // 列幅設定
-                grdFiles.RowHeadersWidthSizeMode =
+                grdImages.RowHeadersWidthSizeMode =
                         DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders |
                         DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-                grdFiles.Columns[IDX_FILE_NAME].Width =
-                        (grdFiles.Width - grdFiles.RowHeadersWidth -
-                         grdFiles.Columns[IDX_SEL_CHK].Width -
-                         grdFiles.Columns[IDX_REF_BTN].Width -
-                         grdFiles.Columns[IDX_SIMILAR_BTN].Width) / 3;
+
+                if (ImageMode == ConfigInfo.ImageDataMode.File)
+                {
+                    grdImages.Columns[FileColumnIndexes.FILE_NAME].Width =
+                            (grdImages.Width - grdImages.RowHeadersWidth -
+                             grdImages.Columns[FileColumnIndexes.SELECT_CHECK].Width -
+                             grdImages.Columns[FileColumnIndexes.REFERENCE_BUTTON].Width -
+                             grdImages.Columns[FileColumnIndexes.SIMILAR_BUTTON].Width) / 3;
+                }
             }
             catch (Exception ex)
             {
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region Form_FormClosing - ×ボタン押下時
+
         /// <summary>
         /// ×ボタンがクリックされた際に実行される処理です。
         /// 終了確認後、アプリケーションを終了します。
@@ -675,9 +977,11 @@ namespace SO.PictManager.Forms
                 Application.Exit(new CancelEventArgs());
             }
         }
+
         #endregion
 
         #region Form_KeyDown - フォーム上でのキー押下時
+
         /// <summary>
         /// フォーム上でキーが押下された際に実行される処理です。
         /// 特殊なキーが押下された場合に固有の処理を実行します。
@@ -713,27 +1017,28 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
-        #region grdFiles_CellDoubleClick - セルダブルクリック時
+        #region grdImages_CellEnter - セルフォーカス取得時
 
         /// <summary>
-        /// ファイル一覧グリッドのセルがダブルクリックされた際に実行される処理です。
-        /// その行に関連付けられたファイルをViewImageFormで表示します。
+        /// 画像一覧グリッドのセルがフォーカスを取得した際に実行される処理です。
+        /// セルがコンボボックスタイプの場合、ドロップダウンを開きます。
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>
-        private void grdFiles_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        private void grdImages_CellEnter(object sender, DataGridViewCellEventArgs e)
         {
             try
             {
-                if (e.RowIndex > -1 
-                    && !(bool)grdFiles.Rows[e.RowIndex].Tag
-                    && e.ColumnIndex != IDX_REF_BTN
-                    && e.ColumnIndex != IDX_SIMILAR_BTN)
+                if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+
+                //if (ImageMode == ConfigInfo.ImageDataMode.Database
+                //    && e.ColumnIndex == DatabaseColumnIndexes.CATEGORY)
+                if (grdImages.Columns[e.ColumnIndex] is DataGridViewComboBoxColumn)
                 {
-                    // イメージ閲覧
-                    new ViewImageForm(this, new FileImage(GetImagePath(e.RowIndex))).Show(this);
+                    SendKeys.Send("{F4}");
                 }
             }
             catch (Exception ex)
@@ -744,49 +1049,127 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region grdFiles_CellClick - セルクリック時
+        #region grdImages_CellDoubleClick - セルダブルクリック時
 
         /// <summary>
-        /// ファイル一覧グリッドのセルがクリックされた際に実行される処理です。
-        /// ・ファイル名列、ディレクトリパス列がクリックされた場合：変更前後の内容をステータスバーに表示します。
-        /// ・参照ボタン列がクリックされた場合：移動先ディレクトリを選択する為の台ログを表示します。
+        /// 画像一覧グリッドのセルがダブルクリックされた際に実行される処理です。
+        /// その行に関連付けられた画像をViewImageFormで表示します。
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>
-        private void grdFiles_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void grdImages_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (e.RowIndex <= -1 || Convert.ToBoolean(grdImages.Rows[e.RowIndex].Tag))
+                    return;
+
+                // 表示画像情報生成
+                IImage img = null;
+                if (ImageMode == ConfigInfo.ImageDataMode.File)
+                {
+                    if (e.ColumnIndex != FileColumnIndexes.SELECT_CHECK
+                        && e.ColumnIndex != FileColumnIndexes.REFERENCE_BUTTON
+                        && e.ColumnIndex != FileColumnIndexes.SIMILAR_BUTTON)
+                    {
+                        img = new FileImage(GetImagePath(e.RowIndex));
+                    }
+                }
+                else
+                {
+                    if (e.ColumnIndex != DatabaseColumnIndexes.SELECT_CHECK
+                        && e.ColumnIndex != DatabaseColumnIndexes.SIMILAR_BUTTON)
+                    {
+                        img = new DataImage(GetImageId(e.RowIndex));
+                    }
+                }
+
+                // 画像閲覧
+                if (img != null)
+                {
+                    new ViewImageForm(this, img, ImageMode).Show(this);
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
+        }
+
+        #endregion
+
+        #region grdImages_CellClick - セルクリック時
+
+        /// <summary>
+        /// 画像一覧グリッドのセルがクリックされた際に実行される処理です。
+        /// ・ファイル名列、ディレクトリパス列がクリックされた場合：変更前後の内容をステータスバーに表示します。
+        /// ・参照ボタン列がクリックされた場合：移動先ディレクトリを選択する為のダイアログを表示します。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void grdImages_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             try
             {
                 lblStatus.Text = string.Empty;
+
                 if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
 
-                switch (e.ColumnIndex)
+                if (ImageMode == ConfigInfo.ImageDataMode.File)
                 {
-                    case IDX_SEL_CHK:
-                        // チェック切り替え
-                        var delChk = grdFiles[e.ColumnIndex, e.RowIndex] as DataGridViewCheckBoxCell;
-                        delChk.Value = !Convert.ToBoolean(delChk.Value);
-                        grdFiles.CommitEdit(DataGridViewDataErrorContexts.Commit);
-                        break;
+                    switch (e.ColumnIndex)
+                    {
+                        case FileColumnIndexes.SELECT_CHECK:
+                            // チェック切り替え
+                            var delChk = grdImages[e.ColumnIndex, e.RowIndex] as DataGridViewCheckBoxCell;
+                            delChk.Value = !Convert.ToBoolean(delChk.Value);
+                            grdImages.CommitEdit(DataGridViewDataErrorContexts.Commit);
+                            break;
 
-                    case IDX_FILE_NAME:
-                    case IDX_DIR_PATH:
-                        // 変更前後の内容をステータスバーに表示
-                        ShowHistoryByStatusBar(grdFiles[e.ColumnIndex, e.RowIndex]);
-                        break;
+                        case FileColumnIndexes.FILE_NAME:
+                        case FileColumnIndexes.FOLDER_PATH:
+                            // 変更前後の内容をステータスバーに表示
+                            ShowHistoryByStatusBar(grdImages[e.ColumnIndex, e.RowIndex]);
+                            break;
 
-                    case IDX_REF_BTN:
-                        // 変更後ディレクトリ選択
-                        SelectDirectoryForChange(e.RowIndex);
-                        break;
+                        case FileColumnIndexes.REFERENCE_BUTTON:
+                            // 変更後ディレクトリ選択
+                            SelectDirectoryForChange(e.RowIndex);
+                            break;
 
-                    case IDX_SIMILAR_BTN:
-                        // 類似画像表示
-                        ShowSimilarImages(e.RowIndex);
-                        break;
+                        case FileColumnIndexes.SIMILAR_BUTTON:
+                            // 類似画像表示
+                            ShowSimilarImages(e.RowIndex);
+                            break;
 
-                    default:
-                        break;
+                        default:
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (e.ColumnIndex)
+                    {
+                        case DatabaseColumnIndexes.SELECT_CHECK:
+                            // チェック切り替え
+                            var delChk = grdImages[e.ColumnIndex, e.RowIndex] as DataGridViewCheckBoxCell;
+                            delChk.Value = !Convert.ToBoolean(delChk.Value);
+                            grdImages.CommitEdit(DataGridViewDataErrorContexts.Commit);
+                            break;
+
+                        case DatabaseColumnIndexes.CATEGORY:
+                            // 変更前後の内容をステータスバーに表示
+                            ShowHistoryByStatusBar(grdImages[e.ColumnIndex, e.RowIndex]);
+                            break;
+
+                        case DatabaseColumnIndexes.SIMILAR_BUTTON:
+                            // 類似画像表示
+                            ShowSimilarImages(e.RowIndex);
+                            break;
+
+                        default:
+                            break;
+                    }
                 }
             }
             catch (Exception ex)
@@ -797,22 +1180,26 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region grdFiles_CellValidating - セル入力内容検証時
+        #region grdImages_CellValidating - セル入力内容検証時
 
         /// <summary>
-        /// ファイル一覧グリッドのセルの入力内容検証時に実行される処理です。
+        /// 画像一覧グリッドのセルの入力内容検証時に実行される処理です。
         /// IsValidInputの実装内容に基づき、セルの入力内容を検証します。
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>
-        private void grdFiles_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        private void grdImages_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
             try
             {
                 if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
 
-                DataGridViewCell cell = grdFiles[e.ColumnIndex, e.RowIndex];
-                if (!IsValidValue(cell))
+                DataGridViewCell cell = grdImages[e.ColumnIndex, e.RowIndex];
+                bool isValid = ImageMode == ConfigInfo.ImageDataMode.File
+                    ? IsValidValueInFileMode(cell)
+                    : IsValidValueInDatabaseMode(cell);
+
+                if (!isValid)
                 {
                     e.Cancel = true;
                     return;
@@ -826,31 +1213,56 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region grdFiles_CellValueChanged - セル内容変更時
+        #region grdImages_CellValueChanged - セル内容変更時
 
         /// <summary>
-        /// ファイル一覧グリッドのセルの内容が変更された際に実行される処理です。
-        /// 
+        /// 画像一覧グリッドのセルの内容が変更された際に実行される処理です。
+        /// 変更された箇所がわかるように、セルの背景色や列ヘッダーのフォントを変更します。
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>
-        private void grdFiles_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void grdImages_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             try
             {
-                if (e.RowIndex < 0 || e.ColumnIndex < 0 || e.ColumnIndex == IDX_REF_BTN)
+                if (e.RowIndex < 0 || e.ColumnIndex < 0)
                     return;
 
-                DataGridViewCell cell = grdFiles[e.ColumnIndex, e.RowIndex];
-                if (e.ColumnIndex == IDX_SIMILAR_BTN)
+                DataGridViewCell cell = grdImages[e.ColumnIndex, e.RowIndex];
+                if (ImageMode == ConfigInfo.ImageDataMode.File)
                 {
-                    // 類似画像検索ボタンの場合
-                    cell.Style.BackColor = cell.Value.Equals(string.Empty)
-                            ? Color.Gray : Color.White;
-                    return;
+                    if (e.ColumnIndex == FileColumnIndexes.REFERENCE_BUTTON
+                        || e.ColumnIndex == FileColumnIndexes.MD5)
+                    {
+                        return;
+                    }
+
+                    if (e.ColumnIndex == FileColumnIndexes.SIMILAR_BUTTON)
+                    {
+                        // 類似画像検索ボタンの場合
+                        cell.Style.BackColor = cell.Value.Equals(string.Empty)
+                                ? Color.Gray : Color.White;
+                        return;
+                    }
+                }
+                else
+                {
+                    if (e.ColumnIndex == DatabaseColumnIndexes.IMAGE_ID
+                        || e.ColumnIndex == FileColumnIndexes.MD5)
+                    {
+                        return;
+                    }
+
+                    if (e.ColumnIndex == DatabaseColumnIndexes.SIMILAR_BUTTON)
+                    {
+                        // 類似画像検索ボタンの場合
+                        cell.Style.BackColor = cell.Value.Equals(string.Empty)
+                                ? Color.Gray : Color.White;
+                        return;
+                    }
                 }
 
-                DataGridViewRowHeaderCell rhCell = grdFiles.Rows[e.RowIndex].HeaderCell;
+                DataGridViewRowHeaderCell rhCell = grdImages.Rows[e.RowIndex].HeaderCell;
                 if (cell.Value.Equals(cell.Tag))    // セル内容が表示時と同一の場合
                 {
                     // 変更カウントをデクリメント、変更判別色クリア
@@ -858,10 +1270,10 @@ namespace SO.PictManager.Forms
                     {
                         --_changeCnt;
                     }
-                    cell.Style.BackColor = grdFiles.Columns[e.ColumnIndex].DefaultCellStyle.BackColor;
+                    cell.Style.BackColor = grdImages.Columns[e.ColumnIndex].DefaultCellStyle.BackColor;
 
                     // 行の全ての内容が元に戻された場合は行ヘッダの変更マークをクリア
-                    if (!grdFiles.Rows[e.RowIndex].Cells.Cast<DataGridViewCell>().Any(
+                    if (!grdImages.Rows[e.RowIndex].Cells.Cast<DataGridViewCell>().Any(
                             c => c.Style.BackColor == Color.Yellow))
                     {
                         if (rhCell.Style.Font.Bold)
@@ -922,26 +1334,50 @@ namespace SO.PictManager.Forms
 
                 CursorFace.Current = Cursors.WaitCursor;
 
-                // 変更を適用
-                // 編集済セルを含む行を抽出→編集済セルを抽出(行順、列順でソート)
-                Func<DataGridViewCell, bool> IsEdit = x => x.Style.BackColor == Color.Yellow;
-                var editedCells = from r in grdFiles.Rows.Cast<DataGridViewRow>()
-                                  where r.Cells.Cast<DataGridViewCell>().Any(IsEdit)
-                                  select r.Cells.Cast<DataGridViewCell>() into er
-                                  from c in er
-                                  where IsEdit(c)
-                                  orderby c.RowIndex, c.ColumnIndex
-                                  select c;
-
-                // 変更を適用
-                var proceededRows = new List<int>();
-                foreach (var cell in editedCells)
+                if (ImageMode == ConfigInfo.ImageDataMode.File)
                 {
-                    if (!ApplyChange(cell, proceededRows))
+                    // 編集済セルを含む行を抽出→編集済セルを抽出(行順、列順でソート)
+                    var editedCells = from r in grdImages.Rows.Cast<DataGridViewRow>()
+                                      where r.HeaderCell.Style.Font.Bold
+                                      select r.Cells.Cast<DataGridViewCell>() into er
+                                      from c in er
+                                      where c.Style.BackColor == Color.Yellow
+                                      orderby c.RowIndex, c.ColumnIndex
+                                      select c;
+
+                    var proceededRows = new List<int>();
+                    foreach (var cell in editedCells)
                     {
-                        RevertEdit(true);
-                        Console.WriteLine("Apply break.");
-                        return;
+                        // 変更を適用
+                        if (!ApplyChangeInFileMode(cell, proceededRows))
+                        {
+                            RevertEdit(true);
+                            Console.WriteLine("Apply break.");
+                            return;
+                        }
+                    }
+                }
+                else
+                {
+                    // 編集済セルを含む行を抽出
+                    var editedRows = from r in grdImages.Rows.Cast<DataGridViewRow>()
+                                     where r.HeaderCell.Style.Font.Bold
+                                     select r;
+
+                    using (var entity = new PictManagerEntities())
+                    {
+                        // 変更を適用
+                        foreach (var row in editedRows)
+                        {
+                            if (!ApplyChangeInDatabaseMode(row, entity))
+                            {
+                                RevertEdit(true);
+                                Console.WriteLine("Apply break.");
+                                return;
+                            }
+                        }
+
+                        entity.SaveChanges();
                     }
                 }
 
@@ -1013,11 +1449,11 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region menuRefresh_Click - 対象ファイル再取得メニュー押下時
+        #region menuRefresh_Click - 対象画像再取得メニュー押下時
 
         /// <summary>
-        /// 対象ファイル再取得メニューがクリックされた際に実行される処理です。
-        /// 現在の情報で対象ファイルリストを更新します。
+        /// 対象画像再取得メニューがクリックされた際に実行される処理です。
+        /// 現在の情報で対象画像リストを更新します。
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>
@@ -1045,6 +1481,8 @@ namespace SO.PictManager.Forms
         /// <param name="e">イベント引数</param>
         private void menuRenameAll_Click(object sender, EventArgs e)
         {
+            Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.File);
+
             try
             {
                 if (RenameAllFiles() == ResultStatus.OK)
@@ -1059,6 +1497,7 @@ namespace SO.PictManager.Forms
         #endregion
 
         #region menuMoveAll_Click - 一括ファイル移動メニュー押下時
+
         /// <summary>
         /// 一括ファイル移動メニューがクリックされた際に実行される処理です。
         /// 移動先ディレクトリ指定ダイアログを表示し、入力された内容に応じてファイルを一括で移動します。
@@ -1067,6 +1506,8 @@ namespace SO.PictManager.Forms
         /// <param name="e">イベント引数</param>
         private void menuMoveAll_Click(object sender, EventArgs e)
         {
+            Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.File);
+
             try
             {
                 // ファイル移動実行、正常終了時はディレクトリ選択フォームへ戻る
@@ -1078,6 +1519,7 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region menuSearchSimilarAll_Click - 全ての行の類似画像を検索メニュー押下時
@@ -1094,6 +1536,7 @@ namespace SO.PictManager.Forms
             try
             {
                 if (_similarMap != null) _similarMap.Clear();
+
                 _similarMap = new Dictionary<int, List<IImage>>();
 
                 Action<int, bool> actResetSimilarButton = (rowIdx, enable) =>
@@ -1102,33 +1545,46 @@ namespace SO.PictManager.Forms
                         if (enable)
                         {
                             cell = new DataGridViewButtonCell();
-                            grdFiles[IDX_SIMILAR_BTN, rowIdx] = cell;
+                            grdImages[FileColumnIndexes.SIMILAR_BUTTON, rowIdx] = cell;
                             cell.Value = "Similar";
                         }
                         else
                         {
                             cell = new DataGridViewTextBoxCell();
-                            grdFiles[IDX_SIMILAR_BTN, rowIdx] = cell;
+                            grdImages[FileColumnIndexes.SIMILAR_BUTTON, rowIdx] = cell;
                             cell.Value = string.Empty;
                             cell.ReadOnly = true;
                         }
                     };
 
-                foreach (DataGridViewRow row in grdFiles.Rows)
+                foreach (DataGridViewRow row in grdImages.Rows)
                 {
-                    string path = GetImagePath(row.Index);
-                    if (!File.Exists(path))
+                    IImage criterion;
+                    string target;
+                    if (ImageMode == ConfigInfo.ImageDataMode.File)
                     {
-                        // ファイルが既に存在しない場合は押下不可能に設定
-                        //btnCell.ReadOnly = true;
-                        actResetSimilarButton(row.Index, false);
-                        continue;
-                    }
+                        string path = GetImagePath(row.Index);
+                        if (!File.Exists(path))
+                        {
+                            // ファイルが既に存在しない場合は押下不可能に設定
+                            actResetSimilarButton(row.Index, false);
+                            continue;
+                        }
 
-                    string msg = string.Format("[{0}行目]{1} の類似画像を検索中...{2}{2}",
-                            row.Index + 1, path, Environment.NewLine);
+                        criterion = new FileImage(path);
+                        target = "ファイルパス:";
+                    }
+                    else
+                    {
+                        criterion = new DataImage(GetImageId(row.Index));
+                        target = "画像ID:";
+                    }
+                    string msg = string.Format("[{0}行目] {1} {2} の類似画像を検索中...{3}{3}",
+                            row.Index + 1, target, criterion.Key, Environment.NewLine);
+
                     List<IImage> similarImages =
-                            ImageController.GetSimilarImages(this, path, msg);
+                            ImageController.GetSimilarImages(this, criterion, msg);
+
                     if (similarImages.Count == 0)
                     {
                         // 類似画像が存在しない場合は押下不可能に設定
@@ -1152,7 +1608,8 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region menuFilterDuplicated_Click - 重複しているファイルのみを抽出メニュー押下時
+        #region menuFilterDuplicated_Click - 重複している画像のみを抽出メニュー押下時
+
         /// <summary>
         /// 重複しているファイルのみを抽出メニューがクリックされた際に実行される処理です。
         /// 重複が発生しているファイルの行のみを表示し、それ以外の行を非表示に設定します。
@@ -1166,26 +1623,29 @@ namespace SO.PictManager.Forms
                 this.Update();
                 CursorFace.Current = Cursors.WaitCursor;
 
+                int md5ColIdx = ImageMode == ConfigInfo.ImageDataMode.File
+                    ? FileColumnIndexes.MD5 : DatabaseColumnIndexes.MD5;
+
                 using (var progressDlg = new CircleProgressDialog(this))
                 {
                     // プログレス表示開始
                     progressDlg.StartProgress();
 
-                    grdFiles.CellValidating -= grdFiles_CellValidating;
+                    grdImages.CellValidating -= grdImages_CellValidating;
 
-                    var rows = new List<DataGridViewRow>(grdFiles.Rows.Count);
-                    for (int i = grdFiles.RowCount - 1; i >= 0; --i)
+                    var rows = new List<DataGridViewRow>(grdImages.Rows.Count);
+                    for (int i = grdImages.RowCount - 1; i >= 0; --i)
                     {
                         // MD5重複が発生していない行は非表示に設定
-                        if (grdFiles[IDX_MD5, i].Style.BackColor == Color.Bisque)
-                            rows.Add(grdFiles.Rows[i]);
+                        if (grdImages[md5ColIdx, i].Style.BackColor == Color.Bisque)
+                            rows.Add(grdImages.Rows[i]);
                     }
-                    grdFiles.Rows.Clear();
-                    grdFiles.Rows.AddRange(rows.ToArray());
+                    grdImages.Rows.Clear();
+                    grdImages.Rows.AddRange(rows.ToArray());
 
-                    grdFiles.Sort(grdFiles.Columns[IDX_MD5], ListSortDirection.Ascending);
+                    grdImages.Sort(grdImages.Columns[md5ColIdx], ListSortDirection.Ascending);
 
-                    grdFiles.CellValidating += grdFiles_CellValidating;
+                    grdImages.CellValidating += grdImages_CellValidating;
                 }
             }
             catch (Exception ex)
@@ -1197,6 +1657,7 @@ namespace SO.PictManager.Forms
                 CursorFace.Current = Cursors.Default;
             }
         }
+
         #endregion
 
         #region menuViewImage_Click - 選択行の画像を表示メニュー押下時
@@ -1211,17 +1672,27 @@ namespace SO.PictManager.Forms
         {
             try
             {
-                if (grdFiles.SelectedCells.Count > 0)
+                if (grdImages.SelectedCells.Count > 0)
                 {
-                    int rowIndex = grdFiles.SelectedCells[0].RowIndex;
+                    int rowIndex = grdImages.SelectedCells[0].RowIndex;
                     if (rowIndex > -1)
                     {
-                        if ((bool)grdFiles.Rows[rowIndex].Tag)
+                        if (Convert.ToBoolean(grdImages.Rows[rowIndex].Tag))
+                        {
                             // 削除済みの場合はメッセージで警告
                             FormUtilities.ShowMessage("W006");
+                        }
                         else
+                        {
                             // イメージ閲覧
-                            new ViewImageForm(this, new FileImage(GetImagePath(rowIndex))).Show(this);
+                            IImage img;
+                            if (ImageMode == ConfigInfo.ImageDataMode.File)
+                                img = new FileImage(GetImagePath(rowIndex));
+                            else
+                                img = new DataImage(GetImageId(rowIndex));
+
+                            new ViewImageForm(this, img, ImageMode).Show(this);
+                        }
                     }
                 }
             }
@@ -1234,6 +1705,7 @@ namespace SO.PictManager.Forms
         #endregion
 
         #region menuSimilar_Click - 選択行の類似画像を表示メニュー押下時
+
         /// <summary>
         /// 選択行の類似画像を表示メニューがクリックされた際に実行される処理です。
         /// 選択中の行の画像の類似画像を表示します。
@@ -1244,12 +1716,12 @@ namespace SO.PictManager.Forms
         {
             try
             {
-                if (grdFiles.SelectedCells.Count > 0)
+                if (grdImages.SelectedCells.Count > 0)
                 {
-                    int rowIndex = grdFiles.SelectedCells[0].RowIndex;
+                    int rowIndex = grdImages.SelectedCells[0].RowIndex;
                     if (rowIndex > -1)
                     {
-                        if ((bool)grdFiles.Rows[rowIndex].Tag)
+                        if (Convert.ToBoolean(grdImages.Rows[rowIndex].Tag))
                             // 削除済みの場合はメッセージで警告
                             FormUtilities.ShowMessage("W006");
                         else
@@ -1263,6 +1735,7 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #endregion
