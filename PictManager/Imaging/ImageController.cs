@@ -37,7 +37,7 @@ namespace SO.PictManager.Imaging
         /// 基準となる画像と類似した画像を検索し、そのリストを取得します。
         /// </summary>
         /// <param name="form">フォーム</param>
-        /// <param name="criterionKey">基準となる画像</param>
+        /// <param name="criterion">基準となる画像</param>
         /// <returns>類似画像のリスト</returns>
         internal static List<IImage> GetSimilarImages(BaseForm form, IImage criterion)
         {

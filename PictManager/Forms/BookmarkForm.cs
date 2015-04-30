@@ -399,6 +399,7 @@ namespace SO.PictManager.Forms
     }
 
     #region BookmarkEventArgs - ブックマークイベント引数クラス
+
     /// <summary>
     /// ブックマークイベント引数クラス
     /// </summary>
@@ -413,11 +414,12 @@ namespace SO.PictManager.Forms
         #endregion
 
         #region コンストラクタ
+
         /// <summary>
         /// ブックマーク情報の各フィールドの値を指定してインスタンスを作成するコンストラクタです。
         /// </summary>
         /// <param name="id">ブックマークのID</param>
-        /// <param name="orderName">ブックマーク名</param>
+        /// <param name="name">ブックマーク名</param>
         /// <param name="fileNo">ブックマークしたファイルのNo</param>
         /// <param name="timeStamp">ブックマークした日時</param>
         /// <param name="sortOrder">ブックマーク時のファイルソート順</param>
@@ -434,7 +436,9 @@ namespace SO.PictManager.Forms
         {
             Bookmark = info;
         }
+
         #endregion
     }
+
     #endregion
 }

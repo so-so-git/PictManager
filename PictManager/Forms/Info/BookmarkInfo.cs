@@ -26,23 +26,28 @@ namespace SO.PictManager.Forms.Info
 
         /// <summary>ブックマークのIDを取得または設定します。</summary>
         public int Id { get; set; }
+
         /// <summary>ブックマーク名を取得または設定します。</summary>
         public string Name { get; set; }
+
         /// <summary>ブックマークしたファイルのNoを取得または設定します。</summary>
         public int FileNo { get; set; }
+
         /// <summary>ブックマークした日時を取得または設定します。</summary>
         public DateTime TimeStamp { get; set; }
+
         /// <summary>ブックマーク時のファイルソート順を取得または設定します。</summary>
         public ImageSortOrder SortOrder { get; set; }
 
         #endregion
 
         #region コンストラクタ
+
         /// <summary>
         /// 各フィールドの値を指定してインスタンスを作成するコンストラクタです。
         /// </summary>
         /// <param name="id">ブックマークのID</param>
-        /// <param name="orderName">ブックマーク名</param>
+        /// <param name="name">ブックマーク名</param>
         /// <param name="fileNo">ブックマークしたファイルのNo</param>
         /// <param name="timeStamp">ブックマークした日時</param>
         /// <param name="sortOrder">ブックマーク時のファイルソート順</param>
@@ -67,9 +72,11 @@ namespace SO.PictManager.Forms.Info
             TimeStamp = src.TimeStamp;
             SortOrder = src.SortOrder;
         }
+
         #endregion
 
         #region Clone - インスタンスのクローンを作成
+
         /// <summary>
         /// (ICloneable.Clone()を実装します)
         /// インスタンスのクローンを作成します。
@@ -79,6 +86,7 @@ namespace SO.PictManager.Forms.Info
         {
             return new BookmarkInfo(this);
         }
+
         #endregion
     }
 }

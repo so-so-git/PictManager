@@ -737,11 +737,22 @@ namespace SO.PictManager.Forms
         /// <param name="e">イベント引数</param>
         protected virtual void btnDelete_Click(object sender, EventArgs e)
         {
-            // PictureBoxリソース解放
-            picViewer.Image.Dispose();
+            try
+            {
+                if (FormUtilities.ShowMessage("Q002") == DialogResult.No) return;
 
-            // 表示中の画像を削除
-            ImageData.Delete();
+                // PictureBoxリソース解放
+                picViewer.Image.Dispose();
+
+                // 表示中の画像を削除
+                ImageData.Delete();
+
+                CloseForm();
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
         }
 
         #endregion

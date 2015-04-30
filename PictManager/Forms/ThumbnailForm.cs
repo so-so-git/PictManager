@@ -675,10 +675,7 @@ namespace SO.PictManager.Forms
                 // 子フォーム側でファイルが削除された場合
                 if (clicked.ImageData.IsDeleted)
                 {
-                    // 画像破棄、名称ラベル設定、選択マーク解除
-                    if (clicked.PictureBox != null)
-                        clicked.PictureBox.Dispose();
-
+                    // 名称ラベル設定、選択マーク解除
                     clicked.ImageKey = ThumbnailUnit.DELETED_NAME_LABEL;
                     clicked.BorderStyle = BorderStyle.None;
                 }
