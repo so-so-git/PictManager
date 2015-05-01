@@ -21,22 +21,22 @@ namespace SO.PictManager.Common
         #region プロパティ
 
         /// <summary>
-        /// システム設定情報を取得・設定します。
+        /// システム設定情報を取得または設定します。
         /// </summary>
         internal static ConfigInfo Config { get; set; }
 
         /// <summary>
-        /// 状態情報を取得・設定します。
+        /// 状態情報を取得または設定します。
         /// </summary>
         internal static StateInfo State { get; set; }
 
         /// <summary>
-        /// ファイルリネーム情報を取得・設定します。
+        /// ファイルリネーム情報を取得または設定します。
         /// </summary>
         internal static RenameInfo Rename { get; set; }
 
         /// <summary>
-        /// アプリケーションの共通ロガーを取得・設定します。
+        /// アプリケーションの共通ロガーを取得または設定します。
         /// </summary>
         internal static Logger Logger { get; set; }
 

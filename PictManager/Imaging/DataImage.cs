@@ -33,7 +33,7 @@ namespace SO.PictManager.Imaging
         #region プロパティ
 
         /// <summary>
-        /// 画像キー(画像ID)を取得・設定します。
+        /// 画像キー(画像ID)を取得または設定します。
         /// </summary>
         public string Key
         {
@@ -58,7 +58,7 @@ namespace SO.PictManager.Imaging
         }
 
         /// <summary>
-        /// 画像が論理削除されているかのフラグを取得・設定します。
+        /// 画像が論理削除されているかのフラグを取得または設定します。
         /// </summary>
         public bool IsDeleted
         {
@@ -67,7 +67,7 @@ namespace SO.PictManager.Imaging
         }
 
         /// <summary>
-        /// カテゴリーIDを取得・設定します。
+        /// カテゴリーIDを取得または設定します。
         /// </summary>
         public int CategoryId
         {
@@ -76,7 +76,7 @@ namespace SO.PictManager.Imaging
         }
 
         /// <summary>
-        /// 画像の説明を取得・設定します。
+        /// 画像の説明を取得または設定します。
         /// </summary>
         public string Description
         {

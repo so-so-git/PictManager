@@ -46,43 +46,43 @@ namespace SO.PictManager.Forms.Info
 
 		#region プロパティ
 
-        /// <summary>ソート順を取得・設定します。</summary>
+        /// <summary>ソート順を取得または設定します。</summary>
         public ImageSortOrder? SortOrder { get; set; }
 
-        /// <summary>親ディレクトリ名をファイル名に含めるかを取得・設定します。</summary>
+        /// <summary>親ディレクトリ名をファイル名に含めるかを取得または設定します。</summary>
 		public bool IsAddParentDirName { get; set; }
 
-        /// <summary>親ディレクトリ名の区切り文字を取得・設定します。</summary>
+        /// <summary>親ディレクトリ名の区切り文字を取得または設定します。</summary>
 		public string DirDelimiter { get; set; }
 
-        /// <summary>ファイル順をシャッフルするかを取得・設定します。</summary>
+        /// <summary>ファイル順をシャッフルするかを取得または設定します。</summary>
 		public bool IsShuffle { get; set; }
 
-        /// <summary>元ファイル名を変更後のファイル名に含めるかを取得・設定します。</summary>
+        /// <summary>元ファイル名を変更後のファイル名に含めるかを取得または設定します。</summary>
 		public bool IsReserveOriginalName { get; set; }
 
-        /// <summary>通り番号をファイル名に含めるかを取得・設定します。</summary>
+        /// <summary>通り番号をファイル名に含めるかを取得または設定します。</summary>
 		public bool IsAddSequential { get; set; }
 
-        /// <summary>通し番号の間隔を取得・設定します。</summary>
+        /// <summary>通し番号の間隔を取得または設定します。</summary>
 		public int? IncrementStep { get; set; }
 
-        /// <summary>通し番号と元ファイル名の区切り文字を取得・設定します。</summary>
+        /// <summary>通し番号と元ファイル名の区切り文字を取得または設定します。</summary>
 		public string SeqDelimiter { get; set; }
 
-        /// <summary>ファイル名に付加する接頭文字列を取得・設定します。</summary>
+        /// <summary>ファイル名に付加する接頭文字列を取得または設定します。</summary>
 		public string Prefix { get; set; }
 
-        /// <summary>ファイル名に付加する接尾文字列を取得・設定します。</summary>
+        /// <summary>ファイル名に付加する接尾文字列を取得または設定します。</summary>
 		public string Suffix { get; set; }
 
-        /// <summary>置換前文字列を取得・設定します。</summary>
+        /// <summary>置換前文字列を取得または設定します。</summary>
 		public string ReplaceBefore { get; set; }
 
-        /// <summary>置換後文字列を取得・設定します。</summary>
+        /// <summary>置換後文字列を取得または設定します。</summary>
 		public string ReplaceAfter { get; set; }
 
-        /// <summary>元ファイル名の挿入位置を取得・設定します。</summary>
+        /// <summary>元ファイル名の挿入位置を取得または設定します。</summary>
 		public EnumOrignalPosition OriginalPosition { get; set; }
 
 		#endregion

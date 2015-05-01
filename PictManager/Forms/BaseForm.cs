@@ -53,12 +53,12 @@ namespace SO.PictManager.Forms
         #region プロパティ
 
         /// <summary>
-        /// 画像モードを取得・設定します。
+        /// 画像モードを取得または設定します。
         /// </summary>
         internal ConfigInfo.ImageDataMode ImageMode { get; set; }
 
         /// <summary>
-        /// 表示対象ディレクトリのパスを取得・設定します。
+        /// 表示対象ディレクトリのパスを取得または設定します。
         /// </summary>
         [Browsable(false)]
         protected internal DirectoryInfo TargetDirectory
@@ -68,7 +68,7 @@ namespace SO.PictManager.Forms
         }
 
         /// <summary>
-        /// 表示対象カテゴリーを取得・設定します。
+        /// 表示対象カテゴリーを取得または設定します。
         /// </summary>
         [Browsable(false)]
         protected internal MstCategory TargetCategory
@@ -128,7 +128,7 @@ namespace SO.PictManager.Forms
         }
 
         /// <summary>
-        /// サブフォルダ包含フラグを取得・設定します。
+        /// サブフォルダ包含フラグを取得または設定します。
         /// </summary>
         protected internal bool IncludeSubFlg
         {

@@ -101,7 +101,7 @@ namespace SO.PictManager.Forms
         #region プロパティ
 
         /// <summary>
-        /// 画像情報を取得・設定します。
+        /// 画像情報を取得または設定します。
         /// </summary>
         protected IImage ImageData { get; set; }
 

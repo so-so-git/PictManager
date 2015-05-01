@@ -13,7 +13,7 @@ namespace SO.PictManager.Imaging
     public interface IImage
     {
         /// <summary>
-        /// 画像キーを取得・設定します。
+        /// 画像キーを取得または設定します。
         /// </summary>
         string Key { get; set; }
 
@@ -28,7 +28,7 @@ namespace SO.PictManager.Imaging
         long DataSize { get; }
 
         /// <summary>
-        /// 画像が削除されているかのフラグを取得・設定します。
+        /// 画像が削除されているかのフラグを取得または設定します。
         /// </summary>
         bool IsDeleted { get; set; }
 

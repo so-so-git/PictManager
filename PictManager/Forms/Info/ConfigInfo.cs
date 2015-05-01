@@ -41,16 +41,16 @@ namespace SO.PictManager.Forms.Info
         {
             #region プロパティ
 
-            /// <summary>対象ファイルの拡張子リストを取得・設定します。</summary>
+            /// <summary>対象ファイルの拡張子リストを取得または設定します。</summary>
             public List<string> TargetExtensions { get; set; }
 
-            /// <summary>サブディレクトリを含むかのフラグを取得・設定します。</summary>
+            /// <summary>サブディレクトリを含むかのフラグを取得または設定します。</summary>
             public bool IsIncludeSubDirectory { get; set; }
 
-            /// <summary>終了時に確認をするかのフラグを取得・設定します。</summary>
+            /// <summary>終了時に確認をするかのフラグを取得または設定します。</summary>
             public bool IsConfirmQuit { get; set; }
 
-            /// <summary>読込画像データモードを取得・設定します。</summary>
+            /// <summary>読込画像データモードを取得または設定します。</summary>
             public ImageDataMode Mode { get; set; }
 
             #endregion
@@ -106,7 +106,7 @@ namespace SO.PictManager.Forms.Info
         {
             #region プロパティ
 
-            /// <summary>ブックマークウィンドウを常に全面に表示するかのフラグを取得・設定します。</summary>
+            /// <summary>ブックマークウィンドウを常に全面に表示するかのフラグを取得または設定します。</summary>
             public bool IsBookmarkTopMost { get; set; }
 
             #endregion
@@ -241,16 +241,16 @@ namespace SO.PictManager.Forms.Info
 
         #region プロパティ
 
-        /// <summary>共通システム設定を取得・設定します。</summary>
+        /// <summary>共通システム設定を取得または設定します。</summary>
         public CommonConfig CommonInfo { get; set; }
 
-        /// <summary>スライド表示のシステム設定を取得・設定します。</summary>
+        /// <summary>スライド表示のシステム設定を取得または設定します。</summary>
         public SlideConfig SlideInfo { get; set; }
 
-        /// <summary>リスト表示のシステム設定を取得・設定します。</summary>
+        /// <summary>リスト表示のシステム設定を取得または設定します。</summary>
         public ListConfig ListInfo { get; set; }
 
-        /// <summary>サムネイル表示のシステム設定を取得・設定します。</summary>
+        /// <summary>サムネイル表示のシステム設定を取得または設定します。</summary>
         public ThumbnailConfig ThumbnailInfo { get; set; }
 
         #endregion

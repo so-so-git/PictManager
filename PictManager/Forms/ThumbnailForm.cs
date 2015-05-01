@@ -53,7 +53,7 @@ namespace SO.PictManager.Forms
 
         #region プロパティ
 
-        #region StatusBarText - ステータスバーのテキスト取得・設定
+        #region StatusBarText - ステータスバーのテキスト取得または設定
         /// <summary>
         /// ステータスバーのテキストを取得または設定します。
         /// </summary>

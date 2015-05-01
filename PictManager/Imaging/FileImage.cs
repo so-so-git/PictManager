@@ -29,7 +29,7 @@ namespace SO.PictManager.Imaging
         #region プロパティ
 
         /// <summary>
-        /// 画像キー(画像ファイルパス)を取得・設定します。
+        /// 画像キー(画像ファイルパス)を取得または設定します。
         /// </summary>
         public string Key
         {
@@ -58,7 +58,7 @@ namespace SO.PictManager.Imaging
         }
 
         /// <summary>
-        /// 画像が削除されているかのフラグを取得・設定します。
+        /// 画像が削除されているかのフラグを取得または設定します。
         /// </summary>
         public bool IsDeleted
         {
