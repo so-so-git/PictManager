@@ -15,7 +15,7 @@
     <RootNamespace>Documentation</RootNamespace>
     <Name>Documentation</Name>
     <!-- SHFB properties -->
-    <OutputPath>D:\VSProjects\Projects\PictManager\Doc\</OutputPath>
+    <OutputPath>.\</OutputPath>
     <HtmlHelpName>PictManager</HtmlHelpName>
     <Language>ja-JP</Language>
     <BuildLogFile>Build.log</BuildLogFile>
@@ -53,7 +53,7 @@
     <SyntaxFilters>Standard</SyntaxFilters>
     <SdkLinkTarget>Blank</SdkLinkTarget>
     <RootNamespaceContainer>False</RootNamespaceContainer>
-    <PresentationStyle>VS2013</PresentationStyle>
+    <PresentationStyle>VS2010</PresentationStyle>
     <Preliminary>False</Preliminary>
     <NamingMethod>Guid</NamingMethod>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
