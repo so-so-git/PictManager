@@ -6,3 +6,4 @@ Uploads/*.*
 *.vbproj.user
 *.log
 PictManagerSetup/PictManagerSetup/Express/
+PictManagerDatabase/PictManagerDatabase.sqlproj.user
