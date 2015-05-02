@@ -30,19 +30,19 @@ namespace SO.PictManager.Forms
         {
             InitializeComponent();
 
+            using (var entity = new PictManagerEntities())
+            {
+                // カテゴリ読込
+                RefreshCategoriesComboBox(entity);
+
+                // 物理削除済み画像数取得
+                var deletedCount = entity.TblImages.Where(i => i.DeleteFlag).Count();
+                lblDeletedCount.Text = deletedCount.ToString("#,0");
+                btnApplyDelete.Enabled = deletedCount > 0;
+            }
+
             if (Utilities.Config.CommonInfo.TargetExtensions.Any())
             {
-                using (var entity = new PictManagerEntities())
-                {
-                    // カテゴリ読込
-                    RefreshCategoriesComboBox(entity);
-
-                    // 物理削除済み画像数取得
-                    var deletedCount = entity.TblImages.Where(i => i.DeleteFlag).Count();
-                    lblDeletedCount.Text = deletedCount.ToString("#,0");
-                    btnApplyDelete.Enabled = deletedCount > 0;
-                }
-
                 // 対象ファイルフィルタ作成
                 var filterPattern = new StringBuilder();
                 foreach (var ext in Utilities.Config.CommonInfo.TargetExtensions)
