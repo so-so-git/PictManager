@@ -108,24 +108,24 @@ namespace SO.PictManager.Forms
         /// <param name="filePath">インポートするファイルのパス</param>
         private void ImportFileToDatabase(string filePath)
         {
-            var dto = new TblImage();
+            var image = new TblImage();
 
             // 画像データ取得
             using (var img = Image.FromFile(filePath))
             {
-                dto.ImageData = new ImageConverter().ConvertTo(img, typeof(byte[])) as byte[];
+                image.ImageData = new ImageConverter().ConvertTo(img, typeof(byte[])) as byte[];
             }
 
             // その他のカラム
-            dto.CategoryId = (cmbImportCategory.SelectedValue as MstCategory).CategoryId;
+            image.CategoryId = (cmbImportCategory.SelectedValue as MstCategory).CategoryId;
 
             DateTime now = DateTime.Now;
-            dto.InsertedDateTime = now;
-            dto.UpdatedDateTime = now;
+            image.InsertedDateTime = now;
+            image.UpdatedDateTime = now;
 
             using (var entity = new PictManagerEntities())
             {
-                entity.TblImages.Add(dto);
+                entity.TblImages.Add(image);
                 entity.SaveChanges();
             }
         }

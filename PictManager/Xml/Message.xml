@@ -98,6 +98,9 @@
 	<msg id="Q016" caption="画像削除確認" buttons="YesNo" icon="Question">
 		選択されている画像を削除してよろしいですか？
 	</msg>
+  <msg id="Q017" caption="フォルダ再作成確認" buttons="YesNo" icon="Question">
+    自動取込フォルダは既に作成されています。\n最新の情報で再作成しますか？
+  </msg>
 
   <!-- ワーニングメッセージ -->
 	<msg id="W000" caption="未入力エラー" buttons="OK" icon="Warning">
@@ -204,10 +207,10 @@
 	<msg id="E005" caption="表示対象未指定" buttons="OK" icon="Error">
 		表示対象の画像が指定されていません。
 	</msg>
-	<msg id="E006" caption="表示対象フォルダ無し" buttons="OK" icon="Error">
-		表示対象のフォルダが存在しません。
-	</msg>
-	<msg id="E007" caption="ファイルオープンエラー" buttons="OK" icon="Error">
+	<msg id="E006" caption="対象フォルダ無し" buttons="OK" icon="Error">
+    {0}対象のフォルダが存在しません。
+  </msg>
+	<msg id="E007" caption="オープンエラー" buttons="OK" icon="Error">
 		{0} を開けません。
 	</msg>
 	<msg id="E008" caption="フォルダ監視エラー" buttons="OK" icon="Error">

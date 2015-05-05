@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -29,12 +31,24 @@ namespace SO.PictManager.Forms
         /// <summary>フォームタイトル書式</summary>
         private const string FORM_TITLE_FORMAT = "PictManager - 対象{0}指定";
 
+        /// <summary>カテゴリーIDとカテゴリー名の区切り文字</summary>
+        private const char CATEGORY_SEPARATOR = '_';
+
         #endregion
 
         #region インスタンス変数
 
         /// <summary>ファイル監視で最後に作成されたファイル名(5秒保持)</summary>
         private string _lastRenameByWatch;
+
+        /// <summary>パネル間の空白領域</summary>
+        private readonly int _spacer;
+
+        /// <summary>ファイルモード時の画面サイズ</summary>
+        private readonly Size _formSizeInFileMode;
+
+        /// <summary>データベースモード時の画面サイズ</summary>
+        private readonly Size _formSizeInDatabaseMode;
 
         #endregion
 
@@ -47,6 +61,11 @@ namespace SO.PictManager.Forms
         {
             // コンポーネント初期化
             InitializeComponent();
+
+            // 画面サイズセット
+            _spacer = 6;
+            _formSizeInDatabaseMode = this.Size;
+            _formSizeInFileMode = new Size(this.Width, this.Height - (pnlForDatabase.Height + _spacer));
 
             // フォーム状態設定
             ChangeImageMode();
@@ -65,39 +84,57 @@ namespace SO.PictManager.Forms
             {
                 // 表示状態切替
                 this.Text = string.Format(FORM_TITLE_FORMAT, "ディレクトリ");
-                txtTargetDirectory.Visible = btnRef.Visible = true;
-                cmbCategories.Visible = btnMaintenance.Enabled = false;
+                pnlForDatabase.Visible = false;
+                btnOpenUrlDrop.Visible = false;
+                pnlMain.Location = pnlForDatabase.Location;
+                this.Size = _formSizeInFileMode;
 
                 // 保存モードボタン設定変更
                 btnSaveMode.Text = "監視";
-                btnSaveMode.Click -= btnOpenUrlDrop_Click;
-                btnSaveMode.Click += btnDirectoryWatch_Click;
+                btnSaveMode.Click -= btnAutoImport_Click;
+                btnSaveMode.Click += btnFolderWatch_Click;
+
+                fileWatcher.Created -= fileWatcherInDatabaseMode_Created;
+                fileWatcher.Created += fileWatcherInFileMode_Created;
 
                 // 状態情報読込
                 StateInfo stateInfo = Utilities.State;
-                if (!string.IsNullOrEmpty(stateInfo.LastPath))
+                if (!string.IsNullOrEmpty(stateInfo.LastViewPath))
                 {
-                    txtTargetDirectory.Text = stateInfo.LastPath;
-                    dlgRef.SelectedPath = stateInfo.LastPath;
+                    txtTargetFolder.Text = stateInfo.LastViewPath;
+                    dlgFolderRef.SelectedPath = stateInfo.LastViewPath;
                 }
             }
             else
             {
                 // 表示状態切替
                 this.Text = string.Format(FORM_TITLE_FORMAT, "カテゴリ");
-                txtTargetDirectory.Visible = btnRef.Visible = false;
-                cmbCategories.Visible = btnMaintenance.Enabled = true;
+                pnlMain.Location = new Point(pnlMain.Location.X, pnlForDatabase.Location.Y + pnlForDatabase.Height + _spacer);
+                this.Size = _formSizeInDatabaseMode;
+                pnlForDatabase.Visible = true;
+                btnOpenUrlDrop.Visible = true;
 
                 // 保存モードボタン設定変更
-                btnSaveMode.Text = "URL受付";
-                btnSaveMode.Click -= btnDirectoryWatch_Click;
-                btnSaveMode.Click += btnOpenUrlDrop_Click;
+                btnSaveMode.Text = "自動取込";
+                btnSaveMode.Click -= btnFolderWatch_Click;
+                btnSaveMode.Click += btnAutoImport_Click;
+
+                fileWatcher.Created -= fileWatcherInFileMode_Created;
+                fileWatcher.Created += fileWatcherInDatabaseMode_Created;
 
                 // カテゴリ読込
                 using (var entity = new PictManagerEntities())
                 {
-                    cmbCategories.DataSource = entity.MstCategories.OrderBy(c => c.CategoryName).ToList();
-                    cmbCategories.DisplayMember = "CategoryName";
+                    cmbCategory.DataSource = entity.MstCategories.OrderBy(c => c.CategoryName).ToList();
+                    cmbCategory.DisplayMember = "CategoryName";
+                }
+
+                // 状態情報読込
+                StateInfo stateInfo = Utilities.State;
+                if (!string.IsNullOrEmpty(stateInfo.LastAutoImportPath))
+                {
+                    txtTargetFolder.Text = stateInfo.LastAutoImportPath;
+                    dlgFolderRef.SelectedPath = stateInfo.LastAutoImportPath;
                 }
             }
 
@@ -106,33 +143,37 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region ValidateTargetDirectory - 対象ディレクトリパスの有効性チェック
+        #region ValidateFolderForFileMode - 対象フォルダパスの有効性チェック(ファイルモード用)
 
         /// <summary>
-        /// 対象ディレクトリパス指定テキストボックスに入力されたパスの有効性をチェックし、
+        /// 対象フォルダパス指定テキストボックスに入力されたパスの有効性をチェックし、
         /// 有効なパスであれば状態情報に保存します。
+        /// (ファイルモード用)
         /// </summary>
+        /// <param name="isFolderWatch">フォルダ監視時の処理かどうかを示すフラグ</param>
         /// <returns>true:有効なパス / false:無効なパス</returns>
-        private bool ValidateTargetDirectory()
+        private bool ValidateFolderForFileMode(bool isFolderWatch)
         {
-            System.Diagnostics.Debug.Assert(Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.File);
+            Debug.Assert(Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.File);
 
-            // 対象ディレクトリ入力チェック
-            if (txtTargetDirectory.Text.Trim() == string.Empty)
+            string action = isFolderWatch ? "監視" : "閲覧";
+
+            // 対象フォルダ入力チェック
+            if (string.IsNullOrEmpty(txtTargetFolder.Text.Trim()))
             {
-                FormUtilities.ShowMessage("E007", "対象ディレクトリ");
+                FormUtilities.ShowMessage("E007", string.Format("{0}対象フォルダ", action));
                 return false;
             }
 
-            // 対象ディレクトリ存在チェック
-            if (!Directory.Exists(txtTargetDirectory.Text))
+            // 対象フォルダ存在チェック
+            if (!Directory.Exists(txtTargetFolder.Text))
             {
-                FormUtilities.ShowMessage("E006");
+                FormUtilities.ShowMessage("E006", action);
                 return false;
             }
 
             // 状態情報更新
-            Utilities.State.LastPath = txtTargetDirectory.Text;
+            Utilities.State.LastViewPath = txtTargetFolder.Text;
             Utilities.SaveStateInfo();
 
             return true;
@@ -140,12 +181,112 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region EndWatch - フォルダ監視終了
+        #region ValidateFolderForDatabaseMode - 対象フォルダパスの有効性チェック(データベースモード用)
+
+        /// <summary>
+        /// 対象フォルダパス指定テキストボックスに入力されたパスの有効性をチェックし、
+        /// 有効なパスであれば状態情報に保存します。
+        /// (データベースモード用)
+        /// </summary>
+        /// <param name="isCreate">自動取込フォルダを作成するかのフラグ</param>
+        /// <returns>true:有効なパス / false:無効なパス</returns>
+        private bool ValidateFolderForDatabaseMode(out bool isCreate)
+        {
+            Debug.Assert(Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.Database);
+
+            isCreate = false;
+
+            // 対象フォルダ入力チェック
+            if (string.IsNullOrEmpty(txtTargetFolder.Text.Trim()))
+            {
+                FormUtilities.ShowMessage("E007", string.Format("{0}対象フォルダ", "自動取込"));
+                return false;
+            }
+
+            // 対象フォルダ存在チェック
+            if (Directory.Exists(txtTargetFolder.Text))
+            {
+                if (FormUtilities.ShowMessage("Q017") == DialogResult.Yes)
+                {
+                    isCreate = true;
+                }
+            }
+            else
+            {
+                isCreate = true;
+            }
+
+            // 状態情報更新
+            Utilities.State.LastAutoImportPath = txtTargetFolder.Text;
+            Utilities.SaveStateInfo();
+
+            return true;
+        }
+
+        #endregion
+
+        #region CreateAutoImportFolder - 自動取込フォルダ作成
+
+        /// <summary>
+        /// 自動取込フォルダを作成します。
+        /// 既に同名フォルダが存在する場合、配下のフォルダとファイルも含め削除された後に再作成されます。
+        /// </summary>
+        private void CreateAutoImportFolder()
+        {
+            Debug.Assert(Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.Database);
+
+            string path = txtTargetFolder.Text;
+            if (Directory.Exists(path))
+            {
+                Directory.Delete(path, true);
+            }
+
+            Directory.CreateDirectory(path);
+
+            using (var entity = new PictManagerEntities())
+            {
+                foreach (var category in entity.MstCategories)
+                {
+                    string childDirName = Path.Combine(
+                        path, category.CategoryId.ToString() + CATEGORY_SEPARATOR + category.CategoryName);
+
+                    Directory.CreateDirectory(childDirName);
+                }
+            }
+        }
+
+        #endregion
+
+        #region BeginFolderWatch - フォルダ管理開始
+
+        /// <summary>
+        /// フォルダ監視を開始し、ウィンドウを最小化します。
+        /// </summary>
+        /// <param name="path">監視対象のフォルダパス</param>
+        /// <param name="iconText">タスクトレイアイコンの表示文字列</param>
+        /// <param name="baloonText">タスクトレイアイコンのバルーンチップの文字列</param>
+        private void BeginFolderWatch(string path, string iconText, string baloonText)
+        {
+            fileWatcher.Path = path;
+            fileWatcher.EnableRaisingEvents = true;
+
+            WindowState = FormWindowState.Minimized;
+
+            notifyIcon.Visible = true;
+            notifyIcon.Text = iconText;
+            notifyIcon.ShowBalloonTip(3000, baloonText, fileWatcher.Path, ToolTipIcon.Info);
+
+            ShowInTaskbar = false;
+        }
+
+        #endregion
+
+        #region EndFolderWatch - フォルダ監視終了
 
         /// <summary>
         /// フォルダ監視を終了し、ウィンドウを元の状態に戻します。
         /// </summary>
-        private void EndWatch()
+        private void EndFolderWatch()
         {
             fileWatcher.EnableRaisingEvents = false;
             notifyIcon.Visible = false;
@@ -156,24 +297,30 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region btnRef_Click - 参照ボタン押下時
+        //*** イベントハンドラ ***
+
+        #region btnFolderBrowse_Click - フォルダー参照ボタン押下時
 
         /// <summary>
-        /// 参照ボタンをクリックした際に実行される処理です。
-        /// 対象ディレクトリ選択ダイアログを表示します。
+        /// フォルダー参照ボタンをクリックした際に実行される処理です。
+        /// 対象フォルダー選択ダイアログを表示します。
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>
-        private void btnRef_Click(object sender, EventArgs e)
+        private void btnFolderBrowse_Click(object sender, EventArgs e)
         {
             try
             {
-                if (Directory.Exists(txtTargetDirectory.Text))
-                    dlgRef.SelectedPath = txtTargetDirectory.Text;
+                if (Directory.Exists(txtTargetFolder.Text))
+                {
+                    dlgFolderRef.SelectedPath = txtTargetFolder.Text;
+                }
 
-                // 対象ディレクトリを取得
-                if (dlgRef.ShowDialog(this) == DialogResult.OK)
-                    txtTargetDirectory.Text = dlgRef.SelectedPath;
+                // 対象フォルダーを取得
+                if (dlgFolderRef.ShowDialog(this) == DialogResult.OK)
+                {
+                    txtTargetFolder.Text = dlgFolderRef.SelectedPath;
+                }
             }
             catch (Exception ex)
             {
@@ -201,8 +348,8 @@ namespace SO.PictManager.Forms
                     // カテゴリ読込
                     using (var entity = new PictManagerEntities())
                     {
-                        cmbCategories.DataSource = entity.MstCategories.OrderBy(c => c.CategoryName).ToList();
-                        cmbCategories.DisplayMember = "CategoryName";
+                        cmbCategory.DataSource = entity.MstCategories.OrderBy(c => c.CategoryName).ToList();
+                        cmbCategory.DisplayMember = "CategoryName";
                     }
 
                     this.ShowInTaskbar = true;
@@ -246,32 +393,62 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region btnDirectoryWatch_Click - ディレクトリ監視ボタン押下時
+        #region btnFolderWatch_Click - フォルダ監視ボタン押下時
 
         /// <summary>
-        /// ディレクトリ監視ボタンを押下した際に実行される処理です。
+        /// フォルダ監視ボタンを押下した際に実行される処理です。
         /// ウィンドウをタスクトレイに格納し、指定フォルダの監視を開始します。
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>
-        private void btnDirectoryWatch_Click(object sender, EventArgs e)
+        private void btnFolderWatch_Click(object sender, EventArgs e)
         {
             try
             {
                 // 対象チェック、状態更新
-                if (!ValidateTargetDirectory()) return;
+                if (!ValidateFolderForFileMode(true)) return;
 
-                fileWatcher.Path = txtTargetDirectory.Text;
-                fileWatcher.EnableRaisingEvents = true;
+                // フォルダ監視開始
+                BeginFolderWatch(
+                    txtTargetFolder.Text,
+                    "フォルダ監視中 - " + Environment.NewLine + fileWatcher.Path,
+                    "フォルダ監視開始");
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
+        }
 
-                WindowState = FormWindowState.Minimized;
+        #endregion
 
-                notifyIcon.Visible = true;
-                notifyIcon.Text = "ディレクトリ監視中 - " + Environment.NewLine + fileWatcher.Path;
-                notifyIcon.ShowBalloonTip(3000, "ディレクトリ監視開始",
-                    fileWatcher.Path, ToolTipIcon.Info);
+        #region btnAutoImport_Click - 自動取込ボタン押下時
 
-                ShowInTaskbar = false;
+        /// <summary>
+        /// 自動取込ボタンを押下した際に実行される処理です。
+        /// ウィンドウをタスクトレイに格納し、指定フォルダの監視を開始します。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void btnAutoImport_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // 対象チェック、状態更新
+                bool isCreate;
+                if (!ValidateFolderForDatabaseMode(out isCreate)) return;
+
+                // 自動取込フォルダ作成
+                if (isCreate)
+                {
+                    CreateAutoImportFolder();
+                }
+
+                // 自動取込開始
+                BeginFolderWatch(
+                    txtTargetFolder.Text,
+                    "自動取込中 - " + Environment.NewLine + fileWatcher.Path,
+                    "自動取込開始");
             }
             catch (Exception ex)
             {
@@ -331,20 +508,20 @@ namespace SO.PictManager.Forms
                 if (Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.File)
                 {
                     // 対象チェック、状態更新
-                    if (!ValidateTargetDirectory()) return;
+                    if (!ValidateFolderForFileMode(false)) return;
 
                     // 対象ディレクトリの内容を展開
                     bool includeSub = Utilities.Config.CommonInfo.IsIncludeSubDirectory;
                     if (rdoSlide.Checked)
-                        frmViewer = new SlideForm(txtTargetDirectory.Text, includeSub);       // スライドショー表示
+                        frmViewer = new SlideForm(txtTargetFolder.Text, includeSub);       // スライドショー表示
                     else if (rdoList.Checked)
-                        frmViewer = new ListForm(txtTargetDirectory.Text, includeSub);        // 一覧表示
+                        frmViewer = new ListForm(txtTargetFolder.Text, includeSub);        // 一覧表示
                     else
-                        frmViewer = new ThumbnailForm(txtTargetDirectory.Text, includeSub);   // サムネール表示
+                        frmViewer = new ThumbnailForm(txtTargetFolder.Text, includeSub);   // サムネール表示
                 }
                 else
                 {
-                    var category = cmbCategories.SelectedItem as MstCategory;
+                    var category = cmbCategory.SelectedItem as MstCategory;
                     if (rdoSlide.Checked)
                         frmViewer = new SlideForm(category);        // スライドショー表示
                     else if (rdoList.Checked)
@@ -376,10 +553,22 @@ namespace SO.PictManager.Forms
         {
             try
             {
-                // 終了確認を行う設定の場合かつディレクトリ指定がある場合(入力中含む)、終了確認を行う
+                // 終了確認を行う設定の場合かつフォルダ指定がある場合(入力中含む)、終了確認を行う
                 if (Utilities.Config.CommonInfo.IsConfirmQuit
-                        && txtTargetDirectory.Text.Trim() != string.Empty)
-                    if (FormUtilities.ShowMessage("Q000") == DialogResult.No) return;
+                    && txtTargetFolder.Text.Trim() != string.Empty)
+                {
+                    if (FormUtilities.ShowMessage("Q000") == DialogResult.No)
+                    {
+                        return;
+                    }
+                }
+
+                // 自動取込フォルダが残っている場合は削除
+                if (Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.Database
+                    && Directory.Exists(Utilities.State.LastAutoImportPath))
+                {
+                    Directory.Delete(Utilities.State.LastAutoImportPath, true);
+                }
 
                 Dispose();
             }
@@ -406,9 +595,9 @@ namespace SO.PictManager.Forms
                 // 発生元が自フォームで無い場合はそのまま終了
                 if (sender is StartForm)
                 {
-                    // 終了確認を行う設定の場合かつディレクトリ指定がある場合(入力中含む)、終了確認を行う
+                    // 終了確認を行う設定の場合かつフォルダ指定がある場合(入力中含む)、終了確認を行う
                     if (Utilities.Config.CommonInfo.IsConfirmQuit
-                        && txtTargetDirectory.Text.Trim() != string.Empty
+                        && txtTargetFolder.Text.Trim() != string.Empty
                         && FormUtilities.ShowMessage("Q000") == DialogResult.No)
                     {
                         e.Cancel = true;
@@ -416,7 +605,17 @@ namespace SO.PictManager.Forms
                     }
                 }
 
-                if (notifyIcon.Visible) notifyIcon.Visible = false;
+                // 自動取込フォルダが残っている場合は削除
+                if (Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.Database
+                    && Directory.Exists(Utilities.State.LastAutoImportPath))
+                {
+                    Directory.Delete(Utilities.State.LastAutoImportPath, true);
+                }
+
+                if (notifyIcon.Visible)
+                {
+                    notifyIcon.Visible = false;
+                }
             }
             catch(Exception ex)
             {
@@ -447,7 +646,7 @@ namespace SO.PictManager.Forms
                     return;
                 }
                 // ドロップされたファイルのパスをテキストボックスへ設定
-                txtTargetDirectory.Text = dropFiles[0];
+                txtTargetFolder.Text = dropFiles[0];
             }
         }
 
@@ -480,68 +679,144 @@ namespace SO.PictManager.Forms
         private void txtTargetDirectory_Enter(object sender, EventArgs e)
         {
             // テキスト全選択
-            txtTargetDirectory.SelectAll();
+            txtTargetFolder.SelectAll();
         }
 
         #endregion
 
-        #region fileWatcher_Created - 監視フィルダへのファイル作成時
+        #region fileWatcherInFileMode_Created - 監視フォルダへのファイル作成時(ファイルモード用)
 
         /// <summary>
-        /// 監視中のフォルダにファイルが作成された際に実行される処理です。
+        /// ファイルモード時の監視中のフォルダにファイルが作成された際に実行される処理です。
         /// 作成されたファイルに対して、自動的にリネームを行います。
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>
-        private void fileWatcher_Created(object sender, FileSystemEventArgs e)
+        private void fileWatcherInFileMode_Created(object sender, FileSystemEventArgs e)
         {
             try
             {
-                // ディレクトリの場合は無視
-                if (!File.Exists(e.FullPath)) return;
-
-                Thread.Sleep(1000);
-
-                // 5秒以内に連続して同じファイルが作成された場合は重複イベントとみなす
-                if (e.FullPath == _lastRenameByWatch)
-                    return;
-
-                // 監視対象の拡張子かチェック
-                List<string> extentions = Utilities.Config.CommonInfo.TargetExtensions;
-                string ext = Path.GetExtension(e.Name);
-                if (!extentions.Contains(ext.Substring(1))) return;
-
-                // 対象ディレクトリ内のファイル数を取得
-                var dir = new DirectoryInfo(Path.GetDirectoryName(e.FullPath));
-                int num = dir.GetFiles().Length - 1;
-                Func<string> createFilePath = () =>
-                    Path.Combine(dir.FullName, string.Format("{0}_{1}{2}", dir.Name, (num++).ToString(), ext));
-
-                // ファイル名生成
-                const int RETRY_MAX = 30;
-                int retry = 0;
-                string newPath;
-                while (File.Exists(newPath = createFilePath()))
+                lock (this)
                 {
-                    if (++retry > RETRY_MAX)
+                    // ディレクトリの場合は無視
+                    if (!File.Exists(e.FullPath))
                     {
-                        // エラーログ出力
-                        Utilities.Logger.WriteLog(GetType().FullName, MethodBase.GetCurrentMethod().Name, 
-                            MessageXml.GetMessageInfo("E008", e.FullPath).message);
                         return;
                     }
+                    Thread.Sleep(1000);
+
+                    // 5秒以内に連続して同じファイルが作成された場合は重複イベントとみなす
+                    if (e.FullPath == _lastRenameByWatch)
+                    {
+                        return;
+                    }
+
+                    // 監視対象の拡張子かチェック
+                    List<string> extentions = Utilities.Config.CommonInfo.TargetExtensions;
+                    string ext = Path.GetExtension(e.Name);
+                    if (!extentions.Contains(ext.Substring(1)))
+                    {
+                        return;
+                    }
+
+                    // 対象ディレクトリ内のファイル数を取得
+                    var dir = new DirectoryInfo(Path.GetDirectoryName(e.FullPath));
+                    int num = dir.GetFiles().Length - 1;
+                    Func<string> createFilePath = () =>
+                        Path.Combine(dir.FullName, string.Format("{0}_{1}{2}", dir.Name, (num++).ToString(), ext));
+
+                    // ファイル名生成
+                    const int RETRY_MAX = 30;
+                    int retry = 0;
+                    string newPath;
+                    while (File.Exists(newPath = createFilePath()))
+                    {
+                        if (++retry > RETRY_MAX)
+                        {
+                            // エラーログ出力
+                            Utilities.Logger.WriteLog(GetType().FullName, MethodBase.GetCurrentMethod().Name,
+                                MessageXml.GetMessageInfo("E008", e.FullPath).message);
+                            return;
+                        }
+                    }
+
+                    // リネーム実行
+                    var moveFile = new FileInfo(e.FullPath);
+                    moveFile.MoveTo(newPath);
+
+                    _lastRenameByWatch = e.FullPath;
+                    watchDupliTimer.Enabled = true;
                 }
-
-                // リネーム実行
-                var moveFile = new FileInfo(e.FullPath);
-                moveFile.MoveTo(newPath);
-
-                _lastRenameByWatch = e.FullPath;
-                watchDupliTimer.Enabled = true;
             }
             catch (Exception ex)
             {
-                EndWatch();
+                EndFolderWatch();
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
+        }
+
+        #endregion
+
+        #region fileWatcherInDatabaseMode_Created - 監視フォルダへのファイル作成時(データベースモード用)
+
+        /// <summary>
+        /// データベースモード時の監視中のフォルダにファイルが作成された際に実行される処理です。
+        /// 作成されたファイルに対して、自動的にリネームを行います。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void fileWatcherInDatabaseMode_Created(object sender, FileSystemEventArgs e)
+        {
+            try
+            {
+                lock (this)
+                {
+                    // ディレクトリの場合は無視
+                    if (!File.Exists(e.FullPath))
+                    {
+                        return;
+                    }
+                    Thread.Sleep(3000);
+
+                    // 取込対象の拡張子かチェック
+                    List<string> extentions = Utilities.Config.CommonInfo.TargetExtensions;
+                    string ext = Path.GetExtension(e.Name);
+                    if (!extentions.Contains(ext.Substring(1)))
+                    {
+                        return;
+                    }
+
+                    // カテゴリーID取得
+                    string dirName = new DirectoryInfo(Path.GetDirectoryName(e.FullPath)).Name;
+                    int categoryId = int.Parse(dirName.Split(CATEGORY_SEPARATOR)[0]);
+                    
+                    // エンティティ生成
+                    var image = new TblImage();
+                    image.CategoryId = categoryId;
+
+                    using (var img = Image.FromFile(e.FullPath))
+                    {
+                        image.ImageData = new ImageConverter().ConvertTo(img, typeof(byte[])) as byte[];
+                    }
+
+                    DateTime now = DateTime.Now;
+                    image.InsertedDateTime = now;
+                    image.UpdatedDateTime = now;
+
+                    // 画像データをデータベースに登録
+                    using (var entity = new PictManagerEntities())
+                    {
+                        entity.TblImages.Add(image);
+                        entity.SaveChanges();
+                    }
+
+                    // 画像ファイルを削除
+                    File.Delete(e.FullPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                EndFolderWatch();
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
@@ -575,7 +850,7 @@ namespace SO.PictManager.Forms
         {
             try
             {
-                EndWatch();
+                EndFolderWatch();
             }
             catch (Exception ex)
             {
@@ -597,7 +872,7 @@ namespace SO.PictManager.Forms
         {
             try
             {
-                Utilities.OpenExplorer(txtTargetDirectory.Text);
+                Utilities.OpenExplorer(txtTargetFolder.Text);
             }
             catch (Exception ex)
             {
@@ -619,7 +894,7 @@ namespace SO.PictManager.Forms
         {
             try
             {
-                EndWatch();
+                EndFolderWatch();
             }
             catch (Exception ex)
             {

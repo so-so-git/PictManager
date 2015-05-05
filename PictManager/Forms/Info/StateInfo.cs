@@ -19,13 +19,15 @@ namespace SO.PictManager.Forms.Info
         #endregion
 
         #region コンストラクタ
+
         /// <summary>
         /// デフォルトのコンストラクタです。
         /// </summary>
         public StateInfo()
         {
-			LastPath = null;
-			SizeMode = PictureBoxSizeMode.Zoom;
+			LastViewPath = null;
+            LastAutoImportPath = null;
+			SizeMode = PictureBoxSizeMode.Normal;
             SortOrder = ImageSortOrder.KeyAsc;
         }
 
@@ -35,18 +37,23 @@ namespace SO.PictManager.Forms.Info
         /// <param name="original">コピー元インスタンス</param>
 		public StateInfo(StateInfo original)
 		{
-			StateInfo newObj = new StateInfo();
+			var newObj = new StateInfo();
 
-			newObj.LastPath = LastPath;
-			newObj.SizeMode = SizeMode;
-            newObj.SortOrder = SortOrder;
+			newObj.LastViewPath = this.LastViewPath;
+            newObj.LastAutoImportPath = this.LastAutoImportPath;
+            newObj.SizeMode = this.SizeMode;
+            newObj.SortOrder = this.SortOrder;
 		}
+
         #endregion
 
 		#region プロパティ
 
-        /// <summary>最後に表示したディレクトリのパスを取得または設定します。</summary>
-		public string LastPath { get; set; }
+        /// <summary>最後に表示したフォルダのパスを取得または設定します。</summary>
+		public string LastViewPath { get; set; }
+
+        /// <summary>最後に指定した自動取込フォルダのパスを取得または設定します。</summary>
+        public string LastAutoImportPath { get; set; }
 
         /// <summary>画像表示時のPictureBoxSizeModeを取得または設定します。</summary>
 		public PictureBoxSizeMode SizeMode { get; set; }
@@ -57,6 +64,7 @@ namespace SO.PictManager.Forms.Info
         #endregion
 
         #region Clone - インスタンスのクローンを作成
+
         /// <summary>
         /// (ICloneable.Clone()を実装します)
         /// インスタンスのクローンを作成します。
@@ -66,6 +74,7 @@ namespace SO.PictManager.Forms.Info
         {
             return new StateInfo(this);
         }
+
         #endregion
     }
 }
