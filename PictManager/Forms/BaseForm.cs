@@ -141,12 +141,28 @@ namespace SO.PictManager.Forms
         #region コンストラクタ
 
         /// <summary>
-        /// デフォルトのコンストラクタです。
+        /// デザイン表示用の仮コンストラクタです。
         /// </summary>
         protected BaseForm()
         {
             // コンポーネント初期化
             InitializeComponent();
+
+            // メニューバー作成
+            CreateMenu();
+        }
+
+        /// <summary>
+        /// 継承クラス用のコンストラクタです。
+        /// </summary>
+        /// <param name="imageMode">画像モード</param>
+        protected BaseForm(ConfigInfo.ImageDataMode imageMode)
+        {
+            // コンポーネント初期化
+            InitializeComponent();
+
+            // フィールド初期化
+            ImageMode = imageMode;
 
             // メニューバー作成
             CreateMenu();
@@ -331,7 +347,7 @@ namespace SO.PictManager.Forms
         #region RenameAllFiles - 対象ファイルリスト一括ファイル名変更
 
         /// <summary>
-        /// 表示中ディレクトリ内の全ファイルのファイル名を一括で変更します。
+        /// 表示中フォルダ内の全ファイルのファイル名を一括で変更します。
         /// </summary>
         /// <returns>処理結果</returns>
         protected ResultStatus RenameAllFiles()
@@ -557,12 +573,13 @@ namespace SO.PictManager.Forms
         /// <returns>処理結果</returns>
         public ResultStatus MoveFile()
         {
+            Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.File);
+
             var status = ResultStatus.Empty;
             string oldFilePath = _imageList[CurrentIndex].Key;
 
             try
             {
-
                 // 対象ファイル存在チェック
                 if (!File.Exists(oldFilePath))
                 {
@@ -578,18 +595,25 @@ namespace SO.PictManager.Forms
                     dlg.RootFolder = Environment.SpecialFolder.MyComputer;
                     dlg.SelectedPath = Path.GetDirectoryName(oldFilePath);
                     dlg.Description = "移動先のディレクトリを選択して下さい。";
-                    if (dlg.ShowDialog(this) != DialogResult.OK) return ResultStatus.Cancel;
+                    if (dlg.ShowDialog(this) != DialogResult.OK)
+                    {
+                        return ResultStatus.Cancel;
+                    }
 
                     // 変更後ファイルパス組立
                     newPath = Path.Combine(
-                            dlg.SelectedPath, Path.GetFileName(oldFilePath));
+                        dlg.SelectedPath, Path.GetFileName(oldFilePath));
                 }
 
                 // ファイル名変更
                 var newFile = new FileInfo(oldFilePath);
                 newFile.MoveTo(newPath);
                 _imageList.RemoveAt(CurrentIndex);
-                if (CurrentIndex > _imageList.Count - 2) CurrentIndex = 0;
+
+                if (CurrentIndex > _imageList.Count - 2)
+                {
+                    CurrentIndex = 0;
+                }
 
                 status = ResultStatus.OK;
             }
@@ -597,14 +621,16 @@ namespace SO.PictManager.Forms
             {
                 status = ResultStatus.Error;
                 string optionMsg = ex is IOException ?
-                        MessageXml.GetMessageInfo("E001", oldFilePath).message : null;
+                    MessageXml.GetMessageInfo("E001", oldFilePath).message : null;
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod(), optionMsg);
             }
             finally
             {
                 if (status == ResultStatus.OK)
+                {
                     // 終了通知
                     FormUtilities.ShowMessage("I004");
+                }
             }
 
             return status;
@@ -612,7 +638,7 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region MoveAllFiles - 対象ファイルを指定ディレクトリに移動
+        #region MoveAllFiles - 全ての対象ファイルを指定ディレクトリに移動
 
         /// <summary>
         /// 表示中ディレクトリ内の全ファイルを一括で指定したディレクトリへ移動します。
@@ -620,8 +646,11 @@ namespace SO.PictManager.Forms
         /// <returns>処理結果</returns>
         protected ResultStatus MoveAllFiles()
         {
+            Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.File);
+
             var status = ResultStatus.Empty;
             string target = null;   // 処理対象ファイルパス
+
             try
             {
                 // マウスカーソル変更(待機)
@@ -653,7 +682,7 @@ namespace SO.PictManager.Forms
             {
                 status = ResultStatus.Error;
                 string optionMsg = ex is IOException ?
-                        MessageXml.GetMessageInfo("E001", target).message : null;
+                    MessageXml.GetMessageInfo("E001", target).message : null;
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod(), optionMsg);
             }
             finally
@@ -665,8 +694,163 @@ namespace SO.PictManager.Forms
                 CursorFace.Current = Cursors.Default;
 
                 if (status == ResultStatus.OK)
+                {
                     // 終了通知
                     FormUtilities.ShowMessage("I004");
+                }
+            }
+
+            return status;
+        }
+
+        #endregion
+
+        #region ChangeCategory - 対象画像カテゴリー変更
+
+        /// <summary>
+        /// 表示中の画像を指定したカテゴリーへ変更します。
+        /// </summary>
+        /// <returns>処理結果</returns>
+        public ResultStatus ChangeCategory()
+        {
+            Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.Database);
+
+            var status = ResultStatus.Empty;
+            int imageId = int.Parse(_imageList[CurrentIndex].Key);
+
+            try
+            {
+                using (var entity = new PictManagerEntities())
+                {
+                    // カテゴリーデータソース取得
+                    var categories = entity.MstCategories.OrderBy(c => c.CategoryName).ToList();
+
+                    // 変更先カテゴリー取得
+                    MstCategory selectedCategory;
+                    using (var dlg = new ComboInputDialog<MstCategory>(
+                        "カテゴリー選択", "変更先のカテゴリーを選択して下さい。", categories, "CategoryName"))
+                    {
+                        dlg.ShowDialog(this);
+
+                        if (dlg.DialogResult != DialogResult.OK)
+                        {
+                            return ResultStatus.Cancel;
+                        }
+
+                        selectedCategory = dlg.SelectedValue;
+                    }
+
+                    // カテゴリー変更
+                    var image = (from i in entity.TblImages
+                                 where i.ImageId == imageId
+                                 select i).First();
+
+                    image.CategoryId = selectedCategory.CategoryId;
+                    image.UpdatedDateTime = DateTime.Now;
+
+                    entity.SaveChanges();
+                }
+
+                status = ResultStatus.OK;
+            }
+            catch (Exception ex)
+            {
+                status = ResultStatus.Error;
+                string optionMsg = ex is IOException ?
+                    MessageXml.GetMessageInfo("E001", string.Format("画像ID: {0}", imageId)).message : null;
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod(), optionMsg);
+            }
+            finally
+            {
+                if (status == ResultStatus.OK)
+                {
+                    // 終了通知
+                    FormUtilities.ShowMessage("I011", "カテゴリ変更");
+                }
+            }
+
+            return status;
+        }
+
+        #endregion
+
+        #region ChangeAllCategories - 全ての画像のカテゴリーを変更
+
+        /// <summary>
+        /// 表示中カテゴリー内の全画像を一括で指定したカテゴリーへ変更します。
+        /// </summary>
+        /// <returns>処理結果</returns>
+        protected ResultStatus ChangeAllCategories()
+        {
+            Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.Database);
+
+            var status = ResultStatus.Empty;
+            int imageId = -1;   // 処理対象画像ID
+
+            try
+            {
+                using (var entity = new PictManagerEntities())
+                {
+                    // カテゴリーデータソース取得
+                    var categories = entity.MstCategories.OrderBy(c => c.CategoryName).ToList();
+
+                    // 変更先カテゴリー取得
+                    MstCategory selectedCategory;
+                    using (var dlg = new ComboInputDialog<MstCategory>(
+                        "カテゴリー選択", "変更先のカテゴリーを選択して下さい。", categories, "CategoryName"))
+                    {
+                        dlg.ShowDialog(this);
+
+                        if (dlg.DialogResult != DialogResult.OK)
+                        {
+                            return ResultStatus.Cancel;
+                        }
+
+                        selectedCategory = dlg.SelectedValue;
+                    }
+
+                    // 対象画像取得
+                    var imageIds = ImageList.Select(i => int.Parse(i.Key)).ToArray();
+
+                    var images = from img in entity.TblImages
+                                 join id in imageIds
+                                 on img.ImageId equals id
+                                 select img;
+
+                    // カテゴリー変更
+                    foreach (var image in images)
+                    {
+                        imageId = image.ImageId;
+
+                        image.CategoryId = selectedCategory.CategoryId;
+                        image.UpdatedDateTime = DateTime.Now;
+                    }
+
+                    entity.SaveChanges();
+                }
+
+                status = ResultStatus.OK;
+            }
+            catch (Exception ex)
+            {
+                status = ResultStatus.Error;
+                string optionMsg = ex is IOException ?
+                    MessageXml.GetMessageInfo("E001", string.Format("画像ID: {0}", imageId)).message : null;
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod(), optionMsg);
+            }
+            finally
+            {
+                // 対象ファイルリストをリフレッシュ
+                RefreshImageList();
+
+                // マウスカーソル変更(通常)
+                CursorFace.Current = Cursors.Default;
+
+                if (status == ResultStatus.OK)
+                {
+                    // 終了通知
+                    FormUtilities.ShowMessage("I011", "カテゴリ変更");
+                }
             }
 
             return status;
@@ -713,6 +897,7 @@ namespace SO.PictManager.Forms
                     {
                         var imageIds = from i in entity.TblImages
                                        where i.CategoryId == TargetCategory.CategoryId
+                                          && !i.DeleteFlag
                                        select i.ImageId;
 
                         foreach (var imageId in imageIds)
@@ -889,6 +1074,8 @@ namespace SO.PictManager.Forms
         }
 
         #endregion
+
+        //*** イベントハンドラ ***
 
         #region CloseForm - フォームをクローズ
 

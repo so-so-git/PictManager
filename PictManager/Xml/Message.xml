@@ -190,7 +190,7 @@
 		{0}モードでビルドされたモジュールの為、起動出来ません。
 	</msg>
 	<msg id="E001" caption="IOException" buttons="OK" icon="Error">
-		エラー対象ファイル - {0}
+		エラー対象画像 - {0}
 	</msg>
 	<msg id="E002" caption="削除失敗" buttons="OK" icon="Error">
 		ファイルの削除は失敗しました。

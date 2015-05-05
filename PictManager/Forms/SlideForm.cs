@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -66,12 +67,12 @@ namespace SO.PictManager.Forms
         /// <param name="targetPath">対象ディレクトリパス</param>
         /// <param name="includeSubFlg">サブディレクトリ以下を含むかを示すフラグ</param>
         public SlideForm(string targetPath, bool includeSubFlg)
+            : base(ConfigInfo.ImageDataMode.File)
         {
             // コンポーネント初期化
             InitializeComponent();
 
             // フィールド初期化
-            ImageMode = ConfigInfo.ImageDataMode.File;
             TargetDirectory = new DirectoryInfo(targetPath);
             IncludeSubFlg = includeSubFlg;
 
@@ -84,12 +85,12 @@ namespace SO.PictManager.Forms
         /// </summary>
         /// <param name="category">対象カテゴリー</param>
         public SlideForm(MstCategory category)
+            : base(ConfigInfo.ImageDataMode.Database)
         {
             // コンポーネント初期化
             InitializeComponent();
 
             // フィールド初期化
-            ImageMode = ConfigInfo.ImageDataMode.Database;
             TargetCategory = category;
 
             // 共通処理
@@ -164,10 +165,28 @@ namespace SO.PictManager.Forms
                 menuTemp.DropDownItems.Add(new ToolStripSeparator());
                 menuTemp.DropDownItems.Add(new ToolStripMenuItem("表示画像削除", null, btnDelete_Click));
                 menuTemp.DropDownItems.Add(new ToolStripMenuItem("削除済画像確認", null,
-                        (s, e) => ViewDeletedFiles()));
+                    (s, e) => ViewDeletedFiles()));
                 menuTemp.DropDownItems.Add(new ToolStripSeparator());
                 menuTemp.DropDownItems.Add(new ToolStripMenuItem("終了", null,
-                        (s, e) => Form_FormClosing(s, new FormClosingEventArgs(CloseReason.UserClosing, false))));
+                    (s, e) => Form_FormClosing(s, new FormClosingEventArgs(CloseReason.UserClosing, false))));
+                barMenu.Items.Add(menuTemp);
+            }
+            else
+            {
+                // データ
+                menuTemp = new ToolStripMenuItem("データ(&D)", null, null, "menuData");
+                menuTemp.ShortcutKeys = Keys.Alt | Keys.D;
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("戻る", null, btnClose_Click));
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("上書き保存", null, (s, e) => SaveImage()));
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("対象データ再取得", null, menuRefresh_Click));
+                menuTemp.DropDownItems.Add(new ToolStripSeparator());
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("表示画像カテゴリー変更", null, menuChangeCategory_Click));
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("一括カテゴリー変更", null, menuChangeCategoryAll_Click));
+                menuTemp.DropDownItems.Add(new ToolStripSeparator());
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("表示画像削除", null, btnDelete_Click));
+                menuTemp.DropDownItems.Add(new ToolStripSeparator());
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("終了", null,
+                    (s, e) => Form_FormClosing(s, new FormClosingEventArgs(CloseReason.UserClosing, false))));
                 barMenu.Items.Add(menuTemp);
             }
 
@@ -182,13 +201,13 @@ namespace SO.PictManager.Forms
             menuIndex.TextChanged += txtIndex_TextChanged;
             menuTemp.DropDownItems.Add(menuIndex);
             menuTemp.DropDownItems.Add(new ToolStripMenuItem("指定インデックスの画像へジャンプ", null,
-                    (s, e) => DisplayPictureByTextBoxValue()));
+                (s, e) => DisplayPictureByTextBoxValue()));
             menuTemp.DropDownItems.Add(new ToolStripSeparator());
             menuTemp.DropDownItems.Add(new ToolStripMenuItem("削除確認しない", null,
-                    (s, e) => ((ToolStripMenuItem)s).Checked = !((ToolStripMenuItem)s).Checked, "menuChkConfirm"));
+                (s, e) => ((ToolStripMenuItem)s).Checked = !((ToolStripMenuItem)s).Checked, "menuChkConfirm"));
             menuTemp.DropDownItems.Add(new ToolStripSeparator());
             menuTemp.DropDownItems.Add(new ToolStripMenuItem("ブックマークウィンドウを開く", null,
-                    (s, e) => ShowBookmarkForm()));
+                (s, e) => ShowBookmarkForm()));
             barMenu.Items.Add(menuTemp);
 
             // 表示
@@ -199,9 +218,9 @@ namespace SO.PictManager.Forms
             menuTemp.DropDownItems.Add(menuSizeMode);
             menuTemp.DropDownItems.Add(new ToolStripSeparator());
             menuTemp.DropDownItems.Add(new ToolStripMenuItem("右に90°回転", null,
-                    (s, e) => RotateImage(RotateFlipType.Rotate90FlipNone)));
+                (s, e) => RotateImage(RotateFlipType.Rotate90FlipNone)));
             menuTemp.DropDownItems.Add(new ToolStripMenuItem("左に90°回転", null,
-                    (s, e) => RotateImage(RotateFlipType.Rotate270FlipNone)));
+                (s, e) => RotateImage(RotateFlipType.Rotate270FlipNone)));
             menuTemp.DropDownItems.Add(new ToolStripSeparator());
             var menuInterval = new ToolStripTextBox("menuTxtInterval");
             menuInterval.KeyDown += menuTxtInterval_KeyDown;
@@ -209,7 +228,7 @@ namespace SO.PictManager.Forms
             menuTemp.DropDownItems.Add(new ToolStripMenuItem("スライド表示", null, menuChkSlide_Click, "menuChkSlide"));
             menuTemp.DropDownItems.Add(new ToolStripSeparator());
             menuTemp.DropDownItems.Add(new ToolStripMenuItem("グレースケール表示", null,
-                    (s, e) => DisplayByGrayScale()));
+                (s, e) => DisplayByGrayScale()));
             barMenu.Items.Add(menuTemp);
         }
 
@@ -554,7 +573,7 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region イベントハンドラ
+        //*** イベントハンドラ ***
 
         #region Form_Shown - フォーム初期表示時
 
@@ -786,7 +805,7 @@ namespace SO.PictManager.Forms
                 int idx = SearchFileIndex(lastFile);
                 CurrentIndex = idx == -1 ? 0 : idx;
 
-                lblCount.Text = (ImageCount + 1).ToString();
+                lblCount.Text = ImageCount.ToString();
                 DisplayImage();
             }
             catch (Exception ex)
@@ -849,11 +868,16 @@ namespace SO.PictManager.Forms
         /// <param name="e">イベント引数</param>
         private void menuMoveAll_Click(object sender, EventArgs e)
         {
+            Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.File);
+
             // 対象ファイル最新化
             RefreshImageList();
 
-            // ファイル移動実行、正常終了時はディレクトリ選択フォームへ戻る
-            if (MoveAllFiles() == ResultStatus.OK) this.BackToOwner();
+            // ファイル移動実行、正常終了時はスタートフォームへ戻る
+            if (MoveAllFiles() == ResultStatus.OK)
+            {
+                this.BackToOwner();
+            }
         }
 
         #endregion
@@ -863,14 +887,68 @@ namespace SO.PictManager.Forms
         /// <summary>
         /// (ViewImageForm.menuMove_Click(object, EventArgs)をオーバーライドします)
         /// 表示画像移動メニューがクリックされた際に実行される処理です。
-        /// 表示中の画像を指定ディレクトリに移動し、ファイルリストを最新化します。
+        /// 表示中の画像を指定ディレクトリに移動し、画像リストを最新化します。
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>
         protected override void menuMove_Click(object sender, EventArgs e)
         {
+            Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.File);
+
             // ファイル名変更
-            if (MoveFile() != ResultStatus.OK) return;
+            if (MoveFile() != ResultStatus.OK)
+            {
+                return;
+            }
+
+            // 次の有効イメージを表示
+            menuRefresh_Click(sender, e);
+        }
+
+        #endregion
+
+        #region menuMoveAll_Click - 一括ファイル移動メニュー押下時
+
+        /// <summary>
+        /// 一括カテゴリー変更メニューがクリックされた際に実行される処理です。
+        /// 変更先カテゴリ指定ダイアログを表示し、入力された内容に応じて画像のカテゴリーを一括で変更します。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void menuChangeCategoryAll_Click(object sender, EventArgs e)
+        {
+            Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.Database);
+
+            // 対象ファイル最新化
+            RefreshImageList();
+
+            // カテゴリー変更実行、正常終了時はスタートフォームへ戻る
+            if (ChangeAllCategories() == ResultStatus.OK)
+            {
+                this.BackToOwner();
+            }
+        }
+
+        #endregion
+
+        #region menuChangeCategory_Click - 表示画像カテゴリー変更メニュー押下時
+
+        /// <summary>
+        /// (ViewImageForm.menuChangeCategory_Click(object, EventArgs)をオーバーライドします)
+        /// 表示画像カテゴリー変更メニューがクリックされた際に実行される処理です。
+        /// 表示中の画像を指定されたカテゴリーに変更し、画像リストを最新化します。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        protected override void menuChangeCategory_Click(object sender, EventArgs e)
+        {
+            Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.Database);
+
+            // カテゴリー変更
+            if (ChangeCategory() != ResultStatus.OK)
+            {
+                return;
+            }
 
             // 次の有効イメージを表示
             menuRefresh_Click(sender, e);
@@ -1371,8 +1449,6 @@ namespace SO.PictManager.Forms
                 CursorFace.Current = Cursors.Default;
             }
         }
-
-        #endregion
 
         #endregion
     }

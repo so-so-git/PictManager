@@ -57,8 +57,7 @@ namespace SO.PictManager.Forms
         #region コンストラクタ
 
         /// <summary>
-        /// デフォルトのコンストラクタです。
-        /// クラス継承時にのみ利用可能です。
+        /// デザイン表示用の仮コンストラクタです。
         /// </summary>
         protected ViewImageForm()
         {
@@ -67,6 +66,20 @@ namespace SO.PictManager.Forms
 
             // フィールド初期化
             ImageMode = ConfigInfo.ImageDataMode.File;
+
+            // 共通コンストラクション
+            ConstructCommon();
+        }
+
+        /// <summary>
+        /// 継承クラス用のコンストラクタです。
+        /// </summary>
+        /// <param name="imageMode">画像モード</param>
+        protected ViewImageForm(ConfigInfo.ImageDataMode imageMode)
+            : base(imageMode)
+        {
+            // コンポーネント初期化
+            InitializeComponent();
 
             // 共通コンストラクション
             ConstructCommon();
@@ -128,7 +141,22 @@ namespace SO.PictManager.Forms
                 menuFile.DropDownItems.Add(new ToolStripMenuItem("表示画像削除", null, btnDelete_Click));
                 menuFile.DropDownItems.Add(new ToolStripSeparator());
                 menuFile.DropDownItems.Add(new ToolStripMenuItem("ディレクトリを開く", null,
-                        (s, e) => Utilities.OpenExplorer(Path.GetDirectoryName(ImageData.Key))));
+                    (s, e) => Utilities.OpenExplorer(Path.GetDirectoryName(ImageData.Key))));
+                menuFile.DropDownItems.Add(new ToolStripSeparator());
+                menuFile.DropDownItems.Add(new ToolStripMenuItem("終了", null,
+                    (s, e) => Form_FormClosing(s, new FormClosingEventArgs(CloseReason.UserClosing, false))));
+                barMenu.Items.Add(menuFile);
+            }
+            else
+            {
+                // データ
+                var menuFile = new ToolStripMenuItem("データ(&D)", null, null, "menuData");
+                menuFile.ShortcutKeys = Keys.Alt | Keys.D;
+                menuFile.DropDownItems.Add(new ToolStripMenuItem("戻る", null, btnClose_Click));
+                menuFile.DropDownItems.Add(new ToolStripMenuItem("上書き保存", null, (s, e) => SaveImage()));
+                menuFile.DropDownItems.Add(new ToolStripSeparator());
+                menuFile.DropDownItems.Add(new ToolStripMenuItem("表示画像カテゴリー変更", null, menuChangeCategory_Click));
+                menuFile.DropDownItems.Add(new ToolStripMenuItem("表示画像削除", null, btnDelete_Click));
                 menuFile.DropDownItems.Add(new ToolStripSeparator());
                 menuFile.DropDownItems.Add(new ToolStripMenuItem("終了", null,
                         (s, e) => Form_FormClosing(s, new FormClosingEventArgs(CloseReason.UserClosing, false))));
@@ -143,12 +171,12 @@ namespace SO.PictManager.Forms
             menuDisp.DropDownItems.Add(menuSizeMode);
             menuDisp.DropDownItems.Add(new ToolStripSeparator());
             menuDisp.DropDownItems.Add(new ToolStripMenuItem("右に90°回転", null,
-                    (s, e) => RotateImage(RotateFlipType.Rotate90FlipNone)));
+                (s, e) => RotateImage(RotateFlipType.Rotate90FlipNone)));
             menuDisp.DropDownItems.Add(new ToolStripMenuItem("左に90°回転", null,
-                    (s, e) => RotateImage(RotateFlipType.Rotate270FlipNone)));
+                (s, e) => RotateImage(RotateFlipType.Rotate270FlipNone)));
             menuDisp.DropDownItems.Add(new ToolStripSeparator());
             menuDisp.DropDownItems.Add(new ToolStripMenuItem("グレースケール表示", null,
-                    (s, e) => DisplayByGrayScale()));
+                (s, e) => DisplayByGrayScale()));
             barMenu.Items.Add(menuDisp);
         }
 
@@ -424,7 +452,20 @@ namespace SO.PictManager.Forms
                 }
                 else
                 {
-                    //TODO 画像保存(DBモード時)
+                    using (var entity = new PictManagerEntities())
+                    {
+                        int imageId = int.Parse(ImageList[CurrentIndex].Key);
+
+                        var image = (from i in entity.TblImages
+                                     where i.ImageId == imageId
+                                     select i).First();
+
+                        var converter = new ImageConverter();
+                        image.ImageData = converter.ConvertTo(picViewer.Image, typeof(byte[])) as byte[];
+                        image.UpdatedDateTime = DateTime.Now;
+
+                        entity.SaveChanges();
+                    }
                 }
             }
             catch (Exception ex)
@@ -529,7 +570,7 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region イベントハンドラ
+        //*** イベントハンドラ ***
 
         #region Form_FormClosing - ×ボタン押下時
 
@@ -852,6 +893,25 @@ namespace SO.PictManager.Forms
         }
 
         #endregion
+
+        #region menuChangeCategory_Click - 表示画像カテゴリー変更メニュー押下時
+
+        /// <summary>
+        /// 表示画像カテゴリー変更メニューがクリックされた際に実行される処理です。
+        /// 表示中の画像を指定されたカテゴリーに変更し、前画面へ戻ります。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        protected virtual void menuChangeCategory_Click(object sender, EventArgs e)
+        {
+            Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.Database);
+
+            // カテゴリー変更
+            ChangeCategory();
+
+            // 前画面へ戻る
+            this.BackToOwner();
+        }
 
         #endregion
     }

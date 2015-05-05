@@ -127,6 +127,12 @@
   <ItemGroup>
     <Compile Include="Common\Constants.cs" />
     <Compile Include="Common\ImageSorter.cs" />
+    <Compile Include="Forms\ComboInputDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ComboInputDialog.Designer.cs">
+      <DependentUpon>ComboInputDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Imaging\IImage.cs" />
     <Compile Include="Imaging\ImageController.cs" />
     <Compile Include="Components\ThumbnailUnit.cs">
@@ -291,6 +297,9 @@
     <EmbeddedResource Include="Forms\BaseForm.resx">
       <SubType>Designer</SubType>
       <DependentUpon>BaseForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ComboInputDialog.resx">
+      <DependentUpon>ComboInputDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MaintenanceForm.resx">
       <DependentUpon>MaintenanceForm.cs</DependentUpon>
