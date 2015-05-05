@@ -7,3 +7,4 @@ Uploads/*.*
 *.log
 PictManagerSetup/PictManagerSetup/Express/
 PictManagerDatabase/PictManagerDatabase.sqlproj.user
+PictManagerDatabase/PictManagerDatabase.dbmdl
