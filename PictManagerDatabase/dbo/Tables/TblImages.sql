@@ -1,6 +1,7 @@
 ﻿CREATE TABLE [dbo].[TblImages] (
     [ImageId]          INT             IDENTITY (0, 1) NOT NULL,
     [ImageData]        VARBINARY (MAX) NOT NULL,
+	[ImageFormat]      VARCHAR (4)     NOT NULL,
     [CategoryId]       INT             NOT NULL,
     [TagId1]           INT             NULL,
     [TagId2]           INT             NULL,

@@ -720,10 +720,10 @@ namespace SO.PictManager.Forms
 
             try
             {
-                using (var entity = new PictManagerEntities())
+                using (var entities = new PictManagerEntities())
                 {
                     // カテゴリーデータソース取得
-                    var categories = entity.MstCategories.OrderBy(c => c.CategoryName).ToList();
+                    var categories = entities.MstCategories.OrderBy(c => c.CategoryName).ToList();
 
                     // 変更先カテゴリー取得
                     MstCategory selectedCategory;
@@ -741,14 +741,14 @@ namespace SO.PictManager.Forms
                     }
 
                     // カテゴリー変更
-                    var image = (from i in entity.TblImages
+                    var image = (from i in entities.TblImages
                                  where i.ImageId == imageId
                                  select i).First();
 
                     image.CategoryId = selectedCategory.CategoryId;
                     image.UpdatedDateTime = DateTime.Now;
 
-                    entity.SaveChanges();
+                    entities.SaveChanges();
                 }
 
                 status = ResultStatus.OK;
@@ -789,10 +789,10 @@ namespace SO.PictManager.Forms
 
             try
             {
-                using (var entity = new PictManagerEntities())
+                using (var entities = new PictManagerEntities())
                 {
                     // カテゴリーデータソース取得
-                    var categories = entity.MstCategories.OrderBy(c => c.CategoryName).ToList();
+                    var categories = entities.MstCategories.OrderBy(c => c.CategoryName).ToList();
 
                     // 変更先カテゴリー取得
                     MstCategory selectedCategory;
@@ -812,7 +812,7 @@ namespace SO.PictManager.Forms
                     // 対象画像取得
                     var imageIds = ImageList.Select(i => int.Parse(i.Key)).ToArray();
 
-                    var images = from img in entity.TblImages
+                    var images = from img in entities.TblImages
                                  join id in imageIds
                                  on img.ImageId equals id
                                  select img;
@@ -826,7 +826,7 @@ namespace SO.PictManager.Forms
                         image.UpdatedDateTime = DateTime.Now;
                     }
 
-                    entity.SaveChanges();
+                    entities.SaveChanges();
                 }
 
                 status = ResultStatus.OK;
@@ -893,9 +893,9 @@ namespace SO.PictManager.Forms
                 else
                 {
                     // 画像テーブルから対象画像データを取得
-                    using (var entity = new PictManagerEntities())
+                    using (var entities = new PictManagerEntities())
                     {
-                        var imageIds = from i in entity.TblImages
+                        var imageIds = from i in entities.TblImages
                                        where i.CategoryId == TargetCategory.CategoryId
                                           && !i.DeleteFlag
                                        select i.ImageId;

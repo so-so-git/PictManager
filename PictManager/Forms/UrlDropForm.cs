@@ -31,10 +31,10 @@ namespace SO.PictManager.Forms
         {
             InitializeComponent();
             
-            using (var entity = new PictManagerEntities())
+            using (var entities = new PictManagerEntities())
             {
                 // カテゴリコンボボックス内容設定
-                RefreshCategoryComboBox(entity);
+                RefreshCategoryComboBox(entities);
             }
         }
 
@@ -45,9 +45,10 @@ namespace SO.PictManager.Forms
         /// <summary>
         /// カテゴリコンボボックスを最新化します。
         /// </summary>
-        private void RefreshCategoryComboBox(PictManagerEntities entity)
+        /// <param name="entities">エンティティオブジェクト</param>
+        private void RefreshCategoryComboBox(PictManagerEntities entities)
         {
-            cmbCategory.DataSource = entity.MstCategories.ToList();
+            cmbCategory.DataSource = entities.MstCategories.ToList();
             cmbCategory.DisplayMember = "CategoryName";
 
             if (cmbCategory.Items.Count > 0)
@@ -64,6 +65,8 @@ namespace SO.PictManager.Forms
 
         #endregion
 
+        //*** イベントハンドラ ***
+
         #region btnAddCategory_Click - カテゴリ追加ボタン押下時
 
         /// <summary>
@@ -76,7 +79,7 @@ namespace SO.PictManager.Forms
         {
             try
             {
-                using (var entity = new PictManagerEntities())
+                using (var entities = new PictManagerEntities())
                 using (var dlg = new CommonInputDialog(
                     "新規カテゴリー追加", "追加するカテゴリー名を入力して下さい。", true, string.Empty))
                 {
@@ -88,7 +91,7 @@ namespace SO.PictManager.Forms
                         if (string.IsNullOrEmpty(dlg.InputString)) continue;
 
                         // カテゴリー名重複チェック
-                        if (isRetry = entity.MstCategories.Any(c => c.CategoryName == dlg.InputString))
+                        if (isRetry = entities.MstCategories.Any(c => c.CategoryName == dlg.InputString))
                         {
                             FormUtilities.ShowMessage("E009", dlg.InputString);
                         }
@@ -101,11 +104,11 @@ namespace SO.PictManager.Forms
                     dto.InsertedDateTime = now;
                     dto.UpdatedDateTime = now;
 
-                    entity.MstCategories.Add(dto);
-                    entity.SaveChanges();
+                    entities.MstCategories.Add(dto);
+                    entities.SaveChanges();
 
                     // カテゴリコンボボックスリフレッシュ
-                    RefreshCategoryComboBox(entity);
+                    RefreshCategoryComboBox(entities);
                 }
             }
             catch (Exception ex)
@@ -151,19 +154,23 @@ namespace SO.PictManager.Forms
         /// <param name="e">イベント引数</param>
         private void lblDropArea_DragDrop(object sender, DragEventArgs e)
         {
+            // 画像データ取得
             string uri = e.Data.GetData(DataFormats.Text).ToString();
+            byte[] imageData = DownloadManager.DownloadData(uri);
 
-            using (var entity = new PictManagerEntities())
+            using (var entities = new PictManagerEntities())
             {
                 DateTime now = DateTime.Now;
-                var dto = new TblImage();
-                dto.ImageData = DownloadManager.DownloadData(uri);
-                dto.CategoryId = (cmbCategory.SelectedItem as MstCategory).CategoryId;
-                dto.InsertedDateTime = now;
-                dto.UpdatedDateTime = now;
+                var entity = new TblImage();
 
-                entity.TblImages.Add(dto);
-                entity.SaveChanges();
+                entity.ImageData = imageData;
+                entity.ImageFormat = Path.GetExtension(uri).Substring(1);
+                entity.CategoryId = (cmbCategory.SelectedItem as MstCategory).CategoryId;
+                entity.InsertedDateTime = now;
+                entity.UpdatedDateTime = now;
+
+                entities.TblImages.Add(entity);
+                entities.SaveChanges();
             }
         }
 

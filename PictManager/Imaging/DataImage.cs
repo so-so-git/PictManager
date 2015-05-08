@@ -91,9 +91,9 @@ namespace SO.PictManager.Imaging
         {
             get
             {
-                using (var entity = new PictManagerEntities())
+                using (var entities = new PictManagerEntities())
                 {
-                    return (from i in entity.TblImages
+                    return (from i in entities.TblImages
                             where i.ImageId == _image.ImageId
                             select i.ImageData).First();
                 }
@@ -123,9 +123,9 @@ namespace SO.PictManager.Imaging
         /// <returns>画像オブジェクト</returns>
         public Image GetImage()
         {
-            using (var entity = new PictManagerEntities())
+            using (var entities = new PictManagerEntities())
             {
-                byte[] imageData = (from i in entity.TblImages
+                byte[] imageData = (from i in entities.TblImages
                                     where i.ImageId == _image.ImageId
                                     select i.ImageData).First();
 
@@ -145,15 +145,15 @@ namespace SO.PictManager.Imaging
         /// </summary>
         public void Delete()
         {
-            using (var entity = new PictManagerEntities())
+            using (var entities = new PictManagerEntities())
             {
-                var image = (from i in entity.TblImages
+                var image = (from i in entities.TblImages
                              where i.ImageId == _image.ImageId
                              select i).First();
 
                 image.DeleteFlag = true;
 
-                entity.SaveChanges();
+                entities.SaveChanges();
             }
 
             // ログ出力
@@ -172,13 +172,13 @@ namespace SO.PictManager.Imaging
         /// <param name="imageId">画像ID</param>
         private void GetTblImage(int imageId)
         {
-            using (var entity = new PictManagerEntities())
+            using (var entities = new PictManagerEntities())
             {
-                var image = (from i in entity.TblImages
+                var image = (from i in entities.TblImages
                              where i.ImageId == imageId
                              select i).First();
 
-                entity.Entry<TblImage>(image).State = EntityState.Detached;
+                entities.Entry<TblImage>(image).State = EntityState.Detached;
 
                 _image = image;
 

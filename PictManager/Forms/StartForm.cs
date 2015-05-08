@@ -123,9 +123,9 @@ namespace SO.PictManager.Forms
                 fileWatcher.Created += fileWatcherInDatabaseMode_Created;
 
                 // カテゴリ読込
-                using (var entity = new PictManagerEntities())
+                using (var entities = new PictManagerEntities())
                 {
-                    cmbCategory.DataSource = entity.MstCategories.OrderBy(c => c.CategoryName).ToList();
+                    cmbCategory.DataSource = entities.MstCategories.OrderBy(c => c.CategoryName).ToList();
                     cmbCategory.DisplayMember = "CategoryName";
                 }
 
@@ -243,9 +243,9 @@ namespace SO.PictManager.Forms
 
             Directory.CreateDirectory(path);
 
-            using (var entity = new PictManagerEntities())
+            using (var entities = new PictManagerEntities())
             {
-                foreach (var category in entity.MstCategories)
+                foreach (var category in entities.MstCategories)
                 {
                     string childDirName = Path.Combine(
                         path, category.CategoryId.ToString() + CATEGORY_SEPARATOR + category.CategoryName);
@@ -346,9 +346,9 @@ namespace SO.PictManager.Forms
                 mainteForm.FormClosed += (sender2, e2) =>
                 {
                     // カテゴリ読込
-                    using (var entity = new PictManagerEntities())
+                    using (var entities = new PictManagerEntities())
                     {
-                        cmbCategory.DataSource = entity.MstCategories.OrderBy(c => c.CategoryName).ToList();
+                        cmbCategory.DataSource = entities.MstCategories.OrderBy(c => c.CategoryName).ToList();
                         cmbCategory.DisplayMember = "CategoryName";
                     }
 
@@ -780,8 +780,8 @@ namespace SO.PictManager.Forms
 
                     // 取込対象の拡張子かチェック
                     List<string> extentions = Utilities.Config.CommonInfo.TargetExtensions;
-                    string ext = Path.GetExtension(e.Name);
-                    if (!extentions.Contains(ext.Substring(1)))
+                    string ext = Path.GetExtension(e.Name).Substring(1);
+                    if (!extentions.Contains(ext))
                     {
                         return;
                     }
@@ -791,23 +791,23 @@ namespace SO.PictManager.Forms
                     int categoryId = int.Parse(dirName.Split(CATEGORY_SEPARATOR)[0]);
                     
                     // エンティティ生成
-                    var image = new TblImage();
-                    image.CategoryId = categoryId;
+                    DateTime now = DateTime.Now;
+                    var entity = new TblImage();
 
                     using (var img = Image.FromFile(e.FullPath))
                     {
-                        image.ImageData = new ImageConverter().ConvertTo(img, typeof(byte[])) as byte[];
+                        entity.ImageData = new ImageConverter().ConvertTo(img, typeof(byte[])) as byte[];
                     }
-
-                    DateTime now = DateTime.Now;
-                    image.InsertedDateTime = now;
-                    image.UpdatedDateTime = now;
+                    entity.ImageFormat = ext;
+                    entity.CategoryId = categoryId;
+                    entity.InsertedDateTime = now;
+                    entity.UpdatedDateTime = now;
 
                     // 画像データをデータベースに登録
-                    using (var entity = new PictManagerEntities())
+                    using (var entities = new PictManagerEntities())
                     {
-                        entity.TblImages.Add(image);
-                        entity.SaveChanges();
+                        entities.TblImages.Add(entity);
+                        entities.SaveChanges();
                     }
 
                     // 画像ファイルを削除

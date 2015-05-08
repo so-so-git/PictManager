@@ -296,10 +296,6 @@ namespace SO.PictManager
 
                 // プログラム内で起動した場合のみ停止処理を行う
                 _isSqlServiceStop = true;
-
-                using (var entity = new PictManagerEntities())
-                {
-                }
             }
             catch (Win32Exception)
             {
@@ -355,9 +351,9 @@ namespace SO.PictManager
         /// </summary>
         private static void EntryUnClassifiedCategory()
         {
-            using (var entity = new PictManagerEntities())
+            using (var entities = new PictManagerEntities())
             {
-                var isExistsUnClassified = (from c in entity.MstCategories
+                var isExistsUnClassified = (from c in entities.MstCategories
                                             where c.CategoryName == Constants.UN_CLASSIFIED_CATEGORY_NAME
                                             select c).Any();
 
@@ -366,9 +362,9 @@ namespace SO.PictManager
 
                 // 現在の最大IDを取得
                 int maxId;
-                if (entity.MstCategories.Any())
+                if (entities.MstCategories.Any())
                 {
-                    maxId = (from c in entity.MstCategories
+                    maxId = (from c in entities.MstCategories
                              select c.CategoryId).Max();
                 }
                 else
@@ -377,10 +373,10 @@ namespace SO.PictManager
                 }
 
                 // ID振り直し
-                entity.Database.ExecuteSqlCommand(
+                entities.Database.ExecuteSqlCommand(
                     "DBCC CHECKIDENT('MstCategories', RESEED, "
                     + (Constants.UN_CLASSIFIED_CATEGORY_ID) + ");");
-                entity.SaveChanges();
+                entities.SaveChanges();
 
                 // 未分類カテゴリを登録
                 DateTime now = DateTime.Now;
@@ -389,13 +385,13 @@ namespace SO.PictManager
                 dto.InsertedDateTime = now;
                 dto.UpdatedDateTime = now;
 
-                entity.MstCategories.Add(dto);
-                entity.SaveChanges();
+                entities.MstCategories.Add(dto);
+                entities.SaveChanges();
 
                 // IDを戻す
-                entity.Database.ExecuteSqlCommand(
+                entities.Database.ExecuteSqlCommand(
                     "DBCC CHECKIDENT('MstCategories', RESEED, " + maxId + ");");
-                entity.SaveChanges();
+                entities.SaveChanges();
             }
         }
 

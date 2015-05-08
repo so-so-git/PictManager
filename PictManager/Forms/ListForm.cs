@@ -306,9 +306,9 @@ namespace SO.PictManager.Forms
             List<MstCategory> categoryList;
             if (ImageMode == ConfigInfo.ImageDataMode.Database)
             {
-                using (var entity = new PictManagerEntities())
+                using (var entities = new PictManagerEntities())
                 {
-                    categoryList = (from c in entity.MstCategories
+                    categoryList = (from c in entities.MstCategories
                                     orderby c.CategoryName
                                     select c).ToList();
                 }
@@ -799,10 +799,10 @@ namespace SO.PictManager.Forms
             if (ImageMode == ConfigInfo.ImageDataMode.Database
                 && cell.ColumnIndex == DatabaseColumnIndexes.CATEGORY)
             {
-                using (var entity = new PictManagerEntities())
+                using (var entities = new PictManagerEntities())
                 {
                     int oldId = Convert.ToInt32(cell.Tag);
-                    statusText = (from c in entity.MstCategories
+                    statusText = (from c in entities.MstCategories
                                   where c.CategoryId == oldId
                                   select c).First().CategoryName;
 
@@ -810,7 +810,7 @@ namespace SO.PictManager.Forms
                     {
                         int newId = Convert.ToInt32(cell.Value);
                         statusText += " -> "
-                            + (from c in entity.MstCategories
+                            + (from c in entities.MstCategories
                                where c.CategoryId == newId
                                select c).First().CategoryName;
                     }
@@ -988,7 +988,7 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region イベントハンドラ
+        //*** イベントハンドラ ***
 
         #region Form_Shown - フォーム表示時
 
@@ -1436,12 +1436,12 @@ namespace SO.PictManager.Forms
                                      where r.HeaderCell.Style.Font.Bold
                                      select r;
 
-                    using (var entity = new PictManagerEntities())
+                    using (var entities = new PictManagerEntities())
                     {
                         // 変更を適用
                         foreach (var row in editedRows)
                         {
-                            if (!ApplyChangesInDatabaseMode(row, entity))
+                            if (!ApplyChangesInDatabaseMode(row, entities))
                             {
                                 RevertEdit(true);
                                 Console.WriteLine("Apply break.");
@@ -1449,7 +1449,7 @@ namespace SO.PictManager.Forms
                             }
                         }
 
-                        entity.SaveChanges();
+                        entities.SaveChanges();
                     }
                 }
 
@@ -1868,8 +1868,6 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
-
-        #endregion
 
         #endregion
     }

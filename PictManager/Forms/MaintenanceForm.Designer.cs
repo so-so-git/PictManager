@@ -82,17 +82,17 @@
             this.rdoImportDirectory.Location = new System.Drawing.Point(9, 24);
             this.rdoImportDirectory.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.rdoImportDirectory.Name = "rdoImportDirectory";
-            this.rdoImportDirectory.Size = new System.Drawing.Size(74, 19);
+            this.rdoImportDirectory.Size = new System.Drawing.Size(60, 19);
             this.rdoImportDirectory.TabIndex = 0;
             this.rdoImportDirectory.TabStop = true;
-            this.rdoImportDirectory.Text = "ディレクトリ";
+            this.rdoImportDirectory.Text = "フォルダ";
             this.rdoImportDirectory.UseVisualStyleBackColor = true;
             this.rdoImportDirectory.CheckedChanged += new System.EventHandler(this.rdoImportKinds_CheckedChanged);
             // 
             // rdoImportFile
             // 
             this.rdoImportFile.AutoSize = true;
-            this.rdoImportFile.Location = new System.Drawing.Point(100, 24);
+            this.rdoImportFile.Location = new System.Drawing.Point(75, 24);
             this.rdoImportFile.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.rdoImportFile.Name = "rdoImportFile";
             this.rdoImportFile.Size = new System.Drawing.Size(59, 19);
@@ -119,9 +119,9 @@
             this.chkIncludeSubDirectory.Location = new System.Drawing.Point(9, 119);
             this.chkIncludeSubDirectory.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chkIncludeSubDirectory.Name = "chkIncludeSubDirectory";
-            this.chkIncludeSubDirectory.Size = new System.Drawing.Size(125, 19);
+            this.chkIncludeSubDirectory.Size = new System.Drawing.Size(111, 19);
             this.chkIncludeSubDirectory.TabIndex = 7;
-            this.chkIncludeSubDirectory.Text = "サブディレクトリも含む";
+            this.chkIncludeSubDirectory.Text = "サブフォルダも含む";
             this.chkIncludeSubDirectory.UseVisualStyleBackColor = true;
             // 
             // btnRef
@@ -138,17 +138,17 @@
             // txtTargetPath
             // 
             this.txtTargetPath.AllowDrop = true;
-            this.txtTargetPath.Location = new System.Drawing.Point(66, 55);
+            this.txtTargetPath.Location = new System.Drawing.Point(64, 55);
             this.txtTargetPath.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtTargetPath.Name = "txtTargetPath";
-            this.txtTargetPath.Size = new System.Drawing.Size(341, 23);
+            this.txtTargetPath.Size = new System.Drawing.Size(343, 23);
             this.txtTargetPath.TabIndex = 3;
             // 
             // cmbImportCategory
             // 
             this.cmbImportCategory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbImportCategory.FormattingEnabled = true;
-            this.cmbImportCategory.Location = new System.Drawing.Point(66, 86);
+            this.cmbImportCategory.Location = new System.Drawing.Point(64, 86);
             this.cmbImportCategory.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cmbImportCategory.Name = "cmbImportCategory";
             this.cmbImportCategory.Size = new System.Drawing.Size(230, 23);
@@ -159,18 +159,18 @@
             this.lblTargetDirectory.AutoSize = true;
             this.lblTargetDirectory.Location = new System.Drawing.Point(7, 60);
             this.lblTargetDirectory.Name = "lblTargetDirectory";
-            this.lblTargetDirectory.Size = new System.Drawing.Size(43, 15);
+            this.lblTargetDirectory.Size = new System.Drawing.Size(31, 15);
             this.lblTargetDirectory.TabIndex = 2;
-            this.lblTargetDirectory.Text = "対象：";
+            this.lblTargetDirectory.Text = "対象";
             // 
             // lblCategories
             // 
             this.lblCategories.AutoSize = true;
             this.lblCategories.Location = new System.Drawing.Point(7, 90);
             this.lblCategories.Name = "lblCategories";
-            this.lblCategories.Size = new System.Drawing.Size(53, 15);
+            this.lblCategories.Size = new System.Drawing.Size(51, 15);
             this.lblCategories.TabIndex = 5;
-            this.lblCategories.Text = "カテゴリ：";
+            this.lblCategories.Text = "カテゴリー";
             // 
             // dlgImportFile
             // 

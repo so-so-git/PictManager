@@ -452,11 +452,11 @@ namespace SO.PictManager.Forms
                 }
                 else
                 {
-                    using (var entity = new PictManagerEntities())
+                    using (var entities = new PictManagerEntities())
                     {
                         int imageId = int.Parse(ImageList[CurrentIndex].Key);
 
-                        var image = (from i in entity.TblImages
+                        var image = (from i in entities.TblImages
                                      where i.ImageId == imageId
                                      select i).First();
 
@@ -464,7 +464,7 @@ namespace SO.PictManager.Forms
                         image.ImageData = converter.ConvertTo(picViewer.Image, typeof(byte[])) as byte[];
                         image.UpdatedDateTime = DateTime.Now;
 
-                        entity.SaveChanges();
+                        entities.SaveChanges();
                     }
                 }
             }

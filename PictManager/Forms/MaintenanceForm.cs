@@ -30,13 +30,13 @@ namespace SO.PictManager.Forms
         {
             InitializeComponent();
 
-            using (var entity = new PictManagerEntities())
+            using (var entities = new PictManagerEntities())
             {
                 // カテゴリ読込
-                RefreshCategoriesComboBox(entity);
+                RefreshCategoriesComboBox(entities);
 
                 // 物理削除済み画像数取得
-                var deletedCount = entity.TblImages.Where(i => i.DeleteFlag).Count();
+                var deletedCount = entities.TblImages.Where(i => i.DeleteFlag).Count();
                 lblDeletedCount.Text = deletedCount.ToString("#,0");
                 btnApplyDelete.Enabled = deletedCount > 0;
             }
@@ -108,29 +108,29 @@ namespace SO.PictManager.Forms
         /// <param name="filePath">インポートするファイルのパス</param>
         private void ImportFileToDatabase(string filePath)
         {
-            var image = new TblImage();
+            DateTime now = DateTime.Now;
+            var entity = new TblImage();
 
-            // 画像データ取得
+            // エンティティ生成
             using (var img = Image.FromFile(filePath))
             {
-                image.ImageData = new ImageConverter().ConvertTo(img, typeof(byte[])) as byte[];
+                entity.ImageData = new ImageConverter().ConvertTo(img, typeof(byte[])) as byte[];
             }
+            entity.ImageFormat = Path.GetExtension(filePath).Substring(1);
+            entity.CategoryId = (cmbImportCategory.SelectedValue as MstCategory).CategoryId;
+            entity.InsertedDateTime = now;
+            entity.UpdatedDateTime = now;
 
-            // その他のカラム
-            image.CategoryId = (cmbImportCategory.SelectedValue as MstCategory).CategoryId;
-
-            DateTime now = DateTime.Now;
-            image.InsertedDateTime = now;
-            image.UpdatedDateTime = now;
-
-            using (var entity = new PictManagerEntities())
+            using (var entities = new PictManagerEntities())
             {
-                entity.TblImages.Add(image);
-                entity.SaveChanges();
+                entities.TblImages.Add(entity);
+                entities.SaveChanges();
             }
         }
 
         #endregion
+
+        //*** イベントハンドラ ***
 
         #region btnEntryCategory_Click - カテゴリー登録ボタンクリック時
 
@@ -152,10 +152,10 @@ namespace SO.PictManager.Forms
                     return;
                 }
 
-                using (var entity = new PictManagerEntities())
+                using (var entities = new PictManagerEntities())
                 {
                     // カテゴリー名重複チェック
-                    if (entity.MstCategories.Any(c => c.CategoryName == categoryName))
+                    if (entities.MstCategories.Any(c => c.CategoryName == categoryName))
                     {
                         FormUtilities.ShowMessage("E009", categoryName);
                         return;
@@ -169,11 +169,11 @@ namespace SO.PictManager.Forms
                     dto.InsertedDateTime = now;
                     dto.UpdatedDateTime = now;
 
-                    entity.MstCategories.Add(dto);
-                    entity.SaveChanges();
+                    entities.MstCategories.Add(dto);
+                    entities.SaveChanges();
 
                     // コンボボックス内容を更新
-                    RefreshCategoriesComboBox(entity);
+                    RefreshCategoriesComboBox(entities);
                 }
 
                 txtEntryCategory.Text = string.Empty;
@@ -202,10 +202,10 @@ namespace SO.PictManager.Forms
             {
                 var selectedCategory = cmbDeleteCategory.SelectedItem as MstCategory;
 
-                using (var entity = new PictManagerEntities())
+                using (var entities = new PictManagerEntities())
                 {
                     // 削除対象のカテゴリーに属している画像を検索
-                    var relationImages = from i in entity.TblImages
+                    var relationImages = from i in entities.TblImages
                                          where i.CategoryId == selectedCategory.CategoryId
                                          select i;
 
@@ -223,11 +223,11 @@ namespace SO.PictManager.Forms
                     }
 
                     // 選択されたカテゴリーを削除
-                    var deleteObj = (from c in entity.MstCategories
+                    var deleteObj = (from c in entities.MstCategories
                                      where c.CategoryId == selectedCategory.CategoryId
                                      select c).First();
 
-                    entity.MstCategories.Remove(deleteObj);
+                    entities.MstCategories.Remove(deleteObj);
 
                     // 削除したカテゴリーに属していた画像を未分類に更新
                     foreach (var img in relationImages)
@@ -235,10 +235,10 @@ namespace SO.PictManager.Forms
                         img.CategoryId = Constants.UN_CLASSIFIED_CATEGORY_ID;
                     }
 
-                    entity.SaveChanges();
+                    entities.SaveChanges();
 
                     // コンボボックス内容を更新
-                    RefreshCategoriesComboBox(entity);
+                    RefreshCategoriesComboBox(entities);
                 }
 
                 FormUtilities.ShowMessage("I011", "カテゴリーの削除");
@@ -417,16 +417,16 @@ namespace SO.PictManager.Forms
                 }
 
                 // 物理削除実行
-                using (var entity = new PictManagerEntities())
+                using (var entities = new PictManagerEntities())
                 {
-                    var deletedImages = entity.TblImages.Where(i => i.DeleteFlag);
+                    var deletedImages = entities.TblImages.Where(i => i.DeleteFlag);
 
                     foreach (var img in deletedImages)
                     {
-                        entity.TblImages.Remove(img);
+                        entities.TblImages.Remove(img);
                     }
 
-                    entity.SaveChanges();
+                    entities.SaveChanges();
                 }
 
                 lblDeletedCount.Text = "0";
