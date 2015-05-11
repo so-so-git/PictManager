@@ -335,55 +335,86 @@ namespace SO.PictManager.Forms
 
                 try
                 {
-                    Cursor = Cursors.WaitCursor;
-
-                    using (var progress = new CircleProgressDialog(this))
+                    if (rdoImportDirectory.Checked) // ディレクトリ
                     {
-                        // プログレス表示開始
-                        progress.StartProgress();
-
-                        if (rdoImportDirectory.Checked) // ディレクトリ
+                        // ディレクトリ存在チェック
+                        if (!Directory.Exists(txtTargetPath.Text))
                         {
-                            // ディレクトリ存在チェック
-                            if (!Directory.Exists(txtTargetPath.Text))
-                            {
-                                FormUtilities.ShowMessage("W024", "ディレクトリ");
-                                return;
-                            }
+                            FormUtilities.ShowMessage("W024", "ディレクトリ");
+                            return;
+                        }
 
-                            // サーチオプション設定
-                            SearchOption opt = chkIncludeSubDirectory.Checked ?
-                                SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+                        Cursor = Cursors.WaitCursor;
 
-                            // 対象ディレクトリ内の画像ファイルパスを全取得
+                        // サーチオプション設定
+                        SearchOption opt = chkIncludeSubDirectory.Checked ?
+                            SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+
+                        // 対象ディレクトリ内の画像ファイルパスを全取得
+                        var filePathList = new List<string>();
+                        using (var progress = new ProgressDialog(this))
+                        {
+                            progress.StartProgress("インポート対象ファイル検索中...",
+                                string.Empty, 0, Utilities.Config.CommonInfo.TargetExtensions.Count);
+
                             foreach (var ext in Utilities.Config.CommonInfo.TargetExtensions)
                             {
-                                var filePathList = Directory.GetFiles(txtTargetPath.Text, "*." + ext, opt).ToList();
-                                filePathList.ForEach(p => ImportFileToDatabase(p));
+                                progress.Message = ext + "ファイル";
+
+                                filePathList.AddRange(Directory.GetFiles(txtTargetPath.Text, "*." + ext, opt));
+
+                                progress.PerformStep();
                             }
                         }
-                        else // ファイル
-                        {
-                            // ファイル存在チェック
-                            if (!File.Exists(txtTargetPath.Text))
-                            {
-                                FormUtilities.ShowMessage("W024", "ファイル");
-                                return;
-                            }
 
-                            // ファイル形式チェック
-                            if (!Utilities.IsAvailableFormat(txtTargetPath.Text, false))
+                        if (filePathList.Count > 0)
+                        {
+                            // ファイルインポート実施
+                            using (var progress = new ProgressDialog(this))
                             {
-                                FormUtilities.ShowMessage("W025");
-                                return;
+                                progress.StartProgress("画像ファイルインポート中...", string.Empty, 0, filePathList.Count);
+
+                                foreach (var path in filePathList)
+                                {
+                                    progress.Message = path;
+
+                                    ImportFileToDatabase(path);
+
+                                    progress.PerformStep();
+                                }
                             }
+                        }
+
+                        FormUtilities.ShowMessage("I012", filePathList.Count.ToString());
+                    }
+                    else // ファイル
+                    {
+                        // ファイル存在チェック
+                        if (!File.Exists(txtTargetPath.Text))
+                        {
+                            FormUtilities.ShowMessage("W024", "ファイル");
+                            return;
+                        }
+
+                        // ファイル形式チェック
+                        if (!Utilities.IsAvailableFormat(txtTargetPath.Text, false))
+                        {
+                            FormUtilities.ShowMessage("W025");
+                            return;
+                        }
+
+                        Cursor = Cursors.WaitCursor;
+                        using (var progress = new CircleProgressDialog(this))
+                        {
+                            // プログレス表示開始
+                            progress.StartProgress();
 
                             // 指定されたファイルをインポート
                             ImportFileToDatabase(txtTargetPath.Text);
                         }
-                    }
 
-                    FormUtilities.ShowMessage("I011", "インポート");
+                        FormUtilities.ShowMessage("I011", "インポート");
+                    }
                 }
                 finally
                 {

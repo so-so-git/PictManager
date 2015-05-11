@@ -45,6 +45,9 @@
   <msg id="I011" caption="処理完了" buttons="OK" icon="Information">
     {0}が完了しました。
   </msg>
+  <msg id="I012" caption="ファイルインポート完了" buttons="OK" icon="Information">
+    {0} ファイルのインポートが完了しました。
+  </msg>
 
   <!-- コンフォームメッセージ -->
 	<msg id="Q000" caption="終了確認" buttons="YesNo" icon="Question">
