@@ -154,12 +154,13 @@ namespace SO.PictManager.Forms
                 menuFile.ShortcutKeys = Keys.Alt | Keys.D;
                 menuFile.DropDownItems.Add(new ToolStripMenuItem("戻る", null, btnClose_Click));
                 menuFile.DropDownItems.Add(new ToolStripMenuItem("上書き保存", null, (s, e) => SaveImage()));
+                menuFile.DropDownItems.Add(new ToolStripMenuItem("ファイルとしてエクスポート", null, menuExportAsFile_Click));
                 menuFile.DropDownItems.Add(new ToolStripSeparator());
                 menuFile.DropDownItems.Add(new ToolStripMenuItem("表示画像カテゴリー変更", null, menuChangeCategory_Click));
                 menuFile.DropDownItems.Add(new ToolStripMenuItem("表示画像削除", null, btnDelete_Click));
                 menuFile.DropDownItems.Add(new ToolStripSeparator());
                 menuFile.DropDownItems.Add(new ToolStripMenuItem("終了", null,
-                        (s, e) => Form_FormClosing(s, new FormClosingEventArgs(CloseReason.UserClosing, false))));
+                    (s, e) => Form_FormClosing(s, new FormClosingEventArgs(CloseReason.UserClosing, false))));
                 barMenu.Items.Add(menuFile);
             }
 
@@ -865,7 +866,10 @@ namespace SO.PictManager.Forms
             Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.File);
 
             // ファイル名変更
-            if (RenameFile() != ResultStatus.OK) return;
+            if (RenameFile() != ResultStatus.OK)
+            {
+                return;
+            }
 
             // ステータスバー更新
             lblStatus.Text = ImageList[CurrentIndex].Key;
@@ -886,7 +890,10 @@ namespace SO.PictManager.Forms
             Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.File);
 
             // ファイル名変更
-            MoveFile();
+            if (MoveFile() != ResultStatus.OK)
+            {
+                return;
+            }
 
             // 前画面へ戻る
             this.BackToOwner();
@@ -907,10 +914,31 @@ namespace SO.PictManager.Forms
             Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.Database);
 
             // カテゴリー変更
-            ChangeCategory();
+            if (ChangeCategory() != ResultStatus.OK)
+            {
+                return;
+            }
 
             // 前画面へ戻る
             this.BackToOwner();
+        }
+
+        #endregion
+
+        #region menuExportAsFile_Click - ファイルとしてエクスポートメニュー押下時
+
+        /// <summary>
+        /// ファイルとしてエクスポートメニューがクリックされた際に実行される処理です。
+        /// 表示中の画像を指定されたカテゴリーに変更し、前画面へ戻ります。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        protected virtual void menuExportAsFile_Click(object sender, EventArgs e)
+        {
+            Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.Database);
+
+            // 画像ファイルエクスポート
+            ExportImageFile();
         }
 
         #endregion

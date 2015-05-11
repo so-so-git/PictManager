@@ -178,6 +178,7 @@ namespace SO.PictManager.Forms
                 menuTemp.ShortcutKeys = Keys.Alt | Keys.D;
                 menuTemp.DropDownItems.Add(new ToolStripMenuItem("戻る", null, btnClose_Click));
                 menuTemp.DropDownItems.Add(new ToolStripMenuItem("上書き保存", null, (s, e) => SaveImage()));
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("ファイルとしてエクスポート", null, menuExportAsFile_Click));
                 menuTemp.DropDownItems.Add(new ToolStripMenuItem("対象データ再取得", null, menuRefresh_Click));
                 menuTemp.DropDownItems.Add(new ToolStripSeparator());
                 menuTemp.DropDownItems.Add(new ToolStripMenuItem("表示画像カテゴリー変更", null, menuChangeCategory_Click));

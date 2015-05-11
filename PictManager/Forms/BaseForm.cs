@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -850,6 +851,74 @@ namespace SO.PictManager.Forms
                 {
                     // 終了通知
                     FormUtilities.ShowMessage("I011", "カテゴリ変更");
+                }
+            }
+
+            return status;
+        }
+
+        #endregion
+
+        #region ExportImageFile - 画像をファイルとしてエクスポート
+
+        /// <summary>
+        /// 表示中の画像をファイルとしてエクスポートします。
+        /// </summary>
+        /// <returns>処理結果</returns>
+        public ResultStatus ExportImageFile()
+        {
+            Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.Database);
+
+            var status = ResultStatus.Empty;
+            int imageId = int.Parse(_imageList[CurrentIndex].Key);
+
+            try
+            {
+                using (var entities = new PictManagerEntities())
+                {
+                    // 出力対象データ取得
+                    var entity = (from i in entities.TblImages
+                                  where i.ImageId == imageId
+                                  select i).First();
+
+                    // 出力ファイルパス取得
+                    string path;
+                    using (var dlg = new SaveFileDialog())
+                    {
+                        dlg.AddExtension = true;
+                        dlg.DefaultExt = entity.ImageFormat;
+                        dlg.Filter = string.Format("{0}ファイル|*.{0}", entity.ImageFormat);
+
+                        if (dlg.ShowDialog(this) != DialogResult.OK)
+                        {
+                            status = ResultStatus.Cancel;
+                            return status;
+                        }
+
+                        path = dlg.FileName;
+                    }
+
+                    using (var img = (new ImageConverter().ConvertFrom(entity.ImageData) as Image))
+                    {
+                        img.Save(path);
+                    }
+                }
+
+                status = ResultStatus.OK;
+            }
+            catch (Exception ex)
+            {
+                status = ResultStatus.Error;
+                string optionMsg = ex is IOException ?
+                    MessageXml.GetMessageInfo("E001", string.Format("画像ID: {0}", imageId)).message : null;
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod(), optionMsg);
+            }
+            finally
+            {
+                if (status == ResultStatus.OK)
+                {
+                    // 終了通知
+                    FormUtilities.ShowMessage("I011", "ファイルエクスポート");
                 }
             }
 
