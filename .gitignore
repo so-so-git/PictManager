@@ -8,3 +8,4 @@ Uploads/*.*
 PictManagerSetup/PictManagerSetup/Express/
 PictManagerDatabase/PictManagerDatabase.sqlproj.user
 PictManagerDatabase/PictManagerDatabase.dbmdl
+/PictManagerDatabase/PictManagerDatabase.dbmdl
