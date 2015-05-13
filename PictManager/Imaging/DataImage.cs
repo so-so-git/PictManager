@@ -85,6 +85,24 @@ namespace SO.PictManager.Imaging
         }
 
         /// <summary>
+        /// 画像セットのIDを取得または設定します。
+        /// </summary>
+        public int? SetId
+        {
+            get { return _image.SetId; }
+            set { _image.SetId = value; }
+        }
+
+        /// <summary>
+        /// 画像セットの表示順を取得または設定します。
+        /// </summary>
+        public int? SetOrder
+        {
+            get { return _image.SetOrder; }
+            set { _image.SetOrder = value; }
+        }
+
+        /// <summary>
         /// 画像のバイトデータを取得します。
         /// </summary>
         public byte[] ImageBytes

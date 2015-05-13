@@ -52,7 +52,10 @@ namespace SO.PictManager.Forms
         private int _slideInterval;
 
         /// <summary>類似画像表示用サムネイルフォーム</summary>
-        private ThumbnailForm _thumbnailForm;
+        private ThumbnailForm _similarForm;
+
+        /// <summary>セット画像表示用サムネイルフォーム</summary>
+        private ThumbnailForm _setForm;
 
         /// <summary>ブックマークフォーム</summary>
         private BookmarkForm _bookmarkForm;
@@ -76,6 +79,9 @@ namespace SO.PictManager.Forms
             TargetDirectory = new DirectoryInfo(targetPath);
             IncludeSubFlg = includeSubFlg;
 
+            // 画面表示制御
+            btnOperateSet.Visible = false;
+
             // 共通処理
             ConstructCommon();
         }
@@ -92,6 +98,9 @@ namespace SO.PictManager.Forms
 
             // フィールド初期化
             TargetCategory = category;
+
+            // 画面表示制御
+            btnOperateSet.Visible = true;
 
             // 共通処理
             ConstructCommon();
@@ -308,9 +317,13 @@ namespace SO.PictManager.Forms
             {
                 // スクロールバー位置初期化
                 if (pnlParent.Panel1.VerticalScroll.Visible)
+                {
                     pnlParent.Panel1.VerticalScroll.Value = 0;
+                }
                 if (pnlParent.Panel1.HorizontalScroll.Visible)
+                {
                     pnlParent.Panel1.HorizontalScroll.Value = 0;
+                }
 
                 // イメージファイルがあるか確認
                 if (ImageCount == 0)
@@ -336,6 +349,14 @@ namespace SO.PictManager.Forms
                 // 表示中情報更新
                 txtIndex.Text = (CurrentIndex + 1).ToString();
                 ShowImageInfoByStatusBar();
+
+                // セット操作ボタンの文言を変更
+                if (ImageMode == ConfigInfo.ImageDataMode.Database)
+                {
+                    var image = ImageData as DataImage;
+
+                    btnOperateSet.Text = image.SetId.HasValue ? "セット表示" : "セット登録";
+                }
 
             }
             catch (Exception ex)
@@ -562,14 +583,36 @@ namespace SO.PictManager.Forms
         protected override void CloseForm()
         {
             // 各リソースを破棄
-            if (_thumbnailForm != null)
-                _thumbnailForm.Dispose();
-            if (_bookmarkForm != null)
-                _bookmarkForm.Dispose();
-            if (_slideThread != null)
-                _slideThread.Abort();
+            DisposeResources();
 
             base.CloseForm();
+        }
+
+        #endregion
+
+        #region DisposeResources - リソース破棄
+
+        /// <summary>
+        /// このフォームで使用しているリソースの破棄を行います。
+        /// </summary>
+        private void DisposeResources()
+        {
+            if (_similarForm != null)
+            {
+                _similarForm.Dispose();
+            }
+            if (_setForm != null)
+            {
+                _setForm.Dispose();
+            }
+            if (_bookmarkForm != null)
+            {
+                _bookmarkForm.Dispose();
+            }
+            if (_slideThread != null)
+            {
+                _slideThread.Abort();
+            }
         }
 
         #endregion
@@ -615,14 +658,12 @@ namespace SO.PictManager.Forms
                 }
 
                 // 各リソースを破棄
-                if (_thumbnailForm != null)
-                    _thumbnailForm.Dispose();
-                if (_bookmarkForm != null)
-                    _bookmarkForm.Dispose();
-                if (_slideThread != null)
-                    _slideThread.Abort();
+                DisposeResources();
 
-                if (Owner != null) Owner.Dispose();
+                if (Owner != null)
+                {
+                    Owner.Dispose();
+                }
             }
             catch (Exception ex)
             {
@@ -1194,6 +1235,7 @@ namespace SO.PictManager.Forms
                     // 類似画像を検索しサムネイルリストで表示
                     List<IImage> similarImages =
                         ImageController.GetSimilarImages(this, ImageList[CurrentIndex]);
+
                     if (!similarImages.Any())
                     {
                         FormUtilities.ShowMessage("I008");
@@ -1201,27 +1243,29 @@ namespace SO.PictManager.Forms
                     }
                     else
                     {
-                        _thumbnailForm = new ThumbnailForm(similarImages);
-                        _thumbnailForm.Text = string.Format("PictManager - 類似画像検索結果 [{0}]",
-                                ImageList[CurrentIndex]);
-                        _thumbnailForm.StatusBarText = string.Format("[{0}] の類似画像を表示中 - {1}件",
-                                ImageList[CurrentIndex], similarImages.Count);
-                        _thumbnailForm.Disposed += new EventHandler(
+                        _similarForm = new ThumbnailForm(similarImages, ImageMode);
+                        _similarForm.Text = string.Format("PictManager - 類似画像検索結果 [{0}]",
+                            ImageList[CurrentIndex]);
+                        _similarForm.StatusBarText = string.Format("[{0}] の類似画像を表示中 - {1}件",
+                            ImageList[CurrentIndex], similarImages.Count);
+                        _similarForm.Disposed += new EventHandler(
                             (obj, fce) =>
                             {
                                 chkSimilar.Checked = false;
                                 RefreshImageList();
                             });
 
-                        _thumbnailForm.Show(this);
-                        _thumbnailForm.Activate();
+                        _similarForm.Show(this);
+                        _similarForm.Activate();
                     }
                 }
                 else
                 {
                     // 表示しているサムネイルフォームを破棄
-                    if (_thumbnailForm != null)
-                        _thumbnailForm.Dispose();
+                    if (_similarForm != null)
+                    {
+                        _similarForm.Dispose();
+                    }
                 }
             }
             catch (Exception ex)
@@ -1273,6 +1317,43 @@ namespace SO.PictManager.Forms
 
         #endregion
 
+        #region btnOperateSet_CheckedChanged - セット操作ボタン押下時
+
+        /// <summary>
+        /// セット操作ボタンがクリックされた際に実行される処理です。
+        /// 既にセットに登録されている画像の場合は、
+        /// そのセット内の画像をサムネイル画面で表示します。
+        /// セットに登録されていない画像の場合は、
+        /// 現在サムネイル画面で開かれているセットに画像を追加します。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void btnOperateSet_CheckedChanged(object sender, EventArgs e)
+        {
+            Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.Database);
+
+            try
+            {
+                var imageData = ImageData as DataImage;
+
+                if (imageData.SetId.HasValue)
+                {
+
+                }
+                else
+                {
+
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
+
+        }
+
+        #endregion
+
         #region btnPrevious_Click - 前へボタン押下時
 
         /// <summary>
@@ -1286,12 +1367,21 @@ namespace SO.PictManager.Forms
             try
             {
                 // 類似画像が表示されている場合は表示フォームを破棄
-                if (_thumbnailForm != null)
-                    _thumbnailForm.Dispose();
+                if (_similarForm != null)
+                {
+                    _similarForm.Dispose();
+                }
 
                 // 一つ前のインデックスの画像を表示(最初の場合は末尾を表示)
-                if (CurrentIndex == 0) CurrentIndex = ImageList.Count - 1;
-                else --CurrentIndex;
+                if (CurrentIndex == 0)
+                {
+                    CurrentIndex = ImageList.Count - 1;
+                }
+                else
+                {
+                    CurrentIndex--;
+                }
+
                 DisplayImage();
             }
             catch (Exception ex)
@@ -1315,18 +1405,26 @@ namespace SO.PictManager.Forms
             try
             {
                 // 類似画像が表示されている場合は表示フォームを破棄
-                if (_thumbnailForm != null)
-                    _thumbnailForm.Dispose();
+                if (_similarForm != null)
+                {
+                    _similarForm.Dispose();
+                }
 
                 // 一つ後のインデックスの画像を表示(末尾の場合は最初を表示)
                 if (CurrentIndex == ImageCount - 1)
                 {
                     CurrentIndex = 0;
+
                     if (!_slideFlg)
+                    {
                         // スライド表示中は通知ダイアログは表示しない
                         FormUtilities.ShowMessage("I000");
+                    }
                 }
-                else ++CurrentIndex;
+                else
+                {
+                    CurrentIndex++;
+                }
 
                 DisplayImage();
             }

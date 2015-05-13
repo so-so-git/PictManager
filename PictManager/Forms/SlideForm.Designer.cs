@@ -39,7 +39,9 @@
             this.btnBookmark = new SO.PictManager.Components.KeyPrevButton();
             this.chkLupe = new SO.PictManager.Components.KeyPrevCheckBox();
             this.picLupe = new System.Windows.Forms.PictureBox();
+            this.btnOperateSet = new SO.PictManager.Components.KeyPrevCheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.picViewer)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlParent)).BeginInit();
             this.pnlParent.Panel1.SuspendLayout();
             this.pnlParent.Panel2.SuspendLayout();
             this.pnlParent.SuspendLayout();
@@ -49,7 +51,7 @@
             // picViewer
             // 
             this.picViewer.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
-            this.picViewer.Size = new System.Drawing.Size(737, 445);
+            this.picViewer.Size = new System.Drawing.Size(737, 442);
             // 
             // pnlParent
             // 
@@ -68,11 +70,12 @@
             this.pnlParent.Panel2.Controls.Add(this.btnNext);
             this.pnlParent.Panel2.Controls.Add(this.txtIndex);
             this.pnlParent.Panel2.Controls.Add(this.lblCount);
+            this.pnlParent.Panel2.Controls.Add(this.btnOperateSet);
             this.pnlParent.Panel2.Controls.Add(this.chkLupe);
             this.pnlParent.Panel2.Controls.Add(this.btnPrevious);
             this.pnlParent.Panel2.Controls.Add(this.lblCountDelim);
-            this.pnlParent.Size = new System.Drawing.Size(1134, 472);
-            this.pnlParent.SplitterDistance = 383;
+            this.pnlParent.Size = new System.Drawing.Size(1134, 470);
+            this.pnlParent.SplitterDistance = 380;
             this.pnlParent.SplitterWidth = 6;
             // 
             // btnClose
@@ -92,7 +95,7 @@
             // 
             // lblInfo
             // 
-            this.lblInfo.Size = new System.Drawing.Size(1118, 445);
+            this.lblInfo.Size = new System.Drawing.Size(1117, 442);
             this.lblInfo.TabIndex = 0;
             // 
             // btnZoomOut
@@ -220,6 +223,19 @@
             this.picLupe.TabStop = false;
             this.picLupe.Visible = false;
             // 
+            // btnOperateSet
+            // 
+            this.btnOperateSet.Appearance = System.Windows.Forms.Appearance.Button;
+            this.btnOperateSet.Location = new System.Drawing.Point(343, 8);
+            this.btnOperateSet.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnOperateSet.Name = "btnOperateSet";
+            this.btnOperateSet.Size = new System.Drawing.Size(73, 29);
+            this.btnOperateSet.TabIndex = 3;
+            this.btnOperateSet.Text = "セット登録";
+            this.btnOperateSet.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnOperateSet.UseVisualStyleBackColor = true;
+            this.btnOperateSet.CheckedChanged += new System.EventHandler(this.btnOperateSet_CheckedChanged);
+            // 
             // SlideForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -234,6 +250,7 @@
             this.pnlParent.Panel1.ResumeLayout(false);
             this.pnlParent.Panel2.ResumeLayout(false);
             this.pnlParent.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlParent)).EndInit();
             this.pnlParent.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picLupe)).EndInit();
             this.ResumeLayout(false);
@@ -253,6 +270,7 @@
         private SO.PictManager.Components.KeyPrevButton btnBookmark;
         private SO.PictManager.Components.KeyPrevCheckBox chkLupe;
         private System.Windows.Forms.PictureBox picLupe;
+        private Components.KeyPrevCheckBox btnOperateSet;
 
     }
 }

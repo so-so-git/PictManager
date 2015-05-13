@@ -51,7 +51,8 @@ namespace SO.PictManager.Forms.Info
         /// <param name="fileNo">ブックマークしたファイルのNo</param>
         /// <param name="timeStamp">ブックマークした日時</param>
         /// <param name="sortOrder">ブックマーク時のファイルソート順</param>
-        public BookmarkInfo(int id, string name, int fileNo, DateTime timeStamp, ImageSortOrder sortOrder)
+        public BookmarkInfo(int id, string name, int fileNo, DateTime timeStamp,
+                            ImageSortOrder sortOrder = ImageSortOrder.KeyAsc)
         {
             Id = id;
             Name = name;

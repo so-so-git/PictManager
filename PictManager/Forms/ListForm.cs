@@ -901,7 +901,7 @@ namespace SO.PictManager.Forms
             }
             else
             {
-                var form = new ThumbnailForm(similarImages);
+                var form = new ThumbnailForm(similarImages, ImageMode);
                 form.Text = string.Format("PictManager - 類似画像検索結果 [{0}]", key);
                 form.StatusBarText = string.Format("[{0}] の類似画像を表示中 - {1}件", key, similarImages.Count);
 

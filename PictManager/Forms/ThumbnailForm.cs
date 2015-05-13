@@ -49,6 +49,9 @@ namespace SO.PictManager.Forms
         /// <summary>リサイズ変更前サイズ</summary>
         private Size _beforeResize;
 
+        /// <summary>画像の順番を手動で変更出来るかのフラグ</summary>
+        private bool _canChangeOrder;
+
         #endregion
 
         #region プロパティ
@@ -108,19 +111,80 @@ namespace SO.PictManager.Forms
         }
 
         /// <summary>
-        /// 対象ファイルパスのリストを指定して表示する際に使用するコンストラクタです。
+        /// 任意の画像リスト用のコンストラクタです。
         /// </summary>
-        /// <param name="pathList">対象ディレクトリパス</param>
-        public ThumbnailForm(List<IImage> pathList)
+        /// <param name="imageList">画像データリスト</param>
+        /// <param name="imageMode">画像モード</param>
+        /// <param name="canChangeOrder">画像の順番を手動で変更出来るかのフラグ</param>
+        public ThumbnailForm(List<IImage> imageList, ConfigInfo.ImageDataMode imageMode,
+                             bool canChangeOrder = false)
+            : base(imageMode)
         {
             // コンポーネント初期化
             InitializeComponent();
 
             // 渡されたファイルパスリストを操作対象とする
-            ImageList = pathList;
+            ImageList = imageList;
+
+            _canChangeOrder = canChangeOrder;
 
             // 共通構築処理
             CommonConstruction();
+        }
+
+        #endregion
+
+        #region RefreshAll - 対象ファイルリスト最新化(外部からの呼出用)
+
+        /// <summary>
+        /// 表示対象画像リストを最新の内容に更新します。
+        /// 画像リストを対象に操作を行っている場合は何も行ないません。
+        /// </summary>
+        public void RefreshAll()
+        {
+            RefreshImageList();
+        }
+
+        #endregion
+
+        #region AddImage - 表示対象画像を追加
+
+        /// <summary>
+        /// 指定された画像データを表示対象リストの末尾に追加します。
+        /// </summary>
+        /// <param name="imageData">追加する画像データ</param>
+        public void AddImage(IImage imageData)
+        {
+            ImageList.Add(imageData);
+            RefreshThumbnails();
+        }
+
+        #endregion
+
+        #region RemoveSelectedImage - 選択されている画像を表示対象リストから除去
+
+        /// <summary>
+        /// 選択されている画像を表示対象リストから除去します。
+        /// </summary>
+        public void RemoveSelectedImage()
+        {
+            var selectedList = from t in _thumbnails
+                               where t.BorderStyle == BorderStyle.FixedSingle
+                               join i in ImageList
+                               on t.ImageKey equals i.Key
+                               select i;
+
+            if (!selectedList.Any())
+            {
+                return;
+            }
+
+            foreach (var selected in selectedList)
+            {
+                ImageList.Remove(selected);
+            }
+
+            RefreshThumbnails();
         }
 
         #endregion
@@ -214,19 +278,20 @@ namespace SO.PictManager.Forms
             // 表示
             menuTemp = new ToolStripMenuItem("表示(&V)", null, null, "menuView");
             menuTemp.ShortcutKeys = Keys.Alt | Keys.V;
-            menuTemp.DropDownItems.Add(new ToolStripMenuItem("選択画像表示", null, menuViewImage_Clicked, "menuViewImage"));
+            menuTemp.DropDownItems.Add(new ToolStripMenuItem("選択画像表示", null, menuViewImage_Click, "menuViewImage"));
             barMenu.Items.Add(menuTemp);
         }
 
         #endregion
 
-        #region RefreshTargetFiles - 対象ファイルリスト最新化
+        #region RefreshImageList - 対象ファイルリスト最新化
 
         /// <summary>
         /// 表示対象画像リストを最新の内容に更新します。
         /// 画像リストを対象に操作を行っている場合は何も行ないません。
+        /// (Refreshメソッドは本メソッドと同じ処理を行います)
         /// </summary>
-        protected override void  RefreshImageList()
+        protected override void RefreshImageList()
         {
             if (ImageMode == Info.ConfigInfo.ImageDataMode.File
                 && TargetDirectory == null)
@@ -356,7 +421,7 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region イベントハンドラ
+        //*** イベントハンドラ ***
 
         #region Form_Shown - フォーム表示時
 
@@ -579,7 +644,7 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region menuViewImage_Clicked - 選択画像表示メニュー押下時
+        #region menuViewImage_Click - 選択画像表示メニュー押下時
 
         /// <summary>
         /// 選択画像表示メニューがクリックされた際に実行される処理です。
@@ -588,7 +653,7 @@ namespace SO.PictManager.Forms
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>
-        private void menuViewImage_Clicked(object sender, EventArgs e)
+        private void menuViewImage_Click(object sender, EventArgs e)
         {
             try
             {
@@ -879,8 +944,6 @@ namespace SO.PictManager.Forms
             else
                 txtPage.Text = menuTxtPage.Text;
         }
-
-        #endregion
 
         #endregion
     }
