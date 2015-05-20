@@ -82,16 +82,16 @@ namespace SO.PictManager.Imaging
                         // 基準画像の各ブロックのピクセル深度の平均を取得
                         blockWidth = bmp.Width / DIVIDE_HORISONTAL;
                         blockHeight = bmp.Height / DIVIDE_VERTICAL;
-                        for (int y = 1; y <= DIVIDE_VERTICAL; ++y)
+                        for (int y = 1; y <= DIVIDE_VERTICAL; y++)
                         {
                             xPos = 0;
-                            for (int x = 1; x <= DIVIDE_HORISONTAL; ++x)
+                            for (int x = 1; x <= DIVIDE_HORISONTAL; x++)
                             {
                                 Rectangle rect = new Rectangle(
-                                        xPos,
-                                        yPos,
-                                        x == DIVIDE_HORISONTAL ? blockWidth + bmp.Width % DIVIDE_HORISONTAL : blockWidth,
-                                        y == DIVIDE_VERTICAL ? blockHeight + bmp.Height % DIVIDE_VERTICAL : blockHeight);
+                                    xPos,
+                                    yPos,
+                                    x == DIVIDE_HORISONTAL ? blockWidth + bmp.Width % DIVIDE_HORISONTAL : blockWidth,
+                                    y == DIVIDE_VERTICAL ? blockHeight + bmp.Height % DIVIDE_VERTICAL : blockHeight);
 
                                 viewAvgs[x - 1, y - 1] = GetBlockColorAverage(bmp, rect);
 
@@ -107,9 +107,12 @@ namespace SO.PictManager.Imaging
                     {
                         // プログレスメッセージ更新
                         progDlg.Message = string.Format("{0}({1}/{2}) {3}",
-                                message ?? string.Empty, ++proceedCount, form.ImageCount, compImage);
+                            message ?? string.Empty, ++proceedCount, form.ImageCount, compImage);
 
-                        if (compImage.Key == criterion.Key) continue;
+                        if (compImage.Key == criterion.Key)
+                        {
+                            continue;
+                        }
 
                         using (Image img = compImage.GetImage())
                         using (Bitmap colorBmp = new Bitmap(img))
@@ -119,22 +122,25 @@ namespace SO.PictManager.Imaging
                             blockWidth = bmp.Width / DIVIDE_HORISONTAL;
                             blockHeight = bmp.Height / DIVIDE_VERTICAL;
                             yPos = 0;
-                            for (int y = 1; y <= DIVIDE_VERTICAL; ++y)
+                            for (int y = 1; y <= DIVIDE_VERTICAL; y++)
                             {
                                 xPos = 0;
-                                for (int x = 1; x <= DIVIDE_HORISONTAL; ++x)
+                                for (int x = 1; x <= DIVIDE_HORISONTAL; x++)
                                 {
                                     Rectangle rect = new Rectangle(
-                                            xPos,
-                                            yPos,
-                                            x == DIVIDE_HORISONTAL ? blockWidth + bmp.Width % DIVIDE_HORISONTAL : blockWidth,
-                                            y == DIVIDE_VERTICAL ? blockHeight + bmp.Height % DIVIDE_VERTICAL : blockHeight);
+                                        xPos,
+                                        yPos,
+                                        x == DIVIDE_HORISONTAL ? blockWidth + bmp.Width % DIVIDE_HORISONTAL : blockWidth,
+                                        y == DIVIDE_VERTICAL ? blockHeight + bmp.Height % DIVIDE_VERTICAL : blockHeight);
 
                                     int viewAvg = viewAvgs[x - 1, y - 1];
                                     int compAvg = GetBlockColorAverage(bmp, rect);
                                     int blockDist = Math.Abs(viewAvg - compAvg);
 
-                                    if (blockDist > THRESHOLD) goto NextImage;
+                                    if (blockDist > THRESHOLD)
+                                    {
+                                        goto NextImage;
+                                    }
 
                                     xPos += blockWidth;
                                 }
@@ -162,6 +168,7 @@ namespace SO.PictManager.Imaging
         #endregion
 
         #region GetBlockColorAverage - 指定ブロックのピクセル色値の平均値を取得
+
         /// <summary>
         /// 対象画像内の指定された矩形内のピクセル色値の平均値を取得します。
         /// </summary>
@@ -177,7 +184,7 @@ namespace SO.PictManager.Imaging
                 bmpData = bmp.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 
                 // 指定矩形内のピクセルデータを取得
-                byte[] pixels = new byte[rect.Width * rect.Height * 4];
+                var pixels = new byte[rect.Width * rect.Height * 4];
                 Marshal.Copy(bmpData.Scan0, pixels, 0, pixels.Length);
 
                 long total = 0;
@@ -194,9 +201,13 @@ namespace SO.PictManager.Imaging
             }
             finally
             {
-                if (bmpData != null) bmp.UnlockBits(bmpData);
+                if (bmpData != null)
+                {
+                    bmp.UnlockBits(bmpData);
+                }
             }
         }
+
         #endregion
     }
 }

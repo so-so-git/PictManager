@@ -182,7 +182,9 @@ namespace SO.PictManager.Forms
             // フィールド初期化
             ImageMode = ConfigInfo.ImageDataMode.File;
             if (targetPath != null)
+            {
                 _targetDir = new DirectoryInfo(targetPath);
+            }
 
             _includeSubFlg = includeSubFlg;
 

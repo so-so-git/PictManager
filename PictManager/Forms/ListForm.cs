@@ -556,13 +556,17 @@ namespace SO.PictManager.Forms
             // 禁則文字チェック
             string editVal = cell.EditedFormattedValue.ToString();
             if (editVal.HasInvalidPathChar(allowChars))
+            {
                 return ErrHandling("W017");
+            }
 
             if (cell.ColumnIndex == FileColumnIndexes.FILE_NAME)
             {
                 // 拡張子変更チェック
                 if (Path.GetExtension(editVal) != Path.GetExtension(cell.Value.ToString()))
+                {
                     return ErrHandling("W018");
+                }
             }
             else
             {
@@ -571,19 +575,28 @@ namespace SO.PictManager.Forms
                 int volCharCnt = (from c in editVal.ToCharArray()
                                   where c == Path.VolumeSeparatorChar
                                   select c).Count();
+
                 if (volCharCnt == 0)
+                {
                     return ErrHandling("W019");
+                }
                 if (volCharCnt > 1)
+                {
                     return ErrHandling("W020");
+                }
 
                 // ボリューム区切り文字位置チェック
                 if (editVal.IndexOf(Path.VolumeSeparatorChar) != 1)
+                {
                     return ErrHandling("W021");
+                }
 
                 // 空のディレクトリパスチェック
                 var twinSep = new string(Path.DirectorySeparatorChar, 2);
                 if (editVal.IndexOf(twinSep) != -1)
+                {
                     return ErrHandling("W022");
+                }
             }
 
             return true;

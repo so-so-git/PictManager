@@ -614,8 +614,8 @@ namespace SO.PictManager.Forms
                     if (_groupForm.GroupId.HasValue)
                     {
                         group = (from g in entities.TblGroups
-                                     where g.GroupId == _groupForm.GroupId.Value
-                                     select g).First();
+                                 where g.GroupId == _groupForm.GroupId.Value
+                                 select g).First();
                         
                         groupId = group.GroupId;
                         description = group.Description;
@@ -681,6 +681,9 @@ namespace SO.PictManager.Forms
                 }
 
                 RefreshImageList();
+
+                ImageData = ImageList[CurrentIndex];
+                RefreshOperateGroupButtonState();
 
                 FormUtilities.ShowMessage("I011", string.Format("画像グループ(ID: {0})の登録", groupId));
             };
