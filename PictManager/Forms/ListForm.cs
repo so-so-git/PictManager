@@ -105,7 +105,7 @@ namespace SO.PictManager.Forms
         /// <param name="targetPath">対象ディレクトリパス</param>
         /// <param name="includeSubFlg">処理対象にサブディレクトリ以下を含むかを示すフラグ</param>
         public ListForm(string targetPath, bool includeSubFlg)
-                : base(targetPath, includeSubFlg)
+            : base(targetPath, includeSubFlg)
         {
             try
             {
@@ -189,12 +189,24 @@ namespace SO.PictManager.Forms
                 menuTemp.DropDownItems.Add(new ToolStripMenuItem("一括ファイル名変更", null, menuRenameAll_Click));
                 menuTemp.DropDownItems.Add(new ToolStripMenuItem("一括ファイル移動", null, menuMoveAll_Click));
                 menuTemp.DropDownItems.Add(new ToolStripMenuItem("削除済画像確認", null,
-                        (s, e) => ViewDeletedFiles()));
+                    (s, e) => ViewDeletedFiles()));
                 menuTemp.DropDownItems.Add(new ToolStripSeparator());
                 menuTemp.DropDownItems.Add(new ToolStripMenuItem("ディレクトリを開く", null, (s, e) => Utilities.OpenExplorer(TargetDirectory.FullName)));
                 menuTemp.DropDownItems.Add(new ToolStripSeparator());
                 menuTemp.DropDownItems.Add(new ToolStripMenuItem("終了", null,
-                        (s, e) => Form_FormClosing(s, new FormClosingEventArgs(CloseReason.UserClosing, false))));
+                    (s, e) => Form_FormClosing(s, new FormClosingEventArgs(CloseReason.UserClosing, false))));
+                barMenu.Items.Add(menuTemp);
+            }
+            else
+            {
+                // データ
+                menuTemp = new ToolStripMenuItem("データ(&D)", null, null, "menuData");
+                menuTemp.ShortcutKeys = Keys.Alt | Keys.D;
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("戻る", null, btnClose_Click));
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("対象ファイル再取得", null, menuRefresh_Click));
+                menuTemp.DropDownItems.Add(new ToolStripSeparator());
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("終了", null,
+                    (s, e) => Form_FormClosing(s, new FormClosingEventArgs(CloseReason.UserClosing, false))));
                 barMenu.Items.Add(menuTemp);
             }
 
@@ -222,7 +234,7 @@ namespace SO.PictManager.Forms
         #region CreateColumns - グリッド列生成
 
         /// <summary>
-        /// ファイル一覧グリッドの列を生成します。
+        /// 画像一覧グリッドの列を生成します。
         /// </summary>
         protected virtual void CreateColumns()
         {
@@ -297,7 +309,7 @@ namespace SO.PictManager.Forms
         #region CreateCells - グリッドセル生成
 
         /// <summary>
-        /// ファイル一覧グリッドのセルを生成します。
+        /// 画像一覧グリッドのセルを生成します。
         /// </summary>
         protected virtual void CreateCells()
         {
@@ -432,9 +444,12 @@ namespace SO.PictManager.Forms
                 if (!img.IsDeleted)
                 {
                     // MD5重複チェック
-                    for (int j = 0; j < grdImages.RowCount; ++j)
+                    for (int j = 0; j < grdImages.RowCount; j++)
                     {
-                        if (Convert.ToBoolean(grdImages[FileColumnIndexes.SELECT_CHECK, j].Tag)) continue;
+                        if (Convert.ToBoolean(grdImages[FileColumnIndexes.SELECT_CHECK, j].Tag))
+                        {
+                            continue;
+                        }
 
                         DataGridViewCell targetCell = grdImages[FileColumnIndexes.MD5, j];
                         if (celMD5.Value.Equals(targetCell.Value))
@@ -613,7 +628,10 @@ namespace SO.PictManager.Forms
                 case FileColumnIndexes.FILE_NAME:
                 case FileColumnIndexes.FOLDER_PATH:
                     // 既に対象が処理済の場合はスキップ
-                    if (proceededRows.Contains(listRow)) break;
+                    if (proceededRows.Contains(listRow))
+                    {
+                        break;
+                    }
 
                     // 対象ファイルのパスを変更
                     ret = ChangePath(listRow);
@@ -649,7 +667,10 @@ namespace SO.PictManager.Forms
                        where i.ImageId == imageId
                        select i).FirstOrDefault();
 
-            if (img == null) return true;
+            if (img == null)
+            {
+                return true;
+            }
 
             img.CategoryId = Convert.ToInt32(row.Cells[DatabaseColumnIndexes.CATEGORY].Value);
             img.Description = row.Cells[DatabaseColumnIndexes.DESCRIPTION].Value.ToSafeString();
@@ -723,7 +744,9 @@ namespace SO.PictManager.Forms
         private void RevertEdit(bool isAllRevert)
         {
             foreach (DataGridViewColumn col in grdImages.Columns)
+            {
                 col.HeaderCell.SortGlyphDirection = SortOrder.None;
+            }
 
             if (isAllRevert)
             {
@@ -766,7 +789,11 @@ namespace SO.PictManager.Forms
                             cell.Value = cell.Tag;
 
                             // 変更カウントをデクリメント、変更判別色クリア
-                            if (cell.Style.BackColor == Color.Yellow) --_changeCnt;
+                            if (cell.Style.BackColor == Color.Yellow)
+                            {
+                                _changeCnt--;
+                            }
+
                             cell.Style.BackColor =
                                 grdImages.Columns[colIndex].DefaultCellStyle.BackColor;
                         }
@@ -809,6 +836,7 @@ namespace SO.PictManager.Forms
                     if (cell.Style.BackColor == Color.Yellow)
                     {
                         int newId = Convert.ToInt32(cell.Value);
+
                         statusText += " -> "
                             + (from c in entities.MstCategories
                                where c.CategoryId == newId
@@ -821,7 +849,9 @@ namespace SO.PictManager.Forms
                 statusText = cell.Tag.ToString();
 
                 if (cell.Style.BackColor == Color.Yellow)
+                {
                     statusText += " -> " + cell.Value.ToString();
+                }
             }
 
             lblStatus.Text = statusText;
@@ -873,11 +903,13 @@ namespace SO.PictManager.Forms
                 ? FileColumnIndexes.SIMILAR_BUTTON
                 : DatabaseColumnIndexes.SIMILAR_BUTTON;
 
-            if (!(grdImages[colIdx, rowIdx] is DataGridViewButtonCell)) return;
+            if (!(grdImages[colIdx, rowIdx] is DataGridViewButtonCell))
+            {
+                return;
+            }
 
             string key = ImageMode == ConfigInfo.ImageDataMode.File
-                ? GetImagePath(rowIdx)
-                : grdImages[DatabaseColumnIndexes.IMAGE_ID, rowIdx].Value.ToSafeString();
+                ? GetImagePath(rowIdx) : GetImageId(rowIdx).ToSafeString();
 
             List<IImage> similarImages;
             if (_similarMap != null && _similarMap.ContainsKey(rowIdx))
@@ -888,11 +920,15 @@ namespace SO.PictManager.Forms
             {
                 IImage criterion;
                 if (ImageMode == ConfigInfo.ImageDataMode.File)
+                {
                     criterion = new FileImage(key);
+                }
                 else
+                {
                     criterion = new DataImage(int.Parse(key));
+                }
 
-                similarImages = ImageController.GetSimilarImages(this, new FileImage(key));
+                similarImages = ImageController.GetSimilarImages(this, criterion);
             }
 
             if (!similarImages.Any())
@@ -964,7 +1000,10 @@ namespace SO.PictManager.Forms
                         cell.Value = cell.Tag;
 
                         // 変更カウントをデクリメント
-                        if (cell.Style.BackColor == Color.Yellow) --_changeCnt;
+                        if (cell.Style.BackColor == Color.Yellow)
+                        {
+                            _changeCnt--;
+                        }
                     }
 
                     cell.ReadOnly = true;
@@ -1045,7 +1084,10 @@ namespace SO.PictManager.Forms
                 }
                 else
                 {
-                    if (Owner != null) Owner.Dispose();
+                    if (Owner != null)
+                    {
+                        Owner.Dispose();
+                    }
                 }
             }
             catch (Exception ex)
@@ -1109,7 +1151,10 @@ namespace SO.PictManager.Forms
         {
             try
             {
-                if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+                if (e.RowIndex < 0 || e.ColumnIndex < 0)
+                {
+                    return;
+                }
 
                 if (grdImages.Columns[e.ColumnIndex] is DataGridViewComboBoxColumn)
                 {
@@ -1137,7 +1182,9 @@ namespace SO.PictManager.Forms
             try
             {
                 if (e.RowIndex <= -1 || IsRowDeleted(grdImages.Rows[e.RowIndex]))
+                {
                     return;
+                }
 
                 // 表示画像情報生成
                 IImage img = null;
@@ -1195,7 +1242,10 @@ namespace SO.PictManager.Forms
             {
                 lblStatus.Text = string.Empty;
 
-                if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+                if (e.RowIndex < 0 || e.ColumnIndex < 0)
+                {
+                    return;
+                }
 
                 if (ImageMode == ConfigInfo.ImageDataMode.File)
                 {
@@ -1260,7 +1310,10 @@ namespace SO.PictManager.Forms
         {
             try
             {
-                if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+                if (e.RowIndex < 0 || e.ColumnIndex < 0)
+                {
+                    return;
+                }
 
                 DataGridViewCell cell = grdImages[e.ColumnIndex, e.RowIndex];
                 bool isValid = ImageMode == ConfigInfo.ImageDataMode.File
@@ -1294,7 +1347,9 @@ namespace SO.PictManager.Forms
             try
             {
                 if (e.RowIndex < 0 || e.ColumnIndex < 0)
+                {
                     return;
+                }
 
                 DataGridViewCell cell = grdImages[e.ColumnIndex, e.RowIndex];
                 if (ImageMode == ConfigInfo.ImageDataMode.File)
@@ -1336,27 +1391,31 @@ namespace SO.PictManager.Forms
                     // 変更カウントをデクリメント、変更判別色クリア
                     if (cell.Style.BackColor == Color.Yellow)
                     {
-                        --_changeCnt;
+                        _changeCnt--;
                     }
                     cell.Style.BackColor = grdImages.Columns[e.ColumnIndex].DefaultCellStyle.BackColor;
 
                     // 行の全ての内容が元に戻された場合は行ヘッダの変更マークをクリア
                     if (!grdImages.Rows[e.RowIndex].Cells.Cast<DataGridViewCell>().Any(
-                            c => c.Style.BackColor == Color.Yellow))
+                        c => c.Style.BackColor == Color.Yellow))
                     {
                         if (rhCell.Style.Font.Bold)
+                        {
                             rhCell.Style.Font = new Font(rhCell.Style.Font, FontStyle.Regular);
+                        }
                     }
                 }
                 else    // セル内容が表示時から変更された場合
                 {
                     // 変更カウントをインクリメント、変更判別色セット
                     cell.Style.BackColor = Color.Yellow;
-                    ++_changeCnt;
+                    _changeCnt++;
 
                     // 行ヘッダの変更マークが未設定の場合は設定
                     if (!rhCell.Style.Font.Bold)
+                    {
                         rhCell.Style.Font = new Font(rhCell.Style.Font, FontStyle.Bold);
+                    }
                 }
 
                 bool isButtonsEnabled = _changeCnt > 0;
@@ -1374,6 +1433,7 @@ namespace SO.PictManager.Forms
         #endregion
 
         #region btnClose_Click - 終了ボタン押下時
+
         /// <summary>
         /// 終了ボタンがクリックされた際に実行される処理です。
         /// 自フォームを破棄し、親フォームを再表示します。
@@ -1384,10 +1444,13 @@ namespace SO.PictManager.Forms
         {
             // 自フォームを破棄し親フォームを表示
             if (_changeCnt > 0 && FormUtilities.ShowMessage("Q005") == DialogResult.No)
+            {
                 return;
+            }
 
             this.BackToOwner();
         }
+
         #endregion
 
         #region btnApplyChanges_Click - 変更適用ボタン押下時
@@ -1402,7 +1465,10 @@ namespace SO.PictManager.Forms
         {
             try
             {
-                if (FormUtilities.ShowMessage("Q008") == DialogResult.No) return;
+                if (FormUtilities.ShowMessage("Q008") == DialogResult.No)
+                {
+                    return;
+                }
 
                 CursorFace.Current = Cursors.WaitCursor;
 
@@ -1484,7 +1550,10 @@ namespace SO.PictManager.Forms
                 CursorFace.Current = Cursors.WaitCursor;
 
                 // 削除確認
-                if (FormUtilities.ShowMessage("Q016") == DialogResult.No) return;
+                if (FormUtilities.ShowMessage("Q016") == DialogResult.No)
+                {
+                    return;
+                }
 
                 // 選択行抽出
                 int selChkColIdx = ImageMode == ConfigInfo.ImageDataMode.File
@@ -1608,7 +1677,9 @@ namespace SO.PictManager.Forms
             try
             {
                 if (RenameAllFiles() == ResultStatus.OK)
+                {
                     RevertEdit(true);
+                }
             }
             catch (Exception ex)
             {
@@ -1634,7 +1705,11 @@ namespace SO.PictManager.Forms
             {
                 // ファイル移動実行、正常終了時はディレクトリ選択フォームへ戻る
                 RefreshImageList();
-                if (MoveAllFiles() == ResultStatus.OK) this.BackToOwner();
+
+                if (MoveAllFiles() == ResultStatus.OK)
+                {
+                    this.BackToOwner();
+                }
             }
             catch (Exception ex)
             {
@@ -1657,27 +1732,30 @@ namespace SO.PictManager.Forms
         {
             try
             {
-                if (_similarMap != null) _similarMap.Clear();
+                if (_similarMap != null)
+                {
+                    _similarMap.Clear();
+                }
 
                 _similarMap = new Dictionary<int, List<IImage>>();
 
                 Action<int, bool> actResetSimilarButton = (rowIdx, enable) =>
+                {
+                    DataGridViewCell cell;
+                    if (enable)
                     {
-                        DataGridViewCell cell;
-                        if (enable)
-                        {
-                            cell = new DataGridViewButtonCell();
-                            grdImages[FileColumnIndexes.SIMILAR_BUTTON, rowIdx] = cell;
-                            cell.Value = "Similar";
-                        }
-                        else
-                        {
-                            cell = new DataGridViewTextBoxCell();
-                            grdImages[FileColumnIndexes.SIMILAR_BUTTON, rowIdx] = cell;
-                            cell.Value = string.Empty;
-                            cell.ReadOnly = true;
-                        }
-                    };
+                        cell = new DataGridViewButtonCell();
+                        grdImages[FileColumnIndexes.SIMILAR_BUTTON, rowIdx] = cell;
+                        cell.Value = "Similar";
+                    }
+                    else
+                    {
+                        cell = new DataGridViewTextBoxCell();
+                        grdImages[FileColumnIndexes.SIMILAR_BUTTON, rowIdx] = cell;
+                        cell.Value = string.Empty;
+                        cell.ReadOnly = true;
+                    }
+                };
 
                 foreach (DataGridViewRow row in grdImages.Rows)
                 {
@@ -1702,10 +1780,10 @@ namespace SO.PictManager.Forms
                         target = "画像ID:";
                     }
                     string msg = string.Format("[{0}行目] {1} {2} の類似画像を検索中...{3}{3}",
-                            row.Index + 1, target, criterion.Key, Environment.NewLine);
+                        row.Index + 1, target, criterion.Key, Environment.NewLine);
 
                     List<IImage> similarImages =
-                            ImageController.GetSimilarImages(this, criterion, msg);
+                        ImageController.GetSimilarImages(this, criterion, msg);
 
                     if (similarImages.Count == 0)
                     {
@@ -1756,11 +1834,13 @@ namespace SO.PictManager.Forms
                     grdImages.CellValidating -= grdImages_CellValidating;
 
                     var rows = new List<DataGridViewRow>(grdImages.Rows.Count);
-                    for (int i = grdImages.RowCount - 1; i >= 0; --i)
+                    for (int i = grdImages.RowCount - 1; i >= 0; i--)
                     {
                         // MD5重複が発生していない行は非表示に設定
                         if (grdImages[md5ColIdx, i].Style.BackColor == Color.Bisque)
+                        {
                             rows.Add(grdImages.Rows[i]);
+                        }
                     }
                     grdImages.Rows.Clear();
                     grdImages.Rows.AddRange(rows.ToArray());
@@ -1810,9 +1890,13 @@ namespace SO.PictManager.Forms
                             // 画像閲覧
                             IImage img;
                             if (ImageMode == ConfigInfo.ImageDataMode.File)
+                            {
                                 img = new FileImage(GetImagePath(rowIndex));
+                            }
                             else
+                            {
                                 img = new DataImage(GetImageId(rowIndex));
+                            }
 
                             new ViewImageForm(this, img, ImageMode).Show(this);
 

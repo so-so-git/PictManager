@@ -23,6 +23,15 @@
           <Property Name="InsertedDateTime" Type="datetime" Nullable="false" />
           <Property Name="UpdatedDateTime" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="TblGroups">
+          <Key>
+            <PropertyRef Name="GroupId" />
+          </Key>
+          <Property Name="GroupId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="256" />
+          <Property Name="InsertedDateTime" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedDateTime" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="TblImages">
           <Key>
             <PropertyRef Name="ImageId" />
@@ -40,27 +49,18 @@
           <Property Name="TagId7" Type="int" />
           <Property Name="TagId8" Type="int" />
           <Property Name="TagId9" Type="int" />
-          <Property Name="SetId" Type="int" />
-          <Property Name="SetOrder" Type="int" />
+          <Property Name="GroupId" Type="int" />
+          <Property Name="GroupOrder" Type="int" />
           <Property Name="Description" Type="varchar" MaxLength="256" />
           <Property Name="DeleteFlag" Type="bit" Nullable="false" />
-          <Property Name="InsertedDateTime" Type="datetime" Nullable="false" />
-          <Property Name="UpdatedDateTime" Type="datetime" Nullable="false" />
-        </EntityType>
-        <EntityType Name="TblSets">
-          <Key>
-            <PropertyRef Name="SetId" />
-          </Key>
-          <Property Name="SetId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Description" Type="varchar" MaxLength="256" />
           <Property Name="InsertedDateTime" Type="datetime" Nullable="false" />
           <Property Name="UpdatedDateTime" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityContainer Name="SOPictManagerDataModelStoreContainer">
           <EntitySet Name="MstCategories" EntityType="Self.MstCategories" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MstTags" EntityType="Self.MstTags" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TblGroups" EntityType="Self.TblGroups" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblImages" EntityType="Self.TblImages" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="TblSets" EntityType="Self.TblSets" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -84,12 +84,28 @@
           <Property Name="InsertedDateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="UpdatedDateTime" Type="DateTime" Precision="3" Nullable="false" />
         </EntityType>
+        <EntityContainer Name="PictManagerEntities" annotation:LazyLoadingEnabled="true" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+          <EntitySet Name="MstCategories" EntityType="Self.MstCategory" />
+          <EntitySet Name="MstTags" EntityType="Self.MstTag" />
+          <EntitySet Name="TblGroups" EntityType="SO.PictManager.DataModel.TblGroup" />
+          <EntitySet Name="TblImages" EntityType="SO.PictManager.DataModel.TblImage" />
+        </EntityContainer>
+        <EntityType Name="TblGroup">
+          <Key>
+            <PropertyRef Name="GroupId" />
+          </Key>
+          <Property Name="GroupId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
+          <Property Name="InsertedDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedDateTime" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
         <EntityType Name="TblImage">
           <Key>
             <PropertyRef Name="ImageId" />
           </Key>
-          <Property Name="ImageId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-          <Property Name="ImageData" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+          <Property Name="ImageId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ImageData" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="ImageFormat" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
           <Property Name="CategoryId" Type="Int32" Nullable="false" />
           <Property Name="TagId1" Type="Int32" />
           <Property Name="TagId2" Type="Int32" />
@@ -100,29 +116,13 @@
           <Property Name="TagId7" Type="Int32" />
           <Property Name="TagId8" Type="Int32" />
           <Property Name="TagId9" Type="Int32" />
-          <Property Name="SetId" Type="Int32" />
-          <Property Name="SetOrder" Type="Int32" />
+          <Property Name="GroupId" Type="Int32" />
+          <Property Name="GroupOrder" Type="Int32" />
           <Property Name="Description" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
-          <Property Name="InsertedDateTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="UpdatedDateTime" Type="DateTime" Precision="3" Nullable="false" />
           <Property Name="DeleteFlag" Type="Boolean" Nullable="false" />
-          <Property Name="ImageFormat" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="TblSet">
-          <Key>
-            <PropertyRef Name="SetId" />
-          </Key>
-          <Property Name="SetId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-          <Property Name="Description" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
           <Property Name="InsertedDateTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="UpdatedDateTime" Type="DateTime" Precision="3" Nullable="false" />
+          <Property Name="UpdatedDateTime" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
-        <EntityContainer Name="PictManagerEntities" annotation:LazyLoadingEnabled="true" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
-          <EntitySet Name="MstCategories" EntityType="Self.MstCategory" />
-          <EntitySet Name="MstTags" EntityType="Self.MstTag" />
-          <EntitySet Name="TblImages" EntityType="Self.TblImage" />
-          <EntitySet Name="TblSets" EntityType="Self.TblSet" />
-        </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -149,38 +149,38 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="TblImages">
-            <EntityTypeMapping TypeName="SO.PictManager.DataModel.TblImage">
-              <MappingFragment StoreEntitySet="TblImages">
-                <ScalarProperty Name="ImageFormat" ColumnName="ImageFormat" />
-                <ScalarProperty Name="DeleteFlag" ColumnName="DeleteFlag" />
-                <ScalarProperty Name="ImageId" ColumnName="ImageId" />
-                <ScalarProperty Name="ImageData" ColumnName="ImageData" />
-                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
-                <ScalarProperty Name="TagId1" ColumnName="TagId1" />
-                <ScalarProperty Name="TagId2" ColumnName="TagId2" />
-                <ScalarProperty Name="TagId3" ColumnName="TagId3" />
-                <ScalarProperty Name="TagId4" ColumnName="TagId4" />
-                <ScalarProperty Name="TagId5" ColumnName="TagId5" />
-                <ScalarProperty Name="TagId6" ColumnName="TagId6" />
-                <ScalarProperty Name="TagId7" ColumnName="TagId7" />
-                <ScalarProperty Name="TagId8" ColumnName="TagId8" />
-                <ScalarProperty Name="TagId9" ColumnName="TagId9" />
-                <ScalarProperty Name="SetId" ColumnName="SetId" />
-                <ScalarProperty Name="SetOrder" ColumnName="SetOrder" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="InsertedDateTime" ColumnName="InsertedDateTime" />
+          <EntitySetMapping Name="TblGroups">
+            <EntityTypeMapping TypeName="SO.PictManager.DataModel.TblGroup">
+              <MappingFragment StoreEntitySet="TblGroups">
                 <ScalarProperty Name="UpdatedDateTime" ColumnName="UpdatedDateTime" />
+                <ScalarProperty Name="InsertedDateTime" ColumnName="InsertedDateTime" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="TblSets">
-            <EntityTypeMapping TypeName="SO.PictManager.DataModel.TblSet">
-              <MappingFragment StoreEntitySet="TblSets">
-                <ScalarProperty Name="SetId" ColumnName="SetId" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="InsertedDateTime" ColumnName="InsertedDateTime" />
+          <EntitySetMapping Name="TblImages">
+            <EntityTypeMapping TypeName="SO.PictManager.DataModel.TblImage">
+              <MappingFragment StoreEntitySet="TblImages">
                 <ScalarProperty Name="UpdatedDateTime" ColumnName="UpdatedDateTime" />
+                <ScalarProperty Name="InsertedDateTime" ColumnName="InsertedDateTime" />
+                <ScalarProperty Name="DeleteFlag" ColumnName="DeleteFlag" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="GroupOrder" ColumnName="GroupOrder" />
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+                <ScalarProperty Name="TagId9" ColumnName="TagId9" />
+                <ScalarProperty Name="TagId8" ColumnName="TagId8" />
+                <ScalarProperty Name="TagId7" ColumnName="TagId7" />
+                <ScalarProperty Name="TagId6" ColumnName="TagId6" />
+                <ScalarProperty Name="TagId5" ColumnName="TagId5" />
+                <ScalarProperty Name="TagId4" ColumnName="TagId4" />
+                <ScalarProperty Name="TagId3" ColumnName="TagId3" />
+                <ScalarProperty Name="TagId2" ColumnName="TagId2" />
+                <ScalarProperty Name="TagId1" ColumnName="TagId1" />
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="ImageFormat" ColumnName="ImageFormat" />
+                <ScalarProperty Name="ImageData" ColumnName="ImageData" />
+                <ScalarProperty Name="ImageId" ColumnName="ImageId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

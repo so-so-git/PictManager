@@ -34,6 +34,7 @@
             this.pnlParent = new System.Windows.Forms.SplitContainer();
             this.pnlThumbnail = new System.Windows.Forms.FlowLayoutPanel();
             this.btnNext = new System.Windows.Forms.Button();
+            this.btnEntry = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
             this.btnPrevious = new System.Windows.Forms.Button();
             this.lblPageMax = new System.Windows.Forms.Label();
@@ -80,6 +81,7 @@
             // pnlParent.Panel2
             // 
             this.pnlParent.Panel2.Controls.Add(this.btnNext);
+            this.pnlParent.Panel2.Controls.Add(this.btnEntry);
             this.pnlParent.Panel2.Controls.Add(this.btnDelete);
             this.pnlParent.Panel2.Controls.Add(this.btnPrevious);
             this.pnlParent.Panel2.Controls.Add(this.lblPageMax);
@@ -87,7 +89,7 @@
             this.pnlParent.Panel2.Controls.Add(this.txtPage);
             this.pnlParent.Panel2.Controls.Add(this.btnClose);
             this.pnlParent.Size = new System.Drawing.Size(737, 511);
-            this.pnlParent.SplitterDistance = 463;
+            this.pnlParent.SplitterDistance = 461;
             this.pnlParent.SplitterWidth = 5;
             this.pnlParent.TabIndex = 1;
             this.pnlParent.TabStop = false;
@@ -99,7 +101,7 @@
             this.pnlThumbnail.Location = new System.Drawing.Point(0, 0);
             this.pnlThumbnail.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.pnlThumbnail.Name = "pnlThumbnail";
-            this.pnlThumbnail.Size = new System.Drawing.Size(737, 463);
+            this.pnlThumbnail.Size = new System.Drawing.Size(737, 461);
             this.pnlThumbnail.TabIndex = 0;
             // 
             // btnNext
@@ -112,6 +114,16 @@
             this.btnNext.Text = ">>";
             this.btnNext.UseVisualStyleBackColor = true;
             this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
+            // 
+            // btnEntry
+            // 
+            this.btnEntry.Location = new System.Drawing.Point(90, 5);
+            this.btnEntry.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnEntry.Name = "btnEntry";
+            this.btnEntry.Size = new System.Drawing.Size(75, 29);
+            this.btnEntry.TabIndex = 1;
+            this.btnEntry.Text = "登録";
+            this.btnEntry.UseVisualStyleBackColor = true;
             // 
             // btnDelete
             // 
@@ -218,5 +230,6 @@
         private System.Windows.Forms.TextBox txtPage;
         private System.Windows.Forms.Button btnNext;
         private System.Windows.Forms.Button btnDelete;
+        private System.Windows.Forms.Button btnEntry;
     }
 }

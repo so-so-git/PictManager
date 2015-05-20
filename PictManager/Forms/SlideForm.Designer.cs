@@ -39,7 +39,7 @@
             this.btnBookmark = new SO.PictManager.Components.KeyPrevButton();
             this.chkLupe = new SO.PictManager.Components.KeyPrevCheckBox();
             this.picLupe = new System.Windows.Forms.PictureBox();
-            this.btnOperateSet = new SO.PictManager.Components.KeyPrevCheckBox();
+            this.btnOperateGroup = new SO.PictManager.Components.KeyPrevButton();
             ((System.ComponentModel.ISupportInitialize)(this.picViewer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pnlParent)).BeginInit();
             this.pnlParent.Panel1.SuspendLayout();
@@ -51,7 +51,7 @@
             // picViewer
             // 
             this.picViewer.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
-            this.picViewer.Size = new System.Drawing.Size(737, 442);
+            this.picViewer.Size = new System.Drawing.Size(737, 439);
             // 
             // pnlParent
             // 
@@ -66,16 +66,16 @@
             this.pnlParent.Panel2.AutoScroll = true;
             this.pnlParent.Panel2.Controls.Add(this.chkSimilar);
             this.pnlParent.Panel2.Controls.Add(this.cmbSort);
+            this.pnlParent.Panel2.Controls.Add(this.btnOperateGroup);
             this.pnlParent.Panel2.Controls.Add(this.btnBookmark);
             this.pnlParent.Panel2.Controls.Add(this.btnNext);
             this.pnlParent.Panel2.Controls.Add(this.txtIndex);
             this.pnlParent.Panel2.Controls.Add(this.lblCount);
-            this.pnlParent.Panel2.Controls.Add(this.btnOperateSet);
             this.pnlParent.Panel2.Controls.Add(this.chkLupe);
             this.pnlParent.Panel2.Controls.Add(this.btnPrevious);
             this.pnlParent.Panel2.Controls.Add(this.lblCountDelim);
             this.pnlParent.Size = new System.Drawing.Size(1134, 470);
-            this.pnlParent.SplitterDistance = 380;
+            this.pnlParent.SplitterDistance = 377;
             this.pnlParent.SplitterWidth = 6;
             // 
             // btnClose
@@ -95,7 +95,7 @@
             // 
             // lblInfo
             // 
-            this.lblInfo.Size = new System.Drawing.Size(1117, 442);
+            this.lblInfo.Size = new System.Drawing.Size(1117, 439);
             this.lblInfo.TabIndex = 0;
             // 
             // btnZoomOut
@@ -223,18 +223,16 @@
             this.picLupe.TabStop = false;
             this.picLupe.Visible = false;
             // 
-            // btnOperateSet
+            // btnOperateGroup
             // 
-            this.btnOperateSet.Appearance = System.Windows.Forms.Appearance.Button;
-            this.btnOperateSet.Location = new System.Drawing.Point(343, 8);
-            this.btnOperateSet.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.btnOperateSet.Name = "btnOperateSet";
-            this.btnOperateSet.Size = new System.Drawing.Size(73, 29);
-            this.btnOperateSet.TabIndex = 3;
-            this.btnOperateSet.Text = "セット登録";
-            this.btnOperateSet.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnOperateSet.UseVisualStyleBackColor = true;
-            this.btnOperateSet.CheckedChanged += new System.EventHandler(this.btnOperateSet_CheckedChanged);
+            this.btnOperateGroup.Location = new System.Drawing.Point(343, 9);
+            this.btnOperateGroup.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnOperateGroup.Name = "btnOperateGroup";
+            this.btnOperateGroup.Size = new System.Drawing.Size(91, 29);
+            this.btnOperateGroup.TabIndex = 1;
+            this.btnOperateGroup.Text = "グループ登録";
+            this.btnOperateGroup.UseVisualStyleBackColor = true;
+            this.btnOperateGroup.Click += new System.EventHandler(this.btnOperateGroup_Click);
             // 
             // SlideForm
             // 
@@ -270,7 +268,7 @@
         private SO.PictManager.Components.KeyPrevButton btnBookmark;
         private SO.PictManager.Components.KeyPrevCheckBox chkLupe;
         private System.Windows.Forms.PictureBox picLupe;
-        private Components.KeyPrevCheckBox btnOperateSet;
+        private Components.KeyPrevButton btnOperateGroup;
 
     }
 }

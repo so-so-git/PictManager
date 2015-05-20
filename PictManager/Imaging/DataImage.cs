@@ -42,11 +42,12 @@ namespace SO.PictManager.Imaging
         }
 
         /// <summary>
-        /// 画像のタイムスタンプ(登録日時)を取得します。
+        /// 画像のタイムスタンプ(更新日時)を取得または設定します。
         /// </summary>
         public DateTime Timestamp
         {
-            get { return _image.InsertedDateTime; }
+            get { return _image.UpdatedDateTime; }
+            set { _image.UpdatedDateTime = value; }
         }
 
         /// <summary>
@@ -85,21 +86,21 @@ namespace SO.PictManager.Imaging
         }
 
         /// <summary>
-        /// 画像セットのIDを取得または設定します。
+        /// 画像グループのIDを取得または設定します。
         /// </summary>
-        public int? SetId
+        public int? GroupId
         {
-            get { return _image.SetId; }
-            set { _image.SetId = value; }
+            get { return _image.GroupId; }
+            set { _image.GroupId = value; }
         }
 
         /// <summary>
-        /// 画像セットの表示順を取得または設定します。
+        /// 画像グループの表示順を取得または設定します。
         /// </summary>
-        public int? SetOrder
+        public int? GroupOrder
         {
-            get { return _image.SetOrder; }
-            set { _image.SetOrder = value; }
+            get { return _image.GroupOrder; }
+            set { _image.GroupOrder = value; }
         }
 
         /// <summary>
@@ -170,8 +171,11 @@ namespace SO.PictManager.Imaging
                              select i).First();
 
                 image.DeleteFlag = true;
+                image.UpdatedDateTime = DateTime.Now;
 
                 entities.SaveChanges();
+
+                GetTblImage(_image.ImageId);
             }
 
             // ログ出力

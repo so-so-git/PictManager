@@ -27,7 +27,7 @@ namespace SO.PictManager.DataModel
     
         public DbSet<MstCategory> MstCategories { get; set; }
         public DbSet<MstTag> MstTags { get; set; }
+        public DbSet<TblGroup> TblGroups { get; set; }
         public DbSet<TblImage> TblImages { get; set; }
-        public DbSet<TblSet> TblSets { get; set; }
     }
 }

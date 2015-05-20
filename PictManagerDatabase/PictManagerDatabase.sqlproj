@@ -76,7 +76,7 @@
     <Folder Include="dbo\Stored Procedures\" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="dbo\Tables\TblSets.sql" />
+    <Build Include="dbo\Tables\TblGroups.sql" />
     <Build Include="dbo\Tables\TblImages.sql" />
     <Build Include="dbo\Tables\MstTags.sql" />
     <Build Include="dbo\Tables\MstCategories.sql" />

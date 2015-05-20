@@ -56,16 +56,50 @@ namespace SO.PictManager.Forms
 
         #region プロパティ
 
-        #region StatusBarText - ステータスバーのテキスト取得または設定
+        /// <summary>
+        /// タイトルバーのテキストを取得または設定します。
+        /// </summary>
+        public string TitleBarText
+        {
+            get { return this.Text; }
+            set { this.Text = value; }
+        }
+
         /// <summary>
         /// ステータスバーのテキストを取得または設定します。
         /// </summary>
-        internal string StatusBarText
+        public string StatusBarText
         {
             get { return lblStatus.Text; }
             set { lblStatus.Text = value; }
         }
+
+        /// <summary>
+        /// 表示している画像グループのIDを取得または設定します。
+        /// </summary>
+        public int? GroupId { get; set; }
+
         #endregion
+
+        #region イベント
+
+        /// <summary>
+        /// 登録ボタン押下時に発生するイベントです。
+        /// </summary>
+        public event EventHandler EntryButtonClick
+        {
+            add { btnEntry.Click += value; }
+            remove { btnEntry.Click -= value; }
+        }
+
+        /// <summary>
+        /// 削除ボタン押下時に発生するイベントです。
+        /// </summary>
+        public event EventHandler DeleteButtonClick
+        {
+            add { btnDelete.Click += value; }
+            remove { btnDelete.Click -= value; }
+        }
 
         #endregion
 
@@ -77,7 +111,7 @@ namespace SO.PictManager.Forms
         /// <param name="targetPath">対象ディレクトリパス</param>
         /// <param name="includeSubFlg">サブディレクトリ以下を含むかを示すフラグ</param>
         public ThumbnailForm(string targetPath, bool includeSubFlg)
-                : base(targetPath, includeSubFlg)
+            : base(targetPath, includeSubFlg)
         {
             // コンポーネント初期化
             InitializeComponent();
@@ -87,8 +121,8 @@ namespace SO.PictManager.Forms
 
             // ステータスバー更新
             lblStatus.Text = ImageCount > 0
-                    ? Path.GetDirectoryName(ImageList.First().Key) + string.Format(" - {0}ファイル", ImageCount)
-                    : NO_IMAGE_LABEL;
+                ? Path.GetDirectoryName(ImageList.First().Key) + string.Format(" - {0}ファイル", ImageCount)
+                : NO_IMAGE_LABEL;
         }
 
         /// <summary>
@@ -106,8 +140,8 @@ namespace SO.PictManager.Forms
 
             // ステータスバー更新
             lblStatus.Text = ImageCount > 0
-                    ? category.CategoryName + string.Format(" - {0}ファイル", ImageCount)
-                    : NO_IMAGE_LABEL;
+                ? category.CategoryName + string.Format(" - {0}ファイル", ImageCount)
+                : NO_IMAGE_LABEL;
         }
 
         /// <summary>
@@ -115,18 +149,23 @@ namespace SO.PictManager.Forms
         /// </summary>
         /// <param name="imageList">画像データリスト</param>
         /// <param name="imageMode">画像モード</param>
+        /// <param name="groupId">表示する画像グループのID</param>
         /// <param name="canChangeOrder">画像の順番を手動で変更出来るかのフラグ</param>
         public ThumbnailForm(List<IImage> imageList, ConfigInfo.ImageDataMode imageMode,
-                             bool canChangeOrder = false)
+                             int? groupId = null, bool canChangeOrder = false)
             : base(imageMode)
         {
             // コンポーネント初期化
             InitializeComponent();
 
-            // 渡されたファイルパスリストを操作対象とする
+            // 渡された画像リストを操作対象とする
             ImageList = imageList;
+            GroupId = groupId;
 
             _canChangeOrder = canChangeOrder;
+
+            // 削除ボタンイベントを除去
+            btnDelete.Click -= btnDelete_Click;
 
             // 共通構築処理
             CommonConstruction();
@@ -210,8 +249,8 @@ namespace SO.PictManager.Forms
             // ページ表示初期化
             txtPage.Text = _currentPage.ToString();
             lblPageMax.Text = ImageCount % _maxDispNum == 0
-                    ? (ImageCount / _maxDispNum).ToString()
-                    : (ImageCount / _maxDispNum + 1).ToString();
+                ? (ImageCount / _maxDispNum).ToString()
+                : (ImageCount / _maxDispNum + 1).ToString();
 
             // 初期表示時のコントロール配置更新用に最大化前のサイズを保管
             _beforeResize = Size;
@@ -220,8 +259,8 @@ namespace SO.PictManager.Forms
             using (ThumbnailUnit sample = new ThumbnailUnit())
             {
                 int formHeight = _maxDispNum % unitInLine == 0
-                        ? _maxDispNum / unitInLine * sample.Height + (_maxDispNum / unitInLine + 1) * yMargin
-                        : (_maxDispNum / unitInLine + 1) * sample.Height + (_maxDispNum / unitInLine + 2) * yMargin;
+                    ? _maxDispNum / unitInLine * sample.Height + (_maxDispNum / unitInLine + 1) * yMargin
+                    : (_maxDispNum / unitInLine + 1) * sample.Height + (_maxDispNum / unitInLine + 2) * yMargin;
                 formHeight += pnlParent.Panel2.Height;
                 ClientSize = new Size(sample.Width * unitInLine + (unitInLine + 1) * xMargin, formHeight);
             }
@@ -252,7 +291,19 @@ namespace SO.PictManager.Forms
                 menuTemp.DropDownItems.Add(new ToolStripMenuItem("ディレクトリを開く", null, (s, e) => Utilities.OpenExplorer(TargetDirectory.FullName)));
                 menuTemp.DropDownItems.Add(new ToolStripSeparator());
                 menuTemp.DropDownItems.Add(new ToolStripMenuItem("終了", null,
-                        (s, e) => Form_FormClosing(s, new FormClosingEventArgs(CloseReason.UserClosing, false))));
+                    (s, e) => Form_FormClosing(s, new FormClosingEventArgs(CloseReason.UserClosing, false))));
+                barMenu.Items.Add(menuTemp);
+            }
+            else
+            {
+                // データ
+                menuTemp = new ToolStripMenuItem("データ(&D)", null, null, "menuData");
+                menuTemp.ShortcutKeys = Keys.Alt | Keys.D;
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("戻る", null, btnClose_Click));
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("ページ再表示", null, (s, e) => RefreshThumbnails()));
+                menuTemp.DropDownItems.Add(new ToolStripSeparator());
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("終了", null,
+                    (s, e) => Form_FormClosing(s, new FormClosingEventArgs(CloseReason.UserClosing, false))));
                 barMenu.Items.Add(menuTemp);
             }
 
@@ -267,12 +318,12 @@ namespace SO.PictManager.Forms
             menuPage.TextChanged += txtPage_TextChanged;
             menuTemp.DropDownItems.Add(menuPage);
             menuTemp.DropDownItems.Add(new ToolStripMenuItem("指定したページへジャンプ", null,
-                    (s, e) => AcceptPageNumber()));
+                (s, e) => AcceptPageNumber()));
             menuTemp.DropDownItems.Add(new ToolStripSeparator());
             menuTemp.DropDownItems.Add(new ToolStripMenuItem("削除確認しない", null,
-                    (s, e) => ((ToolStripMenuItem)s).Checked = !((ToolStripMenuItem)s).Checked, "menuChkConfirm"));
+                (s, e) => ((ToolStripMenuItem)s).Checked = !((ToolStripMenuItem)s).Checked, "menuChkConfirm"));
             menuTemp.DropDownItems.Add(new ToolStripMenuItem("複数選択", null,
-                    (s, e) => ((ToolStripMenuItem)s).Checked = !((ToolStripMenuItem)s).Checked, "menuChkMulti"));
+                (s, e) => ((ToolStripMenuItem)s).Checked = !((ToolStripMenuItem)s).Checked, "menuChkMulti"));
             barMenu.Items.Add(menuTemp);
 
             // 表示
@@ -293,13 +344,14 @@ namespace SO.PictManager.Forms
         /// </summary>
         protected override void RefreshImageList()
         {
-            if (ImageMode == Info.ConfigInfo.ImageDataMode.File
-                && TargetDirectory == null)
+            if ((ImageMode == ConfigInfo.ImageDataMode.File && TargetDirectory == null)
+                || (ImageMode == ConfigInfo.ImageDataMode.Database && TargetCategory == null))
             {
                 return;
             }
 
             base.RefreshImageList();
+
             _currentPage = 1;
             RefreshThumbnails();
         }
@@ -322,7 +374,9 @@ namespace SO.PictManager.Forms
                 _thumbnails.Clear();
                 pnlThumbnail.Controls.Clear();
                 foreach (var thumbnail in _thumbnails)
+                {
                     thumbnail.Dispose();
+                }
 
                 // 選択画像表示メニューを非活性化
                 FormUtilities.GetMenuItem<ToolStripMenuItem>(barMenu.Items, "menuView/menuViewImage").Enabled = false;
@@ -331,10 +385,10 @@ namespace SO.PictManager.Forms
                 using (var progDlg = new ProgressDialog(this))
                 {
                     progDlg.StartProgress(string.Format("ページ{0}表示中...", _currentPage.ToString()), string.Empty, 0,
-                            _currentPage == int.Parse(lblPageMax.Text) ? ImageCount % _maxDispNum : _maxDispNum);
+                        _currentPage == int.Parse(lblPageMax.Text) ? ImageCount % _maxDispNum : _maxDispNum);
                     Update();
 
-                    for (int i = 0; i < _maxDispNum && (_currentPage - 1) * _maxDispNum + i < ImageCount; ++i)
+                    for (int i = 0; i < _maxDispNum && (_currentPage - 1) * _maxDispNum + i < ImageCount; i++)
                     {
                         // 対象ファイルインデックス算出
                         int idx = (_currentPage - 1) * _maxDispNum + i;
@@ -398,6 +452,7 @@ namespace SO.PictManager.Forms
             txtPage.Focus();
             txtPage.SelectAll();
             int page;
+
             // 数値チェック、最小チェック
             if (!int.TryParse(txtPage.Text, out page) || page < 1)
             {
@@ -412,7 +467,10 @@ namespace SO.PictManager.Forms
             }
 
             // 指定ページと現在表示ページが同一の場合は処理無し
-            if (_currentPage == page) return;
+            if (_currentPage == page)
+            {
+                return;
+            }
 
             // 現在ページ表示、サムネイル表示更新
             _currentPage = page;
@@ -492,7 +550,10 @@ namespace SO.PictManager.Forms
                     }
                     else
                     {
-                        if (Owner != null) Owner.Dispose();
+                        if (Owner != null)
+                        {
+                            Owner.Dispose();
+                        }
                     }
                 }
             }
@@ -516,7 +577,10 @@ namespace SO.PictManager.Forms
         {
             try
             {
-                if (e.Delta == 0) return;
+                if (e.Delta == 0)
+                {
+                    return;
+                }
 
                 if (pnlThumbnail.VerticalScroll.Visible)
                 {
@@ -526,7 +590,7 @@ namespace SO.PictManager.Forms
                         if (-pnlThumbnail.AutoScrollPosition.Y + delta < pnlThumbnail.VerticalScroll.Minimum)
                         {
                             pnlThumbnail.AutoScrollPosition =
-                                    new Point(0, pnlThumbnail.VerticalScroll.Minimum);
+                                new Point(0, pnlThumbnail.VerticalScroll.Minimum);
                             return;
                         }
                     }
@@ -535,13 +599,13 @@ namespace SO.PictManager.Forms
                         if (-pnlThumbnail.AutoScrollPosition.Y + delta > pnlThumbnail.VerticalScroll.Maximum)
                         {
                             pnlThumbnail.AutoScrollPosition =
-                                    new Point(0, pnlThumbnail.VerticalScroll.Maximum);
+                                new Point(0, pnlThumbnail.VerticalScroll.Maximum);
                             return;
                         }
                     }
 
                     pnlThumbnail.AutoScrollPosition =
-                            new Point(0, -pnlThumbnail.AutoScrollPosition.Y + delta);
+                        new Point(0, -pnlThumbnail.AutoScrollPosition.Y + delta);
                 }
                 else if (pnlThumbnail.HorizontalScroll.Visible)
                 {
@@ -551,7 +615,7 @@ namespace SO.PictManager.Forms
                         if (-pnlThumbnail.AutoScrollPosition.X + delta < pnlThumbnail.HorizontalScroll.Minimum)
                         {
                             pnlThumbnail.AutoScrollPosition =
-                                    new Point(pnlThumbnail.HorizontalScroll.Minimum, 0);
+                                new Point(pnlThumbnail.HorizontalScroll.Minimum, 0);
                             return;
                         }
                     }
@@ -560,13 +624,13 @@ namespace SO.PictManager.Forms
                         if (-pnlThumbnail.AutoScrollPosition.X + delta < pnlThumbnail.HorizontalScroll.Maximum)
                         {
                             pnlThumbnail.AutoScrollPosition =
-                                    new Point(pnlThumbnail.HorizontalScroll.Maximum, 0);
+                                new Point(pnlThumbnail.HorizontalScroll.Maximum, 0);
                             return;
                         }
                     }
 
                     pnlThumbnail.AutoScrollPosition =
-                            new Point(-pnlThumbnail.AutoScrollPosition.X + delta, 0);
+                        new Point(-pnlThumbnail.AutoScrollPosition.X + delta, 0);
                 }
             }
             catch (Exception ex)
@@ -602,6 +666,7 @@ namespace SO.PictManager.Forms
                 {
                     dlg.RootFolder = Environment.SpecialFolder.Desktop;
                     dlg.Description = "ファイルの移動先フォルダを指定して下さい。";
+
                     if (dlg.ShowDialog(this) != DialogResult.OK)
                     {
                         return;
@@ -625,7 +690,7 @@ namespace SO.PictManager.Forms
             {
                 status = ResultStatus.Error;
                 string optionMsg = ex is IOException ?
-                        MessageXml.GetMessageInfo("E001", target).message : null;
+                    MessageXml.GetMessageInfo("E001", target).message : null;
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
             finally
@@ -637,8 +702,10 @@ namespace SO.PictManager.Forms
                 CursorFace.Current = Cursors.Default;
 
                 if (status == ResultStatus.OK)
+                {
                     // 終了通知
                     FormUtilities.ShowMessage("I004");
+                }
             }
         }
 
@@ -659,8 +726,8 @@ namespace SO.PictManager.Forms
             {
                 // 選択中の画像をViewImageFormで表示
                 ThumbnailUnit_DoubleClick(
-                        _thumbnails.Single(t => t.BorderStyle == BorderStyle.FixedSingle),
-                        new EventArgs());
+                    _thumbnails.Single(t => t.BorderStyle == BorderStyle.FixedSingle),
+                    new EventArgs());
             }
             catch (Exception ex)
             {
@@ -685,23 +752,30 @@ namespace SO.PictManager.Forms
             if (clicked.ImageKey != ThumbnailUnit.DELETED_NAME_LABEL)
             {
                 var menuChkMulti = FormUtilities.GetMenuItem<ToolStripMenuItem>(
-                        barMenu.Items, "menuOpe/menuChkMulti");
+                    barMenu.Items, "menuOpe/menuChkMulti");
+
                 if (menuChkMulti.Checked)
                 {
                     // 複数選択モード時
                     if (clicked.BorderStyle == BorderStyle.None)
+                    {
                         // 未選択時はボーダー設定
                         clicked.BorderStyle = BorderStyle.FixedSingle;
+                    }
                     else
+                    {
                         // 選択済時はボーダー消去
                         clicked.BorderStyle = BorderStyle.None;
+                    }
                 }
                 else
                 {
                     // 単一選択モード時
                     foreach (var thumbnail in _thumbnails)
+                    {
                         // 全サムネイルのボーダーを消去
                         thumbnail.BorderStyle = BorderStyle.None;
+                    }
 
                     // 選択されたサムネイルのボーダーを設定
                     clicked.BorderStyle = BorderStyle.FixedSingle;
@@ -710,7 +784,7 @@ namespace SO.PictManager.Forms
 
             // 選択画像表示メニューを活性制御
             FormUtilities.GetMenuItem<ToolStripMenuItem>(barMenu.Items, "menuView/menuViewImage").Enabled =
-                    _thumbnails.Count(t => t.BorderStyle == BorderStyle.FixedSingle) == 1;
+                _thumbnails.Count(t => t.BorderStyle == BorderStyle.FixedSingle) == 1;
         }
 
         #endregion
@@ -730,10 +804,13 @@ namespace SO.PictManager.Forms
             if (clicked.ImageKey != ThumbnailUnit.DELETED_NAME_LABEL)
             {
                 var menuChkMulti = FormUtilities.GetMenuItem<ToolStripMenuItem>(
-                        barMenu.Items, "menuOpe/menuChkMulti");
+                    barMenu.Items, "menuOpe/menuChkMulti");
+
                 if (menuChkMulti.Checked)
+                {
                     // 複数選択モード時、シングルクリックでボーダーが消える可能性が有るので再設定
                     clicked.BorderStyle = BorderStyle.FixedSingle;
+                }
 
                 new ViewImageForm(this, clicked.ImageData).ShowDialog(this);
 
@@ -761,7 +838,12 @@ namespace SO.PictManager.Forms
         {
             // 全サムネイルのリソース破棄
             foreach (var thumbnail in _thumbnails)
-                if (thumbnail != null) thumbnail.Dispose();
+            {
+                if (thumbnail != null)
+                {
+                    thumbnail.Dispose();
+                }
+            }
 
             // 自フォームを破棄し親フォームを表示
             this.BackToOwner();
@@ -781,9 +863,13 @@ namespace SO.PictManager.Forms
         {
             // ページ更新
             if (_currentPage == 1)
+            {
                 _currentPage = int.Parse(lblPageMax.Text);
+            }
             else
-                --_currentPage;
+            {
+                _currentPage--;
+            }
 
             txtPage.Text = _currentPage.ToString();
 
@@ -805,9 +891,13 @@ namespace SO.PictManager.Forms
         {
             // ページ更新
             if (_currentPage == int.Parse(lblPageMax.Text))
+            {
                 _currentPage = 1;
+            }
             else
-                ++_currentPage;
+            {
+                _currentPage++;
+            }
 
             txtPage.Text = _currentPage.ToString();
 
@@ -847,7 +937,10 @@ namespace SO.PictManager.Forms
 
                 if (!menuChkConfirm.Checked)
                 {
-                    if (FormUtilities.ShowMessage("Q004") == DialogResult.No) return;
+                    if (FormUtilities.ShowMessage("Q004") == DialogResult.No)
+                    {
+                        return;
+                    }
                 }
 
                 foreach (var selected in selectedList)
@@ -900,8 +993,8 @@ namespace SO.PictManager.Forms
             {
                 // 修飾キーが付加されている場合は通常処理
                 if ((e.KeyCode & Keys.Alt) != Keys.Alt &&
-                        (e.KeyCode & Keys.Control) != Keys.Control &&
-                        (e.KeyCode & Keys.Shift) != Keys.Shift)
+                    (e.KeyCode & Keys.Control) != Keys.Control &&
+                    (e.KeyCode & Keys.Shift) != Keys.Shift)
                 {
                     Keys kcode = e.KeyCode & Keys.KeyCode;
                     switch (kcode)
@@ -937,12 +1030,16 @@ namespace SO.PictManager.Forms
         {
             // メニューとメイン画面の同期を取る
             ToolStripTextBox menuTxtPage =
-                    FormUtilities.GetMenuItem<ToolStripTextBox>(barMenu.Items, "menuOpe/menuTxtPage");
+                FormUtilities.GetMenuItem<ToolStripTextBox>(barMenu.Items, "menuOpe/menuTxtPage");
 
             if (sender == txtPage)
+            {
                 menuTxtPage.Text = txtPage.Text;
+            }
             else
+            {
                 txtPage.Text = menuTxtPage.Text;
+            }
         }
 
         #endregion

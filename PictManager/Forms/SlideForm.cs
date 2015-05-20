@@ -54,8 +54,8 @@ namespace SO.PictManager.Forms
         /// <summary>類似画像表示用サムネイルフォーム</summary>
         private ThumbnailForm _similarForm;
 
-        /// <summary>セット画像表示用サムネイルフォーム</summary>
-        private ThumbnailForm _setForm;
+        /// <summary>画像グループ表示用サムネイルフォーム</summary>
+        private ThumbnailForm _groupForm;
 
         /// <summary>ブックマークフォーム</summary>
         private BookmarkForm _bookmarkForm;
@@ -80,7 +80,7 @@ namespace SO.PictManager.Forms
             IncludeSubFlg = includeSubFlg;
 
             // 画面表示制御
-            btnOperateSet.Visible = false;
+            btnOperateGroup.Visible = false;
 
             // 共通処理
             ConstructCommon();
@@ -100,7 +100,7 @@ namespace SO.PictManager.Forms
             TargetCategory = category;
 
             // 画面表示制御
-            btnOperateSet.Visible = true;
+            btnOperateGroup.Visible = true;
 
             // 共通処理
             ConstructCommon();
@@ -264,10 +264,10 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region RefreshTargetFiles - 対象ファイルリスト最新化
+        #region RefreshTargetFiles - 対象画像リスト最新化
 
         /// <summary>
-        /// 表示中ディレクトリの現在の状態を再取得します。
+        /// 表示対象画像リストを最新の内容に更新します。
         /// </summary>
         protected override void RefreshImageList()
         {
@@ -304,10 +304,10 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region DisplayPicture - 指定画像表示
+        #region DisplayImage - 指定画像表示
 
         /// <summary>
-        /// (ViewImageForm.DisplayPicture()をオーバーライドします)
+        /// (ViewImageForm.DisplayImage()をオーバーライドします)
         /// 現在のインデックスが指し示す画像を表示します。
         /// ファイルが削除済みの場合は、それを示すメッセージを表示します。
         /// </summary>
@@ -353,11 +353,8 @@ namespace SO.PictManager.Forms
                 // セット操作ボタンの文言を変更
                 if (ImageMode == ConfigInfo.ImageDataMode.Database)
                 {
-                    var image = ImageData as DataImage;
-
-                    btnOperateSet.Text = image.SetId.HasValue ? "セット表示" : "セット登録";
+                    RefreshOperateGroupButtonState();
                 }
-
             }
             catch (Exception ex)
             {
@@ -555,6 +552,199 @@ namespace SO.PictManager.Forms
 
         #endregion
 
+        #region CreateNewGroup - 新規画像グループを作成
+
+        /// <summary>
+        /// 新規画像グループを登録する為のサムネイル画面を開きます。
+        /// サムネイル画面の登録ボタン押下時に画像グループの登録が確定されます。
+        /// </summary>
+        private void CreateNewGroup()
+        {
+            Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.Database);
+
+            var currentImage = ImageData as DataImage;
+
+            string titleText;
+            string statusText;
+            var imageList = new List<IImage>();
+            if (currentImage.GroupId.HasValue)
+            {
+                // 既に画像グループが設定されている場合、同じグループの画像を表示
+                using (var entities = new PictManagerEntities())
+                {
+                    var imageIds = from i in entities.TblImages
+                                   where i.GroupId == currentImage.GroupId.Value
+                                   orderby i.GroupOrder ?? 0
+                                   select i.ImageId;
+
+                    foreach (var imageId in imageIds)
+                    {
+                        imageList.Add(new DataImage(imageId));
+                    }
+
+                    var description = (from s in entities.TblGroups
+                                       where s.GroupId == currentImage.GroupId.Value
+                                       select s.Description).First();
+
+                    titleText = string.Format("画像グループ(ID: {0})", currentImage.GroupId.Value.ToString());
+                    statusText = description;
+                }
+            }
+            else
+            {
+                // セットが設定されていない場合は現在の画像のみを表示
+                imageList.Add(currentImage);
+
+                titleText = "新規画像グループ";
+                statusText = "新規画像グループ";
+            }
+
+            _groupForm = new ThumbnailForm(imageList, ImageMode, currentImage.GroupId, true);
+            _groupForm.TitleBarText = titleText;
+            _groupForm.StatusBarText = statusText;
+
+            // 登録ボタン押下時の処理を定義
+            _groupForm.EntryButtonClick += (sender3, e3) =>
+            {
+                int groupId;
+                using (var entities = new PictManagerEntities())
+                {
+                    string description = string.Empty;
+                    TblGroup group = null;
+                    if (_groupForm.GroupId.HasValue)
+                    {
+                        group = (from g in entities.TblGroups
+                                     where g.GroupId == _groupForm.GroupId.Value
+                                     select g).First();
+                        
+                        groupId = group.GroupId;
+                        description = group.Description;
+                    }
+                    else
+                    {
+                        groupId = -1;
+                        description = string.Empty;
+                    }
+
+                    // 画像グループの説明を登録
+                    using (var dlg = new CommonInputDialog(
+                        "グループ説明", "画像グループの説明を入力して下さい。", false, description))
+                    {
+                        if (dlg.ShowDialog(this) != DialogResult.OK)
+                        {
+                            return;
+                        }
+
+                        description = dlg.InputString;
+                    }
+
+                    DateTime now = DateTime.Now;
+
+                    if (_groupForm.GroupId.HasValue)
+                    {
+                        // 対象の画像グループIDをクリア
+                        foreach (var image in entities.TblImages.Where(i => i.GroupId == groupId))
+                        {
+                            image.GroupId = null;
+                        }
+
+                        group.Description = description;
+                    }
+                    else
+                    {
+                        // 新規画像グループを発行
+                        group = new TblGroup();
+                        group.Description = description;
+                        group.InsertedDateTime = now;
+                        group.UpdatedDateTime = now;
+
+                        entities.TblGroups.Add(group);
+                        entities.SaveChanges();
+
+                        groupId = group.GroupId;
+                    }
+
+                    // 画像グループIDを新しく設定したグループの画像に入れる
+                    var imageIds = _groupForm.ImageList.Select(i => int.Parse(i.Key)).ToArray();
+
+                    var newSet = from i in entities.TblImages
+                                 where imageIds.Contains(i.ImageId)
+                                 select i;
+
+                    foreach (var image in newSet)
+                    {
+                        image.GroupId = groupId;
+                        image.UpdatedDateTime = now;
+                    }
+
+                    entities.SaveChanges();
+                }
+
+                RefreshImageList();
+
+                FormUtilities.ShowMessage("I011", string.Format("画像グループ(ID: {0})の登録", groupId));
+            };
+
+            // 削除ボタン押下時の処理を定義
+            _groupForm.DeleteButtonClick += (sender4, e4) => _groupForm.RemoveSelectedImage();
+
+            // 画面クローズ時の処理を定義
+            _groupForm.Disposed += (sender2, e2) =>
+            {
+                _groupForm = null;
+                RefreshOperateGroupButtonState();
+            };
+
+            _groupForm.Show(this);
+            RefreshOperateGroupButtonState();
+        }
+
+        #endregion
+
+        #region RefreshOperateGroupButtonState - 画像グループ操作ボタン状態更新
+
+        /// <summary>
+        /// 現在表示している画像の状態に応じて、画像グループ操作ボタンの状態を更新します。
+        /// </summary>
+        private void RefreshOperateGroupButtonState()
+        {
+            Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.Database);
+
+            var image = ImageData as DataImage;
+            if (_groupForm == null)
+            {
+                if (image.GroupId.HasValue)
+                {
+                    btnOperateGroup.Text = "グループ表示";
+                }
+                else
+                {
+                    btnOperateGroup.Text = "グループ登録";
+                }
+
+                btnOperateGroup.Enabled = true;
+            }
+            else
+            {
+                if (image.GroupId.HasValue)
+                {
+                    btnOperateGroup.Text = "グループ表示";
+                }
+                else
+                {
+                    btnOperateGroup.Text = "グループに追加";
+                }
+
+                bool isExists = (from i in _groupForm.ImageList
+                                 where i.Key == image.Key
+                                 select i).Any();
+
+                btnOperateGroup.Enabled = !isExists;
+            }
+        }
+
+        #endregion
+
         #region SaveStateInfo - 状態情報保存
 
         /// <summary>
@@ -601,9 +791,9 @@ namespace SO.PictManager.Forms
             {
                 _similarForm.Dispose();
             }
-            if (_setForm != null)
+            if (_groupForm != null)
             {
-                _setForm.Dispose();
+                _groupForm.Dispose();
             }
             if (_bookmarkForm != null)
             {
@@ -1165,9 +1355,14 @@ namespace SO.PictManager.Forms
 
                 // 削除確認
                 var menuChkConfirm = FormUtilities.GetMenuItem<ToolStripMenuItem>(
-                        barMenu.Items, "menuOpe/menuChkConfirm");
+                    barMenu.Items, "menuOpe/menuChkConfirm");
                 if (!menuChkConfirm.Checked)
-                    if (FormUtilities.ShowMessage("Q002") == DialogResult.No) return;
+                {
+                    if (FormUtilities.ShowMessage("Q002") == DialogResult.No)
+                    {
+                        return;
+                    }
+                }
 
                 // PictureBoxリソース解放
                 picViewer.Image.Dispose();
@@ -1184,7 +1379,10 @@ namespace SO.PictManager.Forms
                 else
                 {
                     if (CurrentIndex == 0)
+                    {
                         FormUtilities.ShowMessage("I000");
+                    }
+
                     DisplayImage();
                 }
             }
@@ -1317,39 +1515,45 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region btnOperateSet_CheckedChanged - セット操作ボタン押下時
+        #region btnOperateGroup_CheckedChanged - 画像グループ操作ボタン押下時
 
         /// <summary>
-        /// セット操作ボタンがクリックされた際に実行される処理です。
-        /// 既にセットに登録されている画像の場合は、
-        /// そのセット内の画像をサムネイル画面で表示します。
-        /// セットに登録されていない画像の場合は、
-        /// 現在サムネイル画面で開かれているセットに画像を追加します。
+        /// 画像グループ操作ボタンがクリックされた際に実行される処理です。
+        /// 既に画像グループに登録されている画像の場合は、
+        /// その画像グループ内の画像をサムネイル画面で表示します。
+        /// 画像グループに登録されていない画像の場合は、
+        /// 現在サムネイル画面で開かれている画像グループに画像を追加します。
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>
-        private void btnOperateSet_CheckedChanged(object sender, EventArgs e)
+        private void btnOperateGroup_Click(object sender, EventArgs e)
         {
             Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.Database);
 
             try
             {
-                var imageData = ImageData as DataImage;
-
-                if (imageData.SetId.HasValue)
+                if (_groupForm == null)
                 {
-
+                    // 画像グループ画面が開いていない時は新規セット作成
+                    CreateNewGroup();
                 }
                 else
                 {
+                    // 画像グループ画面が開いている時はその画像グループに追加
+                    bool isExists = (from i in _groupForm.ImageList
+                                     where i.Key == ImageData.Key
+                                     select i).Any();
 
+                    if (!isExists)
+                    {
+                        _groupForm.AddImage(ImageData);
+                    }
                 }
             }
             catch (Exception ex)
             {
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
-
         }
 
         #endregion

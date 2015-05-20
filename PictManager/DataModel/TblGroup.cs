@@ -12,9 +12,9 @@ namespace SO.PictManager.DataModel
     using System;
     using System.Collections.Generic;
     
-    public partial class TblSet
+    public partial class TblGroup
     {
-        public int SetId { get; set; }
+        public int GroupId { get; set; }
         public string Description { get; set; }
         public System.DateTime InsertedDateTime { get; set; }
         public System.DateTime UpdatedDateTime { get; set; }

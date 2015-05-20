@@ -967,6 +967,7 @@ namespace SO.PictManager.Forms
                         var imageIds = from i in entities.TblImages
                                        where i.CategoryId == TargetCategory.CategoryId
                                           && !i.DeleteFlag
+                                       orderby i.ImageId
                                        select i.ImageId;
 
                         foreach (var imageId in imageIds)

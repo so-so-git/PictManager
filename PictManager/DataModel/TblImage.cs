@@ -16,6 +16,7 @@ namespace SO.PictManager.DataModel
     {
         public int ImageId { get; set; }
         public byte[] ImageData { get; set; }
+        public string ImageFormat { get; set; }
         public int CategoryId { get; set; }
         public Nullable<int> TagId1 { get; set; }
         public Nullable<int> TagId2 { get; set; }
@@ -26,12 +27,11 @@ namespace SO.PictManager.DataModel
         public Nullable<int> TagId7 { get; set; }
         public Nullable<int> TagId8 { get; set; }
         public Nullable<int> TagId9 { get; set; }
-        public Nullable<int> SetId { get; set; }
-        public Nullable<int> SetOrder { get; set; }
+        public Nullable<int> GroupId { get; set; }
+        public Nullable<int> GroupOrder { get; set; }
         public string Description { get; set; }
+        public bool DeleteFlag { get; set; }
         public System.DateTime InsertedDateTime { get; set; }
         public System.DateTime UpdatedDateTime { get; set; }
-        public bool DeleteFlag { get; set; }
-        public string ImageFormat { get; set; }
     }
 }

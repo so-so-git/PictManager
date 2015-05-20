@@ -127,6 +127,9 @@
   <ItemGroup>
     <Compile Include="Common\Constants.cs" />
     <Compile Include="Common\ImageSorter.cs" />
+    <Compile Include="DataModel\TblGroup.cs">
+      <DependentUpon>PictManagerEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ComboInputDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -261,9 +264,6 @@
       <DependentUpon>ViewImageForm.cs</DependentUpon>
     </Compile>
     <Compile Include="DataModel\TblImage.cs">
-      <DependentUpon>PictManagerEntity.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DataModel\TblSet.cs">
       <DependentUpon>PictManagerEntity.tt</DependentUpon>
     </Compile>
     <None Include="app.config">
