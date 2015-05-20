@@ -18,8 +18,6 @@ using SO.PictManager.DataModel;
 using SO.PictManager.Forms.Info;
 using SO.PictManager.Imaging;
 
-using CursorFace = System.Windows.Forms.Cursor;
-
 namespace SO.PictManager.Forms
 {
     /// <summary>
@@ -1483,7 +1481,7 @@ namespace SO.PictManager.Forms
                     return;
                 }
 
-                CursorFace.Current = Cursors.WaitCursor;
+                Cursor.Current = Cursors.WaitCursor;
 
                 if (ImageMode == ConfigInfo.ImageDataMode.File)
                 {
@@ -1542,7 +1540,7 @@ namespace SO.PictManager.Forms
             }
             finally
             {
-                CursorFace.Current = Cursors.Default;
+                Cursor.Current = Cursors.Default;
             }
         }
 
@@ -1560,7 +1558,7 @@ namespace SO.PictManager.Forms
         {
             try
             {
-                CursorFace.Current = Cursors.WaitCursor;
+                Cursor.Current = Cursors.WaitCursor;
 
                 // 削除確認
                 if (FormUtilities.ShowMessage("Q016") == DialogResult.No)
@@ -1595,7 +1593,7 @@ namespace SO.PictManager.Forms
             }
             finally
             {
-                CursorFace.Current = Cursors.Default;
+                Cursor.Current = Cursors.Default;
             }
         }
 
@@ -1834,7 +1832,7 @@ namespace SO.PictManager.Forms
             try
             {
                 this.Update();
-                CursorFace.Current = Cursors.WaitCursor;
+                Cursor.Current = Cursors.WaitCursor;
 
                 int md5ColIdx = ImageMode == ConfigInfo.ImageDataMode.File
                     ? FileColumnIndexes.MD5 : DatabaseColumnIndexes.MD5;
@@ -1869,7 +1867,7 @@ namespace SO.PictManager.Forms
             }
             finally
             {
-                CursorFace.Current = Cursors.Default;
+                Cursor.Current = Cursors.Default;
             }
         }
 

@@ -19,8 +19,6 @@ using SO.PictManager.DataModel;
 using SO.PictManager.Forms.Info;
 using SO.PictManager.Imaging;
 
-using CursorFace = System.Windows.Forms.Cursor;
-
 namespace SO.PictManager.Forms
 {
     /// <summary>
@@ -658,7 +656,7 @@ namespace SO.PictManager.Forms
             try
             {
                 // マウスカーソル変更(待機)
-                CursorFace.Current = Cursors.WaitCursor;
+                Cursor.Current = Cursors.WaitCursor;
 
                 // 移動先ディレクトリを取得
                 string destDir = null;
@@ -699,7 +697,7 @@ namespace SO.PictManager.Forms
                 RefreshImageList();
 
                 // マウスカーソル変更(通常)
-                CursorFace.Current = Cursors.Default;
+                Cursor.Current = Cursors.Default;
 
                 if (status == ResultStatus.OK)
                 {
