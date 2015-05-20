@@ -71,8 +71,8 @@
             this.txtTargetFolder.Size = new System.Drawing.Size(288, 23);
             this.txtTargetFolder.TabIndex = 1;
             this.txtTargetFolder.DragDrop += new System.Windows.Forms.DragEventHandler(this.txtTargetFolder_DragDrop);
-            this.txtTargetFolder.DragEnter += new System.Windows.Forms.DragEventHandler(this.txtTargetDirectory_DragEnter);
-            this.txtTargetFolder.Enter += new System.EventHandler(this.txtTargetDirectory_Enter);
+            this.txtTargetFolder.DragEnter += new System.Windows.Forms.DragEventHandler(this.txtTargetFolder_DragEnter);
+            this.txtTargetFolder.Enter += new System.EventHandler(this.txtTargetFolder_Enter);
             // 
             // btnFolderBrowse
             // 

@@ -33,15 +33,21 @@ namespace SO.PictManager.Forms
             {
                 string extension = format.Tag.ToString();
                 if (extension.IndexOf(',') > -1)
+                {
                     foreach (var splitExt in extension.Split(new[] { ',' }))
                     {
                         formatMap[splitExt] = format;
                     }
+                }
                 else
+                {
                     formatMap[extension] = format;
+                }
             }
             foreach (var target in config.CommonInfo.TargetExtensions)
+            {
                 formatMap[target].Checked = true;
+            }
 
             chkIncludeSub.Checked = config.CommonInfo.IsIncludeSubDirectory;
             chkConfirmQuit.Checked = config.CommonInfo.IsConfirmQuit;
@@ -66,9 +72,13 @@ namespace SO.PictManager.Forms
                 {
                     string extension = format.Tag.ToString();
                     if (extension.IndexOf(',') > -1)
+                    {
                         commonConf.TargetExtensions.AddRange(extension.Split(new[] { ',' }));
+                    }
                     else
+                    {
                         commonConf.TargetExtensions.Add(extension);
+                    }
                 }
             }
             commonConf.IsIncludeSubDirectory = chkIncludeSub.Checked;
@@ -83,6 +93,8 @@ namespace SO.PictManager.Forms
         }
 
         #endregion
+
+        //*** イベントハンドラ ***
 
         #region btnApply_Click - 適用ボタン押下時
 

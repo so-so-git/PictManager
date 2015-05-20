@@ -67,7 +67,7 @@ namespace SO.PictManager.Forms
 
         //*** イベントハンドラ ***
 
-        #region btnAddCategory_Click - カテゴリ追加ボタン押下時
+        #region btnAddCategory_Click - カテゴリー追加ボタン押下時
 
         /// <summary>
         /// カテゴリー追加ボタンをクリックした際に実行される処理です。
@@ -86,9 +86,15 @@ namespace SO.PictManager.Forms
                     bool isRetry = true;
                     do
                     {
-                        if (dlg.ShowDialog(this) != DialogResult.OK) return;
+                        if (dlg.ShowDialog(this) != DialogResult.OK)
+                        {
+                            return;
+                        }
 
-                        if (string.IsNullOrEmpty(dlg.InputString)) continue;
+                        if (string.IsNullOrEmpty(dlg.InputString))
+                        {
+                            continue;
+                        }
 
                         // カテゴリー名重複チェック
                         if (isRetry = entities.MstCategories.Any(c => c.CategoryName == dlg.InputString))
@@ -97,17 +103,17 @@ namespace SO.PictManager.Forms
                         }
                     } while (isRetry);
 
-                    // カテゴリ登録
+                    // カテゴリー登録
                     DateTime now = DateTime.Now;
-                    var dto = new MstCategory();
-                    dto.CategoryName = dlg.InputString;
-                    dto.InsertedDateTime = now;
-                    dto.UpdatedDateTime = now;
+                    var category = new MstCategory();
+                    category.CategoryName = dlg.InputString;
+                    category.InsertedDateTime = now;
+                    category.UpdatedDateTime = now;
 
-                    entities.MstCategories.Add(dto);
+                    entities.MstCategories.Add(category);
                     entities.SaveChanges();
 
-                    // カテゴリコンボボックスリフレッシュ
+                    // カテゴリーコンボボックスリフレッシュ
                     RefreshCategoryComboBox(entities);
                 }
             }
@@ -133,7 +139,7 @@ namespace SO.PictManager.Forms
             if (e.Data.GetDataPresent("UniformResourceLocator")
                 || e.Data.GetDataPresent("UniformResourceLocatorW"))
             {
-                string uri = e.Data.GetData(DataFormats.Text).ToString();
+                string uri = e.Data.GetData(DataFormats.Text).ToSafeString();
                 if (Utilities.IsAvailableFormat(uri, false))
                 {
                     // 処理可能ファイル形式の場合のみドロップ許可
@@ -155,7 +161,7 @@ namespace SO.PictManager.Forms
         private void lblDropArea_DragDrop(object sender, DragEventArgs e)
         {
             // 画像データ取得
-            string uri = e.Data.GetData(DataFormats.Text).ToString();
+            string uri = e.Data.GetData(DataFormats.Text).ToSafeString();
             byte[] imageData = DownloadManager.DownloadData(uri);
 
             using (var entities = new PictManagerEntities())

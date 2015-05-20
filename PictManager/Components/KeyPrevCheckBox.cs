@@ -12,6 +12,7 @@ namespace SO.PictManager.Components
     public class KeyPrevCheckBox : CheckBox
     {
         #region IsInputKey - プリプロセス対象キー識別
+
         /// <summary>
         /// 押下されたキーがプリプロセス対象かを判別します。
         /// </summary>
@@ -20,18 +21,22 @@ namespace SO.PictManager.Components
         protected override bool IsInputKey(Keys keyData)
         {
             // 修飾キーが付加されている場合は通常処理(とりあえず現状は)
-            if ((keyData & Keys.Alt) != Keys.Alt &&
-                    (keyData & Keys.Control) != Keys.Control &&
-                    (keyData & Keys.Shift) != Keys.Shift)
+            if ((keyData & Keys.Alt) != Keys.Alt
+                && (keyData & Keys.Control) != Keys.Control
+                && (keyData & Keys.Shift) != Keys.Shift)
             {
                 // "←"、"→"、"↑"、"↓"キー押下時のみプリプロセス無効化
                 Keys kcode = keyData & Keys.KeyCode;
-                if (kcode == Keys.Left || kcode == Keys.Right ||
-                        kcode == Keys.Up || kcode == Keys.Down) return true;
+                if (kcode == Keys.Left || kcode == Keys.Right
+                    || kcode == Keys.Up || kcode == Keys.Down)
+                {
+                    return true;
+                }
             }
 
             return base.IsInputKey(keyData);
         }
+
         #endregion
     }
 }

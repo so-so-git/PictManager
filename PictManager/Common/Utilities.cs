@@ -43,6 +43,7 @@ namespace SO.PictManager.Common
         #endregion
 
         #region 静的コンストラクタ
+
         /// <summary>
         /// 静的コンストラクタです。
         /// </summary>
@@ -59,9 +60,11 @@ namespace SO.PictManager.Common
                 Logger = new Logger(logPath);
             }
         }
+
         #endregion
 
         #region IsAvailableFormat - 対応形式チェック
+
         /// <summary>
         /// 指定されたURIにあるファイルがアプリケーションで処理出来るファイルか確認します。
         /// </summary>
@@ -70,14 +73,19 @@ namespace SO.PictManager.Common
         /// <returns>処理可能ファイルの場合:true、処理不可能ファイルの場合:false</returns>
         internal static bool IsAvailableFormat(string uri, bool isCheckExists)
         {
-            if (isCheckExists && !File.Exists(uri)) return false;
+            if (isCheckExists && !File.Exists(uri))
+            {
+                return false;
+            }
 
             return Utilities.Config.CommonInfo.TargetExtensions
-                    .Any(x => Path.GetExtension(uri) == "." + x);
+                .Any(x => Path.GetExtension(uri) == "." + x);
         }
+
         #endregion
 
         #region OpenExplorer - エクスプローラでパスを表示
+
         /// <summary>
         /// 指定されたパスをエクスプローラで開きます。
         /// </summary>
@@ -94,9 +102,11 @@ namespace SO.PictManager.Common
 
             p.Start();
         }
+
         #endregion
 
         #region SaveConfigInfo - システム設定情報保存
+
         /// <summary>
         /// Utilitiesクラスが保持しているシステム設定情報をシリアライズしてXMLファイルとして保存します。
         /// 保持しているシステム設定情報が無い場合、このメソッドは何もしません。
@@ -115,9 +125,11 @@ namespace SO.PictManager.Common
             string path = ConfigurationManager.AppSettings[ConfigInfo.SAVE_PATH_KEY];
             XmlManager.Serialize<ConfigInfo>(path, configInfo);
         }
+
         #endregion
 
         #region RestoreConfigInfo - システム設定情報保存読込
+
         /// <summary>
         /// シリアライズされたシステム設定情報を読み込みます。
         /// 読み込んだ情報は、同時にConfigプロパティに設定されることに注意してください。
@@ -126,15 +138,21 @@ namespace SO.PictManager.Common
         {
             string path = ConfigurationManager.AppSettings[ConfigInfo.SAVE_PATH_KEY];
             if (!string.IsNullOrEmpty(path))
+            {
                 Config = XmlManager.Deserialize<ConfigInfo>(path, true);
+            }
             else
+            {
                 Config = new ConfigInfo();
+            }
 
             return Config;
         }
+
         #endregion
 
         #region SaveStateInfo - 状態情報保存
+
         /// <summary>
         /// Utilitiesクラスが保持している状態情報をシリアライズしてXMLファイルとして保存します。
         /// 保持している状態情報が無い場合、このメソッドは何もしません。
@@ -153,9 +171,11 @@ namespace SO.PictManager.Common
             string path = ConfigurationManager.AppSettings[StateInfo.SAVE_PATH_KEY];
             XmlManager.Serialize<StateInfo>(path, stateInfo);
         }
+
         #endregion
 
         #region RestoreStateInfo - 状態情報保存読込
+
         /// <summary>
         /// シリアライズされた状態情報を読み込みます。
         /// 読み込んだ情報は、同時にStateプロパティに設定されることに注意してください。
@@ -164,15 +184,21 @@ namespace SO.PictManager.Common
         {
             string path = ConfigurationManager.AppSettings[StateInfo.SAVE_PATH_KEY];
             if (!string.IsNullOrEmpty(path))
+            {
                 State = XmlManager.Deserialize<StateInfo>(path, true);
+            }
             else
+            {
                 State = new StateInfo();
+            }
 
             return State;
         }
+
         #endregion
 
         #region SaveRenameInfo - ファイルリネーム情報保存
+
         /// <summary>
         /// Utilitiesクラスが保持しているファイルリネーム情報をシリアライズしてXMLファイルとして保存します。
         /// 保持しているファイルリネーム情報が無い場合、このメソッドは何もしません。
@@ -191,9 +217,11 @@ namespace SO.PictManager.Common
             string path = ConfigurationManager.AppSettings[RenameInfo.SAVE_PATH_KEY];
             XmlManager.Serialize<RenameInfo>(path, renameInfo);
         }
+
         #endregion
 
         #region RestoreRenameInfo - ファイルリネーム情報保存読込
+
         /// <summary>
         /// シリアライズされたファイルリネーム情報を読み込みます。
         /// 読み込んだ情報は、同時にRenameプロパティに設定されることに注意してください。
@@ -202,12 +230,17 @@ namespace SO.PictManager.Common
         {
             string path = ConfigurationManager.AppSettings[RenameInfo.SAVE_PATH_KEY];
             if (!string.IsNullOrEmpty(path))
+            {
                 Rename = XmlManager.Deserialize<RenameInfo>(path, true);
+            }
             else
+            {
                 Rename = new RenameInfo();
+            }
 
             return Rename;
         }
+
         #endregion
     }
 }

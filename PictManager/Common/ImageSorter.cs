@@ -73,26 +73,37 @@ namespace SO.PictManager.Common
         {
             Func<string, string> keyGetter;
             if (mode == ConfigInfo.ImageDataMode.File)
+            {
                 keyGetter = Path.GetFileName;
+            }
             else
+            {
                 keyGetter = k => k;
+            }
 
             switch (order)
             {
                 case ImageSortOrder.KeyAsc:
                     return source.OrderBy(p => keyGetter(p.Key));
+
                 case ImageSortOrder.KeyDesc:
                     return source.OrderByDescending(p => keyGetter(p.Key));
+
                 case ImageSortOrder.TimestampAsc:
                     return source.OrderBy(p => p.Timestamp);
+
                 case ImageSortOrder.TimestampDesc:
                     return source.OrderByDescending(p => p.Timestamp);
+
                 case ImageSortOrder.DataSizeAsc:
                     return source.OrderBy(p => p.DataSize);
+
                 case ImageSortOrder.DataSizeDesc:
                     return source.OrderByDescending(p => p.DataSize);
+
                 case ImageSortOrder.Random:
                     return source.OrderBy(p => Guid.NewGuid());
+
                 default:
                     return null;
             }
@@ -154,6 +165,7 @@ namespace SO.PictManager.Common
         {
             FieldInfo field = typeof(ImageSortOrder).GetField(orderName,
                 BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
+
             return (ImageSortOrder)field.GetValue(null);
         }
 
@@ -172,7 +184,9 @@ namespace SO.PictManager.Common
         public static ImageSortOrder GetSortOrderByDisplayText(string displayText)
         {
             if (!_sortOrderMap.ContainsValue(displayText))
+            {
                 throw new ArgumentException("無効なソート順名です。");
+            }
 
             return _sortOrderMap.Where(o => o.Value == displayText).Single().Key;
         }

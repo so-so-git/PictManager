@@ -86,6 +86,7 @@ namespace SO.PictManager.Forms
         #endregion
 
         #region RefreshBookmarks - 表示されているブックマークの内容を最新状態に更新
+
         /// <summary>
         /// 表示されているブックマークの内容を最新状態に更新します。
         /// </summary>
@@ -93,7 +94,10 @@ namespace SO.PictManager.Forms
         {
             dgvBookmarks.Rows.Clear();
 
-            if (!File.Exists(_bookmarkFilePath)) return;
+            if (!File.Exists(_bookmarkFilePath))
+            {
+                return;
+            }
 
             foreach (var xelm in XDocument.Load(_bookmarkFilePath).Root.Descendants())
             {
@@ -109,9 +113,11 @@ namespace SO.PictManager.Forms
 
             SetBookmarkEnabled();
         }
+
         #endregion
 
         #region RaiseBookmarkJump - ブックマークジャンプイベント発生
+
         /// <summary>
         /// ブックマークジャンプイベントを発生させます。
         /// </summary>
@@ -119,17 +125,23 @@ namespace SO.PictManager.Forms
         {
             if (BookmarkJump != null)
             {
-                if (dgvBookmarks.SelectedRows.Count == 0) return;
+                if (dgvBookmarks.SelectedRows.Count == 0)
+                {
+                    return;
+                }
 
                 DataGridViewRow selectedRow;
                 if (dgvBookmarks.SelectedRows.Count > 1)
                 {
                     selectedRow = dgvBookmarks.SelectedRows.Cast<DataGridViewRow>()
                         .OrderBy(r => r.Index).First();
+
                     foreach (DataGridViewRow row in dgvBookmarks.Rows)
                     {
                         if (row.Index != selectedRow.Index)
+                        {
                             row.Selected = false;
+                        }
                     }
                 }
                 else
@@ -137,7 +149,10 @@ namespace SO.PictManager.Forms
                     selectedRow = dgvBookmarks.SelectedRows[0];
                 }
 
-                if (!IsBookmarkEnabled(selectedRow)) return;
+                if (!IsBookmarkEnabled(selectedRow))
+                {
+                    return;
+                }
 
                 var info = new BookmarkInfo(
                     Convert.ToInt32(selectedRow.Cells["colId"].Value),
@@ -146,18 +161,24 @@ namespace SO.PictManager.Forms
                     DateTime.ParseExact(selectedRow.Cells["colTimestamp"].Value.ToString(),
                         BookmarkInfo.TIMESTAMP_FORMAT, null),
                     ImageSorter.GetSortOrderByDisplayText(selectedRow.Cells["colSortOrder"].Value.ToString()));
+
                 BookmarkJump(this, new BookmarkEventArgs(info));
             }
         }
+
         #endregion
 
         #region DeleteBookmark - 選択されているブックマークを削除
+
         /// <summary>
         /// 選択されているブックマークを削除します。
         /// </summary>
         private void DeleteBookmark()
         {
-            if (dgvBookmarks.SelectedRows.Count == 0) return;
+            if (dgvBookmarks.SelectedRows.Count == 0)
+            {
+                return;
+            }
 
             var selectedRowIndexes = from r in dgvBookmarks.SelectedRows.Cast<DataGridViewRow>()
                                      orderby r.Index descending
@@ -177,17 +198,21 @@ namespace SO.PictManager.Forms
             
             xdoc.Save(_bookmarkFilePath);
         }
+
         #endregion
 
         #region ClearBookmarks - 全てのブックマークを削除
+
         /// <summary>
         /// 全てのブックマークを削除します。
         /// </summary>
         private void ClearBookmarks()
         {
             if (dgvBookmarks.RowCount == 0
-                    || FormUtilities.ShowMessage("Q010") == DialogResult.No)
+                || FormUtilities.ShowMessage("Q010") == DialogResult.No)
+            {
                 return;
+            }
 
             // XMLから情報を削除
             XDocument xdoc = XDocument.Load(_bookmarkFilePath);
@@ -198,9 +223,11 @@ namespace SO.PictManager.Forms
             // グリッドから情報を削除
             dgvBookmarks.Rows.Clear();
         }
+
         #endregion
 
         #region SetBookmarkEnabled - ブックマークの行有効状態設定
+
         /// <summary>
         /// ブックマークの有効状態を設定します。
         /// </summary>
@@ -210,6 +237,7 @@ namespace SO.PictManager.Forms
             {
                 ImageSortOrder order =
                     ImageSorter.GetSortOrderByDisplayText(row.Cells["colSortOrder"].Value.ToString());
+
                 if (order == _sortOrder)
                 {
                     row.DefaultCellStyle.BackColor = SystemColors.Window;
@@ -222,9 +250,11 @@ namespace SO.PictManager.Forms
                 }
             }
         }
+
         #endregion
 
         #region IsBookmarkEnabled - ブックマークの有効状態を取得
+
         /// <summary>
         /// ブックマークの有効状態を取得します。
         /// </summary>
@@ -234,13 +264,16 @@ namespace SO.PictManager.Forms
         {
             ImageSortOrder order =
                 ImageSorter.GetSortOrderByDisplayText(row.Cells["colSortOrder"].Value.ToString());
+
             return order == _sortOrder;
         }
+
         #endregion
 
-        #region イベントハンドラ
+        //*** イベントハンドラ ***
 
         #region BookmarkForm_Load - フォームロード時
+
         /// <summary>
         /// フォームがロードされた際の処理です。
         /// フォームの表示関連の初期設定を行います。
@@ -252,9 +285,11 @@ namespace SO.PictManager.Forms
             // 設定情報から常に前面表示するかの設定を読込
             chkTopMost.Checked = Utilities.Config.SlideInfo.IsBookmarkTopMost;
         }
+
         #endregion
 
         #region btnJump_Click - ジャンプボタン押下時
+
         /// <summary>
         /// ジャンプボタンが押下された際の処理です。
         /// 選択されているブックマークのブックマークジャンプイベントを発生させます。
@@ -273,9 +308,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region btnDelete_Click - 削除ボタン押下時
+
         /// <summary>
         /// 削除ボタンが押下された際の処理です。
         /// 選択されているブックマークを削除します。
@@ -293,9 +330,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region btnClear_Click - クリアボタン押下時
+
         /// <summary>
         /// クリアボタンが押下された際の処理です。
         /// 全てのブックマークを削除します。
@@ -313,9 +352,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region chkTopMost_CheckedChanged - 最前面表示チェックボックス変更時
+
         /// <summary>
         /// 最前面表示チェックボックス変更時のチェックが変更された際の処理です。
         /// チェックが付いている場合、常にウィンドウを最前面に表示するよう設定します。
@@ -330,6 +371,7 @@ namespace SO.PictManager.Forms
 
                 // 変更されている場合は設定情報に保存
                 ConfigInfo.SlideConfig slideConf = Utilities.Config.SlideInfo;
+
                 if (chkTopMost.Checked != slideConf.IsBookmarkTopMost)
                 {
                     slideConf.IsBookmarkTopMost = chkTopMost.Checked;
@@ -341,9 +383,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region dgvBookmarks_CellDoubleClick - ブックマークグリッドセルダブルクリック時
+
         /// <summary>
         /// ブックマークグリッドのセルがダブルクリックされた際の処理です。
         /// 選択されたブックマークのブックマークジャンプイベントを発生させます。
@@ -355,16 +399,20 @@ namespace SO.PictManager.Forms
             try
             {
                 if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
+                {
                     RaiseBookmarkJump();
+                }
             }
             catch (Exception ex)
             {
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region dgvBookmarks_CellEndEdit - ブックマークグリッドセル編集時
+
         /// <summary>
         /// ブックマークグリッドのセルが編集された際の処理です。
         /// 編集された内容をブックマーク情報に反映します。
@@ -375,7 +423,10 @@ namespace SO.PictManager.Forms
         {
             try
             {
-                if (dgvBookmarks.Columns[e.ColumnIndex].Name != "colName") return;
+                if (dgvBookmarks.Columns[e.ColumnIndex].Name != "colName")
+                {
+                    return;
+                }
 
                 DataGridViewRow row = dgvBookmarks.Rows[e.RowIndex];
                 string id = row.Cells["colId"].Value.ToString();
@@ -393,7 +444,6 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
-        #endregion
 
         #endregion
     }
@@ -408,7 +458,9 @@ namespace SO.PictManager.Forms
     {
         #region プロパティ
 
-        /// <summary>ブックマーク情報を取得します。</summary>
+        /// <summary>
+        /// ブックマーク情報を取得します。
+        /// </summary>
         public BookmarkInfo Bookmark { get; private set; }
 
         #endregion

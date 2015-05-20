@@ -94,9 +94,11 @@ namespace SO.PictManager.Imaging
             Action actRestoreFileAttr = () => { };
 
             // 表示対象対象が読み取り専用の場合、それを一時的に解除
-            bool readOnlyFlg = false;
-            if (readOnlyFlg = _fileInfo.IsReadOnly) // ←比較では無く代入
+            bool readOnlyFlg = _fileInfo.IsReadOnly;
+            if (readOnlyFlg)
+            {
                 _fileInfo.Attributes = _fileInfo.Attributes ^ FileAttributes.ReadOnly;
+            }
 
             // 表示対象イメージをストリームから読み込み
             using (var fs = new FileStream(_fileInfo.FullName, FileMode.Open))
@@ -127,7 +129,9 @@ namespace SO.PictManager.Imaging
             // 一時退避ディレクトリが未作成の場合は作成
             string storeDir = Path.Combine(EntryPoint.TmpDirPath, Constants.STORE_DIR_NAME);
             if (!Directory.Exists(storeDir))
+            {
                 Directory.CreateDirectory(storeDir);
+            }
 
             // ファイルの読み取り専用属性を解除
             _fileInfo.Attributes = _fileInfo.Attributes & ~FileAttributes.ReadOnly;

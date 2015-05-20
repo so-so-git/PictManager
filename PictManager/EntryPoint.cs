@@ -63,7 +63,7 @@ namespace SO.PictManager
         {
             // 削除ファイル一時ディレクトリパス生成
             _tmpDirPath = Path.Combine(
-                    Path.GetTempPath(), typeof(EntryPoint).Assembly.GetName().Name);
+                Path.GetTempPath(), typeof(EntryPoint).Assembly.GetName().Name);
 
             // SQLServerサービス名取得
             _sqlServiceName = ConfigurationManager.AppSettings["SqlServiceName"];
@@ -109,7 +109,10 @@ namespace SO.PictManager
                 if (Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.Database)
                 {
                     // SQLServerサービス開始
-                    if (!StartSQLServerService()) return;
+                    if (!StartSQLServerService())
+                    {
+                        return;
+                    }
 
                     // 未分類カテゴリの初期登録
                     EntryUnClassifiedCategory();
@@ -144,8 +147,8 @@ namespace SO.PictManager
                         {
                             // 読み取り専用属性解除
                             (from f in Directory.GetFiles(_tmpDirPath)
-                                where (File.GetAttributes(f) & FileAttributes.ReadOnly) == FileAttributes.ReadOnly
-                                select new FileInfo(f)
+                             where (File.GetAttributes(f) & FileAttributes.ReadOnly) == FileAttributes.ReadOnly
+                             select new FileInfo(f)
                             ).ToList().ForEach(f => f.IsReadOnly = false);
 
                             Directory.Delete(_tmpDirPath, true);
@@ -178,17 +181,16 @@ namespace SO.PictManager
         /// <param name="args">コマンドライン引数</param>
         private static void ParseCommandLine(string[] args)
         {
-            for (int i = 0; i < args.Length; ++i)
+            for (int i = 0; i < args.Length; i++)
             {
                 switch (args[i])
                 {
                     case PARAM_CRYPT_MODE:      // 暗号化モードで起動
                         Application.Run(new StartForm());
-
                         return;
 
                     case PARAM_VIEW_LIST:       // 引数のディレクトリを一覧表示
-                        if (i + 1 >= args.Length)
+                        if ((i + 1) >= args.Length)
                         {
                             FormUtilities.ShowMessage("E005");
                             return;
@@ -196,14 +198,18 @@ namespace SO.PictManager
 
                         string listPath = args[i + 1];
                         if (Directory.Exists(listPath))
+                        {
                             Application.Run(new ListForm(listPath, false));
+                        }
                         else
+                        {
                             FormUtilities.ShowMessage("E006");
+                        }
 
                         return;
 
                     case PARAM_VIEW_THUMBNAIL:  // 引数のディレクトリをサムネイル表示
-                        if (i + 1 >= args.Length)
+                        if ((i + 1) >= args.Length)
                         {
                             FormUtilities.ShowMessage("E005");
                             return;
@@ -211,14 +217,18 @@ namespace SO.PictManager
 
                         string thumbnailPath = args[i + 1];
                         if (Directory.Exists(thumbnailPath))
+                        {
                             Application.Run(new ThumbnailForm(thumbnailPath, false));
+                        }
                         else
+                        {
                             FormUtilities.ShowMessage("E006");
+                        }
 
                         return;
 
                     case PARAM_VIEW_SLIDE:      // 引数のディレクトリをスライドショー表示
-                        if (i + 1 >= args.Length)
+                        if ((i + 1) >= args.Length)
                         {
                             FormUtilities.ShowMessage("E005");
                             return;
@@ -226,14 +236,18 @@ namespace SO.PictManager
 
                         string slidePath = args[i + 1];
                         if (Directory.Exists(slidePath))
+                        {
                             Application.Run(new SlideForm(slidePath, false));
+                        }
                         else
+                        {
                             FormUtilities.ShowMessage("E006");
+                        }
 
                         return;
 
                     case PARAM_VIEW_IMAGE:      // 引数のファイルを単一画像表示
-                        if (i + 1 >= args.Length)
+                        if ((i + 1) >= args.Length)
                         {
                             FormUtilities.ShowMessage("E005");
                             return;
@@ -241,10 +255,14 @@ namespace SO.PictManager
 
                         string viewFilePath = args[i + 1];
                         if (Utilities.IsAvailableFormat(viewFilePath, true))
+                        {
                             Application.Run(new ViewImageForm(
                                 null, new FileImage(viewFilePath), ConfigInfo.ImageDataMode.File));
+                        }
                         else
+                        {
                             FormUtilities.ShowMessage("E007", viewFilePath);
+                        }
 
                         return;
 
@@ -358,7 +376,10 @@ namespace SO.PictManager
                                             select c).Any();
 
                 // 登録済みの場合は処理不要
-                if (isExistsUnClassified) return;
+                if (isExistsUnClassified)
+                {
+                    return;
+                }
 
                 // 現在の最大IDを取得
                 int maxId;

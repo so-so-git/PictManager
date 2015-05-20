@@ -39,7 +39,7 @@
             this.btnBookmark = new SO.PictManager.Components.KeyPrevButton();
             this.chkLupe = new SO.PictManager.Components.KeyPrevCheckBox();
             this.picLupe = new System.Windows.Forms.PictureBox();
-            this.btnOperateGroup = new SO.PictManager.Components.KeyPrevButton();
+            this.btnGroup = new SO.PictManager.Components.KeyPrevButton();
             ((System.ComponentModel.ISupportInitialize)(this.picViewer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pnlParent)).BeginInit();
             this.pnlParent.Panel1.SuspendLayout();
@@ -66,7 +66,7 @@
             this.pnlParent.Panel2.AutoScroll = true;
             this.pnlParent.Panel2.Controls.Add(this.chkSimilar);
             this.pnlParent.Panel2.Controls.Add(this.cmbSort);
-            this.pnlParent.Panel2.Controls.Add(this.btnOperateGroup);
+            this.pnlParent.Panel2.Controls.Add(this.btnGroup);
             this.pnlParent.Panel2.Controls.Add(this.btnBookmark);
             this.pnlParent.Panel2.Controls.Add(this.btnNext);
             this.pnlParent.Panel2.Controls.Add(this.txtIndex);
@@ -225,14 +225,14 @@
             // 
             // btnOperateGroup
             // 
-            this.btnOperateGroup.Location = new System.Drawing.Point(343, 9);
-            this.btnOperateGroup.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.btnOperateGroup.Name = "btnOperateGroup";
-            this.btnOperateGroup.Size = new System.Drawing.Size(91, 29);
-            this.btnOperateGroup.TabIndex = 1;
-            this.btnOperateGroup.Text = "グループ登録";
-            this.btnOperateGroup.UseVisualStyleBackColor = true;
-            this.btnOperateGroup.Click += new System.EventHandler(this.btnOperateGroup_Click);
+            this.btnGroup.Location = new System.Drawing.Point(343, 9);
+            this.btnGroup.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnGroup.Name = "btnOperateGroup";
+            this.btnGroup.Size = new System.Drawing.Size(91, 29);
+            this.btnGroup.TabIndex = 1;
+            this.btnGroup.Text = "グループ登録";
+            this.btnGroup.UseVisualStyleBackColor = true;
+            this.btnGroup.Click += new System.EventHandler(this.btnGroup_Click);
             // 
             // SlideForm
             // 
@@ -268,7 +268,7 @@
         private SO.PictManager.Components.KeyPrevButton btnBookmark;
         private SO.PictManager.Components.KeyPrevCheckBox chkLupe;
         private System.Windows.Forms.PictureBox picLupe;
-        private Components.KeyPrevButton btnOperateGroup;
+        private Components.KeyPrevButton btnGroup;
 
     }
 }

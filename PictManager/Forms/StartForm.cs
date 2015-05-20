@@ -22,7 +22,7 @@ using Config = System.Configuration.ConfigurationManager;
 namespace SO.PictManager.Forms
 {
     /// <summary>
-    /// 対象選択フォームクラス
+    /// 開始フォームクラス
     /// </summary>
     public sealed partial class StartForm : Form
     {
@@ -309,6 +309,8 @@ namespace SO.PictManager.Forms
         /// <param name="e">イベント引数</param>
         private void btnFolderBrowse_Click(object sender, EventArgs e)
         {
+            Debug.Assert(Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.File);
+
             try
             {
                 if (Directory.Exists(txtTargetFolder.Text))
@@ -340,6 +342,8 @@ namespace SO.PictManager.Forms
         /// <param name="e">イベント引数</param>
         private void btnMaintenance_Click(object sender, EventArgs e)
         {
+            Debug.Assert(Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.Database);
+
             try
             {
                 var mainteForm = new MaintenanceForm();
@@ -406,7 +410,10 @@ namespace SO.PictManager.Forms
             try
             {
                 // 対象チェック、状態更新
-                if (!ValidateFolderForFileMode(true)) return;
+                if (!ValidateFolderForFileMode(true))
+                {
+                    return;
+                }
 
                 // フォルダ監視開始
                 BeginFolderWatch(
@@ -432,11 +439,16 @@ namespace SO.PictManager.Forms
         /// <param name="e">イベント引数</param>
         private void btnAutoImport_Click(object sender, EventArgs e)
         {
+            Debug.Assert(Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.Database);
+
             try
             {
                 // 対象チェック、状態更新
                 bool isCreate;
-                if (!ValidateFolderForDatabaseMode(out isCreate)) return;
+                if (!ValidateFolderForDatabaseMode(out isCreate))
+                {
+                    return;
+                }
 
                 // 自動取込フォルダ作成
                 if (isCreate)
@@ -468,6 +480,8 @@ namespace SO.PictManager.Forms
         /// <param name="e">イベント引数</param>
         private void btnOpenUrlDrop_Click(object sender, EventArgs e)
         {
+            Debug.Assert(Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.Database);
+
             try
             {
                 var urlDropForm = new UrlDropForm();
@@ -508,26 +522,41 @@ namespace SO.PictManager.Forms
                 if (Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.File)
                 {
                     // 対象チェック、状態更新
-                    if (!ValidateFolderForFileMode(false)) return;
+                    if (!ValidateFolderForFileMode(false))
+                    {
+                        return;
+                    }
 
                     // 対象ディレクトリの内容を展開
                     bool includeSub = Utilities.Config.CommonInfo.IsIncludeSubDirectory;
                     if (rdoSlide.Checked)
+                    {
                         frmViewer = new SlideForm(txtTargetFolder.Text, includeSub);       // スライドショー表示
+                    }
                     else if (rdoList.Checked)
+                    {
                         frmViewer = new ListForm(txtTargetFolder.Text, includeSub);        // 一覧表示
+                    }
                     else
+                    {
                         frmViewer = new ThumbnailForm(txtTargetFolder.Text, includeSub);   // サムネール表示
+                    }
                 }
                 else
                 {
                     var category = cmbCategory.SelectedItem as MstCategory;
                     if (rdoSlide.Checked)
+                    {
                         frmViewer = new SlideForm(category);        // スライドショー表示
+                    }
                     else if (rdoList.Checked)
+                    {
                         frmViewer = new ListForm(category);         // 一覧表示
+                    }
                     else
+                    {
                         frmViewer = new ThumbnailForm(category);    // サムネール表示
+                    }
                 }
 
                 frmViewer.Show(this);
@@ -555,7 +584,7 @@ namespace SO.PictManager.Forms
             {
                 // 終了確認を行う設定の場合かつフォルダ指定がある場合(入力中含む)、終了確認を行う
                 if (Utilities.Config.CommonInfo.IsConfirmQuit
-                    && txtTargetFolder.Text.Trim() != string.Empty)
+                    && !string.IsNullOrEmpty(txtTargetFolder.Text.Trim()))
                 {
                     if (FormUtilities.ShowMessage("Q000") == DialogResult.No)
                     {
@@ -597,7 +626,7 @@ namespace SO.PictManager.Forms
                 {
                     // 終了確認を行う設定の場合かつフォルダ指定がある場合(入力中含む)、終了確認を行う
                     if (Utilities.Config.CommonInfo.IsConfirmQuit
-                        && txtTargetFolder.Text.Trim() != string.Empty
+                        && !string.IsNullOrEmpty(txtTargetFolder.Text.Trim())
                         && FormUtilities.ShowMessage("Q000") == DialogResult.No)
                     {
                         e.Cancel = true;
@@ -625,11 +654,11 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region txtTargetFolder_DragDrop - 対象指定テキストボックスへのDrag&Drop時
+        #region txtTargetFolder_DragDrop - 対象フォルダ指定テキストボックスへのDrag&Drop時
 
         /// <summary>
-        /// 対象ディレクトリ指定テキストボックスにファイルがドラッグアンドドロップされた際に実行される処理です。
-        /// ドラッグアンドドロップされたファイルの絶対パスをTextBoxに表示します。
+        /// 対象フォルダ指定テキストボックスにファイルがドラッグアンドドロップされた際に実行される処理です。
+        /// ドラッグアンドドロップされたファイルの絶対パスをテキストボックスに表示します。
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>
@@ -638,45 +667,50 @@ namespace SO.PictManager.Forms
             // ファイルドロップのみ許可
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                string[] dropFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
+                var dropFiles = e.Data.GetData(DataFormats.FileDrop) as string[];
+
                 // 複数のファイルがドロップされた場合はエラーとする
-                if (dropFiles.Length > 1)
+                if (dropFiles.Length != 1)
                 {
                     FormUtilities.ShowMessage("E010");
                     return;
                 }
+
                 // ドロップされたファイルのパスをテキストボックスへ設定
-                txtTargetFolder.Text = dropFiles[0];
+                txtTargetFolder.Text = dropFiles.Single();
             }
         }
 
         #endregion
 
-        #region txtTargetDirectory_DragEnter - 対象指定テキストボックス領域へのカーソルEnter時
+        #region txtTargetFolder_DragEnter - 対象フォルダ指定テキストボックス領域へのカーソルEnter時
 
         /// <summary>
-        /// 対象ディレクトリ指定テキストボックスにドラッグアンドドロップ時のマウスカーソルが入った際に実行される処理です。
+        /// 対象フォルダ指定テキストボックスにドラッグアンドドロップ時のマウスカーソルが入った際に実行される処理です。
         /// マウスカーソルをファイル追加時カーソルに変更します。
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>
-        private void txtTargetDirectory_DragEnter(object sender, DragEventArgs e)
+        private void txtTargetFolder_DragEnter(object sender, DragEventArgs e)
         {
             // ファイルドロップのみ許可
-            if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Move;
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Move;
+            }
         }
 
         #endregion
 
-        #region txtTargetDirectory_Enter - 対象指定テキストボックスゲットフォーカス時
+        #region txtTargetFolder_Enter - 対象フォルダ指定テキストボックスゲットフォーカス時
 
         /// <summary>
-        /// 対象ディレクトリ指定テキストボックスにフォーカスが与えられた際に実行される処理です。
-        /// TextBox内の全てのテキストを選択状態にします。
+        /// 対象フォルダ指定テキストボックスにフォーカスが与えられた際に実行される処理です。
+        /// テキストボックス内の全てのテキストを選択状態にします。
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>
-        private void txtTargetDirectory_Enter(object sender, EventArgs e)
+        private void txtTargetFolder_Enter(object sender, EventArgs e)
         {
             // テキスト全選択
             txtTargetFolder.SelectAll();
@@ -698,14 +732,14 @@ namespace SO.PictManager.Forms
             {
                 lock (this)
                 {
-                    // ディレクトリの場合は無視
+                    // フォルダの場合は無視
                     if (!File.Exists(e.FullPath))
                     {
                         return;
                     }
                     Thread.Sleep(1000);
 
-                    // 5秒以内に連続して同じファイルが作成された場合は重複イベントとみなす
+                    // 指定秒数以内に連続して同じファイルが作成された場合は重複イベントとみなす
                     if (e.FullPath == _lastRenameByWatch)
                     {
                         return;
@@ -719,7 +753,7 @@ namespace SO.PictManager.Forms
                         return;
                     }
 
-                    // 対象ディレクトリ内のファイル数を取得
+                    // 対象フォルダ内のファイル数を取得
                     var dir = new DirectoryInfo(Path.GetDirectoryName(e.FullPath));
                     int num = dir.GetFiles().Length - 1;
                     Func<string> createFilePath = () =>
@@ -771,7 +805,7 @@ namespace SO.PictManager.Forms
             {
                 lock (this)
                 {
-                    // ディレクトリの場合は無視
+                    // フォルダの場合は無視
                     if (!File.Exists(e.FullPath))
                     {
                         return;
@@ -794,7 +828,7 @@ namespace SO.PictManager.Forms
                     DateTime now = DateTime.Now;
                     var entity = new TblImage();
 
-                    using (var img = Image.FromFile(e.FullPath))
+                    using (Image img = Image.FromFile(e.FullPath))
                     {
                         entity.ImageData = new ImageConverter().ConvertTo(img, typeof(byte[])) as byte[];
                     }

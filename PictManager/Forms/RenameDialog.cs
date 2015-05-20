@@ -60,7 +60,6 @@ namespace SO.PictManager.Forms
         /// <param name="renameInfo">画面に設定するリネーム情報</param>
         private void CommonConstruction(RenameInfo renameInfo)
         {
-
             // ソート順コンボボックス構築
             ImageSorter.BindSortOrderDataSource(cmbSort);
 
@@ -77,6 +76,7 @@ namespace SO.PictManager.Forms
         #endregion
 
         #region IsValidInput - 入力チェック、相関チェック
+
         /// <summary>
         /// (BaseDialog.IsValidInput()をオーバーライドします)
         /// ダイアログに入力された内容の妥当性及び相関チェックを行ないます。
@@ -94,8 +94,10 @@ namespace SO.PictManager.Forms
 
             // 元ファイル名を含むがチェックされている場合
             if (chkOriginal.Checked)
+            {
                 // 置換後文字が入力されている場合
                 if (txtRepAfter.Text.Length != 0)
+                {
                     // 置換前文字入力チェック
                     if (txtRepBefore.Text.Length == 0)
                     {
@@ -103,6 +105,8 @@ namespace SO.PictManager.Forms
                         FormUtilities.ShowMessage("W012");
                         return false;
                     }
+                }
+            }
 
             // 通し番号を付加するがチェックされている場合
             if (chkAddSeq.Checked)
@@ -162,6 +166,7 @@ namespace SO.PictManager.Forms
 
             return true;
         }
+
         #endregion
 
         #region SetRenameInfo - リネーム情報設定
@@ -186,9 +191,13 @@ namespace SO.PictManager.Forms
             rdoBefore.Checked = renameInfo.OriginalPosition == OriginalPosition.Before;
             rdoAfter.Checked = renameInfo.OriginalPosition == OriginalPosition.After;
             if (renameInfo.IsShuffle || !renameInfo.SortOrder.HasValue)
+            {
                 cmbSort.SelectedValue = ImageSortOrder.KeyAsc;
+            }
             else
+            {
                 cmbSort.SelectedValue = renameInfo.SortOrder.Value;
+            }
         }
 
         #endregion
@@ -217,9 +226,13 @@ namespace SO.PictManager.Forms
                 ? txtRepAfter.Text : null;
             renameInfo.OriginalPosition = rdoBefore.Checked ? OriginalPosition.Before : OriginalPosition.After;
             if (renameInfo.IsShuffle || !chkSort.Checked)
+            {
                 renameInfo.SortOrder = null;
+            }
             else
+            {
                 renameInfo.SortOrder = (ImageSortOrder)cmbSort.SelectedValue;
+            }
 
             return renameInfo;
         }
@@ -227,12 +240,13 @@ namespace SO.PictManager.Forms
         #endregion
 
         #region GenerateSample - サンプルファイル名表示内容生成
+
         /// <summary>
         /// ダイアログの入力内容を基にサンプルファイル名表示内容を生成します。
         /// </summary>
         private void GenerateSample()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             // 元ファイル名を含める
             OriginalPosition? orgPos = null;
@@ -246,15 +260,21 @@ namespace SO.PictManager.Forms
 
             // 置換文字
             if (!string.IsNullOrEmpty(txtRepBefore.Text))
+            {
                 sb = new StringBuilder(sb.ToString().Replace(txtRepBefore.Text, txtRepAfter.Text));
+            }
 
             // 通し番号付加
             if (chkAddSeq.Checked)
             {
                 if (orgPos.HasValue && orgPos.Value == OriginalPosition.Before)
+                {
                     sb.Append(seqDelimiter + "001");
+                }
                 else
+                {
                     sb.Insert(0, "001" + seqDelimiter);
+                }
             }
 
             // 接頭文字、接尾文字
@@ -272,52 +292,73 @@ namespace SO.PictManager.Forms
 
             lblSampleAfter.Text = sb.ToString();
         }
+
         #endregion
 
         #region ChangeAccessibles - コントロールアクセス制御
+
         /// <summary>
         /// 画面のコントロール状態に応じて、関連するコントロールのアクセス状態を制御します。
         /// </summary>
         private void ChangeAccessibles()
         {
-            if (_isAccessibleChanging) return;
+            if (_isAccessibleChanging)
+            {
+                return;
+            }
 
             try
             {
                 _isAccessibleChanging = true;
 
+                bool isSort = chkSort.Checked;
+                bool isAddDirName = chkAddDirName.Checked;
+                bool isAddSeq = chkAddSeq.Checked;
+                bool isKeepOriginal = chkOriginal.Checked;
+
                 // シャッフルチェックボックス関連
                 if (chkShuffle.Checked)
                 {
-                    chkSort.Enabled = cmbSort.Enabled = false;
+                    chkSort.Enabled = false;
+                    cmbSort.Enabled = false;
                 }
                 else
                 {
                     // ソート順チェックボックス関連
                     chkSort.Enabled = true;
-                    cmbSort.Enabled = chkSort.Checked;
+                    cmbSort.Enabled = isSort;
                 }
 
                 // 区切り文字1
-                lblDelimiter1.Enabled = txtDirDelimiter.Enabled = chkAddDirName.Checked;
+                lblDelimiter1.Enabled = isAddDirName;
+                txtDirDelimiter.Enabled = isAddDirName;
 
                 // 区切り文字2、元ファイル名位置
-                lblDelimiter2.Enabled = txtSeqDelimiter.Enabled = rdoBefore.Enabled = rdoAfter.Enabled
-                    = chkAddSeq.Checked && chkOriginal.Checked;
+                bool isAddSeqAndOrigianl = isAddSeq & isKeepOriginal;
+                lblDelimiter2.Enabled = isAddSeqAndOrigianl;
+                txtSeqDelimiter.Enabled = isAddSeqAndOrigianl;
+                rdoBefore.Enabled = isAddSeqAndOrigianl;
+                rdoAfter.Enabled = isAddSeqAndOrigianl;
 
                 // 通し番号付与設定関連
-                lblStep.Enabled = txtStep.Enabled = txtSeqDelimiter.Enabled
-                    = chkAddSeq.Checked;
+                lblStep.Enabled = isAddSeq;
+                txtStep.Enabled = isAddSeq;
+                txtSeqDelimiter.Enabled = isAddSeq;
 
                 // 置換前後文字列
-                if (chkOriginal.Checked)
+                if (isKeepOriginal)
                 {
                     txtRepBefore.Enabled = true;
-                    lblArrow1.Enabled = txtRepAfter.Enabled = !string.IsNullOrEmpty(txtRepBefore.Text);
+
+                    bool isInputRepBefore = !string.IsNullOrEmpty(txtRepBefore.Text);
+                    lblArrow1.Enabled = isInputRepBefore;
+                    txtRepAfter.Enabled = isInputRepBefore;
                 }
                 else
                 {
-                    txtRepBefore.Enabled = lblArrow1.Enabled = txtRepAfter.Enabled = false;
+                    txtRepBefore.Enabled = false;
+                    lblArrow1.Enabled = false;
+                    txtRepAfter.Enabled = false;
                 }
             }
             finally
@@ -325,11 +366,13 @@ namespace SO.PictManager.Forms
                 _isAccessibleChanging = false;
             }
         }
+
         #endregion
 
-        #region イベントハンドラ
+        //*** イベントハンドラ ***
 
         #region btnClear_Click - クリアボタン押下時
+
         /// <summary>
         /// クリアボタンがクリックされた際に実行される処理です。
         /// ダイアログに入力された内容を全て消去します。
@@ -341,10 +384,18 @@ namespace SO.PictManager.Forms
             try
             {
                 cmbSort.SelectedIndex = 0;
-                txtDirDelimiter.Text = txtPrefix.Text = txtSuffix.Text = txtRepBefore.Text = txtRepAfter.Text
-                    = txtStep.Text = txtSeqDelimiter.Text = string.Empty;
-                chkSort.Checked = chkAddDirName.Checked = chkShuffle.Checked = chkOriginal.Checked = chkAddSeq.Checked
-                    = false;
+                txtDirDelimiter.Text = string.Empty;
+                txtPrefix.Text = string.Empty;
+                txtSuffix.Text = string.Empty;
+                txtRepBefore.Text = string.Empty;
+                txtRepAfter.Text = string.Empty;
+                txtStep.Text = string.Empty; 
+                txtSeqDelimiter.Text = string.Empty;
+                chkSort.Checked = false;
+                chkAddDirName.Checked = false;
+                chkShuffle.Checked = false;
+                chkOriginal.Checked = false; 
+                chkAddSeq.Checked = false;
                 rdoBefore.Checked = true;
                 lblSampleAfter.Text = @"parent\.jpg";
             }
@@ -353,9 +404,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region chkShuffle_CheckedChanged - 順番シャッフルチェックボックスチェック変更時
+
         /// <summary>
         /// 順番シャッフルチェックボックスが変更された際に実行される処理です。
         /// チェックボックスの状態に応じて入力可能項目の変更を行います。
@@ -373,9 +426,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region chkSort_CheckedChanged - ソート順チェックボックスチェック変更時
+
         /// <summary>
         /// ソート順チェックボックスが変更された際に実行される処理です。
         /// チェックボックスの状態に応じて入力可能項目の変更を行います。
@@ -393,9 +448,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region chkAddDirName_CheckedChanged - 親ディレクトリ名挿入チェック変更時
+
         /// <summary>
         /// 親ディレクトリ名変更チェックボックスが変更された際に実行される処理です。
         /// チェックボックスの状態に応じて入力可能項目の変更を行います。
@@ -416,9 +473,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region chkOriginal_CheckedChanged - 元ファイル名を含むチェック変更時
+
         /// <summary>
         /// 元ファイル名を含むチェックボックスが変更された際に実行される処理です。
         /// チェックボックスの状態に応じて入力可能項目の変更を行います。
@@ -439,9 +498,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region chkAddSeq_CheckedChanged - 通し番号付加チェック変更時
+
         /// <summary>
         /// 通し番号付加チェックボックスが変更された際に実行される処理です。
         /// チェックボックスの状態に応じて入力可能項目の変更を行います。
@@ -462,9 +523,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region TextBoxes_TextChanged - TextBox入力内容変更時
+
         /// <summary>
         /// 各TextBoxの入力内容が変更された際に実行される処理です。
         /// 入力された内容に基づいてサンプルファイル名表示内容を更新します。
@@ -476,7 +539,9 @@ namespace SO.PictManager.Forms
             try
             {
                 if (sender == txtRepBefore)
+                {
                     ChangeAccessibles();
+                }
 
                 GenerateSample();
             }
@@ -485,9 +550,11 @@ namespace SO.PictManager.Forms
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
+
         #endregion
 
         #region OriginalPosRadio_CheckedChanged - 元ファイル名位置指定ラジオボタンチェック変更時
+
         /// <summary>
         /// 元ファイル名位置指定ラジオボタンのチェックが変更された際の処理です。
         /// チェックされた内容に基づいてサンプルファイル名表示内容を更新します。
@@ -499,19 +566,21 @@ namespace SO.PictManager.Forms
             try
             {
                 if ((sender as RadioButton).Checked)
+                {
                     GenerateSample();
+                }
             }
             catch (Exception ex)
             {
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
-        #endregion
 
         #endregion
     }
 
     #region enum OriginalPosition - 元ファイル名位置指定列挙体
+
     /// <summary>
     /// 元ファイル名位置指定列挙体
     /// </summary>
@@ -522,5 +591,6 @@ namespace SO.PictManager.Forms
         /// <summary>元ファイル名を新ファイル名の後に配置</summary>
         After,
     }
+
     #endregion
 }

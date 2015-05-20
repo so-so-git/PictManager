@@ -157,9 +157,13 @@ namespace SO.PictManager.Components
             {
                 var caption = new StringBuilder();
                 if (ImageData is FileImage)
+                {
                     caption.Append("ファイルパス：");
+                }
                 else
+                {
                     caption.Append("画像ID　　　：");
+                }
                 caption.Append(ImageData.Key);
 
                 caption.AppendLine();

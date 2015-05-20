@@ -542,16 +542,16 @@ namespace SO.PictManager.Forms
             }
 
             Predicate<string> ErrHandling = (msg) =>
-                {
-                    // 編集モードを継続、エラー通知表示
-                    foreach (DataGridViewCell selCell in grdImages.SelectedCells)
-                        selCell.Selected = false;
+            {
+                // 編集モードを継続、エラー通知表示
+                foreach (DataGridViewCell selCell in grdImages.SelectedCells)
+                    selCell.Selected = false;
 
-                    grdImages.CurrentCell = cell;
-                    grdImages.BeginEdit(true);
-                    FormUtilities.ShowMessage(msg);
-                    return false;
-                };
+                grdImages.CurrentCell = cell;
+                grdImages.BeginEdit(true);
+                FormUtilities.ShowMessage(msg);
+                return false;
+            };
 
             // 禁則文字チェック
             string editVal = cell.EditedFormattedValue.ToString();
@@ -1125,9 +1125,9 @@ namespace SO.PictManager.Forms
             try
             {
                 // 修飾キーが付加されている場合は通常処理
-                if ((e.KeyCode & Keys.Alt) != Keys.Alt &&
-                    (e.KeyCode & Keys.Control) != Keys.Control &&
-                    (e.KeyCode & Keys.Shift) != Keys.Shift)
+                if ((e.KeyCode & Keys.Alt) != Keys.Alt
+                    && (e.KeyCode & Keys.Control) != Keys.Control
+                    && (e.KeyCode & Keys.Shift) != Keys.Shift)
                 {
                     Keys kcode = e.KeyCode & Keys.KeyCode;
                     switch (kcode)
@@ -1798,7 +1798,7 @@ namespace SO.PictManager.Forms
                     List<IImage> similarImages =
                         ImageController.GetSimilarImages(this, criterion, msg);
 
-                    if (similarImages.Count == 0)
+                    if (!similarImages.Any())
                     {
                         // 類似画像が存在しない場合は押下不可能に設定
                         actResetSimilarButton(row.Index, false);

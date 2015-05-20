@@ -96,7 +96,7 @@ namespace SO.PictManager.Forms.Info
         /// <returns>インスタンスのクローン</returns>
         public object Clone()
         {
-            RenameInfo newObj = new RenameInfo();
+            var newObj = new RenameInfo();
 
             newObj.SortOrder = SortOrder;
 			newObj.IsAddParentDirName = IsAddParentDirName;

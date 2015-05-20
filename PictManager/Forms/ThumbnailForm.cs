@@ -440,7 +440,7 @@ namespace SO.PictManager.Forms
         /// </summary>
         private void AcceptPageNumber()
         {
-            if (txtPage.Text.Trim().Length == 0)
+            if (string.IsNullOrEmpty(txtPage.Text.Trim()))
             {
                 // 未入力時は変更前のページを復元
                 txtPage.Text = _currentPage.ToString();
@@ -451,9 +451,9 @@ namespace SO.PictManager.Forms
 
             txtPage.Focus();
             txtPage.SelectAll();
-            int page;
 
             // 数値チェック、最小チェック
+            int page;
             if (!int.TryParse(txtPage.Text, out page) || page < 1)
             {
                 FormUtilities.ShowMessage("W004");
@@ -992,9 +992,9 @@ namespace SO.PictManager.Forms
             try
             {
                 // 修飾キーが付加されている場合は通常処理
-                if ((e.KeyCode & Keys.Alt) != Keys.Alt &&
-                    (e.KeyCode & Keys.Control) != Keys.Control &&
-                    (e.KeyCode & Keys.Shift) != Keys.Shift)
+                if ((e.KeyCode & Keys.Alt) != Keys.Alt
+                    && (e.KeyCode & Keys.Control) != Keys.Control
+                    && (e.KeyCode & Keys.Shift) != Keys.Shift)
                 {
                     Keys kcode = e.KeyCode & Keys.KeyCode;
                     switch (kcode)

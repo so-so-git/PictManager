@@ -24,7 +24,7 @@ using Config = System.Configuration.ConfigurationManager;
 namespace SO.PictManager.Forms
 {
     /// <summary>
-    /// 単体画像表示フォームクラス
+    /// 単一画像表示フォームクラス
     /// </summary>
     public partial class ViewImageForm : BaseForm
     {
@@ -215,7 +215,10 @@ namespace SO.PictManager.Forms
         protected virtual void InitializeAccessibility()
         {
             // 表示対象ファイルが無い場合は削除ボタン押下不可
-            if (ImageData.Key.BlankToNull() == null) btnDelete.Enabled = false;
+            if (ImageData == null)
+            {
+                btnDelete.Enabled = false;
+            }
         }
 
         #endregion
@@ -230,7 +233,10 @@ namespace SO.PictManager.Forms
             try
             {
                 // 現在表示中のイメージがある場合はそのリソースを解放
-                if (picViewer.Image != null) picViewer.Image.Dispose();
+                if (picViewer.Image != null)
+                {
+                    picViewer.Image.Dispose();
+                }
 
                 // ズーム中フラグ、倍率初期化
                 _zoomed = false;
@@ -283,7 +289,7 @@ namespace SO.PictManager.Forms
 
                 // Fill時のサイズを取得
                 picViewer.Dock = DockStyle.Fill;
-                System.Drawing.Size s = picViewer.Size;
+                Size s = picViewer.Size;
 
                 // Fillを解除し、取得しておいたサイズに変更
                 // (AutoSizeではみ出す場合には再度サイズが自動拡張される)
@@ -296,8 +302,12 @@ namespace SO.PictManager.Forms
                 // メニューのチェック状態を更新
                 var menuItem = FormUtilities.GetMenuItem<ToolStripMenuItem>(barMenu.Items, "menuView/menuCmbSizeMode");
                 if (menuItem != null)
+                {
                     foreach (ToolStripMenuItem item in menuItem.DropDownItems)
+                    {
                         item.Checked = item.Text == cmbPicMode.SelectedItem.ToString();
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -362,6 +372,7 @@ namespace SO.PictManager.Forms
             foreach (var fld in typeof(PictureBoxSizeMode).GetFields(BindingFlags.Public | BindingFlags.Static))
             {
                 string name = fld.GetValue(null).ToString();
+
                 yield return new ToolStripMenuItem(name, null, (s, e) => cmbPicMode.SelectedItem = name, name);
             }
         }
@@ -380,19 +391,25 @@ namespace SO.PictManager.Forms
             try
             {
                 // 0%以下もしくは最大値を超える場合は処理無し
-                if (magnify <= 0 ||
-                        picViewer.Image.Width * magnify / 100 > int.MaxValue ||
-                        picViewer.Image.Height * magnify / 100 > int.MaxValue)
+                if (magnify <= 0
+                    || picViewer.Image.Width * magnify / 100 > int.MaxValue
+                    || picViewer.Image.Height * magnify / 100 > int.MaxValue)
+                {
                     return false;
+                }
 
                 // SizeModeを自動伸張に設定
                 cmbPicMode.SelectedItem = PictureBoxSizeMode.StretchImage.ToString();
 
                 // 画像表示領域伸縮
                 if (picViewer.Image.Width * magnify / 100 <= int.MaxValue && magnify > 0)
+                {
                     picViewer.Width = picViewer.Image.Width * magnify / 100;
+                }
                 if (picViewer.Image.Height * magnify / 100 <= int.MaxValue && magnify > 0)
+                {
                     picViewer.Height = picViewer.Image.Height * magnify / 100;
+                }
             }
             catch (Exception ex)
             {
@@ -449,13 +466,13 @@ namespace SO.PictManager.Forms
                 if (ImageMode == ConfigInfo.ImageDataMode.File
                     && FormUtilities.ShowMessage("Q007") == DialogResult.Yes)
                 {
-                    picViewer.Image.Save(ImageList[CurrentIndex].Key);
+                    picViewer.Image.Save(ImageData.Key);
                 }
                 else
                 {
                     using (var entities = new PictManagerEntities())
                     {
-                        int imageId = int.Parse(ImageList[CurrentIndex].Key);
+                        int imageId = int.Parse(ImageData.Key);
 
                         var image = (from i in entities.TblImages
                                      where i.ImageId == imageId
@@ -490,7 +507,7 @@ namespace SO.PictManager.Forms
                 picViewer.Image.Dispose();
 
                 // NTSC係数を用いた加重平均法でグレースケール化
-                Bitmap bmp = new Bitmap(ImageData.GetImage());
+                var bmp = new Bitmap(ImageData.GetImage());
                 picViewer.Image = ImageUtilities.ToGrayScale(bmp, GrayScaleMethod.NTSC);
             }
         }
@@ -557,7 +574,9 @@ namespace SO.PictManager.Forms
 
             // コンボボックス初期化
             foreach (var item in GetSizeModeMenuItems())
+            {
                 cmbPicMode.Items.Add(item.Text);
+            }
 
             // スクロール幅設定
             pnlParent.Panel1.VerticalScroll.SmallChange = SCROLL_CHANGE_SMALL;
@@ -600,7 +619,10 @@ namespace SO.PictManager.Forms
         protected virtual void Form_Shown(object sender, EventArgs e)
         {
             // picViewerの初期化後クライアントサイズが必要なのでコンストラクタではなくこっち
-            if (ImageData != null) DisplayImage();
+            if (ImageData != null)
+            {
+                DisplayImage();
+            }
         }
 
         #endregion
@@ -616,7 +638,10 @@ namespace SO.PictManager.Forms
         protected void Form_ResizeEnd(object sender, EventArgs e)
         {
             // PitureBoxのサイズを再設定(ズーム表示中は設定無し)
-            if (!_zoomed) ResizeImageRect();
+            if (!_zoomed)
+            {
+                ResizeImageRect();
+            }
         }
 
         #endregion
@@ -632,7 +657,10 @@ namespace SO.PictManager.Forms
         protected virtual void Form_Resize(object sender, EventArgs e)
         {
             // PitureBoxのサイズを再設定(ズーム表示中は設定無し)
-            if (!_zoomed) ResizeImageRect();
+            if (!_zoomed)
+            {
+                ResizeImageRect();
+            }
         }
 
         #endregion
@@ -649,7 +677,10 @@ namespace SO.PictManager.Forms
         {
             try
             {
-                if (e.Delta == 0) return;
+                if (e.Delta == 0)
+                {
+                    return;
+                }
 
                 if (pnlParent.Panel1.VerticalScroll.Visible)
                 {
@@ -660,23 +691,23 @@ namespace SO.PictManager.Forms
                                 < pnlParent.Panel1.VerticalScroll.Minimum)
                         {
                             pnlParent.Panel1.AutoScrollPosition =
-                                    new Point(0, pnlParent.Panel1.VerticalScroll.Minimum);
+                                new Point(0, pnlParent.Panel1.VerticalScroll.Minimum);
                             return;
                         }
                     }
                     else
                     {
                         if (-pnlParent.Panel1.AutoScrollPosition.Y + delta
-                                > pnlParent.Panel1.VerticalScroll.Maximum)
+                            > pnlParent.Panel1.VerticalScroll.Maximum)
                         {
                             pnlParent.Panel1.AutoScrollPosition =
-                                    new Point(0, pnlParent.Panel1.VerticalScroll.Maximum);
+                                new Point(0, pnlParent.Panel1.VerticalScroll.Maximum);
                             return;
                         }
                     }
 
                     pnlParent.Panel1.AutoScrollPosition =
-                            new Point(0, -pnlParent.Panel1.AutoScrollPosition.Y + delta);
+                        new Point(0, -pnlParent.Panel1.AutoScrollPosition.Y + delta);
                 }
                 else if (pnlParent.Panel1.HorizontalScroll.Visible)
                 {
@@ -684,26 +715,26 @@ namespace SO.PictManager.Forms
                     if (delta < 0)
                     {
                         if (-pnlParent.Panel1.AutoScrollPosition.X + delta
-                                < pnlParent.Panel1.HorizontalScroll.Minimum)
+                            < pnlParent.Panel1.HorizontalScroll.Minimum)
                         {
                             pnlParent.Panel1.AutoScrollPosition =
-                                    new Point(pnlParent.Panel1.HorizontalScroll.Minimum, 0);
+                                new Point(pnlParent.Panel1.HorizontalScroll.Minimum, 0);
                             return;
                         }
                     }
                     else
                     {
                         if (-pnlParent.Panel1.AutoScrollPosition.X + delta
-                                < pnlParent.Panel1.HorizontalScroll.Maximum)
+                            < pnlParent.Panel1.HorizontalScroll.Maximum)
                         {
                             pnlParent.Panel1.AutoScrollPosition =
-                                    new Point(pnlParent.Panel1.HorizontalScroll.Maximum, 0);
+                                new Point(pnlParent.Panel1.HorizontalScroll.Maximum, 0);
                             return;
                         }
                     }
 
                     pnlParent.Panel1.AutoScrollPosition =
-                            new Point(-pnlParent.Panel1.AutoScrollPosition.X + delta, 0);
+                        new Point(-pnlParent.Panel1.AutoScrollPosition.X + delta, 0);
                 }
             }
             catch (Exception ex)
@@ -727,9 +758,9 @@ namespace SO.PictManager.Forms
             try
             {
                 // 修飾キーが付加されている場合は通常処理
-                if ((e.KeyCode & Keys.Alt) != Keys.Alt &&
-                        (e.KeyCode & Keys.Control) != Keys.Control &&
-                        (e.KeyCode & Keys.Shift) != Keys.Shift)
+                if ((e.KeyCode & Keys.Alt) != Keys.Alt
+                    && (e.KeyCode & Keys.Control) != Keys.Control
+                    && (e.KeyCode & Keys.Shift) != Keys.Shift)
                 {
                     Keys kcode = e.KeyCode & Keys.KeyCode;
                     switch (kcode)
@@ -781,7 +812,10 @@ namespace SO.PictManager.Forms
         {
             try
             {
-                if (FormUtilities.ShowMessage("Q002") == DialogResult.No) return;
+                if (FormUtilities.ShowMessage("Q002") == DialogResult.No)
+                {
+                    return;
+                }
 
                 // PictureBoxリソース解放
                 picViewer.Image.Dispose();
@@ -811,7 +845,10 @@ namespace SO.PictManager.Forms
         private void btnZoomIn_Click(object sender, EventArgs e)
         {
             // ズーム倍率25%増加
-            if (ZoomImage(_magnify + ZOOM_UNIT)) _magnify += ZOOM_UNIT;
+            if (ZoomImage(_magnify + ZOOM_UNIT))
+            {
+                _magnify += ZOOM_UNIT;
+            }
         }
 
         #endregion
@@ -828,7 +865,10 @@ namespace SO.PictManager.Forms
         private void btnZoomOut_Click(object sender, EventArgs e)
         {
             // ズーム倍率25%減少
-            if (ZoomImage(_magnify - ZOOM_UNIT)) _magnify -= ZOOM_UNIT;
+            if (ZoomImage(_magnify - ZOOM_UNIT))
+            {
+                _magnify -= ZOOM_UNIT;
+            }
         }
 
         #endregion
@@ -872,7 +912,7 @@ namespace SO.PictManager.Forms
             }
 
             // ステータスバー更新
-            lblStatus.Text = ImageList[CurrentIndex].Key;
+            lblStatus.Text = ImageData.Key;
         }
 
         #endregion

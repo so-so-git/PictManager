@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -13,6 +14,7 @@ using SO.Library.Extensions;
 using SO.Library.Forms;
 using SO.PictManager.Common;
 using SO.PictManager.DataModel;
+using SO.PictManager.Forms.Info;
 
 namespace SO.PictManager.Forms
 {
@@ -24,10 +26,12 @@ namespace SO.PictManager.Forms
         #region コンストラクタ
 
         /// <summary>
-        /// 唯一のコンストラクタです。
+        /// デフォルトのコンストラクタです。
         /// </summary>
         public MaintenanceForm()
         {
+            Debug.Assert(Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.Database);
+
             InitializeComponent();
 
             using (var entities = new PictManagerEntities())
@@ -48,7 +52,9 @@ namespace SO.PictManager.Forms
                 foreach (var ext in Utilities.Config.CommonInfo.TargetExtensions)
                 {
                     if (filterPattern.Length > 0)
+                    {
                         filterPattern.Append("|");
+                    }
 
                     filterPattern.AppendFormat("{0}ファイル|*.{0}", ext);
                 }
@@ -290,20 +296,28 @@ namespace SO.PictManager.Forms
                 if (rdoImportDirectory.Checked) // ディレクトリ
                 {
                     if (Directory.Exists(txtTargetPath.Text))
+                    {
                         dlgImportDirectory.SelectedPath = txtTargetPath.Text;
+                    }
 
                     // 対象ディレクトリを取得
                     if (dlgImportDirectory.ShowDialog(this) == DialogResult.OK)
+                    {
                         txtTargetPath.Text = dlgImportDirectory.SelectedPath;
+                    }
                 }
                 else // ファイル
                 {
                     if (File.Exists(txtTargetPath.Text))
+                    {
                         dlgImportFile.FileName = txtTargetPath.Text;
+                    }
 
                     // 対象ファイルを取得
                     if (dlgImportFile.ShowDialog(this) == DialogResult.OK)
+                    {
                         txtTargetPath.Text = dlgImportFile.FileName;
+                    }
                 }
             }
             catch (Exception ex)

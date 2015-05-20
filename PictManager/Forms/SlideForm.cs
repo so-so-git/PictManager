@@ -21,7 +21,6 @@ using SO.PictManager.DataModel;
 using SO.PictManager.Forms.Info;
 using SO.PictManager.Imaging;
 
-using CursorFace = System.Windows.Forms.Cursor;
 using Config = System.Configuration.ConfigurationManager;
 
 namespace SO.PictManager.Forms
@@ -35,6 +34,7 @@ namespace SO.PictManager.Forms
 
         /// <summary>イメージファイル無し時の表示テキスト</summary>
         private const string NO_IMAGE_LABEL = "No image file in \nselected folder.";
+
         /// <summary>削除済時の表示テキスト</summary>
         private const string DELETED_IMAGE_LABEL = "This image is deleted.";
 
@@ -80,7 +80,7 @@ namespace SO.PictManager.Forms
             IncludeSubFlg = includeSubFlg;
 
             // 画面表示制御
-            btnOperateGroup.Visible = false;
+            btnGroup.Visible = false;
 
             // 共通処理
             ConstructCommon();
@@ -100,7 +100,7 @@ namespace SO.PictManager.Forms
             TargetCategory = category;
 
             // 画面表示制御
-            btnOperateGroup.Visible = true;
+            btnGroup.Visible = true;
 
             // 共通処理
             ConstructCommon();
@@ -353,7 +353,7 @@ namespace SO.PictManager.Forms
                 // セット操作ボタンの文言を変更
                 if (ImageMode == ConfigInfo.ImageDataMode.Database)
                 {
-                    RefreshOperateGroupButtonState();
+                    RefreshGroupButtonState();
                 }
             }
             catch (Exception ex)
@@ -373,16 +373,20 @@ namespace SO.PictManager.Forms
         {
             try
             {
-                int factIdx;
                 if (idx < 0)
-                    factIdx = 0;
+                {
+                    CurrentIndex = 0;
+                }
                 else if (idx > ImageCount - 1)
-                    factIdx = ImageCount - 1;
+                {
+                    CurrentIndex = ImageCount - 1;
+                }
                 else
-                    factIdx = idx;
+                {
+                    CurrentIndex = idx;
+                }
 
                 // 表示更新
-                CurrentIndex = factIdx;
                 ImageData = ImageList[CurrentIndex];
                 DisplayImage();
             }
@@ -410,7 +414,7 @@ namespace SO.PictManager.Forms
                     txtIndex.Text = CurrentIndex.ToString();
                     return;
                 }
-                --idx;
+                idx--;
 
                 DisplayPictureByIndex(idx);
                 txtIndex.Text = (CurrentIndex + 1).ToString();
@@ -436,7 +440,7 @@ namespace SO.PictManager.Forms
             {
                 // 現在のインデックスから末尾までを検索
                 int i;
-                for (i = CurrentIndex; i < ImageCount; ++i)
+                for (i = CurrentIndex; i < ImageCount; i++)
                 {
                     if (!ImageList[i].IsDeleted)
                     {
@@ -449,7 +453,7 @@ namespace SO.PictManager.Forms
                 if (i >= ImageCount)
                 {
                     int j;
-                    for (j = 0; j < CurrentIndex; ++j)
+                    for (j = 0; j < CurrentIndex; j++)
                     {
                         if (!ImageList[j].IsDeleted)
                         {
@@ -462,6 +466,7 @@ namespace SO.PictManager.Forms
             catch (Exception ex)
             {
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+
                 // 念の為、戻り値を-1(無効値)に再設定
                 ret = -1;
             }
@@ -506,7 +511,9 @@ namespace SO.PictManager.Forms
 
             // ブックマークウィンドウを開いている場合は内容を更新
             if (_bookmarkForm != null)
+            {
                 _bookmarkForm.RefreshBookmarks();
+            }
         }
 
         #endregion
@@ -683,7 +690,7 @@ namespace SO.PictManager.Forms
                 RefreshImageList();
 
                 ImageData = ImageList[CurrentIndex];
-                RefreshOperateGroupButtonState();
+                RefreshGroupButtonState();
 
                 FormUtilities.ShowMessage("I011", string.Format("画像グループ(ID: {0})の登録", groupId));
             };
@@ -695,21 +702,21 @@ namespace SO.PictManager.Forms
             _groupForm.Disposed += (sender2, e2) =>
             {
                 _groupForm = null;
-                RefreshOperateGroupButtonState();
+                RefreshGroupButtonState();
             };
 
             _groupForm.Show(this);
-            RefreshOperateGroupButtonState();
+            RefreshGroupButtonState();
         }
 
         #endregion
 
-        #region RefreshOperateGroupButtonState - 画像グループ操作ボタン状態更新
+        #region RefreshGroupButtonState - 画像グループ操作ボタン状態更新
 
         /// <summary>
         /// 現在表示している画像の状態に応じて、画像グループ操作ボタンの状態を更新します。
         /// </summary>
-        private void RefreshOperateGroupButtonState()
+        private void RefreshGroupButtonState()
         {
             Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.Database);
 
@@ -718,31 +725,31 @@ namespace SO.PictManager.Forms
             {
                 if (image.GroupId.HasValue)
                 {
-                    btnOperateGroup.Text = "グループ表示";
+                    btnGroup.Text = "グループ表示";
                 }
                 else
                 {
-                    btnOperateGroup.Text = "グループ登録";
+                    btnGroup.Text = "グループ登録";
                 }
 
-                btnOperateGroup.Enabled = true;
+                btnGroup.Enabled = true;
             }
             else
             {
                 if (image.GroupId.HasValue)
                 {
-                    btnOperateGroup.Text = "グループ表示";
+                    btnGroup.Text = "グループ表示";
                 }
                 else
                 {
-                    btnOperateGroup.Text = "グループに追加";
+                    btnGroup.Text = "グループに追加";
                 }
 
                 bool isExists = (from i in _groupForm.ImageList
                                  where i.Key == image.Key
                                  select i).Any();
 
-                btnOperateGroup.Enabled = !isExists;
+                btnGroup.Enabled = !isExists;
             }
         }
 
@@ -886,16 +893,19 @@ namespace SO.PictManager.Forms
                 }
 
                 // 修飾キーが付加されている場合は通常処理
-                if ((e.KeyCode & Keys.Alt) != Keys.Alt &&
-                        (e.KeyCode & Keys.Control) != Keys.Control &&
-                        (e.KeyCode & Keys.Shift) != Keys.Shift)
+                if ((e.KeyCode & Keys.Alt) != Keys.Alt
+                    && (e.KeyCode & Keys.Control) != Keys.Control
+                    && (e.KeyCode & Keys.Shift) != Keys.Shift)
                 {
                     Keys kcode = e.KeyCode & Keys.KeyCode;
                     switch (kcode)
                     {
                         case Keys.Left:
                         case Keys.Up:
-                            if (txtIndex.Focused) break;
+                            if (txtIndex.Focused)
+                            {
+                                break;
+                            }
 
                             // 前のファイルへ
                             btnPrevious_Click(sender, e);
@@ -904,7 +914,10 @@ namespace SO.PictManager.Forms
 
                         case Keys.Right:
                         case Keys.Down:
-                            if (txtIndex.Focused) break;
+                            if (txtIndex.Focused)
+                            {
+                                break;
+                            }
 
                             // 次のファイルへ
                             btnNext_Click(sender, e);
@@ -912,7 +925,10 @@ namespace SO.PictManager.Forms
                             break;
 
                         case Keys.Delete:
-                            if (txtIndex.Focused) break;
+                            if (txtIndex.Focused)
+                            {
+                                break;
+                            }
 
                             // 表示中のファイルを削除
                             btnDelete_Click(sender, e);
@@ -1021,8 +1037,8 @@ namespace SO.PictManager.Forms
             {
                 // 最後に表示していたファイルを取得
                 // (削除されている場合は次の有効イメージを対象とする)
-                int lastIdx;
-                if ((lastIdx = SearchNextValidIndex()) == -1)
+                int lastIdx = SearchNextValidIndex();
+                if (lastIdx == -1)
                 {
                     // 有効なイメージが無い場合は対象ファイル無しのキャプションを表示
                     RefreshImageList();
@@ -1040,7 +1056,8 @@ namespace SO.PictManager.Forms
                 int idx = SearchFileIndex(lastFile);
                 CurrentIndex = idx == -1 ? 0 : idx;
 
-                lblCount.Text = ImageCount.ToString();
+                lblCount.Text = ImageCount.ToSafeString();
+
                 DisplayImage();
             }
             catch (Exception ex)
@@ -1061,10 +1078,12 @@ namespace SO.PictManager.Forms
         /// <param name="e">イベント引数</param>
         private void menuRenameAll_Click(object sender, EventArgs e)
         {
+            Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.File);
+
             // 最後に表示していたファイルを取得
             // (削除されている場合は次の有効イメージを対象とする)
-            int lastIdx;
-            if ((lastIdx = SearchNextValidIndex()) == -1)
+            int lastIdx = SearchNextValidIndex();
+            if (lastIdx == -1)
             {
                 // 有効なイメージが無い場合は対象ファイル無しのキャプションを表示
                 RefreshImageList();
@@ -1087,7 +1106,8 @@ namespace SO.PictManager.Forms
                 int idx = SearchFileIndex(lastFile);
                 CurrentIndex = idx == -1 ? 0 : idx;
             }
-            lblCount.Text = (ImageCount + 1).ToString();
+            lblCount.Text = ImageCount.ToString();
+
             DisplayImage();
         }
 
@@ -1142,7 +1162,7 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region menuMoveAll_Click - 一括ファイル移動メニュー押下時
+        #region menuChangeCategoryAll_Click - 一括カテゴリー変更メニュー押下時
 
         /// <summary>
         /// 一括カテゴリー変更メニューがクリックされた際に実行される処理です。
@@ -1201,24 +1221,27 @@ namespace SO.PictManager.Forms
         /// <param name="e">イベント引数</param>
         private void menuChkSlide_Click(object sender, EventArgs e)
         {
-            var menuChklide = (ToolStripMenuItem)sender;
+            var menuChklide = sender as ToolStripMenuItem;
             try
             {
                 menuChklide.Checked = !menuChklide.Checked;
                 if (menuChklide.Checked)
                 {
                     var menuTxt = FormUtilities.GetMenuItem<ToolStripTextBox>(
-                            barMenu.Items, "menuView/menuTxtInterval");
+                        barMenu.Items, "menuView/menuTxtInterval");
+
                     Action<bool, string> ActCancel = (focusing, msgId) =>
                     {
                         if (focusing)
                         {
                             // 切替間隔指定ボックスにフォーカスセット
-                            ((ToolStripMenuItem)menuTxt.OwnerItem).ShowDropDown();
+                            (menuTxt.OwnerItem as ToolStripMenuItem).ShowDropDown();
                             menuTxt.Focus();
                             menuTxt.SelectAll();
                         }
+
                         menuChklide.Checked = false;
+
                         if (msgId != null)
                         {
                             // エラー通知
@@ -1227,7 +1250,7 @@ namespace SO.PictManager.Forms
                     };
 
                     // 入力チェック
-                    if (menuTxt.Text == string.Empty)
+                    if (string.IsNullOrEmpty(menuTxt.Text))
                     {
                         ActCancel(true, "W007");
                         return;
@@ -1257,12 +1280,16 @@ namespace SO.PictManager.Forms
                             while (true)
                             {
                                 Thread.Sleep(_slideInterval);
-                                if (this.IsHandleCreated && this.InvokeRequired)
+                                if (IsHandleCreated && InvokeRequired)
+                                {
                                     // フォームのハンドルが生きていてかつ、
                                     // フォームのスレッドに処理を委譲する必要がある場合
-                                    this.Invoke(new Action(() => btnNext_Click(this, new EventArgs())));
+                                    Invoke(new Action(() => btnNext_Click(this, new EventArgs())));
+                                }
                                 else
+                                {
                                     btnNext_Click(this, new EventArgs());
+                                }
                             }
                         }
                         ));
@@ -1284,7 +1311,9 @@ namespace SO.PictManager.Forms
                         _slideThread.Join();
                         _slideThread = null;
                     }
+
                     ChangeAccessibility(true);
+
                     _slideFlg = false;
                 }
             }
@@ -1309,9 +1338,9 @@ namespace SO.PictManager.Forms
             try
             {
                 // 修飾キーが付加されている場合は通常処理
-                if ((e.KeyCode & Keys.Alt) != Keys.Alt &&
-                    (e.KeyCode & Keys.Control) != Keys.Control &&
-                    (e.KeyCode & Keys.Shift) != Keys.Shift)
+                if ((e.KeyCode & Keys.Alt) != Keys.Alt
+                    && (e.KeyCode & Keys.Control) != Keys.Control
+                    && (e.KeyCode & Keys.Shift) != Keys.Shift)
                 {
                     Keys kcode = e.KeyCode & Keys.KeyCode;
                     switch (kcode)
@@ -1319,7 +1348,7 @@ namespace SO.PictManager.Forms
                         case Keys.Enter:
                             // スライド表示チェックをONにし、スライド表示開始
                             var menuChkSlide = FormUtilities.GetMenuItem<ToolStripMenuItem>(
-                                    barMenu.Items, "menuView/menuChkSlide");
+                                barMenu.Items, "menuView/menuChkSlide");
                             menuChkSlide.Checked = true;
                             break;
 
@@ -1350,7 +1379,7 @@ namespace SO.PictManager.Forms
             try
             {
                 // 既に削除済か確認
-                if (ImageList[CurrentIndex].IsDeleted)
+                if (ImageData.IsDeleted)
                 {
                     FormUtilities.ShowMessage("E006");
                     return;
@@ -1359,6 +1388,7 @@ namespace SO.PictManager.Forms
                 // 削除確認
                 var menuChkConfirm = FormUtilities.GetMenuItem<ToolStripMenuItem>(
                     barMenu.Items, "menuOpe/menuChkConfirm");
+
                 if (!menuChkConfirm.Checked)
                 {
                     if (FormUtilities.ShowMessage("Q002") == DialogResult.No)
@@ -1371,10 +1401,11 @@ namespace SO.PictManager.Forms
                 picViewer.Image.Dispose();
 
                 // 対象ファイルを削除
-                ImageList[CurrentIndex].Delete();
+                ImageData.Delete();
 
                 // 次の有効イメージを表示
-                if ((CurrentIndex = SearchNextValidIndex()) == -1)
+                CurrentIndex = SearchNextValidIndex();
+                if (CurrentIndex == -1)
                 {
                     FormUtilities.ShowMessage("I005");
                     this.BackToOwner();
@@ -1445,16 +1476,15 @@ namespace SO.PictManager.Forms
                     else
                     {
                         _similarForm = new ThumbnailForm(similarImages, ImageMode);
-                        _similarForm.Text = string.Format("PictManager - 類似画像検索結果 [{0}]",
-                            ImageList[CurrentIndex]);
-                        _similarForm.StatusBarText = string.Format("[{0}] の類似画像を表示中 - {1}件",
-                            ImageList[CurrentIndex], similarImages.Count);
-                        _similarForm.Disposed += new EventHandler(
-                            (obj, fce) =>
-                            {
-                                chkSimilar.Checked = false;
-                                RefreshImageList();
-                            });
+                        _similarForm.Text = string.Format(
+                            "PictManager - 類似画像検索結果 [{0}]", ImageData.Key);
+                        _similarForm.StatusBarText = string.Format(
+                            "[{0}] の類似画像を表示中 - {1}件", ImageData.Key, similarImages.Count);
+                        _similarForm.Disposed += new EventHandler((sender2, e2) =>
+                        {
+                            chkSimilar.Checked = false;
+                            RefreshImageList();
+                        });
 
                         _similarForm.Show(this);
                         _similarForm.Activate();
@@ -1518,7 +1548,7 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region btnOperateGroup_CheckedChanged - 画像グループ操作ボタン押下時
+        #region btnGroup_Click - 画像グループ操作ボタン押下時
 
         /// <summary>
         /// 画像グループ操作ボタンがクリックされた際に実行される処理です。
@@ -1529,7 +1559,7 @@ namespace SO.PictManager.Forms
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>
-        private void btnOperateGroup_Click(object sender, EventArgs e)
+        private void btnGroup_Click(object sender, EventArgs e)
         {
             Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.Database);
 
@@ -1582,7 +1612,7 @@ namespace SO.PictManager.Forms
                 // 一つ前のインデックスの画像を表示(最初の場合は末尾を表示)
                 if (CurrentIndex == 0)
                 {
-                    CurrentIndex = ImageList.Count - 1;
+                    CurrentIndex = ImageCount - 1;
                 }
                 else
                 {
@@ -1657,11 +1687,16 @@ namespace SO.PictManager.Forms
             {
                 // メニューとメイン画面の同期を取る
                 ToolStripTextBox menuTxtIndex =
-                        FormUtilities.GetMenuItem<ToolStripTextBox>(barMenu.Items, "menuOpe/menuTxtIndex");
+                    FormUtilities.GetMenuItem<ToolStripTextBox>(barMenu.Items, "menuOpe/menuTxtIndex");
+
                 if (sender == txtIndex)
+                {
                     menuTxtIndex.Text = txtIndex.Text;
+                }
                 else
+                {
                     txtIndex.Text = menuTxtIndex.Text;
+                }
             }
             catch (Exception ex)
             {
@@ -1684,9 +1719,9 @@ namespace SO.PictManager.Forms
             try
             {
                 // 修飾キーが付加されている場合は通常処理
-                if ((e.KeyCode & Keys.Alt) != Keys.Alt &&
-                        (e.KeyCode & Keys.Control) != Keys.Control &&
-                        (e.KeyCode & Keys.Shift) != Keys.Shift)
+                if ((e.KeyCode & Keys.Alt) != Keys.Alt
+                    && (e.KeyCode & Keys.Control) != Keys.Control
+                    && (e.KeyCode & Keys.Shift) != Keys.Shift)
                 {
                     Keys kcode = e.KeyCode & Keys.KeyCode;
                     switch (kcode)
@@ -1723,7 +1758,7 @@ namespace SO.PictManager.Forms
             try
             {
                 // マウスカーソル変更(待機)
-                CursorFace.Current = Cursors.WaitCursor;
+                Cursor.Current = Cursors.WaitCursor;
 
                 // ソート用メソッドセット
                 ImageSortOrder order = (ImageSortOrder)cmbSort.SelectedValue;
@@ -1742,7 +1777,9 @@ namespace SO.PictManager.Forms
 
                     // ブックマークウィンドウが開いている場合は有効なソート順を設定
                     if (_bookmarkForm != null)
+                    {
                         _bookmarkForm.SortOrder = order;
+                    }
                 }
             }
             catch (Exception ex)
@@ -1752,7 +1789,7 @@ namespace SO.PictManager.Forms
             finally
             {
                 // マウスカーソル変更(通常)
-                CursorFace.Current = Cursors.Default;
+                Cursor.Current = Cursors.Default;
             }
         }
 
