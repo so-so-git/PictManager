@@ -948,7 +948,7 @@ namespace SO.PictManager.Forms
         {
             try
             {
-                var imageList = new List<IImage>();
+                var newList = new List<IImage>();
                 
                 if (ImageMode == ConfigInfo.ImageDataMode.File)
                 {
@@ -966,7 +966,7 @@ namespace SO.PictManager.Forms
                         {
                             foreach (var file in Directory.GetFiles(TargetDirectory.FullName, "*." + ext, opt))
                             {
-                                imageList.Add(new FileImage(file));
+                                newList.Add(new FileImage(file));
                             }
                         }
                     }
@@ -984,13 +984,13 @@ namespace SO.PictManager.Forms
 
                         foreach (var imageId in imageIds)
                         {
-                            imageList.Add(new DataImage(imageId));
+                            newList.Add(new DataImage(imageId));
                         }
                     }
                 }
 
                 ImageList.Clear();
-                imageList = imageList.OrderBy(i => i.Key).ToList();
+                ImageList = newList.OrderBy(i => i.Key).ToList();
             }
             catch (Exception ex)
             {

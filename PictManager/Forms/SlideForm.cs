@@ -264,7 +264,7 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region RefreshTargetFiles - 対象画像リスト最新化
+        #region RefreshImageList - 対象画像リスト最新化
 
         /// <summary>
         /// 表示対象画像リストを最新の内容に更新します。
