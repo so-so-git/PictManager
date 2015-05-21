@@ -539,7 +539,7 @@ namespace SO.PictManager.Forms
                     }
                     else
                     {
-                        frmViewer = new ThumbnailForm(txtTargetFolder.Text, includeSub);   // サムネール表示
+                        frmViewer = new ThumbnailForm(txtTargetFolder.Text, includeSub);   // サムネイル表示
                     }
                 }
                 else
@@ -555,7 +555,7 @@ namespace SO.PictManager.Forms
                     }
                     else
                     {
-                        frmViewer = new ThumbnailForm(category);    // サムネール表示
+                        frmViewer = new ThumbnailForm(category);    // サムネイル表示
                     }
                 }
 

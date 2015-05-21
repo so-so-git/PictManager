@@ -184,6 +184,8 @@ namespace SO.PictManager.Components
 
         #endregion
 
+        //*** イベントハンドラ ***
+
         #region picThumbnail_Click - 表示画像クリック時
 
         /// <summary>

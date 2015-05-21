@@ -50,6 +50,18 @@ namespace SO.PictManager.Forms
         /// <summary>画像の順番を手動で変更出来るかのフラグ</summary>
         private bool _canChangeOrder;
 
+        /// <summary>サムネイルドラッグ中フラグ</summary>
+        private bool _isDraging;
+
+        /// <summary>サムネイルドラッグ開始位置</summary>
+        private Point? _dragStartPoint;
+
+        /// <summary>ドラッグしているサムネイル画像のゴースト</summary>
+        private Form _dragGhost;
+
+        /// <summary>ドラッグしているサムネイル</summary>
+        private ThumbnailUnit _dragThumbnail;
+
         #endregion
 
         #region プロパティ
@@ -167,6 +179,27 @@ namespace SO.PictManager.Forms
 
             // 共通構築処理
             CommonConstruction();
+        }
+
+        #endregion
+
+        #region SetMouseEventHandlers - コントロールにマウスイベントを設定
+
+        /// <summary>
+        /// 指定されたコントロールと、その全ての子コントロールに
+        /// サムネイル移動用のマウスイベントハンドラを設定します。
+        /// </summary>
+        /// <param name="control">対象のコントロール</param>
+        private void SetMouseEventHandlers(Control control)
+        {
+            control.MouseDown += ThumbnailUnit_MouseDown;
+            control.MouseMove += ThumbnailUnit_MouseMove;
+            control.MouseUp += ThumbnailUnit_MouseUp;
+
+            foreach (Control child in control.Controls)
+            {
+                SetMouseEventHandlers(child);
+            }
         }
 
         #endregion
@@ -410,6 +443,11 @@ namespace SO.PictManager.Forms
                         // イベント定義
                         addThumbnail.UnitClick += ThumbnailUnit_Click;
                         addThumbnail.UnitDoubleClick += ThumbnailUnit_DoubleClick;
+
+                        if (_canChangeOrder)
+                        {
+                            SetMouseEventHandlers(addThumbnail);
+                        }
 
                         // サムネイルをパネルと管理リストに追加
                         pnlThumbnail.Controls.Add(addThumbnail);
@@ -1037,6 +1075,205 @@ namespace SO.PictManager.Forms
             else
             {
                 txtPage.Text = menuTxtPage.Text;
+            }
+        }
+
+        #endregion
+
+        #region ThumbnailUnit_MouseDown - サムネイル上でのマウスボタン押下時
+
+        /// <summary>
+        /// サムネイル上でマウスのボタンが押下された際に実行される処理です。
+        /// マウスの左ボタンが押下された場合、ドラッグ処理に関するパラメータを保管します。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void ThumbnailUnit_MouseDown(object sender, MouseEventArgs e)
+        {
+            try
+            {
+                if (e.Button != MouseButtons.Left)
+                {
+                    return;
+                }
+
+                // ドラッグしているコントロールの親をたどり、サムネイルを特定
+                var control = sender as Control;
+                do
+                {
+                    if (control is ThumbnailUnit)
+                    {
+                        _dragThumbnail = control as ThumbnailUnit;
+                        break;
+                    }
+
+                    control = control.Parent;
+
+                } while (control.Parent != null);
+
+                if (_dragThumbnail == null)
+                {
+                    return;
+                }
+
+                // ドラッグ開始地点保管
+                _dragStartPoint = e.Location;
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
+        }
+
+        #endregion
+
+        #region ThumbnailUnit_MouseMove - サムネイル上でのマウス移動時
+
+        /// <summary>
+        /// サムネイル上でマウスが移動された際に実行される処理です。
+        /// 一定以上の距離をドラッグした場合、サムネイル移動状態に入ります。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void ThumbnailUnit_MouseMove(object sender, MouseEventArgs e)
+        {
+            try
+            {
+                if (_dragThumbnail == null)
+                {
+                    return;
+                }
+
+                if (!_isDraging)
+                {
+                    // ドラッグ開始地点からの移動距離が一定以下の場合は何もしない
+                    int moveX = e.Location.X - _dragStartPoint.Value.X;
+                    int moveY = e.Location.Y - _dragStartPoint.Value.Y;
+
+                    if (Math.Abs(moveX) < 10 && Math.Abs(moveY) < 10)
+                    {
+                        return;
+                    }
+
+                    // 移動距離が一定以上になったら、ゴーストを表示してサムネイル移動状態に入る
+                    _isDraging = true;
+
+                    _dragGhost = new Form();
+                    _dragGhost.FormBorderStyle = FormBorderStyle.None;
+                    _dragGhost.MinimumSize = new Size(10, 10);
+                    _dragGhost.Size = _dragThumbnail.PictureBox.Size;
+                    _dragGhost.BackColor = _dragThumbnail.BackColor;
+                    _dragGhost.BackgroundImage = _dragThumbnail.PictureBox.Image;
+                    _dragGhost.BackgroundImageLayout = ImageLayout.Zoom;
+                    _dragGhost.Opacity = 0.5;
+                    _dragGhost.ShowInTaskbar = false;
+                    _dragGhost.Visible = true;
+                }
+
+                if (_isDraging)
+                {
+                    // ゴーストをマウスに追随して移動
+                    _dragGhost.Location = new Point(
+                        MousePosition.X - _dragStartPoint.Value.X,
+                        MousePosition.Y - _dragStartPoint.Value.Y);
+
+                    // 領域交差判定用にゴーストの領域を保管
+                    var ghostRect = new Rectangle(
+                        pnlThumbnail.PointToClient(_dragGhost.Location), _dragGhost.Size);
+
+                    bool isAlreadyHit = false;
+                    foreach (var other in _thumbnails)
+                    {
+                        if (other == _dragThumbnail)
+                        {
+                            continue;
+                        }
+
+                        // ドラッグ中以外のサムネイルの表示領域と交差判定を行う
+                        var otherRect = new Rectangle(other.Location, other.Size);
+
+                        if (isAlreadyHit)
+                        {
+                            // 交差しているが2つ目以降に検出された場合は無視
+                            other.BorderStyle = BorderStyle.None;
+                        }
+                        else if (ghostRect.IntersectsWith(otherRect))
+                        {
+                            // 最初に検出された交差しているサムネイルの位置を移動先としてマーク
+                            other.BorderStyle = BorderStyle.Fixed3D;
+                            isAlreadyHit = true;
+                        }
+                        else
+                        {
+                            // 交差していないサムネイルは無視
+                            other.BorderStyle = BorderStyle.None;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
+        }
+
+        #endregion
+
+        #region ThumbnailUnit_MouseUp - サムネイル上でのマウスボタン解放時
+
+        /// <summary>
+        /// サムネイル上でマウスのボタンが離された際に実行される処理です。
+        /// サムネイル移動状態でマウスの左ボタンが離された場合、
+        /// ボタンを離した位置に応じてサムネイルの表示順を変更します。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void ThumbnailUnit_MouseUp(object sender, MouseEventArgs e)
+        {
+            try
+            {
+                if (e.Button != MouseButtons.Left)
+                {
+                    return;
+                }
+
+                if (_isDraging)
+                {
+                    // 移動先位置としてマークされているサムネイルを取得
+                    ThumbnailUnit dropedLocThumbnail = null;
+                    foreach (var thumbnail in _thumbnails)
+                    {
+                        if (thumbnail.BorderStyle == BorderStyle.Fixed3D)
+                        {
+                            dropedLocThumbnail = thumbnail;
+                            thumbnail.BorderStyle = BorderStyle.None;
+                            break;
+                        }
+                    }
+
+                    if (dropedLocThumbnail != null)
+                    {
+                        // 移動先の位置にドラッグしたサムネイルを移動
+                        int dropedIndex = pnlThumbnail.Controls.GetChildIndex(dropedLocThumbnail);
+                        pnlThumbnail.Controls.SetChildIndex(_dragThumbnail, dropedIndex);
+
+                        // 内部のリストを表示に併せて更新
+                        ImageList = pnlThumbnail.Controls.OfType<ThumbnailUnit>()
+                            .Select(t => t.ImageData).ToList();
+                    }
+
+                    // ゴーストを破棄しサムネイル移動状態を解除
+                    _dragGhost.Close();
+                    _dragGhost = null;
+                    _isDraging = false;
+                }
+
+                _dragStartPoint = null;
+                _dragThumbnail = null;
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
 
