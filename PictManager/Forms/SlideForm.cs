@@ -559,13 +559,13 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region CreateNewGroup - 新規画像グループを作成
+        #region ShowGroupForm - 画像グループ登録画面を開く
 
         /// <summary>
-        /// 新規画像グループを登録する為のサムネイル画面を開きます。
+        /// 画像グループを登録する為のサムネイル画面を開きます。
         /// サムネイル画面の登録ボタン押下時に画像グループの登録が確定されます。
         /// </summary>
-        private void CreateNewGroup()
+        private void ShowGroupForm()
         {
             Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.Database);
 
@@ -649,10 +649,11 @@ namespace SO.PictManager.Forms
 
                     if (_groupForm.GroupId.HasValue)
                     {
-                        // 対象の画像グループIDをクリア
+                        // 古い画像グループ情報をクリア
                         foreach (var image in entities.TblImages.Where(i => i.GroupId == groupId))
                         {
                             image.GroupId = null;
+                            image.GroupOrder = null;
                         }
 
                         group.Description = description;
@@ -671,17 +672,18 @@ namespace SO.PictManager.Forms
                         groupId = group.GroupId;
                     }
 
-                    // 画像グループIDを新しく設定したグループの画像に入れる
-                    var imageIds = _groupForm.ImageList.Select(i => int.Parse(i.Key)).ToArray();
-
-                    var newSet = from i in entities.TblImages
-                                 where imageIds.Contains(i.ImageId)
-                                 select i;
-
-                    foreach (var image in newSet)
+                    // 画像グループ情報を新しく設定したグループの画像に入れる
+                    for (int i = 0; i < _groupForm.ImageCount; i++)
                     {
-                        image.GroupId = groupId;
-                        image.UpdatedDateTime = now;
+                        int imageId = int.Parse(_groupForm.ImageList[i].Key);
+
+                        var entity = (from img in entities.TblImages
+                                      where img.ImageId == imageId
+                                      select img).First();
+
+                        entity.GroupId = groupId;
+                        entity.GroupOrder = i;
+                        entity.UpdatedDateTime = now;
                     }
 
                     entities.SaveChanges();
@@ -1568,7 +1570,7 @@ namespace SO.PictManager.Forms
                 if (_groupForm == null)
                 {
                     // 画像グループ画面が開いていない時は新規セット作成
-                    CreateNewGroup();
+                    ShowGroupForm();
                 }
                 else
                 {
