@@ -633,6 +633,32 @@ namespace SO.PictManager.Forms
 
         #endregion
 
+        #region UpdateLupeView - 部分拡大表示更新
+
+        /// <summary>
+        /// 指定された位置を中心として、部分拡大表示を更新します。
+        /// </summary>
+        /// <param name="pos">拡大位置</param>
+        private void UpdateLupeView(Point pos)
+        {
+            _lupePos = pos;
+            picLupe.Location = new Point(_lupePos.X - picLupe.Size.Width / 2, _lupePos.Y - picLupe.Size.Height / 2);
+
+            using (var g = picLupe.CreateGraphics())
+            {
+                g.Clear(picLupe.BackColor);
+                g.DrawImage(
+                    picViewer.Image,
+                    new Rectangle(new Point(0, 0), picLupe.Size),
+                    new Rectangle(
+                        new Point(_lupePos.X - 50, _lupePos.Y - 50),
+                        new Size(100, 100)),
+                    GraphicsUnit.Pixel);
+            }
+        }
+
+        #endregion
+
         //*** イベントハンドラ ***
 
         #region Form_FormClosing - ×ボタン押下時
@@ -945,25 +971,9 @@ namespace SO.PictManager.Forms
         {
             try
             {
-                if (_lupePos == Cursor.Position)
+                if (_lupePos != Cursor.Position)
                 {
-                    return;
-                }
-
-                _lupePos = Cursor.Position;
-
-                picLupe.Location = new Point(_lupePos.X - picLupe.Size.Width / 2, _lupePos.Y - picLupe.Size.Height / 2);
-
-                using (var g = picLupe.CreateGraphics())
-                {
-                    g.Clear(picLupe.BackColor);
-                    g.DrawImage(
-                        picViewer.Image,
-                        new Rectangle(new Point(0, 0), picLupe.Size),
-                        new Rectangle(
-                            new Point(_lupePos.X - 50, _lupePos.Y - 50),
-                            new Size(100, 100)),
-                        GraphicsUnit.Pixel);
+                    UpdateLupeView(Cursor.Position);
                 }
             }
             catch (Exception ex)
