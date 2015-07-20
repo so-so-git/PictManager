@@ -28,10 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ViewImageForm));
             this.picViewer = new System.Windows.Forms.PictureBox();
             this.pnlParent = new System.Windows.Forms.SplitContainer();
+            this.picLupe = new System.Windows.Forms.PictureBox();
             this.lblInfo = new System.Windows.Forms.Label();
+            this.cmbLupeMagnification = new System.Windows.Forms.ComboBox();
+            this.chkLupe = new SO.PictManager.Components.KeyPrevCheckBox();
             this.btnZoomOut = new System.Windows.Forms.Button();
             this.btnZoomIn = new System.Windows.Forms.Button();
             this.cmbPicMode = new System.Windows.Forms.ComboBox();
@@ -39,10 +43,13 @@
             this.btnClose = new SO.PictManager.Components.KeyPrevButton();
             this.barStatus = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.timLupe = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.picViewer)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlParent)).BeginInit();
             this.pnlParent.Panel1.SuspendLayout();
             this.pnlParent.Panel2.SuspendLayout();
             this.pnlParent.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picLupe)).BeginInit();
             this.barStatus.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -72,12 +79,15 @@
             // pnlParent.Panel1
             // 
             this.pnlParent.Panel1.AutoScroll = true;
+            this.pnlParent.Panel1.Controls.Add(this.picLupe);
             this.pnlParent.Panel1.Controls.Add(this.picViewer);
             this.pnlParent.Panel1.Controls.Add(this.lblInfo);
             // 
             // pnlParent.Panel2
             // 
             this.pnlParent.Panel2.BackColor = System.Drawing.SystemColors.Control;
+            this.pnlParent.Panel2.Controls.Add(this.cmbLupeMagnification);
+            this.pnlParent.Panel2.Controls.Add(this.chkLupe);
             this.pnlParent.Panel2.Controls.Add(this.btnZoomOut);
             this.pnlParent.Panel2.Controls.Add(this.btnZoomIn);
             this.pnlParent.Panel2.Controls.Add(this.cmbPicMode);
@@ -85,10 +95,21 @@
             this.pnlParent.Panel2.Controls.Add(this.btnClose);
             this.pnlParent.Panel2.Controls.Add(this.barStatus);
             this.pnlParent.Size = new System.Drawing.Size(737, 534);
-            this.pnlParent.SplitterDistance = 457;
+            this.pnlParent.SplitterDistance = 445;
             this.pnlParent.SplitterWidth = 5;
             this.pnlParent.TabIndex = 0;
             this.pnlParent.TabStop = false;
+            // 
+            // picLupe
+            // 
+            this.picLupe.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picLupe.Location = new System.Drawing.Point(244, 94);
+            this.picLupe.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.picLupe.Name = "picLupe";
+            this.picLupe.Size = new System.Drawing.Size(200, 200);
+            this.picLupe.TabIndex = 3;
+            this.picLupe.TabStop = false;
+            this.picLupe.Visible = false;
             // 
             // lblInfo
             // 
@@ -97,8 +118,31 @@
             this.lblInfo.Location = new System.Drawing.Point(0, 0);
             this.lblInfo.Name = "lblInfo";
             this.lblInfo.Size = new System.Drawing.Size(737, 460);
-            this.lblInfo.TabIndex = 2;
+            this.lblInfo.TabIndex = 0;
             this.lblInfo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // cmbLupeMagnification
+            // 
+            this.cmbLupeMagnification.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbLupeMagnification.FormattingEnabled = true;
+            this.cmbLupeMagnification.Location = new System.Drawing.Point(176, 12);
+            this.cmbLupeMagnification.Name = "cmbLupeMagnification";
+            this.cmbLupeMagnification.Size = new System.Drawing.Size(42, 23);
+            this.cmbLupeMagnification.TabIndex = 2;
+            this.cmbLupeMagnification.SelectedIndexChanged += new System.EventHandler(this.cmbLupeMagnification_SelectedIndexChanged);
+            // 
+            // chkLupe
+            // 
+            this.chkLupe.Appearance = System.Windows.Forms.Appearance.Button;
+            this.chkLupe.Location = new System.Drawing.Point(97, 8);
+            this.chkLupe.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.chkLupe.Name = "chkLupe";
+            this.chkLupe.Size = new System.Drawing.Size(73, 29);
+            this.chkLupe.TabIndex = 1;
+            this.chkLupe.Text = "部分拡大";
+            this.chkLupe.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.chkLupe.UseVisualStyleBackColor = true;
+            this.chkLupe.CheckedChanged += new System.EventHandler(this.chkLupe_CheckedChanged);
             // 
             // btnZoomOut
             // 
@@ -108,7 +152,7 @@
             this.btnZoomOut.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnZoomOut.Name = "btnZoomOut";
             this.btnZoomOut.Size = new System.Drawing.Size(31, 29);
-            this.btnZoomOut.TabIndex = 3;
+            this.btnZoomOut.TabIndex = 4;
             this.btnZoomOut.UseVisualStyleBackColor = true;
             this.btnZoomOut.Click += new System.EventHandler(this.btnZoomOut_Click);
             // 
@@ -133,7 +177,7 @@
             this.cmbPicMode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cmbPicMode.Name = "cmbPicMode";
             this.cmbPicMode.Size = new System.Drawing.Size(98, 23);
-            this.cmbPicMode.TabIndex = 1;
+            this.cmbPicMode.TabIndex = 5;
             this.cmbPicMode.SelectedIndexChanged += new System.EventHandler(this.cmbPicMode_SelectedIndexChanged);
             // 
             // btnDelete
@@ -154,7 +198,7 @@
             this.btnClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(73, 29);
-            this.btnClose.TabIndex = 2;
+            this.btnClose.TabIndex = 6;
             this.btnClose.Text = "閉じる";
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
@@ -163,11 +207,11 @@
             // 
             this.barStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblStatus});
-            this.barStatus.Location = new System.Drawing.Point(0, 49);
+            this.barStatus.Location = new System.Drawing.Point(0, 61);
             this.barStatus.Name = "barStatus";
             this.barStatus.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
             this.barStatus.Size = new System.Drawing.Size(737, 23);
-            this.barStatus.TabIndex = 0;
+            this.barStatus.TabIndex = 7;
             this.barStatus.Text = "statusStrip1";
             // 
             // lblStatus
@@ -177,16 +221,19 @@
             this.lblStatus.Text = "[ステータス表示]";
             this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // timLupe
+            // 
+            this.timLupe.Interval = 10;
+            this.timLupe.Tick += new System.EventHandler(this.timLupe_Tick);
+            // 
             // ViewImageForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(737, 558);
             this.Controls.Add(this.pnlParent);
-            this.Font = new System.Drawing.Font("Meiryo UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
-            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "ViewImageForm";
             this.Text = "ViewImageForm";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -200,7 +247,9 @@
             this.pnlParent.Panel1.ResumeLayout(false);
             this.pnlParent.Panel2.ResumeLayout(false);
             this.pnlParent.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlParent)).EndInit();
             this.pnlParent.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.picLupe)).EndInit();
             this.barStatus.ResumeLayout(false);
             this.barStatus.PerformLayout();
             this.ResumeLayout(false);
@@ -230,5 +279,9 @@
         protected System.Windows.Forms.Button btnZoomOut;
         /// <summary>ズームインボタン</summary>
         protected System.Windows.Forms.Button btnZoomIn;
+        private System.Windows.Forms.PictureBox picLupe;
+        private System.Windows.Forms.Timer timLupe;
+        private Components.KeyPrevCheckBox chkLupe;
+        private System.Windows.Forms.ComboBox cmbLupeMagnification;
     }
 }

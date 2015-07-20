@@ -978,8 +978,18 @@ namespace SO.PictManager.Forms
             const int SPACE_WIDTH = 6;
 
             // 中央のコントロール群の位置調整
+            Control leftEdgeControl;
+            if (base.ImageMode == ConfigInfo.ImageDataMode.Database)
+            {
+                leftEdgeControl = btnGroup;
+            }
+            else
+            {
+                leftEdgeControl = chkSimilar;
+            }
+
             int x = pnlParent.Width / 2 - lblCountDelim.Width / 2 - txtIndex.Width - btnPrevious.Width - SPACE_WIDTH * 2;
-            int leftLimit = chkLupe.Location.X + chkLupe.Width + SPACE_WIDTH;
+            int leftLimit = leftEdgeControl.Location.X + leftEdgeControl.Width + SPACE_WIDTH;
             if (x < leftLimit)
             {
                 x = leftLimit;
@@ -1504,47 +1514,6 @@ namespace SO.PictManager.Forms
             catch (Exception ex)
             {
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
-            }
-        }
-
-        #endregion
-
-        #region chkLupe_CheckedChanged - ルーペ表示チェックボックス変更時
-
-        /// <summary>
-        /// ルーペ表示チェックボックスが変更された際に実行される処理です。
-        /// 部分拡大鏡を表示します。
-        /// </summary>
-        /// <param name="sender">イベント発生元オブジェクト</param>
-        /// <param name="e">イベント引数</param>
-        private void chkLupe_CheckedChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                //if (chkLupe.Checked)
-                //{
-                //    picLupe.Visible = true;
-                //    picLupe.BringToFront();
-                //    picViewer.MouseMove += new MouseEventHandler(picViewer_MouseMove);
-                //}
-                //else
-                //{
-                //    picLupe.Visible = false;
-                //    picViewer.MouseMove -= new MouseEventHandler(picViewer_MouseMove);
-                //}
-            }
-            catch (Exception ex)
-            {
-                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
-            }
-        }
-
-        void picViewer_MouseMove(object sender, MouseEventArgs e)
-        {
-            picLupe.Location = e.Location;
-            using (var g = picLupe.CreateGraphics())
-            {
-                g.DrawImage(picViewer.Image, new Rectangle(new Point(0, 0), picLupe.Size), new Rectangle(new Point(0, 0), new Size(50, 50)), GraphicsUnit.Pixel);
             }
         }
 

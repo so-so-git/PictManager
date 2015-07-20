@@ -52,6 +52,12 @@ namespace SO.PictManager.Forms
         /// <summary>倍率変更中フラグ</summary>
         private bool _zoomed = false;
 
+        /// <summary>部分拡大位置</summary>
+        private Point _lupePos;
+
+        /// <summary>画像サイズモード保管</summary>
+        private PictureBoxSizeMode _storeSizeMode;
+
         #endregion
 
         #region コンストラクタ
@@ -350,7 +356,14 @@ namespace SO.PictManager.Forms
         {
             try
             {
-                Utilities.State.SizeMode = picViewer.SizeMode;
+                if (chkLupe.Checked)
+                {
+                    Utilities.State.SizeMode = _storeSizeMode;
+                }
+                else
+                {
+                    Utilities.State.SizeMode = picViewer.SizeMode;
+                }
                 Utilities.SaveStateInfo();
             }
             catch (Exception ex)
@@ -521,8 +534,14 @@ namespace SO.PictManager.Forms
         /// </summary>
         protected override void CloseForm()
         {
-            // 自フォームを破棄し親フォームを表示
+            // リソース破棄
+            timLupe.Stop();
+            timLupe.Enabled = false;
+
+            // 状態情報をセーブ
             SaveStateInfo();
+
+            // 自フォームを破棄し親フォームを表示
             this.BackToOwner();
         }
 
@@ -572,20 +591,44 @@ namespace SO.PictManager.Forms
             // ステータスバーに画像情報を表示
             ShowImageInfoByStatusBar();
 
-            // コンボボックス初期化
-            foreach (var item in GetSizeModeMenuItems())
-            {
-                cmbPicMode.Items.Add(item.Text);
-            }
-
             // スクロール幅設定
             pnlParent.Panel1.VerticalScroll.SmallChange = SCROLL_CHANGE_SMALL;
             pnlParent.Panel1.HorizontalScroll.SmallChange = SCROLL_CHANGE_SMALL;
             pnlParent.Panel1.VerticalScroll.LargeChange = SCROLL_CHANGE_LARGE;
             pnlParent.Panel1.HorizontalScroll.LargeChange = SCROLL_CHANGE_LARGE;
 
+            // 部分拡大倍率コンボボックス初期化
+            for (int i = 2; i <= 5; i++)
+            {
+                cmbLupeMagnification.Items.Add(new KeyValuePair<string, int>(string.Format("x{0}", i), i));
+            }
+            cmbLupeMagnification.DisplayMember = "Key";
+            cmbLupeMagnification.SelectedIndex = 0;
+            cmbLupeMagnification.Enabled = false;
+
+            // サイズモードコンボボックス初期化
+            foreach (var item in GetSizeModeMenuItems())
+            {
+                cmbPicMode.Items.Add(item.Text);
+            }
+
             // サイズモード復元
             cmbPicMode.SelectedItem = Utilities.State.SizeMode.ToString();
+        }
+
+        #endregion
+
+        #region ChangeLupeModification - 部分拡大倍率変更
+
+        /// <summary>
+        /// 部分拡大倍率をコンボボックスで選択されている倍率に変更します。
+        /// </summary>
+        private void ChangeLupeModification()
+        {
+            var selectedMagni = (KeyValuePair<string, int>)cmbLupeMagnification.SelectedItem;
+            int lupeSize = 100 * selectedMagni.Value;
+
+            picLupe.Size = new Size(lupeSize, lupeSize);
         }
 
         #endregion
@@ -824,6 +867,132 @@ namespace SO.PictManager.Forms
                 ImageData.Delete();
 
                 CloseForm();
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
+        }
+
+        #endregion
+
+        #region chkLupe_CheckedChanged - ルーペ表示チェックボックス変更時
+
+        /// <summary>
+        /// ルーペ表示チェックボックスが変更された際に実行される処理です。
+        /// 部分拡大鏡を表示します。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void chkLupe_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (chkLupe.Checked)
+                {
+                    // 部分拡大モード開始時の各種値を保存
+                    _lupePos = Cursor.Position;
+                    _storeSizeMode = picViewer.SizeMode;
+
+                    // コントロール値更新
+                    picViewer.SizeMode = PictureBoxSizeMode.Normal;
+                    cmbPicMode.Enabled = false;
+                    cmbLupeMagnification.Enabled = true;
+
+                    // 部分拡大倍率設定
+                    ChangeLupeModification();
+
+                    // 部分拡大窓表示
+                    picLupe.Location = new Point(_lupePos.X - picLupe.Size.Width / 2, _lupePos.Y - picLupe.Size.Height / 2);
+                    picLupe.Visible = true;
+                    picLupe.BringToFront();
+
+                    // 部分拡大タイマー開始
+                    timLupe.Enabled = true;
+                    timLupe.Start();
+                }
+                else
+                {
+                    // 部分拡大窓消去
+                    cmbPicMode.Enabled = true;
+                    cmbLupeMagnification.Enabled = false;
+                    picViewer.SizeMode = _storeSizeMode;
+
+                    picLupe.Visible = false;
+
+                    // 部分拡大タイマー終了
+                    timLupe.Stop();
+                    timLupe.Enabled = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
+        }
+
+        #endregion
+
+        #region timLupe_Tick - 部分拡大表示タイマー時間経過時
+
+        /// <summary>
+        /// 部分拡大表示タイマーの時間経過時に実行される処理です。
+        /// 部分拡大表示位置をマウスカーソルに追随させます。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void timLupe_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                if (_lupePos == Cursor.Position)
+                {
+                    return;
+                }
+
+                _lupePos = Cursor.Position;
+
+                picLupe.Location = new Point(_lupePos.X - picLupe.Size.Width / 2, _lupePos.Y - picLupe.Size.Height / 2);
+
+                using (var g = picLupe.CreateGraphics())
+                {
+                    g.Clear(picLupe.BackColor);
+                    g.DrawImage(
+                        picViewer.Image,
+                        new Rectangle(new Point(0, 0), picLupe.Size),
+                        new Rectangle(
+                            new Point(_lupePos.X - 50, _lupePos.Y - 50),
+                            new Size(100, 100)),
+                        GraphicsUnit.Pixel);
+                }
+            }
+            catch (Exception ex)
+            {
+                timLupe.Stop();
+                timLupe.Enabled = false;
+
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
+        }
+
+        #endregion
+
+        #region cmbLupeMagnification_SelectedIndexChanged - 部分拡大倍率コンボボックス選択変更時
+
+        /// <summary>
+        /// 部分拡大倍率コンボボックスの選択変更時に実行される処理です。
+        /// 部分拡大倍率を変更します。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void cmbLupeMagnification_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (chkLupe.Checked)
+                {
+                    ChangeLupeModification();
+                }
             }
             catch (Exception ex)
             {
