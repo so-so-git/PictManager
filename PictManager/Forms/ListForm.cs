@@ -182,7 +182,7 @@ namespace SO.PictManager.Forms
                 menuTemp = new ToolStripMenuItem("ファイル(&F)", null, null, "menuFile");
                 menuTemp.ShortcutKeys = Keys.Alt | Keys.F;
                 menuTemp.DropDownItems.Add(new ToolStripMenuItem("戻る", null, btnClose_Click));
-                menuTemp.DropDownItems.Add(new ToolStripMenuItem("対象ファイル再取得", null, menuRefresh_Click));
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("対象画像再取得", null, menuRefresh_Click));
                 menuTemp.DropDownItems.Add(new ToolStripSeparator());
                 menuTemp.DropDownItems.Add(new ToolStripMenuItem("一括ファイル名変更", null, menuRenameAll_Click));
                 menuTemp.DropDownItems.Add(new ToolStripMenuItem("一括ファイル移動", null, menuMoveAll_Click));
@@ -201,7 +201,7 @@ namespace SO.PictManager.Forms
                 menuTemp = new ToolStripMenuItem("データ(&D)", null, null, "menuData");
                 menuTemp.ShortcutKeys = Keys.Alt | Keys.D;
                 menuTemp.DropDownItems.Add(new ToolStripMenuItem("戻る", null, btnClose_Click));
-                menuTemp.DropDownItems.Add(new ToolStripMenuItem("対象ファイル再取得", null, menuRefresh_Click));
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("対象画像再取得", null, menuRefresh_Click));
                 menuTemp.DropDownItems.Add(new ToolStripSeparator());
                 menuTemp.DropDownItems.Add(new ToolStripMenuItem("終了", null,
                     (s, e) => Form_FormClosing(s, new FormClosingEventArgs(CloseReason.UserClosing, false))));
@@ -214,7 +214,7 @@ namespace SO.PictManager.Forms
             menuTemp.DropDownItems.Add(new ToolStripMenuItem("全ての変更を適用", null, btnApplyChanges_Click));
             menuTemp.DropDownItems.Add(new ToolStripMenuItem("全ての変更を戻す", null, btnRevertSelection_Click));
             menuTemp.DropDownItems.Add(new ToolStripSeparator());
-            menuTemp.DropDownItems.Add(new ToolStripMenuItem("重複しているファイルのみを抽出", null, menuFilterDuplicated_Click));
+            menuTemp.DropDownItems.Add(new ToolStripMenuItem("重複している画像のみを抽出", null, menuFilterDuplicated_Click));
             menuTemp.DropDownItems.Add(new ToolStripSeparator());
             menuTemp.DropDownItems.Add(new ToolStripMenuItem("全ての行の類似画像を検索", null, menuSearchSimilarAll_Click));
             barMenu.Items.Add(menuTemp);
@@ -334,8 +334,6 @@ namespace SO.PictManager.Forms
             {
                 var row = new DataGridViewRow();
 
-                SetRowDeleted(row, img.IsDeleted);
-                row.ReadOnly = img.IsDeleted;
                 row.HeaderCell.Value = (++i).ToString();
                 row.HeaderCell.Style.Font = new Font(this.Font, FontStyle.Regular);
 
@@ -439,25 +437,8 @@ namespace SO.PictManager.Forms
                 celMD5.ReadOnly = true;
                 celSimilar.ReadOnly = img.IsDeleted;
 
-                if (!img.IsDeleted)
-                {
-                    // MD5重複チェック
-                    for (int j = 0; j < rowList.Count; j++)
-                    {
-                        DataGridViewRow targetRow = rowList[j];
-                        if (!IsRowDeleted(targetRow))
-                        {
-                            DataGridViewCell targetCell = targetRow.Cells[FileColumnIndexes.MD5];
-                            if (celMD5.Value.Equals(targetCell.Value))
-                            {
-                                celMD5.Style.BackColor = Color.Bisque;
-                                targetCell.Style.BackColor = Color.Bisque;
-                                break;
-                            }
-                        }
-
-                    }
-                }
+                SetRowDeleted(row, img.IsDeleted);
+                row.ReadOnly = img.IsDeleted;
 
                 rowList.Add(row);
             }
@@ -1021,7 +1002,8 @@ namespace SO.PictManager.Forms
                 }
 
                 var selChkNewCell = new DataGridViewTextBoxCell();
-                grdImages[selChkColIdx, row.Index] = selChkNewCell;
+                row.Cells[selChkColIdx] = selChkNewCell;
+
                 selChkNewCell.Value = string.Empty;
                 selChkNewCell.Tag = selChkNewCell.Value;
                 selChkNewCell.Style.BackColor = Color.LightGray;
@@ -1034,6 +1016,59 @@ namespace SO.PictManager.Forms
             {
                 row.DefaultCellStyle.BackColor = Color.White;
             }
+        }
+
+        #endregion
+
+        #region FilterDuplicatedImages - MD5が重複している画像のみを抽出して表示
+
+        /// <summary>
+        /// MD5が重複している画像のみを抽出し、グリッドに表示します。
+        /// </summary>
+        private void FilterDuplicatedImages()
+        {
+            int md5ColIndex;
+            int keyColIndex;
+            if (ImageMode == ConfigInfo.ImageDataMode.File)
+            {
+                md5ColIndex = FileColumnIndexes.MD5;
+                keyColIndex = FileColumnIndexes.FILE_NAME;
+            }
+            else
+            {
+                md5ColIndex = DatabaseColumnIndexes.MD5;
+                keyColIndex = DatabaseColumnIndexes.IMAGE_ID;
+            }
+
+            // MD5が同じ画像をグルーピング
+            var duplecatedGroups = from row in grdImages.Rows.Cast<DataGridViewRow>()
+                                   where !IsRowDeleted(row)
+                                   group row by row.Cells[md5ColIndex].Value
+                                   into grp
+                                   where grp.Count() > 1
+                                   orderby grp.Key
+                                   select grp;
+
+            var viewRowList = new List<DataGridViewRow>();
+            bool isEvenGroup = false;
+
+            foreach (var grp in duplecatedGroups)
+            {
+                // 同MD5毎に背景色を交互に設定
+                Color backColor = isEvenGroup ? Color.PaleTurquoise : Color.White;
+                foreach (var row in grp)
+                {
+                    row.DefaultCellStyle.BackColor = backColor;
+                }
+                isEvenGroup = !isEvenGroup;
+
+                // キーでソートして表示リストに追加
+                viewRowList.AddRange(grp.OrderBy(r => r.Cells[keyColIndex].Value));
+            }
+
+            // MD5重複画像のみをグリッドに表示
+            grdImages.Rows.Clear();
+            grdImages.Rows.AddRange(viewRowList.ToArray());
         }
 
         #endregion
@@ -1822,8 +1857,8 @@ namespace SO.PictManager.Forms
         #region menuFilterDuplicated_Click - 重複している画像のみを抽出メニュー押下時
 
         /// <summary>
-        /// 重複しているファイルのみを抽出メニューがクリックされた際に実行される処理です。
-        /// 重複が発生しているファイルの行のみを表示し、それ以外の行を非表示に設定します。
+        /// 重複している画像のみを抽出メニューがクリックされた際に実行される処理です。
+        /// 重複が発生している画像の行のみを表示し、それ以外の行を非表示に設定します。
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>
@@ -1844,19 +1879,8 @@ namespace SO.PictManager.Forms
 
                     grdImages.CellValidating -= grdImages_CellValidating;
 
-                    var rows = new List<DataGridViewRow>(grdImages.Rows.Count);
-                    for (int i = grdImages.RowCount - 1; i >= 0; i--)
-                    {
-                        // MD5重複が発生していない行は非表示に設定
-                        if (grdImages[md5ColIdx, i].Style.BackColor == Color.Bisque)
-                        {
-                            rows.Add(grdImages.Rows[i]);
-                        }
-                    }
-                    grdImages.Rows.Clear();
-                    grdImages.Rows.AddRange(rows.ToArray());
-
-                    grdImages.Sort(grdImages.Columns[md5ColIdx], ListSortDirection.Ascending);
+                    // MD5が重複している画像のみを抽出して表示
+                    FilterDuplicatedImages();
 
                     grdImages.CellValidating += grdImages_CellValidating;
                 }
