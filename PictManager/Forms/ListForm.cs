@@ -442,20 +442,20 @@ namespace SO.PictManager.Forms
                 if (!img.IsDeleted)
                 {
                     // MD5重複チェック
-                    for (int j = 0; j < grdImages.RowCount; j++)
+                    for (int j = 0; j < rowList.Count; j++)
                     {
-                        if (Convert.ToBoolean(grdImages[FileColumnIndexes.SELECT_CHECK, j].Tag))
+                        DataGridViewRow targetRow = rowList[j];
+                        if (!IsRowDeleted(targetRow))
                         {
-                            continue;
+                            DataGridViewCell targetCell = targetRow.Cells[FileColumnIndexes.MD5];
+                            if (celMD5.Value.Equals(targetCell.Value))
+                            {
+                                celMD5.Style.BackColor = Color.Bisque;
+                                targetCell.Style.BackColor = Color.Bisque;
+                                break;
+                            }
                         }
 
-                        DataGridViewCell targetCell = grdImages[FileColumnIndexes.MD5, j];
-                        if (celMD5.Value.Equals(targetCell.Value))
-                        {
-                            celMD5.Style.BackColor = Color.Bisque;
-                            targetCell.Style.BackColor = Color.Bisque;
-                            break;
-                        }
                     }
                 }
 
