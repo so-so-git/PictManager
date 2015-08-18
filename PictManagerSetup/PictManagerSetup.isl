@@ -225,6 +225,7 @@
 	<table name="AppSearch">
 		<col key="yes" def="s72">Property</col>
 		<col key="yes" def="s72">Signature_</col>
+		<row><td>DOTNETVERSION40CLIENT</td><td>DotNet40Client</td></row>
 	</table>
 
 	<table name="BBControl">
@@ -339,10 +340,11 @@
 		<col def="S0">ISDotNetInstallerArgsCommit</col>
 		<col def="S0">ISDotNetInstallerArgsUninstall</col>
 		<col def="S0">ISDotNetInstallerArgsRollback</col>
-		<row><td>Component</td><td>{7E2DB29E-E832-4EAD-9F47-98557BCB7B22}</td><td>INSTALLDIR</td><td>2</td><td/><td>File</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>Component1</td><td>{013BCC64-6789-4AFB-93CD-982EFEBBEAA5}</td><td>INSTALLDIR</td><td>2</td><td/><td>File1</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>ISX_DEFAULTCOMPONENT</td><td>{50312488-B89D-4C6A-8B4C-A6447E7F2364}</td><td>XML</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>ISX_DEFAULTCOMPONENT1</td><td>{8D787AAB-338A-4067-AE31-56CC28CDAEC1}</td><td>INSTALLDIR</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>Component</td><td>{7E2DB29E-E832-4EAD-9F47-98557BCB7B22}</td><td>INSTALLDIR</td><td>258</td><td/><td>File</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>Component1</td><td>{013BCC64-6789-4AFB-93CD-982EFEBBEAA5}</td><td>INSTALLDIR</td><td>258</td><td/><td>File1</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>ISX_DEFAULTCOMPONENT</td><td>{50312488-B89D-4C6A-8B4C-A6447E7F2364}</td><td>XML</td><td>258</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>ISX_DEFAULTCOMPONENT1</td><td>{8D787AAB-338A-4067-AE31-56CC28CDAEC1}</td><td>INSTALLDIR</td><td>258</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>ISX_DEFAULTCOMPONENT2</td><td>{4879966D-6153-43EF-A3D6-A489E66C267C}</td><td>ProgramFiles64Folder</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
 
 	<table name="Condition">
@@ -1052,6 +1054,7 @@
 		<col key="yes" def="s72">Directory_</col>
 		<col key="yes" def="s72">Component_</col>
 		<row><td>INSTALLDIR</td><td>ISX_DEFAULTCOMPONENT1</td></row>
+		<row><td>ProgramFiles64Folder</td><td>ISX_DEFAULTCOMPONENT2</td></row>
 	</table>
 
 	<table name="CustomAction">
@@ -1152,7 +1155,7 @@
 		<row><td>MyPicturesFolder</td><td>TARGETDIR</td><td>.:MyPict~1|MyPictures</td><td/><td>0</td><td/></row>
 		<row><td>NetHoodFolder</td><td>TARGETDIR</td><td>.:NetHood</td><td/><td>0</td><td/></row>
 		<row><td>PICTMANAGER</td><td>HOME</td><td>PICTMA~1|PictManager</td><td/><td>0</td><td/></row>
-		<row><td>PICTMANAGER1</td><td>ProgramFilesFolder</td><td>PICTMA~1|PictManager</td><td/><td>0</td><td/></row>
+		<row><td>PICTMANAGER1</td><td>ProgramFiles64Folder</td><td>PICTMA~1|PictManager</td><td/><td>0</td><td/></row>
 		<row><td>PersonalFolder</td><td>TARGETDIR</td><td>.:Personal</td><td/><td>0</td><td/></row>
 		<row><td>PrimaryVolumePath</td><td>TARGETDIR</td><td>.:Primar~1|PrimaryVolumePath</td><td/><td>0</td><td/></row>
 		<row><td>PrintHoodFolder</td><td>TARGETDIR</td><td>.:PRINTH~1|PrintHood</td><td/><td>0</td><td/></row>
@@ -1869,6 +1872,7 @@
 		<row><td>AlwaysInstall</td><td>Component1</td></row>
 		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT</td></row>
 		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT1</td></row>
+		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT2</td></row>
 	</table>
 
 	<table name="File">
@@ -1901,6 +1905,7 @@
 	<table name="ISAssistantTag">
 		<col key="yes" def="s72">Tag</col>
 		<col def="S255">Data</col>
+		<row><td>NewShortcut1</td><td/></row>
 		<row><td>PROJECT_ASSISTANT_DEFAULT_FEATURE</td><td>AlwaysInstall</td></row>
 		<row><td>PROJECT_ASSISTANT_FEATURES</td><td>NonSelectable</td></row>
 	</table>
@@ -2033,6 +2038,7 @@
 		<row><td>Component1</td><td/><td/><td>_CCB424EC_EF44_4F7A_B53B_44A2AFB4BD47_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ISX_DEFAULTCOMPONENT</td><td/><td/><td>_21B598FF_13C6_41B1_ABA4_2CB321B4A75C_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ISX_DEFAULTCOMPONENT1</td><td/><td/><td>_72CEE6BB_D8F2_4C66_BC22_B5FAD6C8416D_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>ISX_DEFAULTCOMPONENT2</td><td/><td/><td>_5A7C0CC4_05F6_456B_A0BE_2CB0687CD0FC_FILTER</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISCustomActionReference">
@@ -2656,6 +2662,8 @@
 		<row><td>COMPANY_NAME</td><td>1041</td><td>Shingo Ohya</td><td>0</td><td/><td>-500965291</td></row>
 		<row><td>DN_AlwaysInstall</td><td>1041</td><td>常にインストール</td><td>0</td><td/><td>-500993004</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_COLOR</td><td>1041</td><td>このｼｽﾃﾑの色設定では、[ProductName] を実行できません。</td><td>0</td><td/><td>-500993004</td></row>
+		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_DOTNETVERSION40CLIENT</td><td>1033</td><td>Microsoft .NET Framework 4.0 Client Package or greater needs to be installed for this installation to continue.</td><td>0</td><td/><td>-1809629323</td></row>
+		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_DOTNETVERSION40CLIENT</td><td>1041</td><td>Microsoft .NET Framework 4.0 Client Package or greater needs to be installed for this installation to continue.</td><td>0</td><td/><td>-1809629323</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_DOTNETVERSION40FULL</td><td>1041</td><td>Microsoft .NET Framework 4.0 Full package or greater needs to be installed for this installation to continue.</td><td>0</td><td/><td>-500993004</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_OS</td><td>1041</td><td>このｵﾍﾟﾚｰﾃｨﾝｸﾞ ｼｽﾃﾑでは [ProductName] を実行できません。</td><td>0</td><td/><td>-500993004</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_PROCESSOR</td><td>1041</td><td>このﾌﾟﾛｾｯｻでは [ProductName] を実行できません。</td><td>0</td><td/><td>-500993004</td></row>
@@ -3756,6 +3764,14 @@
 		<row><td>IDS__TargetReq_DESC_RAM</td><td>1041</td><td>RAM 容量が、[ProductName] の実行に適切ではありません。</td><td>0</td><td/><td>-500993004</td></row>
 		<row><td>IDS__TargetReq_DESC_RESOLUTION</td><td>1041</td><td>画面の解像度が、[ProductName] の実行に適切ではありません。</td><td>0</td><td/><td>-500993004</td></row>
 		<row><td>ID_STRING1</td><td>1041</td><td>http://www.ShingoOhya.com</td><td>0</td><td/><td>-500965291</td></row>
+		<row><td>ID_STRING10</td><td>1033</td><td>newfolder3</td><td>0</td><td/><td>-1809604394</td></row>
+		<row><td>ID_STRING10</td><td>1041</td><td>Internet Explorer</td><td>0</td><td/><td>-1809602346</td></row>
+		<row><td>ID_STRING11</td><td>1033</td><td>newfolder4</td><td>0</td><td/><td>-1809596202</td></row>
+		<row><td>ID_STRING11</td><td>1041</td><td>Quick Launch</td><td>0</td><td/><td>-1809596202</td></row>
+		<row><td>ID_STRING12</td><td>1033</td><td>newfolder5</td><td>0</td><td/><td>-1809585962</td></row>
+		<row><td>ID_STRING12</td><td>1041</td><td>User Pinned</td><td>0</td><td/><td>-1809645322</td></row>
+		<row><td>ID_STRING13</td><td>1033</td><td>newfolder6</td><td>0</td><td/><td>-1809641226</td></row>
+		<row><td>ID_STRING13</td><td>1041</td><td>TaskBar</td><td>0</td><td/><td>-1809639178</td></row>
 		<row><td>ID_STRING2</td><td>1041</td><td>Shingo Ohya</td><td>0</td><td/><td>-500965291</td></row>
 		<row><td>ID_STRING3</td><td>1041</td><td>Launch |Built</td><td>0</td><td/><td>-500993004</td></row>
 		<row><td>ID_STRING4</td><td>1033</td><td>PictManager インストーラ</td><td>0</td><td/><td>-500995020</td></row>
@@ -3764,6 +3780,8 @@
 		<row><td>ID_STRING5</td><td>1041</td><td>PictManager</td><td>0</td><td/><td>-500999947</td></row>
 		<row><td>ID_STRING6</td><td>1033</td><td>NewShortcut3</td><td>0</td><td/><td>-501014091</td></row>
 		<row><td>ID_STRING6</td><td>1041</td><td>PictManager - Uninstall</td><td>0</td><td/><td>-501007947</td></row>
+		<row><td>ID_STRING8</td><td>1033</td><td>PictManager</td><td>0</td><td/><td>-1809612618</td></row>
+		<row><td>ID_STRING8</td><td>1041</td><td>PictManager</td><td>0</td><td/><td>-1809612618</td></row>
 		<row><td>IIDS_UITEXT_FeatureUninstalled</td><td>1041</td><td>{&amp;Tahoma9}この機能をアンインストールしたままにします。</td><td>0</td><td/><td>-500993004</td></row>
 	</table>
 
@@ -3872,7 +3890,9 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I2">ISIconIndex</col>
 		<row><td>ARPPRODUCTICON.exe</td><td/><td>&lt;ISProductFolder&gt;\redist\Language Independent\OS Independent\setupicon.ico</td><td>0</td></row>
+		<row><td>NewShortcut1_258A7B97A4E64FCF9D55338206733DF2.exe</td><td/><td>&lt;VSSolutionFolder&gt;\PictManager\images.ico</td><td>0</td></row>
 		<row><td>NewShortcut3_B198F87B87D7442C80BE8E94CD94394D.exe</td><td/><td>C:\Program Files (x86)\InstallShield\2013LE\Redist\Language Independent\OS Independent\uninstall.ico</td><td>0</td></row>
+		<row><td>_Built1_565A507DA0B944EDA904D2A441966407.exe</td><td/><td>&lt;VSSolutionFolder&gt;\PictManager\images.ico</td><td>0</td></row>
 	</table>
 
 	<table name="IniFile">
@@ -4063,6 +4083,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 	<table name="LaunchCondition">
 		<col key="yes" def="s255">Condition</col>
 		<col def="l255">Description</col>
+		<row><td>DOTNETVERSION40CLIENT&gt;="#1"</td><td>##IDPROP_EXPRESS_LAUNCH_CONDITION_DOTNETVERSION40CLIENT##</td></row>
 	</table>
 
 	<table name="ListBox">
@@ -4380,7 +4401,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
 		<row><td>ProductCode</td><td>{B8C8AA10-088E-4A19-9DE1-85F98D5D2700}</td><td/></row>
 		<row><td>ProductName</td><td>PictManager</td><td/></row>
-		<row><td>ProductVersion</td><td>1.00.0000</td><td/></row>
+		<row><td>ProductVersion</td><td>1.00.0001</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>
 		<row><td>ProgressType1</td><td>Installing</td><td/></row>
 		<row><td>ProgressType2</td><td>installed</td><td/></row>
@@ -4392,7 +4413,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>RestartManagerOption</td><td>CloseRestart</td><td/></row>
 		<row><td>SERIALNUMBER</td><td/><td/></row>
 		<row><td>SERIALNUMVALSUCCESSRETVAL</td><td>1</td><td/></row>
-		<row><td>SecureCustomProperties</td><td>ISFOUNDNEWERPRODUCTVERSION;USERNAME;COMPANYNAME;ISX_SERIALNUM;SUPPORTDIR</td><td/></row>
+		<row><td>SecureCustomProperties</td><td>ISFOUNDNEWERPRODUCTVERSION;USERNAME;COMPANYNAME;ISX_SERIALNUM;SUPPORTDIR;DOTNETVERSION40CLIENT</td><td/></row>
 		<row><td>SelectedSetupType</td><td>##IDS__DisplayName_Typical##</td><td/></row>
 		<row><td>SetupType</td><td>Typical</td><td/></row>
 		<row><td>UpgradeCode</td><td>{4FF10557-D129-466D-8AFA-6C880525CDE9}</td><td/></row>
@@ -4437,6 +4458,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="s255">Key</col>
 		<col def="S255">Name</col>
 		<col def="I2">Type</col>
+		<row><td>DotNet40Client</td><td>2</td><td>SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Client</td><td>Install</td><td>2</td></row>
 	</table>
 
 	<table name="Registry">
@@ -4544,9 +4566,9 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="S255">ISComments</col>
 		<col def="S255">ISShortcutName</col>
 		<col def="I4">ISAttributes</col>
-		<row><td>NewShortcut1</td><td>pictmanager</td><td>##ID_STRING5##</td><td>Component</td><td>AlwaysInstall</td><td/><td/><td/><td/><td/><td>1</td><td>INSTALLDIR</td><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>NewShortcut1</td><td>pictmanager</td><td>##ID_STRING5##</td><td>Component</td><td>AlwaysInstall</td><td/><td/><td/><td>NewShortcut1_258A7B97A4E64FCF9D55338206733DF2.exe</td><td>0</td><td>1</td><td>INSTALLDIR</td><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>NewShortcut3</td><td>pictmanager</td><td>##ID_STRING6##</td><td>ISX_DEFAULTCOMPONENT1</td><td>[SystemFolder]MsiExec.exe</td><td>/x [ProductCode]</td><td/><td/><td>NewShortcut3_B198F87B87D7442C80BE8E94CD94394D.exe</td><td>0</td><td>1</td><td/><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>_Built1</td><td>DesktopFolder</td><td>##IDS_SHORTCUT_DISPLAY_NAME1##</td><td>Component</td><td>AlwaysInstall</td><td/><td/><td/><td/><td/><td>1</td><td>INSTALLDIR</td><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>_Built1</td><td>DesktopFolder</td><td>##IDS_SHORTCUT_DISPLAY_NAME1##</td><td>Component</td><td>AlwaysInstall</td><td/><td/><td/><td>_Built1_565A507DA0B944EDA904D2A441966407.exe</td><td>0</td><td>1</td><td>INSTALLDIR</td><td/><td/><td/><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="Signature">
