@@ -97,8 +97,8 @@ namespace SO.PictManager.Forms
             if (chkOriginal.Checked)
             {
                 // 置換前文字入力チェック
-                if (!string.IsNullOrEmpty(txtRepBefore.Text)
-                    && !string.IsNullOrEmpty(txtRepAfter.Text))
+                if (!string.IsNullOrEmpty(txtRepAfter.Text)
+                    && string.IsNullOrEmpty(txtRepBefore.Text))
                 {
                     txtRepBefore.Focus();
                     FormUtilities.ShowMessage("W012");
@@ -109,8 +109,8 @@ namespace SO.PictManager.Forms
             // 通し番号を付加するがチェックされている場合
             if (chkAddSeq.Checked)
             {
-                // 通し番号間隔が入力チェック
-                if (!string.IsNullOrEmpty(nudStep.Text))
+                // 通し番号間隔入力チェック
+                if (string.IsNullOrEmpty(nudStep.Text))
                 {
                     nudStep.Focus();
                     FormUtilities.ShowMessage("W013");
