@@ -65,7 +65,7 @@ namespace SO.PictManager.Forms.Info
 		public bool IsAddSequential { get; set; }
 
         /// <summary>通し番号の間隔を取得または設定します。</summary>
-		public int? IncrementStep { get; set; }
+		public uint? IncrementStep { get; set; }
 
         /// <summary>通し番号と元ファイル名の区切り文字を取得または設定します。</summary>
 		public string SeqDelimiter { get; set; }

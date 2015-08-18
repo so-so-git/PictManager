@@ -492,7 +492,7 @@ namespace SO.PictManager.Forms
 
                             // 総ファイル数に合わせて0埋めで桁揃えを行う
                             pathBuilder.Append(StringUtilities.PaddingByZero(
-                                fileCnt++ * renameInfo.IncrementStep.Value,
+                                fileCnt++ * Convert.ToInt32(renameInfo.IncrementStep.Value),
                                 ((countMap[parentPath] - 1) * renameInfo.IncrementStep).ToString().Length));
                         }
 

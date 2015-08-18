@@ -35,7 +35,6 @@
             this.txtSuffix = new System.Windows.Forms.TextBox();
             this.rdoBefore = new System.Windows.Forms.RadioButton();
             this.chkAddSeq = new System.Windows.Forms.CheckBox();
-            this.txtStep = new System.Windows.Forms.TextBox();
             this.lblStep = new System.Windows.Forms.Label();
             this.txtRepBefore = new System.Windows.Forms.TextBox();
             this.lblReplace = new System.Windows.Forms.Label();
@@ -43,33 +42,31 @@
             this.txtRepAfter = new System.Windows.Forms.TextBox();
             this.rdoAfter = new System.Windows.Forms.RadioButton();
             this.txtSeqDelimiter = new System.Windows.Forms.TextBox();
-            this.lblDelimiter2 = new System.Windows.Forms.Label();
+            this.lblSeqDelimiter = new System.Windows.Forms.Label();
             this.chkShuffle = new System.Windows.Forms.CheckBox();
             this.btnClear = new System.Windows.Forms.Button();
             this.chkAddDirName = new System.Windows.Forms.CheckBox();
             this.txtDirDelimiter = new System.Windows.Forms.TextBox();
-            this.lblDelimiter1 = new System.Windows.Forms.Label();
+            this.lblDirDelimiter = new System.Windows.Forms.Label();
             this.grpSample = new System.Windows.Forms.GroupBox();
             this.lblArrow2 = new System.Windows.Forms.Label();
             this.lblSampleAfter = new System.Windows.Forms.Label();
             this.lblSampleBefore = new System.Windows.Forms.Label();
             this.cmbSort = new System.Windows.Forms.ComboBox();
             this.chkSort = new System.Windows.Forms.CheckBox();
+            this.nudStep = new System.Windows.Forms.NumericUpDown();
             this.grpSample.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudStep)).BeginInit();
             this.SuspendLayout();
             // 
             // btnOk
             // 
             this.btnOk.Location = new System.Drawing.Point(339, 605);
-            this.btnOk.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.btnOk.Size = new System.Drawing.Size(75, 30);
             this.btnOk.TabIndex = 26;
             // 
             // btnCancel
             // 
             this.btnCancel.Location = new System.Drawing.Point(255, 605);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.btnCancel.Size = new System.Drawing.Size(75, 30);
             this.btnCancel.TabIndex = 25;
             // 
             // lblPrefix
@@ -148,16 +145,6 @@
             this.chkAddSeq.UseVisualStyleBackColor = true;
             this.chkAddSeq.CheckedChanged += new System.EventHandler(this.chkAddSeq_CheckedChanged);
             // 
-            // txtStep
-            // 
-            this.txtStep.Location = new System.Drawing.Point(84, 179);
-            this.txtStep.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.txtStep.MaxLength = 3;
-            this.txtStep.Name = "txtStep";
-            this.txtStep.Size = new System.Drawing.Size(37, 23);
-            this.txtStep.TabIndex = 9;
-            this.txtStep.Text = "1";
-            // 
             // lblStep
             // 
             this.lblStep.Location = new System.Drawing.Point(33, 179);
@@ -228,14 +215,14 @@
             this.txtSeqDelimiter.Text = "_";
             this.txtSeqDelimiter.TextChanged += new System.EventHandler(this.TextBoxes_TextChanged);
             // 
-            // lblDelimiter2
+            // lblSeqDelimiter
             // 
-            this.lblDelimiter2.Location = new System.Drawing.Point(35, 285);
-            this.lblDelimiter2.Name = "lblDelimiter2";
-            this.lblDelimiter2.Size = new System.Drawing.Size(75, 25);
-            this.lblDelimiter2.TabIndex = 13;
-            this.lblDelimiter2.Text = "区切文字：";
-            this.lblDelimiter2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblSeqDelimiter.Location = new System.Drawing.Point(35, 285);
+            this.lblSeqDelimiter.Name = "lblSeqDelimiter";
+            this.lblSeqDelimiter.Size = new System.Drawing.Size(75, 25);
+            this.lblSeqDelimiter.TabIndex = 13;
+            this.lblSeqDelimiter.Text = "区切文字：";
+            this.lblSeqDelimiter.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // chkShuffle
             // 
@@ -284,14 +271,14 @@
             this.txtDirDelimiter.Text = "_";
             this.txtDirDelimiter.TextChanged += new System.EventHandler(this.TextBoxes_TextChanged);
             // 
-            // lblDelimiter1
+            // lblDirDelimiter
             // 
-            this.lblDelimiter1.Location = new System.Drawing.Point(33, 115);
-            this.lblDelimiter1.Name = "lblDelimiter1";
-            this.lblDelimiter1.Size = new System.Drawing.Size(75, 25);
-            this.lblDelimiter1.TabIndex = 5;
-            this.lblDelimiter1.Text = "区切文字：";
-            this.lblDelimiter1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblDirDelimiter.Location = new System.Drawing.Point(33, 115);
+            this.lblDirDelimiter.Name = "lblDirDelimiter";
+            this.lblDirDelimiter.Size = new System.Drawing.Size(75, 25);
+            this.lblDirDelimiter.TabIndex = 5;
+            this.lblDirDelimiter.Text = "区切文字：";
+            this.lblDirDelimiter.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // grpSample
             // 
@@ -354,11 +341,35 @@
             this.chkSort.UseVisualStyleBackColor = true;
             this.chkSort.CheckedChanged += new System.EventHandler(this.chkSort_CheckedChanged);
             // 
+            // nudStep
+            // 
+            this.nudStep.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.nudStep.Location = new System.Drawing.Point(86, 182);
+            this.nudStep.Maximum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            0});
+            this.nudStep.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nudStep.Name = "nudStep";
+            this.nudStep.Size = new System.Drawing.Size(51, 23);
+            this.nudStep.TabIndex = 9;
+            this.nudStep.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
             // RenameDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(429, 654);
+            this.Controls.Add(this.nudStep);
             this.Controls.Add(this.cmbSort);
             this.Controls.Add(this.grpSample);
             this.Controls.Add(this.btnClear);
@@ -366,12 +377,11 @@
             this.Controls.Add(this.txtRepBefore);
             this.Controls.Add(this.lblReplace);
             this.Controls.Add(this.lblArrow1);
-            this.Controls.Add(this.lblDelimiter1);
+            this.Controls.Add(this.lblDirDelimiter);
             this.Controls.Add(this.txtDirDelimiter);
-            this.Controls.Add(this.lblDelimiter2);
+            this.Controls.Add(this.lblSeqDelimiter);
             this.Controls.Add(this.txtSeqDelimiter);
             this.Controls.Add(this.lblStep);
-            this.Controls.Add(this.txtStep);
             this.Controls.Add(this.rdoAfter);
             this.Controls.Add(this.rdoBefore);
             this.Controls.Add(this.txtSuffix);
@@ -383,8 +393,6 @@
             this.Controls.Add(this.chkOriginal);
             this.Controls.Add(this.lblSuffix);
             this.Controls.Add(this.lblPrefix);
-            this.Font = new System.Drawing.Font("Meiryo UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "RenameDialog";
             this.Text = "ファイル名変更形式指定";
             this.Controls.SetChildIndex(this.lblPrefix, 0);
@@ -398,12 +406,11 @@
             this.Controls.SetChildIndex(this.txtSuffix, 0);
             this.Controls.SetChildIndex(this.rdoBefore, 0);
             this.Controls.SetChildIndex(this.rdoAfter, 0);
-            this.Controls.SetChildIndex(this.txtStep, 0);
             this.Controls.SetChildIndex(this.lblStep, 0);
             this.Controls.SetChildIndex(this.txtSeqDelimiter, 0);
-            this.Controls.SetChildIndex(this.lblDelimiter2, 0);
+            this.Controls.SetChildIndex(this.lblSeqDelimiter, 0);
             this.Controls.SetChildIndex(this.txtDirDelimiter, 0);
-            this.Controls.SetChildIndex(this.lblDelimiter1, 0);
+            this.Controls.SetChildIndex(this.lblDirDelimiter, 0);
             this.Controls.SetChildIndex(this.lblArrow1, 0);
             this.Controls.SetChildIndex(this.lblReplace, 0);
             this.Controls.SetChildIndex(this.txtRepBefore, 0);
@@ -413,8 +420,10 @@
             this.Controls.SetChildIndex(this.btnClear, 0);
             this.Controls.SetChildIndex(this.grpSample, 0);
             this.Controls.SetChildIndex(this.cmbSort, 0);
+            this.Controls.SetChildIndex(this.nudStep, 0);
             this.grpSample.ResumeLayout(false);
             this.grpSample.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudStep)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -429,7 +438,6 @@
         private System.Windows.Forms.TextBox txtSuffix;
         private System.Windows.Forms.RadioButton rdoBefore;
         private System.Windows.Forms.CheckBox chkAddSeq;
-        private System.Windows.Forms.TextBox txtStep;
         private System.Windows.Forms.Label lblStep;
         private System.Windows.Forms.TextBox txtRepBefore;
         private System.Windows.Forms.Label lblReplace;
@@ -437,17 +445,18 @@
         private System.Windows.Forms.TextBox txtRepAfter;
         private System.Windows.Forms.RadioButton rdoAfter;
         private System.Windows.Forms.TextBox txtSeqDelimiter;
-        private System.Windows.Forms.Label lblDelimiter2;
+        private System.Windows.Forms.Label lblSeqDelimiter;
         private System.Windows.Forms.CheckBox chkShuffle;
         private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.CheckBox chkAddDirName;
         private System.Windows.Forms.TextBox txtDirDelimiter;
-        private System.Windows.Forms.Label lblDelimiter1;
+        private System.Windows.Forms.Label lblDirDelimiter;
         private System.Windows.Forms.GroupBox grpSample;
         private System.Windows.Forms.Label lblSampleBefore;
         private System.Windows.Forms.Label lblArrow2;
         private System.Windows.Forms.Label lblSampleAfter;
         private System.Windows.Forms.ComboBox cmbSort;
         private System.Windows.Forms.CheckBox chkSort;
+        private System.Windows.Forms.NumericUpDown nudStep;
     }
 }

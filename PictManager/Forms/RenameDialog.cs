@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -95,16 +96,13 @@ namespace SO.PictManager.Forms
             // 元ファイル名を含むがチェックされている場合
             if (chkOriginal.Checked)
             {
-                // 置換後文字が入力されている場合
-                if (txtRepAfter.Text.Length != 0)
+                // 置換前文字入力チェック
+                if (!string.IsNullOrEmpty(txtRepBefore.Text)
+                    && !string.IsNullOrEmpty(txtRepAfter.Text))
                 {
-                    // 置換前文字入力チェック
-                    if (txtRepBefore.Text.Length == 0)
-                    {
-                        txtRepBefore.Focus();
-                        FormUtilities.ShowMessage("W012");
-                        return false;
-                    }
+                    txtRepBefore.Focus();
+                    FormUtilities.ShowMessage("W012");
+                    return false;
                 }
             }
 
@@ -112,56 +110,35 @@ namespace SO.PictManager.Forms
             if (chkAddSeq.Checked)
             {
                 // 通し番号間隔が入力チェック
-                if (txtStep.Text.Length == 0)
+                if (!string.IsNullOrEmpty(nudStep.Text))
                 {
-                    txtStep.Focus();
+                    nudStep.Focus();
                     FormUtilities.ShowMessage("W013");
-                    return false;
-                }
-
-                // 通し番号間隔数値チェック
-                int parseRes;
-                if (!int.TryParse(txtStep.Text, out parseRes))
-                {
-                    txtStep.Focus();
-                    txtStep.SelectAll();
-                    FormUtilities.ShowMessage("W014");
                     return false;
                 }
             }
 
             // 禁止文字チェック
-            // 接頭文字
-            if (txtPrefix.Text.Length != 0 && txtPrefix.Text.HasInvalidPathChar())
+            var pathCheckList = new[]
             {
-                txtPrefix.Focus();
-                txtPrefix.SelectAll();
-                FormUtilities.ShowMessage("W015", "接頭文字");
-                return false;
-            }
-            // 接尾文字
-            if (txtSuffix.Text.Length != 0 && txtSuffix.Text.HasInvalidPathChar())
+                new { TextBox = txtDirDelimiter, ItemName = "親ディレクトリ名区切り文字" },
+                new { TextBox = txtSeqDelimiter, ItemName = "通し番号区切り文字" },
+                new { TextBox = txtPrefix      , ItemName = "接頭文字" },
+                new { TextBox = txtSuffix      , ItemName = "接尾文字" },
+                new { TextBox = txtRepBefore   , ItemName = "置換前文字" },
+                new { TextBox = txtRepAfter    , ItemName = "置換後文字" },
+            };
+
+            foreach (var chkTarget in pathCheckList)
             {
-                txtSuffix.Focus();
-                txtSuffix.SelectAll();
-                FormUtilities.ShowMessage("W015", "接尾文字");
-                return false;
-            }
-            // 置換前文字
-            if (txtRepBefore.Text.Length != 0 && txtRepBefore.Text.HasInvalidPathChar())
-            {
-                txtRepBefore.Focus();
-                txtRepBefore.SelectAll();
-                FormUtilities.ShowMessage("W015", "置換前文字");
-                return false;
-            }
-            // 置換後文字
-            if (txtRepAfter.Text.Length != 0 && txtRepAfter.Text.HasInvalidPathChar())
-            {
-                txtRepAfter.Focus();
-                txtRepAfter.SelectAll();
-                FormUtilities.ShowMessage("W015", "置換後文字");
-                return false;
+                if (!string.IsNullOrEmpty(chkTarget.TextBox.Text)
+                    && chkTarget.TextBox.Text.HasInvalidPathChar())
+                {
+                    chkTarget.TextBox.Focus();
+                    chkTarget.TextBox.SelectAll();
+                    FormUtilities.ShowMessage("W015", chkTarget.ItemName);
+                    return false;
+                }
             }
 
             return true;
@@ -182,7 +159,8 @@ namespace SO.PictManager.Forms
             chkOriginal.Checked = renameInfo.IsReserveOriginalName;
             chkAddSeq.Checked = renameInfo.IsAddSequential;
             chkShuffle.Checked = renameInfo.IsShuffle;
-            txtStep.Text = (renameInfo.IncrementStep ?? 0).ToString();
+            chkSort.Checked = renameInfo.SortOrder.HasValue;
+            nudStep.Value = renameInfo.IncrementStep ?? nudStep.Minimum;
             renameInfo.SeqDelimiter = chkAddSeq.Checked && chkOriginal.Checked ? txtSeqDelimiter.Text : null;
             txtPrefix.Text = renameInfo.Prefix;
             txtSuffix.Text = renameInfo.Suffix;
@@ -217,7 +195,7 @@ namespace SO.PictManager.Forms
             renameInfo.IsReserveOriginalName = chkOriginal.Checked;
             renameInfo.IsAddSequential = chkAddSeq.Checked;
             renameInfo.IsShuffle = chkAddSeq.Checked ? chkShuffle.Checked : false;
-            renameInfo.IncrementStep = chkAddSeq.Checked ? new Nullable<int>(int.Parse(txtStep.Text)) : null;
+            renameInfo.IncrementStep = chkAddSeq.Checked ? new Nullable<uint>(decimal.ToUInt32(nudStep.Value)) : null;
             renameInfo.SeqDelimiter = chkAddSeq.Checked && chkOriginal.Checked ? txtSeqDelimiter.Text : null;
             renameInfo.Prefix = txtPrefix.Text;
             renameInfo.Suffix = txtSuffix.Text;
@@ -311,11 +289,6 @@ namespace SO.PictManager.Forms
             {
                 _isAccessibleChanging = true;
 
-                bool isSort = chkSort.Checked;
-                bool isAddDirName = chkAddDirName.Checked;
-                bool isAddSeq = chkAddSeq.Checked;
-                bool isKeepOriginal = chkOriginal.Checked;
-
                 // シャッフルチェックボックス関連
                 if (chkShuffle.Checked)
                 {
@@ -326,24 +299,26 @@ namespace SO.PictManager.Forms
                 {
                     // ソート順チェックボックス関連
                     chkSort.Enabled = true;
-                    cmbSort.Enabled = isSort;
+                    cmbSort.Enabled = chkSort.Checked;
                 }
 
-                // 区切り文字1
-                lblDelimiter1.Enabled = isAddDirName;
+                // 親ディレクトリ名区切り文字
+                bool isAddDirName = chkAddDirName.Checked;
+                lblDirDelimiter.Enabled = isAddDirName;
                 txtDirDelimiter.Enabled = isAddDirName;
 
-                // 区切り文字2、元ファイル名位置
-                bool isAddSeqAndOrigianl = isAddSeq & isKeepOriginal;
-                lblDelimiter2.Enabled = isAddSeqAndOrigianl;
-                txtSeqDelimiter.Enabled = isAddSeqAndOrigianl;
-                rdoBefore.Enabled = isAddSeqAndOrigianl;
-                rdoAfter.Enabled = isAddSeqAndOrigianl;
-
                 // 通し番号付与設定関連
+                bool isAddSeq = chkAddSeq.Checked;
                 lblStep.Enabled = isAddSeq;
-                txtStep.Enabled = isAddSeq;
-                txtSeqDelimiter.Enabled = isAddSeq;
+                nudStep.Enabled = isAddSeq;
+
+                // 通し番号区切り文字、元ファイル名位置
+                bool isKeepOriginal = chkOriginal.Checked;
+                bool isAddSeqAndOriginal = isAddSeq & isKeepOriginal;
+                lblSeqDelimiter.Enabled = isAddSeqAndOriginal;
+                txtSeqDelimiter.Enabled = isAddSeqAndOriginal;
+                rdoBefore.Enabled = isAddSeqAndOriginal;
+                rdoAfter.Enabled = isAddSeqAndOriginal;
 
                 // 置換前後文字列
                 if (isKeepOriginal)
@@ -389,7 +364,7 @@ namespace SO.PictManager.Forms
                 txtSuffix.Text = string.Empty;
                 txtRepBefore.Text = string.Empty;
                 txtRepAfter.Text = string.Empty;
-                txtStep.Text = string.Empty; 
+                nudStep.Value = nudStep.Minimum;
                 txtSeqDelimiter.Text = string.Empty;
                 chkSort.Checked = false;
                 chkAddDirName.Checked = false;
