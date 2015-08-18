@@ -27,8 +27,4 @@
     <StartArguments>
     </StartArguments>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Design|AnyCPU' ">
-    <StartWorkingDirectory>
-    </StartWorkingDirectory>
-  </PropertyGroup>
 </Project>
