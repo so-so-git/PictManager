@@ -5,7 +5,6 @@ Uploads/*.*
 *.suo
 *.vbproj.user
 *.log
-PictManagerSetup/PictManagerSetup/Express/
 PictManagerDatabase/PictManagerDatabase.sqlproj.user
 PictManagerDatabase/PictManagerDatabase.dbmdl
 /PictManagerDatabase/PictManagerDatabase.dbmdl
