@@ -263,6 +263,11 @@ namespace SO.PictManager.Forms
         /// <returns>処理結果</returns>
         public ResultStatus RenameFile()
         {
+            if (ImageCount == 0)
+            {
+                return ResultStatus.Cancel;
+            }
+
             var status = ResultStatus.Empty;
             string oldFilePath = ImageList[CurrentIndex].Key;
 
@@ -587,6 +592,11 @@ namespace SO.PictManager.Forms
         {
             Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.File);
 
+            if (ImageCount == 0)
+            {
+                return ResultStatus.Cancel;
+            }
+
             var status = ResultStatus.Empty;
             string oldFilePath = ImageList[CurrentIndex].Key;
 
@@ -622,7 +632,7 @@ namespace SO.PictManager.Forms
                 newFile.MoveTo(newPath);
                 ImageList.RemoveAt(CurrentIndex);
 
-                if (CurrentIndex > ImageCount - 2)
+                if (CurrentIndex >= ImageCount)
                 {
                     CurrentIndex = 0;
                 }
@@ -727,6 +737,11 @@ namespace SO.PictManager.Forms
         public ResultStatus ChangeCategory()
         {
             Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.Database);
+
+            if (ImageCount == 0)
+            {
+                return ResultStatus.Cancel;
+            }
 
             var status = ResultStatus.Empty;
             int imageId = int.Parse(ImageList[CurrentIndex].Key);
@@ -880,6 +895,11 @@ namespace SO.PictManager.Forms
         public ResultStatus ExportImageFile()
         {
             Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.Database);
+
+            if (ImageCount == 0)
+            {
+                return ResultStatus.Cancel;
+            }
 
             var status = ResultStatus.Empty;
             int imageId = int.Parse(ImageList[CurrentIndex].Key);

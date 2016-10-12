@@ -10,3 +10,5 @@ PictManagerDatabase/PictManagerDatabase.dbmdl
 /PictManagerDatabase/PictManagerDatabase.dbmdl
 PictManagerSetup/Debug
 PictManagerSetup/Release
+UpgradeLog.htm
+*.jfm

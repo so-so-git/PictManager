@@ -1049,8 +1049,8 @@ namespace SO.PictManager.Forms
             {
                 // 最後に表示していたファイルを取得
                 // (削除されている場合は次の有効イメージを対象とする)
-                int lastIdx = SearchNextValidIndex();
-                if (lastIdx == -1)
+                int lastIndex = SearchNextValidIndex();
+                if (lastIndex == -1)
                 {
                     // 有効なイメージが無い場合は対象ファイル無しのキャプションを表示
                     RefreshImageList();
@@ -1059,14 +1059,14 @@ namespace SO.PictManager.Forms
                 }
 
                 // 最終表示ファイルパスを検索用に保存
-                string lastFile = ImageList[lastIdx].Key;
+                string lastFile = ImageList[lastIndex].Key;
 
                 // 対象ファイルを最新化
                 RefreshImageList();
 
                 // 最後に表示していたファイルを再表示
-                int idx = SearchFileIndex(lastFile);
-                CurrentIndex = idx == -1 ? 0 : idx;
+                int showIndex = SearchFileIndex(lastFile);
+                CurrentIndex = showIndex == -1 ? 0 : showIndex;
 
                 lblCount.Text = ImageCount.ToSafeString();
 

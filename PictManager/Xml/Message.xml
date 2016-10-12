@@ -45,9 +45,6 @@
   <msg id="I011" caption="処理完了" buttons="OK" icon="Information">
     {0}が完了しました。
   </msg>
-  <msg id="I012" caption="ファイルインポート完了" buttons="OK" icon="Information">
-    {0} ファイルのインポートが完了しました。
-  </msg>
 
   <!-- コンフォームメッセージ -->
 	<msg id="Q000" caption="終了確認" buttons="YesNo" icon="Question">
@@ -103,6 +100,9 @@
 	</msg>
   <msg id="Q017" caption="フォルダ再作成確認" buttons="YesNo" icon="Question">
     自動取込フォルダは既に作成されています。\n最新の情報で再作成しますか？
+  </msg>
+  <msg id="Q018" caption="ファイルインポート完了" buttons="YesNo" icon="Question">
+    {0} ファイルのインポートが完了しました。\nインポートしたファイルを削除しますか？
   </msg>
 
   <!-- ワーニングメッセージ -->

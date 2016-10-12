@@ -33,25 +33,27 @@
             // 
             // txtInput
             // 
+            this.txtInput.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.txtInput.Visible = false;
             // 
             // cmbSelect
             // 
             this.cmbSelect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbSelect.FormattingEnabled = true;
-            this.cmbSelect.Location = new System.Drawing.Point(28, 36);
+            this.cmbSelect.Location = new System.Drawing.Point(33, 45);
+            this.cmbSelect.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cmbSelect.Name = "cmbSelect";
-            this.cmbSelect.Size = new System.Drawing.Size(220, 20);
+            this.cmbSelect.Size = new System.Drawing.Size(256, 23);
             this.cmbSelect.TabIndex = 1;
             // 
             // ComboInputDialog
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(341, 100);
+            this.ClientSize = new System.Drawing.Size(398, 125);
             this.Controls.Add(this.cmbSelect);
+            this.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.Name = "ComboInputDialog";
-            this.Text = "ComboInputDialog";
             this.Controls.SetChildIndex(this.lblInput, 0);
             this.Controls.SetChildIndex(this.txtInput, 0);
             this.Controls.SetChildIndex(this.btnCancel, 0);

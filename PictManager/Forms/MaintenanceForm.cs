@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -12,6 +10,7 @@ using System.Windows.Forms;
 
 using SO.Library.Extensions;
 using SO.Library.Forms;
+using SO.Library.IO;
 using SO.PictManager.Common;
 using SO.PictManager.DataModel;
 using SO.PictManager.Forms.Info;
@@ -44,6 +43,8 @@ namespace SO.PictManager.Forms
                 lblDeletedCount.Text = deletedCount.ToString("#,0");
                 btnApplyDelete.Enabled = deletedCount > 0;
             }
+
+            lblStatus.Text = string.Empty;
 
             if (Utilities.Config.CommonInfo.TargetExtensions.Any())
             {
@@ -105,6 +106,54 @@ namespace SO.PictManager.Forms
 
         #endregion
 
+        #region EntryCategory - カテゴリー登録
+
+        /// <summary>
+        /// テキストボックスに入力されたカテゴリーをデータベースに登録します。
+        /// </summary>
+        private void EntryCategory()
+        {
+            lblStatus.Text = string.Empty;
+
+            // カテゴリー名入力チェック
+            string categoryName = txtEntryCategory.Text.Trim();
+            if (string.IsNullOrEmpty(categoryName))
+            {
+                FormUtilities.ShowMessage("W000", "カテゴリー名");
+                return;
+            }
+
+            using (var entities = new PictManagerEntities())
+            {
+                // カテゴリー名重複チェック
+                if (entities.MstCategories.Any(c => c.CategoryName == categoryName))
+                {
+                    FormUtilities.ShowMessage("E009", categoryName);
+                    return;
+                }
+
+                // カテゴリー登録
+                var dto = new MstCategory();
+                dto.CategoryName = categoryName;
+
+                DateTime now = DateTime.Now;
+                dto.InsertedDateTime = now;
+                dto.UpdatedDateTime = now;
+
+                entities.MstCategories.Add(dto);
+                entities.SaveChanges();
+
+                // コンボボックス内容を更新
+                RefreshCategoriesComboBox(entities);
+            }
+
+            txtEntryCategory.Text = string.Empty;
+            lblStatus.Text = MessageXml.GetMessageInfo("I011",
+                string.Format("カテゴリー[{0}]の登録", categoryName)).message;
+        }
+
+        #endregion
+
         #region ImportFileToDatabase - ファイルをデータベースにインポート
 
         /// <summary>
@@ -138,6 +187,36 @@ namespace SO.PictManager.Forms
 
         //*** イベントハンドラ ***
 
+        #region txtEntryCategory_KeyDown - 登録カテゴリーテキストボックスキーダウン時
+
+        /// <summary>
+        /// 登録カテゴリーテキストボックスでキーが押下された際に実行される処理です。
+        /// テキストボックスに入力されたカテゴリーをデータベースに登録します。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void txtEntryCategory_KeyDown(object sender, KeyEventArgs e)
+        {
+            try
+            {
+                if ((e.KeyCode & Keys.Return) == Keys.Return)
+                {
+                    // リターンキー押下時、カテゴリーを登録
+                    EntryCategory();
+
+                    e.Handled = true;
+                    e.SuppressKeyPress = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
+
+        }
+
+        #endregion
+
         #region btnEntryCategory_Click - カテゴリー登録ボタンクリック時
 
         /// <summary>
@@ -150,41 +229,7 @@ namespace SO.PictManager.Forms
         {
             try
             {
-                // カテゴリー名入力チェック
-                string categoryName = txtEntryCategory.Text.Trim();
-                if (string.IsNullOrEmpty(categoryName))
-                {
-                    FormUtilities.ShowMessage("W000", "カテゴリー名");
-                    return;
-                }
-
-                using (var entities = new PictManagerEntities())
-                {
-                    // カテゴリー名重複チェック
-                    if (entities.MstCategories.Any(c => c.CategoryName == categoryName))
-                    {
-                        FormUtilities.ShowMessage("E009", categoryName);
-                        return;
-                    }
-
-                    // カテゴリー登録
-                    var dto = new MstCategory();
-                    dto.CategoryName = categoryName;
-
-                    DateTime now = DateTime.Now;
-                    dto.InsertedDateTime = now;
-                    dto.UpdatedDateTime = now;
-
-                    entities.MstCategories.Add(dto);
-                    entities.SaveChanges();
-
-                    // コンボボックス内容を更新
-                    RefreshCategoriesComboBox(entities);
-                }
-
-                txtEntryCategory.Text = string.Empty;
-
-                FormUtilities.ShowMessage("I011", "カテゴリーの登録");
+                EntryCategory();
             }
             catch (Exception ex)
             {
@@ -247,7 +292,7 @@ namespace SO.PictManager.Forms
                     RefreshCategoriesComboBox(entities);
                 }
 
-                FormUtilities.ShowMessage("I011", "カテゴリーの削除");
+                lblStatus.Text = MessageXml.GetMessageInfo("I011", "カテゴリーの削除").message;
             }
             catch (Exception ex)
             {
@@ -399,7 +444,23 @@ namespace SO.PictManager.Forms
                             }
                         }
 
-                        FormUtilities.ShowMessage("I012", filePathList.Count.ToString());
+                        if (FormUtilities.ShowMessage("Q018", filePathList.Count.ToString()) == DialogResult.Yes)
+                        {
+                            // インポートしたファイルを削除
+                            using (var progress = new ProgressDialog(this))
+                            {
+                                progress.StartProgress("インポート済みファイルの削除中...", string.Empty, 0, filePathList.Count);
+
+                                foreach (var path in filePathList)
+                                {
+                                    progress.Message = path;
+
+                                    File.Delete(path);
+
+                                    progress.PerformStep();
+                                }
+                            }
+                        }
                     }
                     else // ファイル
                     {

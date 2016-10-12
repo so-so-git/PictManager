@@ -50,9 +50,12 @@
             this.lblDeletedCount = new System.Windows.Forms.Label();
             this.btnApplyDelete = new System.Windows.Forms.Button();
             this.lblDeletedCountHeader = new System.Windows.Forms.Label();
+            this.barStatus = new System.Windows.Forms.StatusStrip();
+            this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.grpImport.SuspendLayout();
             this.grpCategories.SuspendLayout();
             this.grpDeletedImages.SuspendLayout();
+            this.barStatus.SuspendLayout();
             this.SuspendLayout();
             // 
             // grpImport
@@ -203,6 +206,7 @@
             this.txtEntryCategory.Name = "txtEntryCategory";
             this.txtEntryCategory.Size = new System.Drawing.Size(230, 23);
             this.txtEntryCategory.TabIndex = 0;
+            this.txtEntryCategory.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtEntryCategory_KeyDown);
             // 
             // btnDeleteCategory
             // 
@@ -239,7 +243,7 @@
             // btnClose
             // 
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClose.Location = new System.Drawing.Point(368, 300);
+            this.btnClose.Location = new System.Drawing.Point(375, 311);
             this.btnClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(87, 29);
@@ -289,11 +293,28 @@
             this.lblDeletedCountHeader.TabIndex = 0;
             this.lblDeletedCountHeader.Text = "削除画像数：";
             // 
+            // barStatus
+            // 
+            this.barStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lblStatus});
+            this.barStatus.Location = new System.Drawing.Point(0, 344);
+            this.barStatus.Name = "barStatus";
+            this.barStatus.Size = new System.Drawing.Size(471, 22);
+            this.barStatus.TabIndex = 4;
+            this.barStatus.Text = "statusStrip1";
+            // 
+            // lblStatus
+            // 
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(76, 17);
+            this.lblStatus.Text = "ステータス表示";
+            // 
             // MaintenanceForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(471, 342);
+            this.ClientSize = new System.Drawing.Size(471, 366);
+            this.Controls.Add(this.barStatus);
             this.Controls.Add(this.grpDeletedImages);
             this.Controls.Add(this.grpCategories);
             this.Controls.Add(this.grpImport);
@@ -308,7 +329,10 @@
             this.grpCategories.PerformLayout();
             this.grpDeletedImages.ResumeLayout(false);
             this.grpDeletedImages.PerformLayout();
+            this.barStatus.ResumeLayout(false);
+            this.barStatus.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -336,5 +360,7 @@
         private System.Windows.Forms.Label lblDeletedCount;
         private System.Windows.Forms.Button btnApplyDelete;
         private System.Windows.Forms.Label lblDeletedCountHeader;
+        private System.Windows.Forms.StatusStrip barStatus;
+        private System.Windows.Forms.ToolStripStatusLabel lblStatus;
     }
 }
