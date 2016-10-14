@@ -68,6 +68,8 @@ namespace SO.PictManager.Forms
             {
                 grpImport.Enabled = false;
             }
+
+            btnViewDeletedFiles.Enabled = Utilities.IsExistsDeletedFile;
         }
 
         #endregion
@@ -154,14 +156,137 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region ImportFileToDatabase - ファイルをデータベースにインポート
+        #region ImportFile - ファイルインポート
 
         /// <summary>
-        /// 指定されたパスに存在するファイルをデータベースのTblImagesにインポートします。
+        /// 画面で指定されたファイルのインポートを行います。
+        /// </summary>
+        private void ImportFile()
+        {
+            // ファイル存在チェック
+            if (!File.Exists(txtTargetPath.Text))
+            {
+                FormUtilities.ShowMessage("W024", "ファイル");
+                return;
+            }
+
+            // ファイル形式チェック
+            if (!Utilities.IsAvailableFormat(txtTargetPath.Text, false))
+            {
+                FormUtilities.ShowMessage("W025");
+                return;
+            }
+
+            Cursor = Cursors.WaitCursor;
+            using (var progress = new CircleProgressDialog(this))
+            {
+                // プログレス表示開始
+                progress.StartProgress();
+
+                // 指定されたファイルをインポート
+                InsertImage(txtTargetPath.Text);
+            }
+
+            if (FormUtilities.ShowMessage("Q018", string.Format("[{0}] ", txtTargetPath.Text)) == DialogResult.Yes)
+            {
+                // インポートしたファイルを削除
+                Utilities.DeleteFile(txtTargetPath.Text, true);
+                btnViewDeletedFiles.Enabled = true;
+            }
+        }
+
+        #endregion
+
+        #region ImportDirectory - ディレクトリインポート
+
+        /// <summary>
+        /// 画面で指定されたディレクトリ配下の全ファイルのインポートを行います。
+        /// </summary>
+        private void ImportDirectory()
+        {
+            // ディレクトリ存在チェック
+            if (!Directory.Exists(txtTargetPath.Text))
+            {
+                FormUtilities.ShowMessage("W024", "ディレクトリ");
+                return;
+            }
+
+            Cursor = Cursors.WaitCursor;
+
+            // サーチオプション設定
+            SearchOption opt = chkIncludeSubDirectory.Checked ?
+                SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+
+            // 対象ディレクトリ内の画像ファイルパスを全取得
+            var filePathList = new List<string>();
+            using (var progress = new ProgressDialog(this))
+            {
+                progress.StartProgress("インポート対象ファイル検索中...",
+                    string.Empty, 0, Utilities.Config.CommonInfo.TargetExtensions.Count);
+
+                foreach (var ext in Utilities.Config.CommonInfo.TargetExtensions)
+                {
+                    progress.Message = ext + "ファイル";
+
+                    filePathList.AddRange(Directory.GetFiles(txtTargetPath.Text, "*." + ext, opt));
+
+                    progress.PerformStep();
+                }
+            }
+
+            // 対象ファイルが存在確認
+            if (!filePathList.Any())
+            {
+                FormUtilities.ShowMessage("W028");
+                return;
+            }
+
+            // ファイルインポート実施
+            using (var progress = new ProgressDialog(this))
+            {
+                progress.StartProgress("画像ファイルインポート中...", string.Empty, 0, filePathList.Count);
+
+                foreach (var path in filePathList)
+                {
+                    progress.Message = path;
+
+                    InsertImage(path);
+
+                    progress.PerformStep();
+                }
+            }
+
+            if (FormUtilities.ShowMessage("Q018", string.Format("{0} ファイル", filePathList.Count)) == DialogResult.Yes)
+            {
+                // インポートしたファイルを削除
+                using (var progress = new ProgressDialog(this))
+                {
+                    progress.StartProgress("インポート済みファイルの削除中...", string.Empty, 0, filePathList.Count);
+
+                    foreach (var path in filePathList)
+                    {
+                        progress.Message = path;
+
+                        Utilities.DeleteFile(path, true);
+
+                        progress.PerformStep();
+                    }
+                }
+
+                btnViewDeletedFiles.Enabled = true;
+            }
+        }
+
+        #endregion
+
+        #region InsertImage - 画像データをデータベースに登録
+
+        /// <summary>
+        /// 指定されたパスに存在するファイルの画像データをデータベースのTblImagesに登録します。
         /// パスの存在チェックやファイル形式チェックは行われません。
         /// </summary>
         /// <param name="filePath">インポートするファイルのパス</param>
-        private void ImportFileToDatabase(string filePath)
+        private void InsertImage(string filePath)
         {
             DateTime now = DateTime.Now;
             var entity = new TblImage();
@@ -374,7 +499,7 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region btnImport_Click - インポートボタンクリック時
+        #region btnImport_Click - インポートボタン押下時
 
         /// <summary>
         /// インポートボタンがクリックされた際に実行される処理です。
@@ -395,107 +520,41 @@ namespace SO.PictManager.Forms
 
                 try
                 {
-                    if (rdoImportDirectory.Checked) // ディレクトリ
+                    if (rdoImportDirectory.Checked)
                     {
-                        // ディレクトリ存在チェック
-                        if (!Directory.Exists(txtTargetPath.Text))
-                        {
-                            FormUtilities.ShowMessage("W024", "ディレクトリ");
-                            return;
-                        }
-
-                        Cursor = Cursors.WaitCursor;
-
-                        // サーチオプション設定
-                        SearchOption opt = chkIncludeSubDirectory.Checked ?
-                            SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
-
-                        // 対象ディレクトリ内の画像ファイルパスを全取得
-                        var filePathList = new List<string>();
-                        using (var progress = new ProgressDialog(this))
-                        {
-                            progress.StartProgress("インポート対象ファイル検索中...",
-                                string.Empty, 0, Utilities.Config.CommonInfo.TargetExtensions.Count);
-
-                            foreach (var ext in Utilities.Config.CommonInfo.TargetExtensions)
-                            {
-                                progress.Message = ext + "ファイル";
-
-                                filePathList.AddRange(Directory.GetFiles(txtTargetPath.Text, "*." + ext, opt));
-
-                                progress.PerformStep();
-                            }
-                        }
-
-                        if (filePathList.Count > 0)
-                        {
-                            // ファイルインポート実施
-                            using (var progress = new ProgressDialog(this))
-                            {
-                                progress.StartProgress("画像ファイルインポート中...", string.Empty, 0, filePathList.Count);
-
-                                foreach (var path in filePathList)
-                                {
-                                    progress.Message = path;
-
-                                    ImportFileToDatabase(path);
-
-                                    progress.PerformStep();
-                                }
-                            }
-                        }
-
-                        if (FormUtilities.ShowMessage("Q018", filePathList.Count.ToString()) == DialogResult.Yes)
-                        {
-                            // インポートしたファイルを削除
-                            using (var progress = new ProgressDialog(this))
-                            {
-                                progress.StartProgress("インポート済みファイルの削除中...", string.Empty, 0, filePathList.Count);
-
-                                foreach (var path in filePathList)
-                                {
-                                    progress.Message = path;
-
-                                    Utilities.DeleteFile(path, true);
-
-                                    progress.PerformStep();
-                                }
-                            }
-                        }
+                        ImportDirectory();
                     }
-                    else // ファイル
+                    else
                     {
-                        // ファイル存在チェック
-                        if (!File.Exists(txtTargetPath.Text))
-                        {
-                            FormUtilities.ShowMessage("W024", "ファイル");
-                            return;
-                        }
-
-                        // ファイル形式チェック
-                        if (!Utilities.IsAvailableFormat(txtTargetPath.Text, false))
-                        {
-                            FormUtilities.ShowMessage("W025");
-                            return;
-                        }
-
-                        Cursor = Cursors.WaitCursor;
-                        using (var progress = new CircleProgressDialog(this))
-                        {
-                            // プログレス表示開始
-                            progress.StartProgress();
-
-                            // 指定されたファイルをインポート
-                            ImportFileToDatabase(txtTargetPath.Text);
-                        }
-
-                        FormUtilities.ShowMessage("I011", "インポート");
+                        ImportFile();
                     }
                 }
                 finally
                 {
                     Cursor = Cursors.Default;
                 }
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
+        }
+
+        #endregion
+
+        #region btnViewDeletedFiles_Click - 削除ファイル確認ボタン押下時
+
+        /// <summary>
+        /// 削除ファイル確認ボタンがクリックされた際に実行される処理です。
+        /// 一時退避ディレクトリをエクスプローラで表示します。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void btnViewDeletedFiles_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Utilities.ViewDeletedFiles();
             }
             catch (Exception ex)
             {

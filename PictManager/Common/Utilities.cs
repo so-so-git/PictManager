@@ -6,6 +6,7 @@ using System.Reflection;
 
 using SO.PictManager.Forms.Info;
 using SO.Library.IO;
+using SO.Library.Forms;
 
 namespace SO.PictManager.Common
 {
@@ -35,6 +36,27 @@ namespace SO.PictManager.Common
         /// アプリケーションの共通ロガーを取得または設定します。
         /// </summary>
         internal static Logger Logger { get; set; }
+
+        /// <summary>
+        /// 削除ファイルの一時退避ディレクトリのパスを取得します。
+        /// </summary>
+        internal static string StoreDirectoryPath
+        {
+            get { return Path.Combine(EntryPoint.TmpDirPath, Constants.STORE_DIR_NAME); }
+        }
+
+        /// <summary>
+        /// 一時退避ディレクトリに退避された削除ファイルがあるかを示すフラグを取得します。
+        /// </summary>
+        /// <returns></returns>
+        internal static bool IsExistsDeletedFile
+        {
+            get
+            {
+                return Directory.Exists(StoreDirectoryPath)
+                    && Directory.GetFiles(StoreDirectoryPath, "*", SearchOption.AllDirectories).Any();
+            }
+        }
 
         #endregion
 
@@ -298,6 +320,30 @@ namespace SO.PictManager.Common
             Logger.WriteLog(typeof(Utilities).FullName, MethodBase.GetCurrentMethod().Name,
                 logPrefix + file.FullName);
 
+        }
+
+        #endregion
+
+        #region ViewDeletedFiles - 一時退避ディレクトリをエクスプローラで閲覧
+
+        /// <summary>
+        /// 削除ファイルの一時退避ディレクトリの内容をエクスプローラで表示します。
+        /// </summary>
+        public static void ViewDeletedFiles()
+        {
+            // 削除ファイル存在確認
+            if (!IsExistsDeletedFile)
+            {
+                FormUtilities.ShowMessage("I006");
+                return;
+            }
+
+            // explorerで一時退避ディレクトリを開く
+            var process = new Process();
+            process.StartInfo.FileName = "explorer";
+            process.StartInfo.Arguments = StoreDirectoryPath;
+            process.StartInfo.UseShellExecute = false;
+            process.Start();
         }
 
         #endregion

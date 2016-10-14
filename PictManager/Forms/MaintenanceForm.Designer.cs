@@ -52,6 +52,7 @@
             this.lblDeletedCountHeader = new System.Windows.Forms.Label();
             this.barStatus = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.btnViewDeletedFiles = new System.Windows.Forms.Button();
             this.grpImport.SuspendLayout();
             this.grpCategories.SuspendLayout();
             this.grpDeletedImages.SuspendLayout();
@@ -62,6 +63,7 @@
             // 
             this.grpImport.Controls.Add(this.rdoImportDirectory);
             this.grpImport.Controls.Add(this.rdoImportFile);
+            this.grpImport.Controls.Add(this.btnViewDeletedFiles);
             this.grpImport.Controls.Add(this.btnImport);
             this.grpImport.Controls.Add(this.chkIncludeSubDirectory);
             this.grpImport.Controls.Add(this.btnRef);
@@ -107,7 +109,7 @@
             // btnImport
             // 
             this.btnImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnImport.Location = new System.Drawing.Point(355, 121);
+            this.btnImport.Location = new System.Drawing.Point(249, 122);
             this.btnImport.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnImport.Name = "btnImport";
             this.btnImport.Size = new System.Drawing.Size(87, 29);
@@ -262,7 +264,7 @@
             this.grpDeletedImages.Size = new System.Drawing.Size(307, 55);
             this.grpDeletedImages.TabIndex = 2;
             this.grpDeletedImages.TabStop = false;
-            this.grpDeletedImages.Text = "削除済み画像";
+            this.grpDeletedImages.Text = "削除済み画像データ";
             // 
             // lblDeletedCount
             // 
@@ -308,6 +310,18 @@
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(76, 17);
             this.lblStatus.Text = "ステータス表示";
+            // 
+            // btnViewDeletedFiles
+            // 
+            this.btnViewDeletedFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnViewDeletedFiles.Location = new System.Drawing.Point(342, 122);
+            this.btnViewDeletedFiles.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnViewDeletedFiles.Name = "btnViewDeletedFiles";
+            this.btnViewDeletedFiles.Size = new System.Drawing.Size(100, 29);
+            this.btnViewDeletedFiles.TabIndex = 8;
+            this.btnViewDeletedFiles.Text = "削除ファイル確認";
+            this.btnViewDeletedFiles.UseVisualStyleBackColor = true;
+            this.btnViewDeletedFiles.Click += new System.EventHandler(this.btnViewDeletedFiles_Click);
             // 
             // MaintenanceForm
             // 
@@ -362,5 +376,6 @@
         private System.Windows.Forms.Label lblDeletedCountHeader;
         private System.Windows.Forms.StatusStrip barStatus;
         private System.Windows.Forms.ToolStripStatusLabel lblStatus;
+        private System.Windows.Forms.Button btnViewDeletedFiles;
     }
 }

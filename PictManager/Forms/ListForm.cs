@@ -187,7 +187,7 @@ namespace SO.PictManager.Forms
                 menuTemp.DropDownItems.Add(new ToolStripMenuItem("一括ファイル名変更", null, menuRenameAll_Click));
                 menuTemp.DropDownItems.Add(new ToolStripMenuItem("一括ファイル移動", null, menuMoveAll_Click));
                 menuTemp.DropDownItems.Add(new ToolStripMenuItem("削除済画像確認", null,
-                    (s, e) => ViewDeletedFiles()));
+                    (s, e) => Utilities.ViewDeletedFiles()));
                 menuTemp.DropDownItems.Add(new ToolStripSeparator());
                 menuTemp.DropDownItems.Add(new ToolStripMenuItem("ディレクトリを開く", null, (s, e) => Utilities.OpenExplorer(TargetDirectory.FullName)));
                 menuTemp.DropDownItems.Add(new ToolStripSeparator());

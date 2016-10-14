@@ -102,7 +102,7 @@
     自動取込フォルダは既に作成されています。\n最新の情報で再作成しますか？
   </msg>
   <msg id="Q018" caption="ファイルインポート完了" buttons="YesNo" icon="Question">
-    {0} ファイルのインポートが完了しました。\nインポートしたファイルを削除しますか？
+    {0}のインポートが完了しました。\nインポートしたファイルを削除しますか？
   </msg>
 
   <!-- ワーニングメッセージ -->
@@ -187,8 +187,11 @@
   <msg id="W026" caption="バージョン警告" buttons="OK" icon="Warning">
     {0}モードでビルドされたモジュールです。
   </msg>
-  <msg id="W027" caption="サービス停止キャンセル" buttons="OK" icon="Error">
+  <msg id="W027" caption="サービス停止キャンセル" buttons="OK" icon="Warning">
     サービス[{0}]の停止がキャンセルされました。
+  </msg>
+  <msg id="W028" caption="対象ファイル無し" buttons="OK" icon="Warning">
+    インポート対象となるファイルが存在しません。
   </msg>
 
   <!-- エラーメッセージ -->

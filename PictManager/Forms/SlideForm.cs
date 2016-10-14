@@ -174,7 +174,7 @@ namespace SO.PictManager.Forms
                 menuTemp.DropDownItems.Add(new ToolStripSeparator());
                 menuTemp.DropDownItems.Add(new ToolStripMenuItem("表示画像削除", null, btnDelete_Click));
                 menuTemp.DropDownItems.Add(new ToolStripMenuItem("削除済画像確認", null,
-                    (s, e) => ViewDeletedFiles()));
+                    (s, e) => Utilities.ViewDeletedFiles()));
                 menuTemp.DropDownItems.Add(new ToolStripSeparator());
                 menuTemp.DropDownItems.Add(new ToolStripMenuItem("終了", null,
                     (s, e) => Form_FormClosing(s, new FormClosingEventArgs(CloseReason.UserClosing, false))));

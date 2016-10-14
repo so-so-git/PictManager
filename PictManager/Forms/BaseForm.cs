@@ -223,38 +223,6 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region ViewDeletedFiles - 一時退避ディレクトリをエクスプローラで閲覧
-
-        /// <summary>
-        /// 削除ディレクトリの内容をエクスプローラで表示します。
-        /// </summary>
-        protected void ViewDeletedFiles()
-        {
-            try
-            {
-                // 一時退避ディレクトリ存在確認
-                string storeDir = Path.Combine(EntryPoint.TmpDirPath, Constants.STORE_DIR_NAME);
-                if (!Directory.Exists(storeDir))
-                {
-                    FormUtilities.ShowMessage("I006");
-                    return;
-                }
-
-                // explorerで一時退避ディレクトリを開く
-                var process = new Process();
-                process.StartInfo.FileName = "explorer";
-                process.StartInfo.Arguments = storeDir;
-                process.StartInfo.UseShellExecute = false;
-                process.Start();
-            }
-            catch (Exception ex)
-            {
-                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
-            }
-        }
-
-        #endregion
-
         #region RenameFile - 対象ファイル名変更
 
         /// <summary>
