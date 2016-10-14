@@ -456,7 +456,7 @@ namespace SO.PictManager.Forms
                                 {
                                     progress.Message = path;
 
-                                    File.Delete(path);
+                                    Utilities.DeleteFile(path, true);
 
                                     progress.PerformStep();
                                 }

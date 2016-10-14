@@ -140,21 +140,19 @@ namespace SO.PictManager
             {
                 try
                 {
-                    if (Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.File)
+                    // 一時ディレクトリ削除
+                    if (Directory.Exists(_tmpDirPath))
                     {
-                        // 一時ディレクトリ削除
-                        if (Directory.Exists(_tmpDirPath))
-                        {
-                            // 読み取り専用属性解除
-                            (from f in Directory.GetFiles(_tmpDirPath)
-                             where (File.GetAttributes(f) & FileAttributes.ReadOnly) == FileAttributes.ReadOnly
-                             select new FileInfo(f)
-                            ).ToList().ForEach(f => f.IsReadOnly = false);
+                        // 読み取り専用属性解除
+                        (from f in Directory.GetFiles(_tmpDirPath)
+                         where (File.GetAttributes(f) & FileAttributes.ReadOnly) == FileAttributes.ReadOnly
+                         select new FileInfo(f)
+                        ).ToList().ForEach(f => f.IsReadOnly = false);
 
-                            Directory.Delete(_tmpDirPath, true);
-                        }
+                        Directory.Delete(_tmpDirPath, true);
                     }
-                    else
+
+                    if (Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.Database)
                     {
                         // SQLServerサービス停止
                         StopSQLServerService();

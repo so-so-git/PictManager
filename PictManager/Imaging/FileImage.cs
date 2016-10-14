@@ -126,37 +126,7 @@ namespace SO.PictManager.Imaging
         /// </summary>
         public void Delete()
         {
-            // 一時退避ディレクトリが未作成の場合は作成
-            string storeDir = Path.Combine(EntryPoint.TmpDirPath, Constants.STORE_DIR_NAME);
-            if (!Directory.Exists(storeDir))
-            {
-                Directory.CreateDirectory(storeDir);
-            }
-
-            // ファイルの読み取り専用属性を解除
-            _fileInfo.Attributes = _fileInfo.Attributes & ~FileAttributes.ReadOnly;
-
-            // 既に同名ファイルが存在する場合は前にアンダーバーを追加
-            string movePath = Path.Combine(storeDir, _fileInfo.Name);
-            while (File.Exists(movePath))
-            {
-                movePath = Path.Combine(storeDir, Path.GetFileName(movePath).Insert(0, "_"));
-            }
-
-            // 対象ファイルを一時退避ディレクトリへ移動
-            File.Move(_fileInfo.FullName, movePath);
-
-            // 削除済ファイルリストに追記
-            string delListPath = Path.Combine(storeDir, Constants.DEL_LIST_NAME);
-            using (var sw = new StreamWriter(delListPath, true))
-            {
-                sw.WriteLine(Path.GetFileName(movePath) + Constants.DEL_LIST_SEPARATOR + _fileInfo.FullName);
-            }
-
-            // ログ出力
-            Utilities.Logger.WriteLog(GetType().FullName, MethodBase.GetCurrentMethod().Name,
-                "[DELETE]" + _fileInfo.FullName);
-
+            Utilities.DeleteFile(_fileInfo.FullName, true);
             IsDeleted = true;
         }
 

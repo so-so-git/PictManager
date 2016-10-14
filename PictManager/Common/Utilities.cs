@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
+﻿using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Windows.Forms;
 using System.IO;
+using System.Reflection;
 
-using SO.PictManager.Common;
 using SO.PictManager.Forms.Info;
 using SO.Library.IO;
 
@@ -239,6 +235,69 @@ namespace SO.PictManager.Common
             }
 
             return Rename;
+        }
+
+        #endregion
+
+        #region DeleteFile - ファイル削除
+
+        /// <summary>
+        /// 指定されたパスにあるファイルを削除します。
+        /// 削除の方法は、第二引数で指定します。
+        /// </summary>
+        /// <param name="path">削除するファイルのパス</param>
+        /// <param name="isSoftDelete">true:一時退避ディレクトリへ移動 / false:完全削除</param>
+        public static void DeleteFile(string path, bool isSoftDelete)
+        {
+            var file = new FileInfo(path);
+            if (!file.Exists)
+            {
+                return;
+            }
+
+            string logPrefix;
+            if (isSoftDelete)
+            {
+                // 一時退避ディレクトリが未作成の場合は作成
+                string storeDir = Path.Combine(EntryPoint.TmpDirPath, Constants.STORE_DIR_NAME);
+                if (!Directory.Exists(storeDir))
+                {
+                    Directory.CreateDirectory(storeDir);
+                }
+
+                // ファイルの読み取り専用属性を解除
+                file.Attributes = file.Attributes & ~FileAttributes.ReadOnly;
+
+                // 既に同名ファイルが存在する場合は前にアンダーバーを追加
+                string movePath = Path.Combine(storeDir, file.Name);
+                while (File.Exists(movePath))
+                {
+                    movePath = Path.Combine(storeDir, Path.GetFileName(movePath).Insert(0, "_"));
+                }
+
+                // 対象ファイルを一時退避ディレクトリへ移動
+                File.Move(file.FullName, movePath);
+
+                // 削除済ファイルリストに追記
+                string delListPath = Path.Combine(storeDir, Constants.DEL_LIST_NAME);
+                using (var sw = new StreamWriter(delListPath, true))
+                {
+                    sw.WriteLine(Path.GetFileName(movePath) + Constants.DEL_LIST_SEPARATOR + file.FullName);
+                }
+
+                logPrefix = "[SOFT DELETE]";
+            }
+            else
+            {
+                // ファイルを完全削除
+                file.Delete();
+                logPrefix = "[DELETE]";
+            }
+
+            // ログ出力
+            Logger.WriteLog(typeof(Utilities).FullName, MethodBase.GetCurrentMethod().Name,
+                logPrefix + file.FullName);
+
         }
 
         #endregion
