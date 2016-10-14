@@ -15,6 +15,7 @@
     [GroupId]          INT             NULL,
     [GroupOrder]       INT             NULL,
     [Description]      VARCHAR (256)   NULL,
+	[Md5]              CHAR(32)        NOT NULL,
     [DeleteFlag]       BIT             DEFAULT ((0)) NOT NULL,
     [InsertedDateTime] DATETIME        NOT NULL,
     [UpdatedDateTime]  DATETIME        NOT NULL,

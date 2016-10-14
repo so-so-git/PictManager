@@ -52,6 +52,7 @@
           <Property Name="GroupId" Type="int" />
           <Property Name="GroupOrder" Type="int" />
           <Property Name="Description" Type="varchar" MaxLength="256" />
+          <Property Name="Md5" Type="char" MaxLength="32" Nullable="false" />
           <Property Name="DeleteFlag" Type="bit" Nullable="false" />
           <Property Name="InsertedDateTime" Type="datetime" Nullable="false" />
           <Property Name="UpdatedDateTime" Type="datetime" Nullable="false" />
@@ -122,6 +123,7 @@
           <Property Name="DeleteFlag" Type="Boolean" Nullable="false" />
           <Property Name="InsertedDateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="UpdatedDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Md5" Type="String" Nullable="false" MaxLength="32" FixedLength="true" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -162,6 +164,7 @@
           <EntitySetMapping Name="TblImages">
             <EntityTypeMapping TypeName="SO.PictManager.DataModel.TblImage">
               <MappingFragment StoreEntitySet="TblImages">
+                <ScalarProperty Name="Md5" ColumnName="Md5" />
                 <ScalarProperty Name="UpdatedDateTime" ColumnName="UpdatedDateTime" />
                 <ScalarProperty Name="InsertedDateTime" ColumnName="InsertedDateTime" />
                 <ScalarProperty Name="DeleteFlag" ColumnName="DeleteFlag" />

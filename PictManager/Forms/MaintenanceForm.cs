@@ -173,6 +173,7 @@ namespace SO.PictManager.Forms
             }
             entity.ImageFormat = Path.GetExtension(filePath).Substring(1);
             entity.CategoryId = (cmbImportCategory.SelectedValue as MstCategory).CategoryId;
+            entity.Md5 = Cryptgrapher.GetBytesMD5(entity.ImageData);
             entity.InsertedDateTime = now;
             entity.UpdatedDateTime = now;
 

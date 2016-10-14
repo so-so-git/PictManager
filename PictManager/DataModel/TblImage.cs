@@ -33,5 +33,6 @@ namespace SO.PictManager.DataModel
         public bool DeleteFlag { get; set; }
         public System.DateTime InsertedDateTime { get; set; }
         public System.DateTime UpdatedDateTime { get; set; }
+        public string Md5 { get; set; }
     }
 }

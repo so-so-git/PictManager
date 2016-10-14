@@ -1,9 +1,8 @@
-﻿
-CREATE PROCEDURE [TruncateAndReseed]
-  @TableName AS VARCHAR(50)
+﻿CREATE PROCEDURE [TruncateAndReseed]
+	@TableName AS VARCHAR(50)
 AS
-  EXEC('TRUNCATE TABLE ' + @TableName);
+	EXEC('TRUNCATE TABLE ' + @TableName);
 
-  DBCC CHECKIDENT(@TableName, RESEED, 0);
+	DBCC CHECKIDENT(@TableName, RESEED, 0);
 
-  EXEC('SELECT * FROM ' + @TableName);
+	EXEC('SELECT * FROM ' + @TableName);

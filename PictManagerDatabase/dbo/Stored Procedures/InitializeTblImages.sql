@@ -1,8 +1,7 @@
-﻿
-CREATE PROCEDURE [InitializeTblImages]
+﻿CREATE PROCEDURE [InitializeTblImages]
 AS
-  TRUNCATE TABLE [TblImages];
+	TRUNCATE TABLE [TblImages];
 
-  DBCC CHECKIDENT('TblImages', RESEED, 0) 
+	DBCC CHECKIDENT('TblImages', RESEED, 0);
 
-  SELECT * FROM [TblImages]
+	SELECT * FROM [TblImages];
