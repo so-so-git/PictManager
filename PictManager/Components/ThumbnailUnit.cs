@@ -23,9 +23,6 @@ namespace SO.PictManager.Components
         /// <summary>削除済名称ラベル</summary>
         public const string DELETED_NAME_LABEL = "Deleted.";
 
-        /// <summary>仮削除ファイル格納フォルダ</summary>
-        private const string STORE_DIR_NAME = "DeletedFiles";
-
         #endregion
 
         #region インスタンス変数定義

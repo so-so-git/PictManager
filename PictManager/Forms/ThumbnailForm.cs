@@ -131,7 +131,7 @@ namespace SO.PictManager.Forms
 
             // ステータスバー更新
             lblStatus.Text = ImageCount > 0
-                ? Path.GetDirectoryName(ImageList.First().Key) + string.Format(" - {0}ファイル", ImageCount)
+                ? Path.GetDirectoryName(ImageList.First().Key) + string.Format(" - {0}件", ImageCount)
                 : NO_IMAGE_LABEL;
         }
 
@@ -150,7 +150,7 @@ namespace SO.PictManager.Forms
 
             // ステータスバー更新
             lblStatus.Text = ImageCount > 0
-                ? category.CategoryName + string.Format(" - {0}ファイル", ImageCount)
+                ? category.CategoryName + string.Format(" - {0}件", ImageCount)
                 : NO_IMAGE_LABEL;
         }
 
@@ -274,7 +274,7 @@ namespace SO.PictManager.Forms
             // サムネイルユニット配列初期化
             _thumbnails.Clear();
 
-            // ファイル取得
+            // 対象画像リスト取得
             RefreshImageList();
 
             // ページ表示初期化

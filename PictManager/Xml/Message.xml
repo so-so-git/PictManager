@@ -9,7 +9,7 @@
 ]>
 <root>
 	<!-- インフォメーションメッセージ -->
-	<msg id="I000" caption="ファイル一周" buttons="OK" icon="Information">
+	<msg id="I000" caption="画像一周" buttons="OK" icon="Information">
 		一周しました。
 	</msg>
 	<msg id="I001" caption="処理完了" buttons="OK" icon="Information">
@@ -27,9 +27,9 @@
 	<msg id="I005" caption="全画像削除済み" buttons="OK" icon="Information">
 		全ての画像が削除されました。
 	</msg>
-	<msg id="I006" caption="削除済みファイル無し" buttons="OK" icon="Information">
-		削除済みのファイルはありません。
-	</msg>
+	<msg id="I006" caption="削除済み画像無し" buttons="OK" icon="Information">
+    削除済みの画像はありません。
+  </msg>
 	<msg id="I007" caption="変更内容適用中止" buttons="OK" icon="Information">
 		変更内容の適用が中止されました。
 	</msg>
@@ -39,9 +39,9 @@
 	<msg id="I009" caption="類似画像一括検索完了" buttons="OK" icon="Information">
 		全ての行の類似画像の検索が完了しました。
 	</msg>
-	<msg id="I010" caption="ファイル表示順ソート実行中" buttons="OK" icon="Information">
-		ファイル表示順ソート中...
-	</msg>
+	<msg id="I010" caption="画像表示順ソート実行中" buttons="OK" icon="Information">
+    画像表示順ソート中...
+  </msg>
   <msg id="I011" caption="処理完了" buttons="OK" icon="Information">
     {0}が完了しました。
   </msg>
@@ -50,18 +50,18 @@
 	<msg id="Q000" caption="終了確認" buttons="YesNo" icon="Question">
 		終了します。\nよろしいですか？
 	</msg>
-	<msg id="Q001" caption="ファイル削除確認" buttons="YesNo" icon="Question">
-		エラー対象のファイルを削除しますか？
-	</msg>
+	<msg id="Q001" caption="画像削除確認" buttons="YesNo" icon="Question">
+    エラー対象の画像を削除しますか？
+  </msg>
 	<msg id="Q002" caption="削除確認" buttons="YesNo" icon="Question">
-		表示中のファイルを削除します。\nよろしいですか？
-	</msg>
+    表示中の画像を削除します。\nよろしいですか？
+  </msg>
 	<msg id="Q003" caption="スライド表示開始確認" buttons="YesNo" icon="Question">
 		スライド表示を開始しますか？
 	</msg>
-	<msg id="Q004" caption="ファイル削除確認" buttons="YesNo" icon="Question">
-		選択中のファイルを削除します。\nよろしいですか？
-	</msg>
+	<msg id="Q004" caption="画像削除確認" buttons="YesNo" icon="Question">
+    選択中の画像を削除します。\nよろしいですか？
+  </msg>
 	<msg id="Q005" caption="編集内容破棄確認" buttons="YesNo" icon="Question">
 		編集されたセルが存在します。\n編集内容を破棄し、画面を閉じてよろしいですか？
 	</msg>
@@ -139,9 +139,9 @@
 	<msg id="W008" caption="切替間隔入力エラー" buttons="OK" icon="Warning">
 		画像切替間隔は1以上の半角数字で入力して下さい。
 	</msg>
-	<msg id="W009" caption="対象ファイル未選択" buttons="OK" icon="Warning">
-		対象ファイルを選択して下さい。
-	</msg>
+	<msg id="W009" caption="対象画像未選択" buttons="OK" icon="Warning">
+    対象画像を選択して下さい。
+  </msg>
 	<msg id="W010" caption="複数対象検出" buttons="OK" icon="Warning">
 		単一の対象のみをドロップして下さい。
 	</msg>
@@ -208,8 +208,8 @@
 		エラー対象画像 - {0}
 	</msg>
 	<msg id="E002" caption="削除失敗" buttons="OK" icon="Error">
-		ファイルの削除は失敗しました。
-	</msg>
+    画像の削除は失敗しました。
+  </msg>
 	<msg id="E003" caption="対象ファイルエラー" buttons="OK" icon="Error">
 		{0} が存在しません。\n削除されたか、移動された可能性があります。
 	</msg>

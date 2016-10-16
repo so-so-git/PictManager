@@ -60,7 +60,7 @@
             this.grdImages.Name = "grdImages";
             this.grdImages.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.grdImages.RowTemplate.Height = 21;
-            this.grdImages.Size = new System.Drawing.Size(737, 460);
+            this.grdImages.Size = new System.Drawing.Size(737, 459);
             this.grdImages.TabIndex = 0;
             this.grdImages.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdImages_CellClick);
             this.grdImages.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdImages_CellDoubleClick);
@@ -93,7 +93,7 @@
             this.pnlParent.Panel2.Controls.Add(this.btnClose);
             this.pnlParent.Panel2.Controls.Add(this.barStatus);
             this.pnlParent.Size = new System.Drawing.Size(737, 534);
-            this.pnlParent.SplitterDistance = 460;
+            this.pnlParent.SplitterDistance = 459;
             this.pnlParent.SplitterWidth = 5;
             this.pnlParent.TabIndex = 2;
             // 
@@ -170,7 +170,7 @@
             // 
             this.barStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblStatus});
-            this.barStatus.Location = new System.Drawing.Point(0, 47);
+            this.barStatus.Location = new System.Drawing.Point(0, 48);
             this.barStatus.Name = "barStatus";
             this.barStatus.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
             this.barStatus.Size = new System.Drawing.Size(737, 22);
@@ -193,7 +193,7 @@
             this.KeyPreview = true;
             this.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.Name = "ListForm";
-            this.Text = "PictManager - ファイル一覧";
+            this.Text = "PictManager - 画像一覧";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_FormClosing);
             this.Shown += new System.EventHandler(this.Form_Shown);

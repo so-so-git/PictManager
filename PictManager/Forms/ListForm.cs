@@ -21,7 +21,7 @@ using SO.PictManager.Imaging;
 namespace SO.PictManager.Forms
 {
     /// <summary>
-    /// ファイル一覧表示フォームクラス
+    /// 画像一覧表示フォームクラス
     /// </summary>
     public partial class ListForm : BaseForm
     {
@@ -733,7 +733,7 @@ namespace SO.PictManager.Forms
         #region ChangePath - 入力内容をファイルパスに反映
 
         /// <summary>
-        /// ファイル一覧グリッドのファイル名列、ディレクトリパス列で入力された変更をファイルに対して反映します。
+        /// 画像一覧グリッドのファイル名列、ディレクトリパス列で入力された変更をファイルに対して反映します。
         /// </summary>
         /// <param name="rowIndex">処理対象の行インデックス</param>
         /// <returns>処理中止フラグ</returns>
@@ -1129,7 +1129,7 @@ namespace SO.PictManager.Forms
 
         /// <summary>
         /// フォームが表示された際に実行される処理です。
-        /// ファイル一覧グリッドの各列幅を初期化します。
+        /// 画像一覧グリッドの各列幅を初期化します。
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>
@@ -1327,7 +1327,7 @@ namespace SO.PictManager.Forms
 
         /// <summary>
         /// 画像一覧グリッドのセルがクリックされた際に実行される処理です。
-        /// ・ファイル名列、ディレクトリパス列がクリックされた場合：変更前後の内容をステータスバーに表示します。
+        /// ・ファイル名列、ディレクトリパス列、カテゴリー列がクリックされた場合：変更前後の内容をステータスバーに表示します。
         /// ・参照ボタン列がクリックされた場合：移動先ディレクトリを選択する為のダイアログを表示します。
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
@@ -1553,7 +1553,7 @@ namespace SO.PictManager.Forms
 
         /// <summary>
         /// 変更適用ボタンがクリックされた際に実行される処理です。
-        /// ファイル一覧グリッドに入力された内容を各ファイルに適用します。
+        /// 画像一覧グリッドに入力された内容を各ファイルに適用します。
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>
@@ -1688,7 +1688,7 @@ namespace SO.PictManager.Forms
 
         /// <summary>
         /// 選択行の変更を取消ボタンがクリックされた際に実行される処理です。
-        /// ファイル一覧グリッドの選択チェックボックスがONの行の内容を、
+        /// 画像一覧グリッドの選択チェックボックスがONの行の内容を、
         /// 最後に適用が実行された状態に戻します。
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
@@ -1714,7 +1714,7 @@ namespace SO.PictManager.Forms
 
         /// <summary>
         /// 全ての変更を取消ボタンがクリックされた際に実行される処理です。
-        /// ファイル一覧グリッドの全てのの行の内容を、
+        /// 画像一覧グリッドの全てのの行の内容を、
         /// 最後に適用が実行された状態に戻します。
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>

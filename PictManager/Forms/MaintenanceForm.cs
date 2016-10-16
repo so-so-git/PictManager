@@ -746,7 +746,7 @@ namespace SO.PictManager.Forms
 
         /// <summary>
         /// 重複画像を確認ボタンがクリックされた際に実行される処理です。
-        /// MD5が重複している画像をリストフォームで表示します。
+        /// MD5が重複している画像を画像一覧表示フォームで表示します。
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>

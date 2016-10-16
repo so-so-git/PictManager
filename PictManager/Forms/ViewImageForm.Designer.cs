@@ -267,7 +267,7 @@
         protected System.Windows.Forms.StatusStrip barStatus;
         /// <summary>ステータスバー内表示用ラベル</summary>
         protected System.Windows.Forms.ToolStripStatusLabel lblStatus;
-        /// <summary>表示画像ファイル削除ボタン</summary>
+        /// <summary>表示画像削除ボタン</summary>
         protected SO.PictManager.Components.KeyPrevButton btnDelete;
         /// <summary>フォームクローズボタン</summary>
         protected SO.PictManager.Components.KeyPrevButton btnClose;

@@ -149,7 +149,14 @@ namespace SO.PictManager
                          select new FileInfo(f)
                         ).ToList().ForEach(f => f.IsReadOnly = false);
 
-                        Directory.Delete(_tmpDirPath, true);
+                        try
+                        {
+                            Directory.Delete(_tmpDirPath, true);
+                        }
+                        catch
+                        {
+                            // ディレクトリ削除失敗はどうしようもないので無視
+                        }
                     }
 
                     if (Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.Database)

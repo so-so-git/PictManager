@@ -265,11 +265,11 @@ namespace SO.PictManager.Forms
 
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
 
-                // エラー対象ファイル削除確認ダイアログ表示
+                // エラー対象画像削除確認ダイアログ表示
                 if (ImageMode == ConfigInfo.ImageDataMode.File
                     && DialogResult.Yes == FormUtilities.ShowMessage("I010"))
                 {
-                    // エラーファイル削除
+                    // エラー画像削除
                     btnDelete_Click(this, new EventArgs());
                 }
             }

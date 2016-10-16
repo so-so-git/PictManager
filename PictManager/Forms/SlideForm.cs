@@ -115,7 +115,7 @@ namespace SO.PictManager.Forms
         /// </summary>
         private void ConstructCommon()
         {
-            // ファイル取得
+            // 表示対象画像取得
             RefreshImageList();
             lblCount.Text = ImageCount.ToString();
             txtIndex.MaxLength = lblCount.Text.Length;
@@ -127,7 +127,7 @@ namespace SO.PictManager.Forms
             ImageList = ImageSorter.Sort(ImageList, Utilities.State.SortOrder, ImageMode).ToList();
             cmbSort.SelectedIndexChanged += cmbSort_SelectedIndexChanged;
 
-            // 最初の画像を基底クラスの表示対象ファイルプロパティに設定
+            // 最初の画像を基底クラスの表示対象画像プロパティに設定
             if (ImageCount > 0)
             {
                 ImageData = ImageList.First();
@@ -273,7 +273,7 @@ namespace SO.PictManager.Forms
         {
             base.RefreshImageList();
 
-            // ファイル総数を更新
+            // 画像総数を更新
             lblCount.Text = ImageCount.ToString();
         }
 
@@ -1035,11 +1035,11 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region menuRefresh_Click - 対象ファイル再取得メニュー押下時
+        #region menuRefresh_Click - 対象画像再取得メニュー押下時
 
         /// <summary>
-        /// 対象ファイル再取得メニューがクリックされた際に実行される処理です。
-        /// 現在の情報で対象ファイルリストを更新します。
+        /// 対象画像再取得メニューがクリックされた際に実行される処理です。
+        /// 現在の情報で対象画像リストを更新します。
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>
@@ -1047,24 +1047,24 @@ namespace SO.PictManager.Forms
         {
             try
             {
-                // 最後に表示していたファイルを取得
+                // 最後に表示していた画像を取得
                 // (削除されている場合は次の有効イメージを対象とする)
                 int lastIndex = SearchNextValidIndex();
                 if (lastIndex == -1)
                 {
-                    // 有効なイメージが無い場合は対象ファイル無しのキャプションを表示
+                    // 有効な画像が無い場合は対象画像無しのキャプションを表示
                     RefreshImageList();
                     DisplayImage();
                     return;
                 }
 
-                // 最終表示ファイルパスを検索用に保存
+                // 最終表示画像パスを検索用に保存
                 string lastFile = ImageList[lastIndex].Key;
 
-                // 対象ファイルを最新化
+                // 対象画像リストを最新化
                 RefreshImageList();
 
-                // 最後に表示していたファイルを再表示
+                // 最後に表示していた画像を再表示
                 int showIndex = SearchFileIndex(lastFile);
                 CurrentIndex = showIndex == -1 ? 0 : showIndex;
 
@@ -1092,12 +1092,12 @@ namespace SO.PictManager.Forms
         {
             Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.File);
 
-            // 最後に表示していたファイルを取得
+            // 最後に表示していた画像を取得
             // (削除されている場合は次の有効イメージを対象とする)
             int lastIdx = SearchNextValidIndex();
             if (lastIdx == -1)
             {
-                // 有効なイメージが無い場合は対象ファイル無しのキャプションを表示
+                // 有効な画像が無い場合は対象画像無しのキャプションを表示
                 RefreshImageList();
                 DisplayImage();
                 return;
@@ -1114,7 +1114,7 @@ namespace SO.PictManager.Forms
             }
             else
             {
-                // 最後に表示していたファイルを再表示
+                // 最後に表示していた画像を再表示
                 int idx = SearchFileIndex(lastFile);
                 CurrentIndex = idx == -1 ? 0 : idx;
             }
@@ -1137,7 +1137,7 @@ namespace SO.PictManager.Forms
         {
             Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.File);
 
-            // 対象ファイル最新化
+            // 対象画像リスト最新化
             RefreshImageList();
 
             // ファイル移動実行、正常終了時はスタートフォームへ戻る
@@ -1168,7 +1168,7 @@ namespace SO.PictManager.Forms
                 return;
             }
 
-            // 次の有効イメージを表示
+            // 次の有効画像を表示
             menuRefresh_Click(sender, e);
         }
 
@@ -1186,7 +1186,7 @@ namespace SO.PictManager.Forms
         {
             Debug.Assert(ImageMode == ConfigInfo.ImageDataMode.Database);
 
-            // 対象ファイル最新化
+            // 対象画像リスト最新化
             RefreshImageList();
 
             // カテゴリー変更実行、正常終了時はスタートフォームへ戻る
@@ -1217,7 +1217,7 @@ namespace SO.PictManager.Forms
                 return;
             }
 
-            // 次の有効イメージを表示
+            // 次の有効画像を表示
             menuRefresh_Click(sender, e);
         }
 
