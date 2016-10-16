@@ -331,27 +331,46 @@ namespace SO.PictManager.Forms
                              on image.CategoryId equals category.CategoryId
                            select new { Image = image, Category = category };
 
-                foreach (var row in rows)
+                // 画像データエクスポート実施
+                using (var progress = new ProgressDialog(this))
                 {
-                    // 画像データをファイルとして出力
-                    string fileName = string.Format("{0}_{1:00000}.{2}",
-                        row.Category.CategoryName, row.Image.ImageId, row.Image.ImageFormat);
+                    progress.StartProgress("画像データエクスポート中...", string.Empty, 0, rows.Count());
 
-                    using (var img = (new ImageConverter().ConvertFrom(row.Image.ImageData) as Image))
+                    foreach (var row in rows)
                     {
-                        img.Save(Path.Combine(exportDirectory.FullName, fileName));
+                        // 画像データをファイルとして出力
+                        string fileName = string.Format("{0}_{1:00000}.{2}",
+                            row.Category.CategoryName, row.Image.ImageId, row.Image.ImageFormat);
+                        string filePath = Path.Combine(exportDirectory.FullName, fileName);
+
+                        progress.Message = filePath;
+
+                        using (var img = (new ImageConverter().ConvertFrom(row.Image.ImageData) as Image))
+                        {
+                            img.Save(filePath);
+                        }
+
+                        progress.PerformStep();
                     }
                 }
 
                 // エクスポート済みファイルの削除確認
                 if (FormUtilities.ShowMessage("Q019", string.Format("{0} 画像", rows.Count())) == DialogResult.Yes)
                 {
-                    foreach (var row in rows)
+                    using (var progress = new ProgressDialog(this, ProgressBarStyle.Marquee))
                     {
-                        row.Image.DeleteFlag = true;
+                        foreach (var row in rows)
+                        {
+                            row.Image.DeleteFlag = true;
+                        }
                     }
                     entities.SaveChanges();
                 }
+
+                // 物理削除済み画像数取得
+                var deletedCount = entities.TblImages.Where(i => i.DeleteFlag).Count();
+                lblDeletedCount.Text = deletedCount.ToString("#,0");
+                btnApplyDelete.Enabled = deletedCount > 0;
             }
         }
 
