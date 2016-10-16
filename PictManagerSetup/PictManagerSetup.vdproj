@@ -15,20 +15,8 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_0C2EA04095BD957DF51E0A0DFC706043"
+        "MsmKey" = "8:_0AAED1C32AE232F0E0FE6DBD19058A3E"
         "OwnerKey" = "8:_657FA9F2819B418EA5E7E74FE792634A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_49E74B93C3BEDC107595C61F332F9528"
-        "OwnerKey" = "8:_657FA9F2819B418EA5E7E74FE792634A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_49E74B93C3BEDC107595C61F332F9528"
-        "OwnerKey" = "8:_0C2EA04095BD957DF51E0A0DFC706043"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -39,7 +27,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_F45362FC9CEF60807487EBA562A27FE8"
+        "MsmKey" = "8:_A3A21A84344EDA52CC8C937182D690DA"
+        "OwnerKey" = "8:_657FA9F2819B418EA5E7E74FE792634A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A3A21A84344EDA52CC8C937182D690DA"
+        "OwnerKey" = "8:_0AAED1C32AE232F0E0FE6DBD19058A3E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_E71A9A9C51C1ED4826A74BF574E59239"
         "OwnerKey" = "8:_657FA9F2819B418EA5E7E74FE792634A"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -52,19 +52,19 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_F45362FC9CEF60807487EBA562A27FE8"
+        "OwnerKey" = "8:_E71A9A9C51C1ED4826A74BF574E59239"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_0C2EA04095BD957DF51E0A0DFC706043"
+        "OwnerKey" = "8:_0AAED1C32AE232F0E0FE6DBD19058A3E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_49E74B93C3BEDC107595C61F332F9528"
+        "OwnerKey" = "8:_A3A21A84344EDA52CC8C937182D690DA"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -92,6 +92,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.5"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.5 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.5"
+                    }
+                }
             }
         }
         "Release"
@@ -154,14 +162,14 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_0C2EA04095BD957DF51E0A0DFC706043"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_0AAED1C32AE232F0E0FE6DBD19058A3E"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_0C2EA04095BD957DF51E0A0DFC706043"
+                    "_0AAED1C32AE232F0E0FE6DBD19058A3E"
                     {
                     "Name" = "8:EntityFramework.SqlServer.dll"
                     "Attributes" = "3:512"
@@ -185,14 +193,14 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_49E74B93C3BEDC107595C61F332F9528"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A3A21A84344EDA52CC8C937182D690DA"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_49E74B93C3BEDC107595C61F332F9528"
+                    "_A3A21A84344EDA52CC8C937182D690DA"
                     {
                     "Name" = "8:EntityFramework.dll"
                     "Attributes" = "3:512"
@@ -216,14 +224,14 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F45362FC9CEF60807487EBA562A27FE8"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E71A9A9C51C1ED4826A74BF574E59239"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:SOLibrary, Version=1.0.5781.24440, Culture=neutral, processorArchitecture=AMD64"
+            "AssemblyAsmDisplayName" = "8:SOLibrary, Version=1.0.6133.30314, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
-                    "_F45362FC9CEF60807487EBA562A27FE8"
+                    "_E71A9A9C51C1ED4826A74BF574E59239"
                     {
                     "Name" = "8:SOLibrary.dll"
                     "Attributes" = "3:512"
@@ -303,8 +311,8 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:PictManager"
-        "ProductCode" = "8:{DB919ED7-D8FF-4C5B-B0EE-FF0E8233D88E}"
-        "PackageCode" = "8:{33219262-338B-4116-AABB-8E6F0EC02562}"
+        "ProductCode" = "8:{07DD5F09-A267-402D-82FB-2C2AA0803151}"
+        "PackageCode" = "8:{57D4BF87-E13F-4027-BC19-5580EB49E660}"
         "UpgradeCode" = "8:{26DC52B8-27EB-4FD0-BF99-8FB1540251F8}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -312,12 +320,12 @@
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
         "ProductVersion" = "8:1.0.0"
-        "Manufacturer" = "8:Private"
+        "Manufacturer" = "8:so-so"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:PictManagerSetup"
+        "Title" = "8:PictManager のセットアップ"
         "Subject" = "8:"
-        "ARPCONTACT" = "8:Shingo Ohya"
+        "ARPCONTACT" = "8:so-so"
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:"
@@ -853,7 +861,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_657FA9F2819B418EA5E7E74FE792634A"
             {
-            "SourcePath" = "8:..\\PictManager\\obj\\x64\\Release\\PictManager.exe"
+            "SourcePath" = "8:..\\PictManager\\obj\\Release\\PictManager.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_184736CDA81D4E289045088BAE0A72D4"
