@@ -126,4 +126,29 @@
   <metadata name="barStatus.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>334, 17</value>
   </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        AAABAAEAEBAAAAAAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAQAQAAAAAAAAAAAAAAAAAAAAA
+        AAD///////////////+qdFP/q3JP/6ptRf+qa0P/qmtD/6prQ/+qa0P/qmtD/6pwSv+qdFP/////////
+        ////////////////////////qG1I/+7s6v/38vD/+PPw//jz7//38u7/9/Lu//jy7v/x7ur/q3BK////
+        /////////////////////////////6ZkOv/28Oz//ejX//7o1//+6Nf//ujX//7o1//96Nf/9+zl/6pr
+        Q/////////////////////////////////+mZDn/9/Ds/4FiQv+sglj/rIJY/6yCWP+sglj/gWJC//bs
+        5f+qa0P/qmtD/6pwSv+qdFP/////////////////qGY6//fx7P+sglj/5a11/+Wtdf/lrXX/5a11/6yC
+        WP/27eX/r3VP//jy7v/x7ur/q3BK/6p0U/+rck//qm1F/6hmPP/38u3/pn9W/96qc//eqnP/3Kdy/9yn
+        cv+kfVX/9u3m/690Tv/96Nf/9+zl/6prQ/+obUj/7uzq//fy8P+tbkf/9/Tx/76riP/+5bX//eS1//3k
+        tf/95LX/vquI//bv5/+mbU7/WFu1//bs5f+qa0P/pmQ6//bw7P/96Nf/rW5F//f08/+2pIH/8tyt//Xe
+        sP/64bL//OO0/76riP/37+j/qW9Q/2Jo3v/27eX/qm1F/6ZkOf/38Oz/Nmw6/6JvRv/z8vH/loFc/7um
+        gP+7poD/u6aA/7yog/+PgGX/9/Hq/6huUP9hZtb/9u3m/6ptRf+oZjr/9/Hs/0eQTP+kf1n/3t7c//Pz
+        8v/39PP/9/Ty//jy7f/48uv/9/Lr//Hu6P+sdVX/mJDi//bv5/+qbUX/qGY8//fy7f9Fi0v/iJhf/6R9
+        Wf+kcUj/qGY6/61uRf+nZkP/qWlG/6ppRv+qcE7/t5ed/5iQ4v/37+j/q21F/6hmPP/39PH/cJ96/5TU
+        ov+U06P/lNOj/6dzS//z8vH/dW7E/5CI4P+QiOD/kIjg/5WM4P+Ae7n/9/Hq/6ttRf+oZjz/9/Tz/2qY
+        dP+Oyp3/kM2e/5LRoP+pgV7/3t7c//Pz8v/39PP/9/Ty//jy7f/48uv/9/Lr//Hu6P+qcEr/qG1G//Py
+        8f9LflX/aZx0/2mcdP9pnHT/jopo/6N3WP+tdVD/qGY7/6hmOv+oZDr/qGQ6/6hkOv+oa0P/qHRR/6t5
+        WP/e3tz/8/Py//f08//39PL/+PLt//jy6//38uv/8e7o/6pwSv//////////////////////////////
+        //+qe1v/q3dY/6htRv+oZjr/qGY6/6hkOv+oZDr/qGQ6/6hrQ/+odFH/////////////////////////
+        ////////AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA
+        //8AAP//AAD//w==
+</value>
+  </data>
 </root>

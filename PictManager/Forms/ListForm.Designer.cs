@@ -33,12 +33,12 @@
             this.pnlParent = new System.Windows.Forms.SplitContainer();
             this.lblFileCount = new System.Windows.Forms.Label();
             this.btnRevertAll = new SO.PictManager.Components.KeyPrevButton();
+            this.btnDeleteSelection = new SO.PictManager.Components.KeyPrevButton();
             this.btnRevertSelection = new SO.PictManager.Components.KeyPrevButton();
             this.btnApplyChanges = new SO.PictManager.Components.KeyPrevButton();
             this.btnClose = new SO.PictManager.Components.KeyPrevButton();
             this.barStatus = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.btnDeleteSelection = new SO.PictManager.Components.KeyPrevButton();
             ((System.ComponentModel.ISupportInitialize)(this.grdImages)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pnlParent)).BeginInit();
             this.pnlParent.Panel1.SuspendLayout();
@@ -60,7 +60,7 @@
             this.grdImages.Name = "grdImages";
             this.grdImages.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.grdImages.RowTemplate.Height = 21;
-            this.grdImages.Size = new System.Drawing.Size(737, 461);
+            this.grdImages.Size = new System.Drawing.Size(737, 460);
             this.grdImages.TabIndex = 0;
             this.grdImages.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdImages_CellClick);
             this.grdImages.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdImages_CellDoubleClick);
@@ -93,7 +93,7 @@
             this.pnlParent.Panel2.Controls.Add(this.btnClose);
             this.pnlParent.Panel2.Controls.Add(this.barStatus);
             this.pnlParent.Size = new System.Drawing.Size(737, 534);
-            this.pnlParent.SplitterDistance = 461;
+            this.pnlParent.SplitterDistance = 460;
             this.pnlParent.SplitterWidth = 5;
             this.pnlParent.TabIndex = 2;
             // 
@@ -102,9 +102,9 @@
             this.lblFileCount.AutoSize = true;
             this.lblFileCount.Location = new System.Drawing.Point(539, 12);
             this.lblFileCount.Name = "lblFileCount";
-            this.lblFileCount.Size = new System.Drawing.Size(59, 15);
+            this.lblFileCount.Size = new System.Drawing.Size(30, 15);
             this.lblFileCount.TabIndex = 5;
-            this.lblFileCount.Text = "999 files.";
+            this.lblFileCount.Text = "0 件";
             // 
             // btnRevertAll
             // 
@@ -117,6 +117,18 @@
             this.btnRevertAll.Text = "全ての変更を取消";
             this.btnRevertAll.UseVisualStyleBackColor = true;
             this.btnRevertAll.Click += new System.EventHandler(this.btnRevertAll_Click);
+            // 
+            // btnDeleteSelection
+            // 
+            this.btnDeleteSelection.Enabled = false;
+            this.btnDeleteSelection.Location = new System.Drawing.Point(128, 5);
+            this.btnDeleteSelection.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnDeleteSelection.Name = "btnDeleteSelection";
+            this.btnDeleteSelection.Size = new System.Drawing.Size(132, 29);
+            this.btnDeleteSelection.TabIndex = 1;
+            this.btnDeleteSelection.Text = "選択行の画像を削除";
+            this.btnDeleteSelection.UseVisualStyleBackColor = true;
+            this.btnDeleteSelection.Click += new System.EventHandler(this.btnDeleteSelection_Click);
             // 
             // btnRevertSelection
             // 
@@ -158,30 +170,18 @@
             // 
             this.barStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblStatus});
-            this.barStatus.Location = new System.Drawing.Point(0, 45);
+            this.barStatus.Location = new System.Drawing.Point(0, 47);
             this.barStatus.Name = "barStatus";
             this.barStatus.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
-            this.barStatus.Size = new System.Drawing.Size(737, 23);
+            this.barStatus.Size = new System.Drawing.Size(737, 22);
             this.barStatus.TabIndex = 4;
             this.barStatus.Text = "statusStrip1";
             // 
             // lblStatus
             // 
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(102, 18);
+            this.lblStatus.Size = new System.Drawing.Size(86, 17);
             this.lblStatus.Text = "[ステータス表示]";
-            // 
-            // btnDeleteSelection
-            // 
-            this.btnDeleteSelection.Enabled = false;
-            this.btnDeleteSelection.Location = new System.Drawing.Point(128, 5);
-            this.btnDeleteSelection.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.btnDeleteSelection.Name = "btnDeleteSelection";
-            this.btnDeleteSelection.Size = new System.Drawing.Size(132, 29);
-            this.btnDeleteSelection.TabIndex = 1;
-            this.btnDeleteSelection.Text = "選択行の画像を削除";
-            this.btnDeleteSelection.UseVisualStyleBackColor = true;
-            this.btnDeleteSelection.Click += new System.EventHandler(this.btnDeleteSelection_Click);
             // 
             // ListForm
             // 

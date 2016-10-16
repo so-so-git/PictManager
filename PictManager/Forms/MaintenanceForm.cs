@@ -14,6 +14,7 @@ using SO.Library.IO;
 using SO.PictManager.Common;
 using SO.PictManager.DataModel;
 using SO.PictManager.Forms.Info;
+using SO.PictManager.Imaging;
 
 namespace SO.PictManager.Forms
 {
@@ -741,6 +742,67 @@ namespace SO.PictManager.Forms
 
         #endregion
 
+        #region btnCheckDuplicate_Click - 重複画像を確認ボタンクリック時
+
+        /// <summary>
+        /// 重複画像を確認ボタンがクリックされた際に実行される処理です。
+        /// MD5が重複している画像をリストフォームで表示します。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void btnCheckDuplicate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var duplicatedList = new List<IImage>();
+
+                try
+                {
+                    Cursor = Cursors.WaitCursor;
+
+                    // MD5が重複しているものを抽出
+                    using (var entities = new PictManagerEntities())
+                    {
+                        var query = from image in entities.TblImages
+                                    where !image.DeleteFlag
+                                    group image by image.Md5 into groups
+                                    where groups.Count() > 1
+                                    from dupli in groups
+                                    orderby dupli.Md5, dupli.CategoryId, dupli.ImageId
+                                    select dupli;
+
+                        foreach (var row in query)
+                        {
+                            duplicatedList.Add(new DataImage(row.ImageId));
+                        }
+                    }
+                }
+                finally
+                {
+                    Cursor = Cursors.Default;
+                }
+
+                using (var listForm = new ListForm(duplicatedList))
+                {
+                    this.Hide();
+                    try
+                    {
+                        listForm.ShowDialog(this);
+                    }
+                    finally
+                    {
+                        this.Show();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
+        }
+
+        #endregion
+
         #region btnClose_Click -  閉じるボタンクリック時
 
         /// <summary>
@@ -751,7 +813,14 @@ namespace SO.PictManager.Forms
         /// <param name="e">イベント引数</param>
         private void btnClose_Click(object sender, EventArgs e)
         {
-            this.Close();
+            try
+            {
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
         }
 
         #endregion

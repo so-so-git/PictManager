@@ -93,6 +93,9 @@ namespace SO.PictManager.Forms
         /// <summary>行の画像と類似画像のマッピング</summary>
         private Dictionary<int, List<IImage>> _similarMap;
 
+        /// <summary>表示対象として渡された画像情報のリスト</summary>
+        private List<IImage> _viewList;
+
         #endregion
 
         #region コンストラクタ
@@ -142,6 +145,31 @@ namespace SO.PictManager.Forms
             }
         }
 
+        /// <summary>
+        /// 表示リスト指定用のコンストラクタです。
+        /// </summary>
+        /// <param name="viewList">表示対象の画像情報を格納したリスト</param>
+        public ListForm(List<IImage> viewList)
+            : base(null)
+        {
+            try
+            {
+                // コンポーネント初期化
+                InitializeComponent();
+
+                // 表示対象のリストを保管
+                _viewList = viewList;
+
+                // 共通処理
+                ConstructCommon();
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+                this.BackToOwner();
+            }
+        }
+
         #endregion
 
         #region ConstructCommon - 共通コンストラクション
@@ -151,7 +179,7 @@ namespace SO.PictManager.Forms
         /// </summary>
         private void ConstructCommon()
         {
-            // ファイル取得
+            // 表示対象画像取得
             RefreshImageList();
 
             // グリッド列生成
@@ -162,7 +190,7 @@ namespace SO.PictManager.Forms
 
             // ステータスバー更新
             lblStatus.Text = string.Empty;
-            lblFileCount.Text = ImageList.Count + " files.";
+            lblFileCount.Text = ImageList.Count + " 件";
         }
 
         #endregion
@@ -225,6 +253,28 @@ namespace SO.PictManager.Forms
             menuTemp.DropDownItems.Add(new ToolStripMenuItem("選択行の画像を表示", null, menuViewImage_Click));
             menuTemp.DropDownItems.Add(new ToolStripMenuItem("選択行の類似画像を表示", null, menuSimilar_Click));
             barMenu.Items.Add(menuTemp);
+        }
+
+        #endregion
+
+        #region RefreshImageList - 表示対象画像リスト最新化
+
+        /// <summary>
+        /// (BaseForm.RefreshImageList()をオーバーライドします)
+        /// 表示対象画像リストを最新の内容に更新します。
+        /// </summary>
+        protected override void RefreshImageList()
+        {
+            if (_viewList == null)
+            {
+                // 表示対象が指定されていない場合は既定の処理
+                base.RefreshImageList();
+            }
+            else
+            {
+                // 表示対象が指定されている場合はそれをそのまま表示
+                ImageList = _viewList;
+            }
         }
 
         #endregion

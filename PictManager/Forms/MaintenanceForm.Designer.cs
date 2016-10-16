@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MaintenanceForm));
             this.grpImportExport = new System.Windows.Forms.GroupBox();
             this.grpImportExportType = new System.Windows.Forms.GroupBox();
             this.rdoTypeImport = new System.Windows.Forms.RadioButton();
@@ -57,6 +58,7 @@
             this.lblDeletedCountHeader = new System.Windows.Forms.Label();
             this.barStatus = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.btnCheckDuplicate = new System.Windows.Forms.Button();
             this.grpImportExport.SuspendLayout();
             this.grpImportExportType.SuspendLayout();
             this.grpImportTarget.SuspendLayout();
@@ -311,7 +313,7 @@
             // btnClose
             // 
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClose.Location = new System.Drawing.Point(375, 368);
+            this.btnClose.Location = new System.Drawing.Point(375, 405);
             this.btnClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(87, 29);
@@ -365,7 +367,7 @@
             // 
             this.barStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblStatus});
-            this.barStatus.Location = new System.Drawing.Point(0, 401);
+            this.barStatus.Location = new System.Drawing.Point(0, 438);
             this.barStatus.Name = "barStatus";
             this.barStatus.Size = new System.Drawing.Size(471, 22);
             this.barStatus.TabIndex = 4;
@@ -377,17 +379,30 @@
             this.lblStatus.Size = new System.Drawing.Size(76, 17);
             this.lblStatus.Text = "ステータス表示";
             // 
+            // btnCheckDuplicate
+            // 
+            this.btnCheckDuplicate.Location = new System.Drawing.Point(12, 388);
+            this.btnCheckDuplicate.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnCheckDuplicate.Name = "btnCheckDuplicate";
+            this.btnCheckDuplicate.Size = new System.Drawing.Size(109, 29);
+            this.btnCheckDuplicate.TabIndex = 8;
+            this.btnCheckDuplicate.Text = "重複画像を確認";
+            this.btnCheckDuplicate.UseVisualStyleBackColor = true;
+            this.btnCheckDuplicate.Click += new System.EventHandler(this.btnCheckDuplicate_Click);
+            // 
             // MaintenanceForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(471, 423);
+            this.ClientSize = new System.Drawing.Size(471, 460);
             this.Controls.Add(this.barStatus);
             this.Controls.Add(this.grpDeletedImages);
             this.Controls.Add(this.grpCategories);
+            this.Controls.Add(this.btnCheckDuplicate);
             this.Controls.Add(this.grpImportExport);
             this.Controls.Add(this.btnClose);
             this.Font = new System.Drawing.Font("Meiryo UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "MaintenanceForm";
             this.Text = "PictManager - データベースメンテナンス";
@@ -439,5 +454,6 @@
         private System.Windows.Forms.RadioButton rdoTypeImport;
         private System.Windows.Forms.RadioButton rdoTypeExport;
         private System.Windows.Forms.GroupBox grpImportTarget;
+        private System.Windows.Forms.Button btnCheckDuplicate;
     }
 }
