@@ -586,10 +586,7 @@ namespace SO.PictManager.Forms
                     }
                     else
                     {
-                        if (Owner != null)
-                        {
-                            Owner.Dispose();
-                        }
+                        this.BackToOwner();
                     }
                 }
             }

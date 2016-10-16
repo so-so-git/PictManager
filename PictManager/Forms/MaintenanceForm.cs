@@ -784,15 +784,7 @@ namespace SO.PictManager.Forms
 
                 using (var listForm = new ListForm(duplicatedList))
                 {
-                    this.Hide();
-                    try
-                    {
-                        listForm.ShowDialog(this);
-                    }
-                    finally
-                    {
-                        this.Show();
-                    }
+                    listForm.ShowDialog(this);
                 }
             }
             catch (Exception ex)

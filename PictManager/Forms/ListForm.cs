@@ -81,6 +81,22 @@ namespace SO.PictManager.Forms
 
         #endregion
 
+        #region class RowInfo - グリッド行情報クラス
+
+        /// <summary>
+        /// グリッド行情報クラス
+        /// </summary>
+        private class RowInfo
+        {
+            /// <summary>行の削除フラグ</summary>
+            public bool IsDeleted { get; set; }
+
+            /// <summary>行の通常時の背景色</summary>
+            public Color RowColor { get; set; }
+        }
+
+        #endregion
+
         #region クラス定数
 
         #endregion
@@ -378,11 +394,16 @@ namespace SO.PictManager.Forms
                 categoryList = null;
             }
 
+            string lastMd5 = string.Empty;
+            bool isOdd = true;
             int i = 0;
             var rowList = new List<DataGridViewRow>(ImageList.Count);
             foreach (var img in ImageList)
             {
                 var row = new DataGridViewRow();
+
+                var rowInfo = new RowInfo();
+                row.Tag = rowInfo;
 
                 row.HeaderCell.Value = (++i).ToString();
                 row.HeaderCell.Style.Font = new Font(this.Font, FontStyle.Regular);
@@ -483,6 +504,14 @@ namespace SO.PictManager.Forms
                 }
                 row.Cells.Add(celMD5);
                 row.Cells.Add(celSimilar);
+
+                // MD5が前の行から変わったかに応じて行の背景色を設定
+                if (celMD5.Value.ToString() != lastMd5)
+                {
+                    isOdd = !isOdd;
+                    lastMd5 = celMD5.Value.ToString();
+                }
+                rowInfo.RowColor = isOdd ? Color.LightCyan : Color.White;
 
                 celMD5.ReadOnly = true;
                 celSimilar.ReadOnly = img.IsDeleted;
@@ -999,7 +1028,7 @@ namespace SO.PictManager.Forms
         /// <returns>グリッド行の画像が削除されているかのフラグ</returns>
         private bool IsRowDeleted(DataGridViewRow row)
         {
-            return Convert.ToBoolean(row.Tag);
+            return (row.Tag as RowInfo).IsDeleted;
         }
 
         #endregion
@@ -1016,7 +1045,8 @@ namespace SO.PictManager.Forms
         {
             grdImages.CancelEdit();
 
-            row.Tag = deleteFlag;
+            var rowInfo = row.Tag as RowInfo;
+            rowInfo.IsDeleted = deleteFlag;
 
             if (deleteFlag)
             {
@@ -1064,7 +1094,7 @@ namespace SO.PictManager.Forms
             }
             else
             {
-                row.DefaultCellStyle.BackColor = Color.White;
+                row.DefaultCellStyle.BackColor = rowInfo.RowColor;
             }
         }
 
@@ -1180,10 +1210,7 @@ namespace SO.PictManager.Forms
                 }
                 else
                 {
-                    if (Owner != null)
-                    {
-                        Owner.Dispose();
-                    }
+                    this.BackToOwner();
                 }
             }
             catch (Exception ex)

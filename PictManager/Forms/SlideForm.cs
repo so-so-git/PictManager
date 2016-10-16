@@ -859,13 +859,8 @@ namespace SO.PictManager.Forms
                     return;
                 }
 
-                // 各リソースを破棄
-                DisposeResources();
-
-                if (Owner != null)
-                {
-                    Owner.Dispose();
-                }
+                // フォームクローズ
+                CloseForm();
             }
             catch (Exception ex)
             {
