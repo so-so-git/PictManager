@@ -66,7 +66,7 @@ namespace SO.PictManager.Forms
             }
             else
             {
-                grpImport.Enabled = false;
+                grpImportExport.Enabled = false;
             }
 
             btnViewDeletedFiles.Enabled = Utilities.IsExistsDeletedFile;
@@ -311,6 +311,52 @@ namespace SO.PictManager.Forms
 
         #endregion
 
+        #region ExportImages - ファイルエクスポート
+
+        /// <summary>
+        /// 画面で指定されたディレクトリに画像をエクスポートします。
+        /// </summary>
+        /// <param name="exportDirectory">エクスポート先ディレクトリ</param>
+        private void ExportImages(DirectoryInfo exportDirectory)
+        {
+            using (var entities = new PictManagerEntities())
+            {
+                int categoryId = (cmbImportCategory.SelectedValue as MstCategory).CategoryId;
+
+                // 指定されているカテゴリーの画像データを抽出
+                var rows = from image in entities.TblImages
+                           where image.CategoryId == categoryId
+                              && !image.DeleteFlag
+                           join category in entities.MstCategories
+                             on image.CategoryId equals category.CategoryId
+                           select new { Image = image, Category = category };
+
+                foreach (var row in rows)
+                {
+                    // 画像データをファイルとして出力
+                    string fileName = string.Format("{0}_{1:00000}.{2}",
+                        row.Category.CategoryName, row.Image.ImageId, row.Image.ImageFormat);
+
+                    using (var img = (new ImageConverter().ConvertFrom(row.Image.ImageData) as Image))
+                    {
+                        img.Save(Path.Combine(exportDirectory.FullName, fileName));
+                    }
+                }
+
+                // エクスポート済みファイルの削除確認
+                if (FormUtilities.ShowMessage("Q019", string.Format("{0} 画像", rows.Count())) == DialogResult.Yes)
+                {
+                    foreach (var row in rows)
+                    {
+                        row.Image.DeleteFlag = true;
+                    }
+                    entities.SaveChanges();
+                }
+            }
+        }
+
+        #endregion
+
         //*** イベントハンドラ ***
 
         #region txtEntryCategory_KeyDown - 登録カテゴリーテキストボックスキーダウン時
@@ -429,7 +475,30 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region rdoImportKinds_CheckedChanged - インポート対象ラジオボタン変更時
+        #region rdoImportTargets_CheckedChanged - インポート対象ラジオボタン変更時
+
+        /// <summary>
+        /// 実行処理ラジオボタンの状態が変更された際に実行される処理です。
+        /// 選択された実行処理の種類に応じてフォームの状態を切り替えます。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void rdoImportExportType_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                grpImportTarget.Enabled =
+                    chkIncludeSubDirectory.Enabled = rdoTypeImport.Checked;
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
+        }
+
+        #endregion
+
+        #region rdoImportTargets_CheckedChanged - インポート対象ラジオボタン変更時
 
         /// <summary>
         /// インポート対象ラジオボタンの状態が変更された際に実行される処理です。
@@ -437,7 +506,7 @@ namespace SO.PictManager.Forms
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>
-        private void rdoImportKinds_CheckedChanged(object sender, EventArgs e)
+        private void rdoImportTargets_CheckedChanged(object sender, EventArgs e)
         {
             try
             {
@@ -499,34 +568,79 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region btnImport_Click - インポートボタン押下時
+        #region btnImportExport_Click - インポート・エクスポート実行ボタン押下時
 
         /// <summary>
-        /// インポートボタンがクリックされた際に実行される処理です。
-        /// 指定された対象をデータベースにインポートします。
+        /// インポート・エクスポート実行ボタンがクリックされた際に実行される処理です。
+        /// 指定された処理(インポート または エクスポート)を実行します。
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>
-        private void btnImport_Click(object sender, EventArgs e)
+        private void btnImportExport_Click(object sender, EventArgs e)
         {
             try
             {
                 // 入力チェック
                 if (string.IsNullOrEmpty(txtTargetPath.Text))
                 {
-                    FormUtilities.ShowMessage("W000", "インポート対象");
+                    FormUtilities.ShowMessage("W000",
+                        rdoTypeImport.Checked ? "インポート対象" : "エクスポート先");
                     return;
                 }
 
                 try
                 {
-                    if (rdoImportDirectory.Checked)
+                    if (rdoTypeImport.Checked)  // インポート
                     {
-                        ImportDirectory();
+                        if (rdoImportDirectory.Checked)
+                        {
+                            // 指定されたディレクトリをインポート
+                            ImportDirectory();
+                        }
+                        else
+                        {
+                            // 指定されたファイルをインポート
+                            ImportFile();
+                        }
                     }
-                    else
+                    else    // エクスポート
                     {
-                        ImportFile();
+                        // エクスポート先確認
+                        var exportDirectory = new DirectoryInfo(txtTargetPath.Text);
+                        if (exportDirectory.Exists)
+                        {
+                            // エクスポート先フォルダ内のファイル存在確認
+                            if (exportDirectory.GetFiles().Any())
+                            {
+                                // 継続確認
+                                if (FormUtilities.ShowMessage("Q020") == DialogResult.No)
+                                {
+                                    return;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // エクスポート先フォルダ作成確認
+                            if (FormUtilities.ShowMessage("Q009", "エクスポート先", exportDirectory.FullName) == DialogResult.No)
+                            {
+                                return;
+                            }
+
+                            // エクスポート先フォルダ作成
+                            try
+                            {
+                                exportDirectory.Create();
+                            }
+                            catch (IOException)
+                            {
+                                FormUtilities.ShowMessage("E011");
+                                return;
+                            }
+                        }
+
+                        // 指定されたディレクトリにエクスポート
+                        ExportImages(exportDirectory);
                     }
                 }
                 finally

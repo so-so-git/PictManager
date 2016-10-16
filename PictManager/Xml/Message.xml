@@ -75,7 +75,7 @@
 		変更内容を確定してよろしいですか？
 	</msg>
 	<msg id="Q009" caption="フォルダ作成確認" buttons="YesNo" icon="Question">
-		移動先のフォルダ[{0}]が存在しません。\n作成してよろしいですか？
+		{0}のフォルダ[{1}]が存在しません。\n作成してよろしいですか？
 	</msg>
 	<msg id="Q010" caption="ブックマーク全削除確認" buttons="YesNo" icon="Question">
 		全てのブックマークを削除してよろしいですか？
@@ -101,8 +101,14 @@
   <msg id="Q017" caption="フォルダ再作成確認" buttons="YesNo" icon="Question">
     自動取込フォルダは既に作成されています。\n最新の情報で再作成しますか？
   </msg>
-  <msg id="Q018" caption="ファイルインポート完了" buttons="YesNo" icon="Question">
+  <msg id="Q018" caption="インポート済みファイル削除確認" buttons="YesNo" icon="Question">
     {0}のインポートが完了しました。\nインポートしたファイルを削除しますか？
+  </msg>
+  <msg id="Q019" caption="エクスポート済み画像データ削除確認" buttons="YesNo" icon="Question">
+    {0}のエクスポートが完了しました。\nエクスポートした画像データをデータベースから削除しますか？
+  </msg>
+  <msg id="Q020" caption="ファイルが存在するフォルダへのエクスポート確認" buttons="YesNo" icon="Question">
+    指定されたフォルダには既にファイルが存在します。\nエクスポートを継続してもよろしいですか？\n(ファイルが上書きされる可能性があります)
   </msg>
 
   <!-- ワーニングメッセージ -->
@@ -227,5 +233,8 @@
   </msg>
   <msg id="E010" caption="サービス開始キャンセル" buttons="OK" icon="Error">
     サービス[{0}]の開始がキャンセルされました。\nアプリケーションは起動できません。
+  </msg>
+  <msg id="E011" caption="フォルダ作成失敗" buttons="OK" icon="Error">
+    フォルダが作成できませんでした。
   </msg>
 </root>

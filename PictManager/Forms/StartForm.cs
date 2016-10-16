@@ -83,7 +83,7 @@ namespace SO.PictManager.Forms
             if (Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.File)
             {
                 // 表示状態切替
-                this.Text = string.Format(FORM_TITLE_FORMAT, "ディレクトリ");
+                this.Text = string.Format(FORM_TITLE_FORMAT, "フォルダ");
                 pnlForDatabase.Visible = false;
                 btnOpenUrlDrop.Visible = false;
                 pnlMain.Location = pnlForDatabase.Location;
@@ -108,7 +108,7 @@ namespace SO.PictManager.Forms
             else
             {
                 // 表示状態切替
-                this.Text = string.Format(FORM_TITLE_FORMAT, "カテゴリ");
+                this.Text = string.Format(FORM_TITLE_FORMAT, "カテゴリー");
                 pnlMain.Location = new Point(pnlMain.Location.X, pnlForDatabase.Location.Y + pnlForDatabase.Height + _spacer);
                 this.Size = _formSizeInDatabaseMode;
                 pnlForDatabase.Visible = true;
@@ -309,8 +309,6 @@ namespace SO.PictManager.Forms
         /// <param name="e">イベント引数</param>
         private void btnFolderBrowse_Click(object sender, EventArgs e)
         {
-            Debug.Assert(Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.File);
-
             try
             {
                 if (Directory.Exists(txtTargetFolder.Text))

@@ -696,7 +696,7 @@ namespace SO.PictManager.Forms
             if (!Directory.Exists(dirPath))
             {
                 // フォルダ作成確認
-                if (FormUtilities.ShowMessage("Q009", dirPath) == DialogResult.No)
+                if (FormUtilities.ShowMessage("Q009", "移動先", dirPath) == DialogResult.No)
                 {
                     FormUtilities.ShowMessage("I007");
                     return false;
