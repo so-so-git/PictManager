@@ -1683,7 +1683,8 @@ namespace SO.PictManager.Forms
                     ? FileColumnIndexes.SELECT_CHECK : DatabaseColumnIndexes.SELECT_CHECK;
 
                 var selectedRows = from r in grdImages.Rows.Cast<DataGridViewRow>()
-                                   where Convert.ToBoolean(r.Cells[selChkColIdx].Value)
+                                   where r.Cells[selChkColIdx] is DataGridViewCheckBoxCell
+                                      && Convert.ToBoolean(r.Cells[selChkColIdx].Value)
                                    select r;
 
                 // 選択行の画像を削除
