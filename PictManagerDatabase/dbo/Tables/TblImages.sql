@@ -21,4 +21,13 @@
     [UpdatedDateTime]  DATETIME        NOT NULL,
     CONSTRAINT [PK_TblImages] PRIMARY KEY NONCLUSTERED ([ImageId] ASC)
 );
+GO
 
+CREATE NONCLUSTERED INDEX [IX_TblImages_CategoryId] ON [dbo].[TblImages] ([CategoryId] ASC);
+GO
+
+CREATE NONCLUSTERED INDEX [IX_TblImages_GroupId] ON [dbo].[TblImages] ([GroupId] ASC);
+GO
+
+CREATE NONCLUSTERED INDEX [IX_TblImages_Md5] ON [dbo].[TblImages] ([Md5] ASC);
+GO

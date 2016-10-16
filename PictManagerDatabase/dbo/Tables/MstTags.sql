@@ -5,4 +5,7 @@
     [UpdatedDateTime]  DATETIME     NOT NULL,
     CONSTRAINT [PK_MstTags] PRIMARY KEY NONCLUSTERED ([TagId] ASC)
 );
+GO
 
+CREATE NONCLUSTERED INDEX [IX_MstTags_TagName] ON [dbo].[MstTags] ([TagName] ASC);
+GO
