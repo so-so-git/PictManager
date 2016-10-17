@@ -1781,13 +1781,19 @@ namespace SO.PictManager.Forms
         /// <param name="e">イベント引数</param>
         private void menuRefresh_Click(object sender, EventArgs e)
         {
+            Cursor = Cursors.WaitCursor;
             try
             {
+                RefreshImageList();
                 RevertEdit(true);
             }
             catch (Exception ex)
             {
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
+            finally
+            {
+                Cursor = Cursors.Default;
             }
         }
 
