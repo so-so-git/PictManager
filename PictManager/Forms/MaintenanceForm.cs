@@ -754,11 +754,10 @@ namespace SO.PictManager.Forms
         {
             try
             {
-                var duplicatedList = new List<IImage>();
-
-                try
+                // 一覧で表示する画像リストの取得デリゲートを定義
+                Func<List<IImage>> imageListGetFunction = () =>
                 {
-                    Cursor = Cursors.WaitCursor;
+                    var duplicatedList = new List<IImage>();
 
                     // MD5が重複しているものを抽出
                     using (var entities = new PictManagerEntities())
@@ -776,13 +775,11 @@ namespace SO.PictManager.Forms
                             duplicatedList.Add(new DataImage(row.ImageId));
                         }
                     }
-                }
-                finally
-                {
-                    Cursor = Cursors.Default;
-                }
 
-                using (var listForm = new ListForm(duplicatedList))
+                    return duplicatedList;
+                };
+
+                using (var listForm = new ListForm(imageListGetFunction))
                 {
                     listForm.ShowDialog(this);
                 }

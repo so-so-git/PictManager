@@ -112,8 +112,8 @@ namespace SO.PictManager.Forms
         /// <summary>行の画像と類似画像のマッピング</summary>
         private Dictionary<int, List<IImage>> _similarMap;
 
-        /// <summary>表示対象として渡された画像情報のリスト</summary>
-        private List<IImage> _viewList;
+        /// <summary>表示対象画像リスト取得デリゲート</summary>
+        private Func<List<IImage>> _imageListGetFunction;
 
         #endregion
 
@@ -131,9 +131,6 @@ namespace SO.PictManager.Forms
             {
                 // コンポーネント初期化
                 InitializeComponent();
-
-                // 共通処理
-                ConstructCommon();
             }
             catch (Exception ex)
             {
@@ -153,9 +150,6 @@ namespace SO.PictManager.Forms
             {
                 // コンポーネント初期化
                 InitializeComponent();
-
-                // 共通処理
-                ConstructCommon();
             }
             catch (Exception ex)
             {
@@ -165,10 +159,10 @@ namespace SO.PictManager.Forms
         }
 
         /// <summary>
-        /// 表示リスト指定用のコンストラクタです。
+        /// 表示対象カスタマイズ用のコンストラクタです。
         /// </summary>
-        /// <param name="viewList">表示対象の画像情報を格納したリスト</param>
-        public ListForm(List<IImage> viewList)
+        /// <param name="function">表示対象画像リスト取得デリゲート</param>
+        public ListForm(Func<List<IImage>> function)
             : base(null)
         {
             try
@@ -176,40 +170,14 @@ namespace SO.PictManager.Forms
                 // コンポーネント初期化
                 InitializeComponent();
 
-                // 表示対象のリストを保管
-                _viewList = viewList;
-
-                // 共通処理
-                ConstructCommon();
+                // 表示対象画像リスト取得デリゲートを保管
+                _imageListGetFunction = function;
             }
             catch (Exception ex)
             {
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
                 this.BackToOwner();
             }
-        }
-
-        #endregion
-
-        #region ConstructCommon - 共通コンストラクション
-
-        /// <summary>
-        /// インスタンス構築時の共通処理を実行します。
-        /// </summary>
-        private void ConstructCommon()
-        {
-            // 表示対象画像取得
-            RefreshImageList();
-
-            // グリッド列生成
-            CreateColumns();
-
-            // グリッドセル生成
-            CreateCells();
-
-            // ステータスバー更新
-            lblStatus.Text = string.Empty;
-            lblFileCount.Text = ImageList.Count + " 件";
         }
 
         #endregion
@@ -284,15 +252,15 @@ namespace SO.PictManager.Forms
         /// </summary>
         protected override void RefreshImageList()
         {
-            if (_viewList == null)
+            if (_imageListGetFunction != null)
             {
-                // 表示対象が指定されていない場合は既定の処理
-                base.RefreshImageList();
+                // 表示対象画像リスト取得デリゲートが指定されている場合はそれを利用し対象を取得
+                ImageList = _imageListGetFunction();
             }
             else
             {
-                // 表示対象が指定されている場合はそれをそのまま表示
-                ImageList = _viewList;
+                // 表示対象画像リスト取得デリゲートが指定されていない場合は既定の処理
+                base.RefreshImageList();
             }
         }
 
@@ -1168,8 +1136,22 @@ namespace SO.PictManager.Forms
         /// <param name="e">イベント引数</param>
         private void Form_Shown(object sender, EventArgs e)
         {
+            Cursor = Cursors.WaitCursor;
             try
             {
+                // 表示対象画像取得
+                RefreshImageList();
+
+                // グリッド列生成
+                CreateColumns();
+
+                // グリッドセル生成
+                CreateCells();
+
+                // ステータスバー更新
+                lblStatus.Text = string.Empty;
+                lblFileCount.Text = ImageList.Count + " 件";
+
                 // 列幅設定
                 grdImages.RowHeadersWidthSizeMode =
                     DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders |
@@ -1187,6 +1169,10 @@ namespace SO.PictManager.Forms
             catch (Exception ex)
             {
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
+            finally
+            {
+                Cursor = Cursors.Default;
             }
         }
 
