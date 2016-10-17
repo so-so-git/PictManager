@@ -786,6 +786,14 @@ namespace SO.PictManager.Forms
                 {
                     listForm.ShowDialog(this);
                 }
+
+                using (var entities = new PictManagerEntities())
+                {
+                    // 物理削除済み画像数取得
+                    var deletedCount = entities.TblImages.Where(i => i.DeleteFlag).Count();
+                    lblDeletedCount.Text = deletedCount.ToString("#,0");
+                    btnApplyDelete.Enabled = deletedCount > 0;
+                }
             }
             catch (Exception ex)
             {
