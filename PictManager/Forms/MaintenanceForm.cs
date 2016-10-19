@@ -179,20 +179,32 @@ namespace SO.PictManager.Forms
             }
 
             Cursor = Cursors.WaitCursor;
+            bool isSucceeded;
             using (var progress = new CircleProgressDialog(this))
             {
                 // プログレス表示開始
                 progress.StartProgress();
 
                 // 指定されたファイルをインポート
-                InsertImage(txtTargetPath.Text);
+                isSucceeded = InsertImage(txtTargetPath.Text);
             }
 
-            if (FormUtilities.ShowMessage("Q018", string.Format("[{0}] ", txtTargetPath.Text)) == DialogResult.Yes)
+            if (isSucceeded)
             {
-                // インポートしたファイルを削除
-                Utilities.DeleteFile(txtTargetPath.Text, true);
-                btnViewDeletedFiles.Enabled = true;
+                // 登録成功時
+                if (FormUtilities.ShowMessage("Q018", string.Format("[{0}] ", txtTargetPath.Text)) == DialogResult.Yes)
+                {
+                    // インポートしたファイルを削除
+                    Utilities.DeleteFile(txtTargetPath.Text, true);
+                    btnViewDeletedFiles.Enabled = true;
+                }
+            }
+            else
+            {
+                // 登録失敗時
+                FormUtilities.ShowMessage("E012");
+                txtTargetPath.Focus();
+                txtTargetPath.SelectAll();
             }
         }
 
@@ -243,6 +255,7 @@ namespace SO.PictManager.Forms
             }
 
             // ファイルインポート実施
+            var skipList = new List<string>();
             using (var progress = new ProgressDialog(this))
             {
                 progress.StartProgress("画像ファイルインポート中...", string.Empty, 0, filePathList.Count);
@@ -251,20 +264,42 @@ namespace SO.PictManager.Forms
                 {
                     progress.Message = path;
 
-                    InsertImage(path);
+                    if (!InsertImage(path))
+                    {
+                        // 重複によりインポートスキップした場合
+                        skipList.Add(path);
+                    }
 
                     progress.PerformStep();
                 }
             }
 
-            if (FormUtilities.ShowMessage("Q018", string.Format("{0} ファイル", filePathList.Count)) == DialogResult.Yes)
+            // スキップしたもの以外を抽出
+            var importedList = filePathList.Except(skipList);
+
+            if (!importedList.Any())
+            {
+                // 全重複エラーメッセージ
+                FormUtilities.ShowMessage("E013");
+                txtTargetPath.Focus();
+                txtTargetPath.SelectAll();
+
+                return;
+            }
+            else if (skipList.Any())
+            {
+                // 一部重複警告メッセージ
+                FormUtilities.ShowMessage("W029", skipList.Count);
+            }
+
+            if (FormUtilities.ShowMessage("Q018", string.Format("{0} ファイル", importedList.Count())) == DialogResult.Yes)
             {
                 // インポートしたファイルを削除
                 using (var progress = new ProgressDialog(this))
                 {
-                    progress.StartProgress("インポート済みファイルの削除中...", string.Empty, 0, filePathList.Count);
+                    progress.StartProgress("インポート済みファイルの削除中...", string.Empty, 0, importedList.Count());
 
-                    foreach (var path in filePathList)
+                    foreach (var path in importedList)
                     {
                         progress.Message = path;
 
@@ -287,27 +322,47 @@ namespace SO.PictManager.Forms
         /// パスの存在チェックやファイル形式チェックは行われません。
         /// </summary>
         /// <param name="filePath">インポートするファイルのパス</param>
-        private void InsertImage(string filePath)
+        /// <returns>true:登録正常終了 / false:重複画像の為、取込み中断</returns>
+        private bool InsertImage(string filePath)
         {
-            DateTime now = DateTime.Now;
-            var entity = new TblImage();
-
-            // エンティティ生成
+            // バイナリデータ取得
+            byte[] imageData;
             using (var img = Image.FromFile(filePath))
             {
-                entity.ImageData = new ImageConverter().ConvertTo(img, typeof(byte[])) as byte[];
+                imageData = new ImageConverter().ConvertTo(img, typeof(byte[])) as byte[];
             }
-            entity.ImageFormat = Path.GetExtension(filePath).Substring(1);
-            entity.CategoryId = (cmbImportCategory.SelectedValue as MstCategory).CategoryId;
-            entity.Md5 = Cryptgrapher.GetBytesMD5(entity.ImageData);
-            entity.InsertedDateTime = now;
-            entity.UpdatedDateTime = now;
 
             using (var entities = new PictManagerEntities())
             {
+                // インポートする画像と同じMD5のものが登録済みかを確認
+                string md5 = Cryptgrapher.GetBytesMD5(imageData);
+
+                var query = from image in entities.TblImages
+                            where image.Md5 == md5
+                            select image;
+
+                if (query.Any())
+                {
+                    // 重複画像
+                    return false;
+                }
+
+                // エンティティ生成
+                DateTime now = DateTime.Now;
+                var entity = new TblImage();
+
+                entity.ImageData = imageData;
+                entity.ImageFormat = Path.GetExtension(filePath).Substring(1);
+                entity.CategoryId = (cmbImportCategory.SelectedValue as MstCategory).CategoryId;
+                entity.Md5 = Cryptgrapher.GetBytesMD5(entity.ImageData);
+                entity.InsertedDateTime = now;
+                entity.UpdatedDateTime = now;
+
                 entities.TblImages.Add(entity);
                 entities.SaveChanges();
             }
+
+            return true;
         }
 
         #endregion

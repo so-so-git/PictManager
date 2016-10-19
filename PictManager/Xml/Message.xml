@@ -199,6 +199,9 @@
   <msg id="W028" caption="対象ファイル無し" buttons="OK" icon="Warning">
     インポート対象となるファイルが存在しません。
   </msg>
+  <msg id="W029" caption="重複画像有り" buttons="OK" icon="Warning">
+    {0} ファイルの画像は既にデータベースに存在する為、インポートをスキップしました。
+  </msg>
 
   <!-- エラーメッセージ -->
 	<msg id="E000" caption="バージョンエラー" buttons="OK" icon="Error">
@@ -236,5 +239,11 @@
   </msg>
   <msg id="E011" caption="フォルダ作成失敗" buttons="OK" icon="Error">
     フォルダが作成できませんでした。
+  </msg>
+  <msg id="E012" caption="重複画像" buttons="OK" icon="Error">
+    指定された画像は既にデータベースに存在します。
+  </msg>
+  <msg id="E013" caption="重複画像" buttons="OK" icon="Error">
+    指定されたフォルダの全ての画像は既にデータベースに存在します。
   </msg>
 </root>
