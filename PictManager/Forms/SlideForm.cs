@@ -313,13 +313,13 @@ namespace SO.PictManager.Forms
             try
             {
                 // スクロールバー位置初期化
-                if (pnlToolAreaSplit.Panel1.VerticalScroll.Visible)
+                if (pnlContent.VerticalScroll.Visible)
                 {
-                    pnlToolAreaSplit.Panel1.VerticalScroll.Value = 0;
+                    pnlContent.VerticalScroll.Value = 0;
                 }
-                if (pnlToolAreaSplit.Panel1.HorizontalScroll.Visible)
+                if (pnlContent.HorizontalScroll.Visible)
                 {
-                    pnlToolAreaSplit.Panel1.HorizontalScroll.Value = 0;
+                    pnlContent.HorizontalScroll.Value = 0;
                 }
 
                 // イメージファイルがあるか確認
@@ -980,7 +980,7 @@ namespace SO.PictManager.Forms
                 leftEdgeControl = chkSimilar;
             }
 
-            int x = pnlToolAreaSplit.Width / 2 - lblCountDelim.Width / 2 - txtIndex.Width - btnPrevious.Width - SPACE_WIDTH * 2;
+            int x = pnlFooter.Width / 2 - lblCountDelim.Width / 2 - txtIndex.Width - btnPrevious.Width - SPACE_WIDTH * 2;
             int leftLimit = leftEdgeControl.Location.X + leftEdgeControl.Width + SPACE_WIDTH;
             if (x < leftLimit)
             {
@@ -1002,7 +1002,7 @@ namespace SO.PictManager.Forms
             btnNext.Location = new Point(x, btnNext.Location.Y);
 
             // 右のコントロール群の位置調整
-            x = pnlToolAreaSplit.Width - btnClose.Width - cmbPicMode.Width - cmbSort.Width
+            x = pnlFooter.Width - btnClose.Width - cmbPicMode.Width - cmbSort.Width
                 - btnZoomOut.Width - btnZoomIn.Width - SPACE_WIDTH * 5;
             leftLimit = btnNext.Location.X + btnNext.Width + SPACE_WIDTH;
             if (x < leftLimit)

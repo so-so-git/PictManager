@@ -42,8 +42,11 @@ namespace SO.PictManager.Forms
         /// <summary>新規タグ入力用テキストボックスのコントロール名</summary>
         protected const string TEXT_BOX_NAME_NEW_TAG = "txtNewTag";
 
-        /// <summary>ツールエリアの高さ</summary>
-        protected const int TOOL_AREA_HEIGHT = 50;
+        /// <summary>タグパネルの最小の高さ</summary>
+        protected const int TAG_PANEL_MIN_HEIGHT = 30;
+
+        /// <summary>フッターエリアの高さ</summary>
+        protected const int FOOTER_HEIGHT = 50;
 
         #endregion
 
@@ -88,7 +91,7 @@ namespace SO.PictManager.Forms
             InitializeComponent();
 
             // フィールド初期化
-            ImageMode = ConfigInfo.ImageDataMode.File;
+            ImageMode = ConfigInfo.ImageDataMode.Database;
 
             // 共通コンストラクション
             ConstructCommon();
@@ -638,19 +641,19 @@ namespace SO.PictManager.Forms
         private void ResetScrollProperties()
         {
             // 垂直スクロールバー設定
-            if (pnlToolAreaSplit.Panel1.VerticalScroll.Visible)
+            if (pnlContent.VerticalScroll.Visible)
             {
-                pnlToolAreaSplit.Panel1.AutoScrollPosition = new Point(0, pnlToolAreaSplit.Panel1.VerticalScroll.Minimum);
-                pnlToolAreaSplit.Panel1.VerticalScroll.SmallChange = picViewer.Size.Height / 20;
-                pnlToolAreaSplit.Panel1.VerticalScroll.LargeChange = picViewer.Size.Height / 4;
+                pnlContent.AutoScrollPosition = new Point(0, pnlContent.VerticalScroll.Minimum);
+                pnlContent.VerticalScroll.SmallChange = picViewer.Size.Height / 20;
+                pnlContent.VerticalScroll.LargeChange = picViewer.Size.Height / 4;
             }
 
             // 水平スクロールバー設定
-            if (pnlToolAreaSplit.Panel1.HorizontalScroll.Visible)
+            if (pnlContent.HorizontalScroll.Visible)
             {
-                pnlToolAreaSplit.Panel1.AutoScrollPosition = new Point(pnlToolAreaSplit.Panel1.HorizontalScroll.Minimum, 0);
-                pnlToolAreaSplit.Panel1.HorizontalScroll.SmallChange = picViewer.Size.Width / 20;
-                pnlToolAreaSplit.Panel1.HorizontalScroll.LargeChange = picViewer.Size.Width / 4;
+                pnlContent.AutoScrollPosition = new Point(pnlContent.HorizontalScroll.Minimum, 0);
+                pnlContent.HorizontalScroll.SmallChange = picViewer.Size.Width / 20;
+                pnlContent.HorizontalScroll.LargeChange = picViewer.Size.Width / 4;
             }
         }
 
@@ -737,25 +740,21 @@ namespace SO.PictManager.Forms
             ShowImageInfoByStatusBar();
 
             // スクロール幅設定
-            pnlToolAreaSplit.Panel1.VerticalScroll.SmallChange = SCROLL_CHANGE_SMALL;
-            pnlToolAreaSplit.Panel1.HorizontalScroll.SmallChange = SCROLL_CHANGE_SMALL;
-            pnlToolAreaSplit.Panel1.VerticalScroll.LargeChange = SCROLL_CHANGE_LARGE;
-            pnlToolAreaSplit.Panel1.HorizontalScroll.LargeChange = SCROLL_CHANGE_LARGE;
+            pnlContent.VerticalScroll.SmallChange = SCROLL_CHANGE_SMALL;
+            pnlContent.HorizontalScroll.SmallChange = SCROLL_CHANGE_SMALL;
+            pnlContent.VerticalScroll.LargeChange = SCROLL_CHANGE_LARGE;
+            pnlContent.HorizontalScroll.LargeChange = SCROLL_CHANGE_LARGE;
 
             // タグパネル設定
             if (ImageMode == ConfigInfo.ImageDataMode.Database)
             {
-                pnlTagSplit.SplitterDistance = pnlTagSplit.Panel1MinSize;
+                pnlHeader.Height = TAG_PANEL_MIN_HEIGHT;
                 TagPanelExpanded = false;
             }
             else
             {
-                pnlTagSplit.Panel1Collapsed = true;
+                pnlHeader.Hide();
             }
-
-            // ツールエリアを分割するスプリッタの位置を調整
-            pnlToolAreaSplit.SplitterDistance =
-                pnlToolAreaSplit.ClientSize.Height - barMenu.Height - TOOL_AREA_HEIGHT;
 
             if (ImageData != null)
             {
@@ -821,59 +820,51 @@ namespace SO.PictManager.Forms
                     return;
                 }
 
-                if (pnlToolAreaSplit.Panel1.VerticalScroll.Visible)
+                if (pnlContent.VerticalScroll.Visible)
                 {
-                    int delta = e.Delta / Constants.WHEEL_DELTA * pnlToolAreaSplit.Panel1.VerticalScroll.SmallChange * -1;
+                    int delta = e.Delta / Constants.WHEEL_DELTA * pnlContent.VerticalScroll.SmallChange * -1;
                     if (delta < 0)
                     {
-                        if (-pnlToolAreaSplit.Panel1.AutoScrollPosition.Y + delta
-                                < pnlToolAreaSplit.Panel1.VerticalScroll.Minimum)
+                        if (-pnlContent.AutoScrollPosition.Y + delta < pnlContent.VerticalScroll.Minimum)
                         {
-                            pnlToolAreaSplit.Panel1.AutoScrollPosition =
-                                new Point(0, pnlToolAreaSplit.Panel1.VerticalScroll.Minimum);
+                            pnlContent.AutoScrollPosition = new Point(0, pnlContent.VerticalScroll.Minimum);
                             return;
                         }
                     }
                     else
                     {
-                        if (-pnlToolAreaSplit.Panel1.AutoScrollPosition.Y + delta
-                            > pnlToolAreaSplit.Panel1.VerticalScroll.Maximum)
+                        if (-pnlContent.AutoScrollPosition.Y + delta > pnlContent.VerticalScroll.Maximum)
                         {
-                            pnlToolAreaSplit.Panel1.AutoScrollPosition =
-                                new Point(0, pnlToolAreaSplit.Panel1.VerticalScroll.Maximum);
+                            pnlContent.AutoScrollPosition =
+                                new Point(0, pnlContent.VerticalScroll.Maximum);
                             return;
                         }
                     }
 
-                    pnlToolAreaSplit.Panel1.AutoScrollPosition =
-                        new Point(0, -pnlToolAreaSplit.Panel1.AutoScrollPosition.Y + delta);
+                    pnlContent.AutoScrollPosition = new Point(0, -pnlContent.AutoScrollPosition.Y + delta);
                 }
-                else if (pnlToolAreaSplit.Panel1.HorizontalScroll.Visible)
+                else if (pnlContent.HorizontalScroll.Visible)
                 {
-                    int delta = e.Delta / Constants.WHEEL_DELTA * pnlToolAreaSplit.Panel1.HorizontalScroll.SmallChange * -1;
+                    int delta = e.Delta / Constants.WHEEL_DELTA * pnlContent.HorizontalScroll.SmallChange * -1;
                     if (delta < 0)
                     {
-                        if (-pnlToolAreaSplit.Panel1.AutoScrollPosition.X + delta
-                            < pnlToolAreaSplit.Panel1.HorizontalScroll.Minimum)
+                        if (-pnlContent.AutoScrollPosition.X + delta < pnlContent.HorizontalScroll.Minimum)
                         {
-                            pnlToolAreaSplit.Panel1.AutoScrollPosition =
-                                new Point(pnlToolAreaSplit.Panel1.HorizontalScroll.Minimum, 0);
+                            pnlContent.AutoScrollPosition = new Point(pnlContent.HorizontalScroll.Minimum, 0);
                             return;
                         }
                     }
                     else
                     {
-                        if (-pnlToolAreaSplit.Panel1.AutoScrollPosition.X + delta
-                            < pnlToolAreaSplit.Panel1.HorizontalScroll.Maximum)
+                        if (-pnlContent.AutoScrollPosition.X + delta < pnlContent.HorizontalScroll.Maximum)
                         {
-                            pnlToolAreaSplit.Panel1.AutoScrollPosition =
-                                new Point(pnlToolAreaSplit.Panel1.HorizontalScroll.Maximum, 0);
+                            pnlContent.AutoScrollPosition =
+                                new Point(pnlContent.HorizontalScroll.Maximum, 0);
                             return;
                         }
                     }
 
-                    pnlToolAreaSplit.Panel1.AutoScrollPosition =
-                        new Point(-pnlToolAreaSplit.Panel1.AutoScrollPosition.X + delta, 0);
+                    pnlContent.AutoScrollPosition = new Point(-pnlContent.AutoScrollPosition.X + delta, 0);
                 }
             }
             catch (Exception ex)
@@ -1156,12 +1147,12 @@ namespace SO.PictManager.Forms
             {
                 if (TagPanelExpanded)
                 {
-                    pnlTagSplit.SplitterDistance = pnlTagSplit.Panel1MinSize;
+                    pnlHeader.Height = TAG_PANEL_MIN_HEIGHT;
                     btnTagPanelToggle.Image = Resources.arrow_down;
                 }
                 else
                 {
-                    pnlTagSplit.SplitterDistance = 50;
+                    pnlHeader.Height = TAG_PANEL_MIN_HEIGHT * 2;
                     btnTagPanelToggle.Image = Resources.arrow_up;
                 }
 

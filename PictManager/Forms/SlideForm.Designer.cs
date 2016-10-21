@@ -39,81 +39,93 @@
             this.btnBookmark = new SO.PictManager.Components.KeyPrevButton();
             this.btnGroup = new SO.PictManager.Components.KeyPrevButton();
             ((System.ComponentModel.ISupportInitialize)(this.picViewer)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pnlToolAreaSplit)).BeginInit();
-            this.pnlToolAreaSplit.Panel1.SuspendLayout();
-            this.pnlToolAreaSplit.Panel2.SuspendLayout();
-            this.pnlToolAreaSplit.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pnlTagSplit)).BeginInit();
-            this.pnlTagSplit.Panel2.SuspendLayout();
-            this.pnlTagSplit.SuspendLayout();
+            this.pnlFooter.SuspendLayout();
+            this.pnlHeader.SuspendLayout();
+            this.pnlContent.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // picViewer
-            // 
-            this.picViewer.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
-            this.picViewer.Size = new System.Drawing.Size(1134, 398);
-            // 
-            // pnlToolAreaSplit
-            // 
-            this.pnlToolAreaSplit.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
-            // 
-            // pnlToolAreaSplit.Panel2
-            // 
-            this.pnlToolAreaSplit.Panel2.AutoScroll = true;
-            this.pnlToolAreaSplit.Panel2.Controls.Add(this.chkSimilar);
-            this.pnlToolAreaSplit.Panel2.Controls.Add(this.cmbSort);
-            this.pnlToolAreaSplit.Panel2.Controls.Add(this.btnGroup);
-            this.pnlToolAreaSplit.Panel2.Controls.Add(this.btnBookmark);
-            this.pnlToolAreaSplit.Panel2.Controls.Add(this.btnNext);
-            this.pnlToolAreaSplit.Panel2.Controls.Add(this.txtIndex);
-            this.pnlToolAreaSplit.Panel2.Controls.Add(this.lblCount);
-            this.pnlToolAreaSplit.Panel2.Controls.Add(this.btnPrevious);
-            this.pnlToolAreaSplit.Panel2.Controls.Add(this.lblCountDelim);
-            this.pnlToolAreaSplit.Size = new System.Drawing.Size(1134, 472);
-            this.pnlToolAreaSplit.SplitterDistance = 398;
-            this.pnlToolAreaSplit.SplitterWidth = 6;
             // 
             // btnClose
             // 
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnClose.Location = new System.Drawing.Point(1049, 8);
+            this.btnClose.Location = new System.Drawing.Point(1049, 11);
             this.btnClose.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.btnClose.TabIndex = 15;
             // 
             // cmbPicMode
             // 
             this.cmbPicMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.cmbPicMode.Location = new System.Drawing.Point(945, 13);
+            this.cmbPicMode.Location = new System.Drawing.Point(945, 15);
             this.cmbPicMode.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.cmbPicMode.Size = new System.Drawing.Size(98, 23);
             this.cmbPicMode.TabIndex = 14;
             // 
-            // lblInfo
-            // 
-            this.lblInfo.Size = new System.Drawing.Size(1134, 307);
-            // 
             // btnZoomOut
             // 
             this.btnZoomOut.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnZoomOut.Location = new System.Drawing.Point(737, 8);
+            this.btnZoomOut.Location = new System.Drawing.Point(730, 11);
             this.btnZoomOut.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.btnZoomOut.TabIndex = 12;
             // 
             // btnZoomIn
             // 
             this.btnZoomIn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnZoomIn.Location = new System.Drawing.Point(700, 8);
+            this.btnZoomIn.Location = new System.Drawing.Point(693, 11);
             this.btnZoomIn.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.btnZoomIn.TabIndex = 11;
             // 
-            // pnlTagSplit
+            // picViewer
             // 
-            this.pnlTagSplit.Panel1Collapsed = true;
-            this.pnlTagSplit.Size = new System.Drawing.Size(1134, 472);
+            this.picViewer.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            this.picViewer.Size = new System.Drawing.Size(1134, 370);
+            // 
+            // lblInfo
+            // 
+            this.lblInfo.Size = new System.Drawing.Size(1134, 370);
+            // 
+            // btnTagPanelToggle
+            // 
+            this.btnTagPanelToggle.FlatAppearance.BorderColor = System.Drawing.SystemColors.Info;
+            this.btnTagPanelToggle.Location = new System.Drawing.Point(1094, 0);
+            // 
+            // pnlFooter
+            // 
+            this.pnlFooter.Controls.Add(this.chkSimilar);
+            this.pnlFooter.Controls.Add(this.cmbSort);
+            this.pnlFooter.Controls.Add(this.btnGroup);
+            this.pnlFooter.Controls.Add(this.btnBookmark);
+            this.pnlFooter.Controls.Add(this.btnNext);
+            this.pnlFooter.Controls.Add(this.txtIndex);
+            this.pnlFooter.Controls.Add(this.lblCount);
+            this.pnlFooter.Controls.Add(this.btnPrevious);
+            this.pnlFooter.Controls.Add(this.lblCountDelim);
+            this.pnlFooter.Location = new System.Drawing.Point(0, 424);
+            this.pnlFooter.Size = new System.Drawing.Size(1134, 50);
+            this.pnlFooter.Controls.SetChildIndex(this.lblCountDelim, 0);
+            this.pnlFooter.Controls.SetChildIndex(this.btnPrevious, 0);
+            this.pnlFooter.Controls.SetChildIndex(this.lblCount, 0);
+            this.pnlFooter.Controls.SetChildIndex(this.txtIndex, 0);
+            this.pnlFooter.Controls.SetChildIndex(this.btnNext, 0);
+            this.pnlFooter.Controls.SetChildIndex(this.btnBookmark, 0);
+            this.pnlFooter.Controls.SetChildIndex(this.btnGroup, 0);
+            this.pnlFooter.Controls.SetChildIndex(this.cmbSort, 0);
+            this.pnlFooter.Controls.SetChildIndex(this.chkSimilar, 0);
+            this.pnlFooter.Controls.SetChildIndex(this.btnClose, 0);
+            this.pnlFooter.Controls.SetChildIndex(this.cmbPicMode, 0);
+            this.pnlFooter.Controls.SetChildIndex(this.btnDelete, 0);
+            this.pnlFooter.Controls.SetChildIndex(this.btnZoomIn, 0);
+            this.pnlFooter.Controls.SetChildIndex(this.btnZoomOut, 0);
+            // 
+            // pnlHeader
+            // 
+            this.pnlHeader.Size = new System.Drawing.Size(1134, 30);
+            // 
+            // pnlContent
+            // 
+            this.pnlContent.Size = new System.Drawing.Size(1134, 370);
             // 
             // btnPrevious
             // 
-            this.btnPrevious.Location = new System.Drawing.Point(515, 8);
+            this.btnPrevious.Location = new System.Drawing.Point(516, 11);
             this.btnPrevious.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnPrevious.Name = "btnPrevious";
             this.btnPrevious.Size = new System.Drawing.Size(29, 29);
@@ -124,7 +136,7 @@
             // 
             // btnNext
             // 
-            this.btnNext.Location = new System.Drawing.Point(657, 8);
+            this.btnNext.Location = new System.Drawing.Point(658, 11);
             this.btnNext.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnNext.Name = "btnNext";
             this.btnNext.Size = new System.Drawing.Size(29, 29);
@@ -135,7 +147,7 @@
             // 
             // lblCount
             // 
-            this.lblCount.Location = new System.Drawing.Point(610, 12);
+            this.lblCount.Location = new System.Drawing.Point(611, 15);
             this.lblCount.Name = "lblCount";
             this.lblCount.Size = new System.Drawing.Size(41, 20);
             this.lblCount.TabIndex = 9;
@@ -144,7 +156,7 @@
             // 
             // lblCountDelim
             // 
-            this.lblCountDelim.Location = new System.Drawing.Point(594, 11);
+            this.lblCountDelim.Location = new System.Drawing.Point(597, 15);
             this.lblCountDelim.Name = "lblCountDelim";
             this.lblCountDelim.Size = new System.Drawing.Size(13, 20);
             this.lblCountDelim.TabIndex = 8;
@@ -154,19 +166,20 @@
             // txtIndex
             // 
             this.txtIndex.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.txtIndex.Location = new System.Drawing.Point(550, 12);
+            this.txtIndex.Location = new System.Drawing.Point(551, 15);
             this.txtIndex.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtIndex.Name = "txtIndex";
             this.txtIndex.Size = new System.Drawing.Size(40, 23);
             this.txtIndex.TabIndex = 7;
             this.txtIndex.Text = "9999";
+            this.txtIndex.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtIndex.TextChanged += new System.EventHandler(this.txtIndex_TextChanged);
             this.txtIndex.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtIndex_KeyDown);
             // 
             // chkSimilar
             // 
             this.chkSimilar.Appearance = System.Windows.Forms.Appearance.Button;
-            this.chkSimilar.Location = new System.Drawing.Point(312, 8);
+            this.chkSimilar.Location = new System.Drawing.Point(312, 11);
             this.chkSimilar.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chkSimilar.Name = "chkSimilar";
             this.chkSimilar.Size = new System.Drawing.Size(73, 29);
@@ -180,7 +193,7 @@
             // 
             this.cmbSort.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbSort.FormattingEnabled = true;
-            this.cmbSort.Location = new System.Drawing.Point(774, 12);
+            this.cmbSort.Location = new System.Drawing.Point(774, 15);
             this.cmbSort.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cmbSort.Name = "cmbSort";
             this.cmbSort.Size = new System.Drawing.Size(165, 23);
@@ -189,7 +202,7 @@
             // 
             // btnBookmark
             // 
-            this.btnBookmark.Location = new System.Drawing.Point(224, 8);
+            this.btnBookmark.Location = new System.Drawing.Point(224, 11);
             this.btnBookmark.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnBookmark.Name = "btnBookmark";
             this.btnBookmark.Size = new System.Drawing.Size(82, 29);
@@ -200,7 +213,7 @@
             // 
             // btnGroup
             // 
-            this.btnGroup.Location = new System.Drawing.Point(391, 8);
+            this.btnGroup.Location = new System.Drawing.Point(391, 11);
             this.btnGroup.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnGroup.Name = "btnGroup";
             this.btnGroup.Size = new System.Drawing.Size(91, 29);
@@ -217,17 +230,13 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.Name = "SlideForm";
-            this.Text = "PictManager - イメージビューア [画像パス：]";
+            this.Text = "PictManager - イメージビューア [画像ID：]";
             this.Resize += new System.EventHandler(this.Form_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.picViewer)).EndInit();
-            this.pnlToolAreaSplit.Panel1.ResumeLayout(false);
-            this.pnlToolAreaSplit.Panel2.ResumeLayout(false);
-            this.pnlToolAreaSplit.Panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pnlToolAreaSplit)).EndInit();
-            this.pnlToolAreaSplit.ResumeLayout(false);
-            this.pnlTagSplit.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pnlTagSplit)).EndInit();
-            this.pnlTagSplit.ResumeLayout(false);
+            this.pnlFooter.ResumeLayout(false);
+            this.pnlFooter.PerformLayout();
+            this.pnlHeader.ResumeLayout(false);
+            this.pnlContent.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
