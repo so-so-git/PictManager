@@ -29,5 +29,6 @@ namespace SO.PictManager.DataModel
         public DbSet<MstTag> MstTags { get; set; }
         public DbSet<TblGroup> TblGroups { get; set; }
         public DbSet<TblImage> TblImages { get; set; }
+        public DbSet<TblTagging> TblTaggings { get; set; }
     }
 }

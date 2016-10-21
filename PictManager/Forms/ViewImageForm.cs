@@ -11,15 +11,12 @@ using SO.Library.Drawing;
 using SO.Library.Extensions;
 using SO.Library.Forms;
 using SO.Library.Forms.Extensions;
-using SO.Library.IO;
-using SO.Library.Text;
-using SO.PictManager.Components;
 using SO.PictManager.Common;
+using SO.PictManager.Components;
 using SO.PictManager.DataModel;
 using SO.PictManager.Forms.Info;
 using SO.PictManager.Imaging;
-
-using Config = System.Configuration.ConfigurationManager;
+using SO.PictManager.Properties;
 
 namespace SO.PictManager.Forms
 {
@@ -42,6 +39,12 @@ namespace SO.PictManager.Forms
         /// <summary>スクロール幅(大)の設定値</summary>
         protected const int SCROLL_CHANGE_LARGE = 250;
 
+        /// <summary>新規タグ入力用テキストボックスのコントロール名</summary>
+        protected const string TEXT_BOX_NAME_NEW_TAG = "txtNewTag";
+
+        /// <summary>ツールエリアの高さ</summary>
+        protected const int TOOL_AREA_HEIGHT = 50;
+
         #endregion
 
         #region インスタンス変数
@@ -57,6 +60,20 @@ namespace SO.PictManager.Forms
 
         /// <summary>画像サイズモード保管</summary>
         private PictureBoxSizeMode _storeSizeMode;
+
+        #endregion
+
+        #region プロパティ
+
+        /// <summary>
+        /// 画像情報を取得または設定します。
+        /// </summary>
+        protected IImage ImageData { get; set; }
+
+        /// <summary>
+        /// タグパネルが開かれているかを示すフラグを取得または設定します。
+        /// </summary>
+        protected bool TagPanelExpanded { get; set; }
 
         #endregion
 
@@ -117,12 +134,31 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region プロパティ
+        #region ConstructCommon - 共通コンストラクション
 
         /// <summary>
-        /// 画像情報を取得または設定します。
+        /// インスタンス構築時の共通処理を実行します。
         /// </summary>
-        protected IImage ImageData { get; set; }
+        private void ConstructCommon()
+        {
+            // 部分拡大倍率コンボボックス初期化
+            for (int i = 2; i <= 5; i++)
+            {
+                cmbLupeMagnification.Items.Add(new KeyValuePair<string, int>(string.Format("x{0}", i), i));
+            }
+            cmbLupeMagnification.DisplayMember = "Key";
+            cmbLupeMagnification.SelectedIndex = 0;
+            cmbLupeMagnification.Enabled = false;
+
+            // サイズモードコンボボックス初期化
+            foreach (var item in GetSizeModeMenuItems())
+            {
+                cmbPicMode.Items.Add(item.Text);
+            }
+
+            // サイズモード復元
+            cmbPicMode.SelectedItem = Utilities.State.SizeMode.ToString();
+        }
 
         #endregion
 
@@ -200,7 +236,8 @@ namespace SO.PictManager.Forms
             {
                 using (Image img = ImageData.GetImage())
                 {
-                    lblStatus.Text = string.Format("パス：{0}    サイズ：{1}×{2}    更新日時：{3}",
+                    lblStatus.Text = string.Format("画像{0}：{1}    サイズ：{2}×{3}    更新日時：{4}",
+                        ImageMode == ConfigInfo.ImageDataMode.File ? "パス" : "ID",
                         ImageData.Key, img.Width, img.Height,
                         ImageData.Timestamp.ToString("yyyy/MM/dd HH:mm:ss"));
                 }
@@ -257,6 +294,9 @@ namespace SO.PictManager.Forms
 
                 // スクロール設定
                 ResetScrollProperties();
+
+                // タグを表示
+                ShowTags();
             }
             catch (Exception ex)
             {
@@ -272,6 +312,49 @@ namespace SO.PictManager.Forms
                     // エラー画像削除
                     btnDelete_Click(this, new EventArgs());
                 }
+            }
+        }
+
+        #endregion
+
+        #region ShowTags - タグ表示
+
+        /// <summary>
+        /// 表示中の画像のタグを表示します。
+        /// </summary>
+        private void ShowTags()
+        {
+            // 前の画像のタグ表示を消去
+            pnlTags.Controls.Clear();
+
+            int imageId = int.Parse(ImageData.Key);
+            using (var entities = new PictManagerEntities())
+            {
+                // 画像のタグ付けを取得
+                var taggings = from row in entities.TblTaggings
+                               where row.ImageId == imageId
+                               select row;
+
+                foreach (var tagging in taggings)
+                {
+                    // タグユニットをパネルに追加
+                    var tagUnit = new TagUnit(imageId, tagging.TagId);
+                    tagUnit.TagDeleted += (sender, e) => ShowTags();
+
+                    pnlTags.Controls.Add(tagUnit);
+                }
+            }
+
+            if (pnlTags.Controls.Count < Constants.TAG_MAX_COUNT)
+            {
+                // タグ付けが最大数に満たない場合、タグ付け追加用のテキストボックスを配置
+                var txtNewTag = new TextBox();
+                txtNewTag.Name = TEXT_BOX_NAME_NEW_TAG;
+                txtNewTag.MaxLength = 50;
+
+                txtNewTag.KeyDown += txtNewTag_KeyDown;
+
+                pnlTags.Controls.Add(txtNewTag);
             }
         }
 
@@ -293,14 +376,14 @@ namespace SO.PictManager.Forms
                 // コンボボックスの選択アイテムと同名のサイズモードを設定
                 picViewer.SizeMode = (PictureBoxSizeMode)fieldInfo.GetValue(null);
 
-                // Fill時のサイズを取得
-                picViewer.Dock = DockStyle.Fill;
-                Size s = picViewer.Size;
+                //// Fill時のサイズを取得
+                //picViewer.Dock = DockStyle.Fill;
+                //Size s = picViewer.Size;
 
-                // Fillを解除し、取得しておいたサイズに変更
-                // (AutoSizeではみ出す場合には再度サイズが自動拡張される)
-                picViewer.Dock = DockStyle.None;
-                picViewer.Size = s;
+                //// Fillを解除し、取得しておいたサイズに変更
+                //// (AutoSizeではみ出す場合には再度サイズが自動拡張される)
+                //picViewer.Dock = DockStyle.None;
+                //picViewer.Size = s;
 
                 // スクロール設定
                 ResetScrollProperties();
@@ -555,65 +638,20 @@ namespace SO.PictManager.Forms
         private void ResetScrollProperties()
         {
             // 垂直スクロールバー設定
-            if (pnlParent.Panel1.VerticalScroll.Visible)
+            if (pnlToolAreaSplit.Panel1.VerticalScroll.Visible)
             {
-                pnlParent.Panel1.AutoScrollPosition = new Point(0, pnlParent.Panel1.VerticalScroll.Minimum);
-                pnlParent.Panel1.VerticalScroll.SmallChange = picViewer.Size.Height / 20;
-                pnlParent.Panel1.VerticalScroll.LargeChange = picViewer.Size.Height / 4;
+                pnlToolAreaSplit.Panel1.AutoScrollPosition = new Point(0, pnlToolAreaSplit.Panel1.VerticalScroll.Minimum);
+                pnlToolAreaSplit.Panel1.VerticalScroll.SmallChange = picViewer.Size.Height / 20;
+                pnlToolAreaSplit.Panel1.VerticalScroll.LargeChange = picViewer.Size.Height / 4;
             }
 
             // 水平スクロールバー設定
-            if (pnlParent.Panel1.HorizontalScroll.Visible)
+            if (pnlToolAreaSplit.Panel1.HorizontalScroll.Visible)
             {
-                pnlParent.Panel1.AutoScrollPosition = new Point(pnlParent.Panel1.HorizontalScroll.Minimum, 0);
-                pnlParent.Panel1.HorizontalScroll.SmallChange = picViewer.Size.Width / 20;
-                pnlParent.Panel1.HorizontalScroll.LargeChange = picViewer.Size.Width / 4;
+                pnlToolAreaSplit.Panel1.AutoScrollPosition = new Point(pnlToolAreaSplit.Panel1.HorizontalScroll.Minimum, 0);
+                pnlToolAreaSplit.Panel1.HorizontalScroll.SmallChange = picViewer.Size.Width / 20;
+                pnlToolAreaSplit.Panel1.HorizontalScroll.LargeChange = picViewer.Size.Width / 4;
             }
-        }
-
-        #endregion
-
-        #region ConstructCommon - 共通コンストラクション
-
-        /// <summary>
-        /// インスタンス構築時の共通処理を実行します。
-        /// </summary>
-        private void ConstructCommon()
-        {
-            // 情報ラベル不可視化
-            lblInfo.Hide();
-
-            // タイトルバー表示
-            this.Text = string.Format("PictManager - イメージビューア [{0}:{1}]",
-                ImageMode == ConfigInfo.ImageDataMode.File ? "画像パス" : "画像ID",
-                ImageData == null ? string.Empty : ImageData.Key);
-
-            // ステータスバーに画像情報を表示
-            ShowImageInfoByStatusBar();
-
-            // スクロール幅設定
-            pnlParent.Panel1.VerticalScroll.SmallChange = SCROLL_CHANGE_SMALL;
-            pnlParent.Panel1.HorizontalScroll.SmallChange = SCROLL_CHANGE_SMALL;
-            pnlParent.Panel1.VerticalScroll.LargeChange = SCROLL_CHANGE_LARGE;
-            pnlParent.Panel1.HorizontalScroll.LargeChange = SCROLL_CHANGE_LARGE;
-
-            // 部分拡大倍率コンボボックス初期化
-            for (int i = 2; i <= 5; i++)
-            {
-                cmbLupeMagnification.Items.Add(new KeyValuePair<string, int>(string.Format("x{0}", i), i));
-            }
-            cmbLupeMagnification.DisplayMember = "Key";
-            cmbLupeMagnification.SelectedIndex = 0;
-            cmbLupeMagnification.Enabled = false;
-
-            // サイズモードコンボボックス初期化
-            foreach (var item in GetSizeModeMenuItems())
-            {
-                cmbPicMode.Items.Add(item.Text);
-            }
-
-            // サイズモード復元
-            cmbPicMode.SelectedItem = Utilities.State.SizeMode.ToString();
         }
 
         #endregion
@@ -687,9 +725,41 @@ namespace SO.PictManager.Forms
         /// <param name="e">イベント引数</param>
         protected virtual void Form_Shown(object sender, EventArgs e)
         {
-            // picViewerの初期化後クライアントサイズが必要なのでコンストラクタではなくこっち
+            // 情報ラベル不可視化
+            lblInfo.Hide();
+
+            // タイトルバー表示
+            this.Text = string.Format("PictManager - イメージビューア [画像{0}：{1}]",
+                ImageMode == ConfigInfo.ImageDataMode.File ? "パス" : "ID",
+                ImageData == null ? string.Empty : ImageData.Key);
+
+            // ステータスバーに画像情報を表示
+            ShowImageInfoByStatusBar();
+
+            // スクロール幅設定
+            pnlToolAreaSplit.Panel1.VerticalScroll.SmallChange = SCROLL_CHANGE_SMALL;
+            pnlToolAreaSplit.Panel1.HorizontalScroll.SmallChange = SCROLL_CHANGE_SMALL;
+            pnlToolAreaSplit.Panel1.VerticalScroll.LargeChange = SCROLL_CHANGE_LARGE;
+            pnlToolAreaSplit.Panel1.HorizontalScroll.LargeChange = SCROLL_CHANGE_LARGE;
+
+            // タグパネル設定
+            if (ImageMode == ConfigInfo.ImageDataMode.Database)
+            {
+                pnlTagSplit.SplitterDistance = pnlTagSplit.Panel1MinSize;
+                TagPanelExpanded = false;
+            }
+            else
+            {
+                pnlTagSplit.Panel1Collapsed = true;
+            }
+
+            // ツールエリアを分割するスプリッタの位置を調整
+            pnlToolAreaSplit.SplitterDistance =
+                pnlToolAreaSplit.ClientSize.Height - barMenu.Height - TOOL_AREA_HEIGHT;
+
             if (ImageData != null)
             {
+                // 画像データが有る場合は表示
                 DisplayImage();
             }
         }
@@ -751,59 +821,59 @@ namespace SO.PictManager.Forms
                     return;
                 }
 
-                if (pnlParent.Panel1.VerticalScroll.Visible)
+                if (pnlToolAreaSplit.Panel1.VerticalScroll.Visible)
                 {
-                    int delta = e.Delta / Constants.WHEEL_DELTA * pnlParent.Panel1.VerticalScroll.SmallChange * -1;
+                    int delta = e.Delta / Constants.WHEEL_DELTA * pnlToolAreaSplit.Panel1.VerticalScroll.SmallChange * -1;
                     if (delta < 0)
                     {
-                        if (-pnlParent.Panel1.AutoScrollPosition.Y + delta
-                                < pnlParent.Panel1.VerticalScroll.Minimum)
+                        if (-pnlToolAreaSplit.Panel1.AutoScrollPosition.Y + delta
+                                < pnlToolAreaSplit.Panel1.VerticalScroll.Minimum)
                         {
-                            pnlParent.Panel1.AutoScrollPosition =
-                                new Point(0, pnlParent.Panel1.VerticalScroll.Minimum);
+                            pnlToolAreaSplit.Panel1.AutoScrollPosition =
+                                new Point(0, pnlToolAreaSplit.Panel1.VerticalScroll.Minimum);
                             return;
                         }
                     }
                     else
                     {
-                        if (-pnlParent.Panel1.AutoScrollPosition.Y + delta
-                            > pnlParent.Panel1.VerticalScroll.Maximum)
+                        if (-pnlToolAreaSplit.Panel1.AutoScrollPosition.Y + delta
+                            > pnlToolAreaSplit.Panel1.VerticalScroll.Maximum)
                         {
-                            pnlParent.Panel1.AutoScrollPosition =
-                                new Point(0, pnlParent.Panel1.VerticalScroll.Maximum);
+                            pnlToolAreaSplit.Panel1.AutoScrollPosition =
+                                new Point(0, pnlToolAreaSplit.Panel1.VerticalScroll.Maximum);
                             return;
                         }
                     }
 
-                    pnlParent.Panel1.AutoScrollPosition =
-                        new Point(0, -pnlParent.Panel1.AutoScrollPosition.Y + delta);
+                    pnlToolAreaSplit.Panel1.AutoScrollPosition =
+                        new Point(0, -pnlToolAreaSplit.Panel1.AutoScrollPosition.Y + delta);
                 }
-                else if (pnlParent.Panel1.HorizontalScroll.Visible)
+                else if (pnlToolAreaSplit.Panel1.HorizontalScroll.Visible)
                 {
-                    int delta = e.Delta / Constants.WHEEL_DELTA * pnlParent.Panel1.HorizontalScroll.SmallChange * -1;
+                    int delta = e.Delta / Constants.WHEEL_DELTA * pnlToolAreaSplit.Panel1.HorizontalScroll.SmallChange * -1;
                     if (delta < 0)
                     {
-                        if (-pnlParent.Panel1.AutoScrollPosition.X + delta
-                            < pnlParent.Panel1.HorizontalScroll.Minimum)
+                        if (-pnlToolAreaSplit.Panel1.AutoScrollPosition.X + delta
+                            < pnlToolAreaSplit.Panel1.HorizontalScroll.Minimum)
                         {
-                            pnlParent.Panel1.AutoScrollPosition =
-                                new Point(pnlParent.Panel1.HorizontalScroll.Minimum, 0);
+                            pnlToolAreaSplit.Panel1.AutoScrollPosition =
+                                new Point(pnlToolAreaSplit.Panel1.HorizontalScroll.Minimum, 0);
                             return;
                         }
                     }
                     else
                     {
-                        if (-pnlParent.Panel1.AutoScrollPosition.X + delta
-                            < pnlParent.Panel1.HorizontalScroll.Maximum)
+                        if (-pnlToolAreaSplit.Panel1.AutoScrollPosition.X + delta
+                            < pnlToolAreaSplit.Panel1.HorizontalScroll.Maximum)
                         {
-                            pnlParent.Panel1.AutoScrollPosition =
-                                new Point(pnlParent.Panel1.HorizontalScroll.Maximum, 0);
+                            pnlToolAreaSplit.Panel1.AutoScrollPosition =
+                                new Point(pnlToolAreaSplit.Panel1.HorizontalScroll.Maximum, 0);
                             return;
                         }
                     }
 
-                    pnlParent.Panel1.AutoScrollPosition =
-                        new Point(-pnlParent.Panel1.AutoScrollPosition.X + delta, 0);
+                    pnlToolAreaSplit.Panel1.AutoScrollPosition =
+                        new Point(-pnlToolAreaSplit.Panel1.AutoScrollPosition.X + delta, 0);
                 }
             }
             catch (Exception ex)
@@ -1068,6 +1138,126 @@ namespace SO.PictManager.Forms
 
             // PitureBoxのサイズを再設定
             ResizeImageRect();
+        }
+
+        #endregion
+
+        #region btnTagPanelToggle_Click - タグパネル切替ボタン押下時
+
+        /// <summary>
+        /// タグパネル切替ボタンがクリックされた際に実行される処理です。
+        /// タグパネルの表示高さを切り替えます。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void btnTagPanelToggle_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (TagPanelExpanded)
+                {
+                    pnlTagSplit.SplitterDistance = pnlTagSplit.Panel1MinSize;
+                    btnTagPanelToggle.Image = Resources.arrow_down;
+                }
+                else
+                {
+                    pnlTagSplit.SplitterDistance = 50;
+                    btnTagPanelToggle.Image = Resources.arrow_up;
+                }
+
+                TagPanelExpanded = !TagPanelExpanded;
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
+        }
+
+        #endregion
+
+        #region txtNewTag_KeyDown - 新規タグテキストボックスキー押下時
+
+        /// <summary>
+        /// フォーム上でキーが押下された際に実行される処理です。
+        /// 特殊なキーが押下された場合に固有の処理を実行します。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void txtNewTag_KeyDown(object sender, KeyEventArgs e)
+        {
+            try
+            {
+                if ((e.KeyCode & Keys.Return) == Keys.Return)   // リターンキー押下時
+                {
+                    try
+                    {
+                        string tagName = (sender as TextBox).Text.Trim();
+                        if (string.IsNullOrEmpty(tagName))
+                        {
+                            return;
+                        }
+
+                        int imageId = int.Parse(ImageData.Key);
+                        int tagNo = pnlTags.Controls.OfType<TagUnit>().Count() + 1;
+
+                        using (var entities = new PictManagerEntities())
+                        {
+                            // 同じ名称のタグを取得
+                            var tag = (from row in entities.MstTags
+                                        where row.TagName == tagName
+                                        select row).SingleOrDefault();
+
+                            if (tag == null)
+                            {
+                                // タグが存在しない場合、新規登録
+                                tag = new MstTag();
+                                tag.TagName = tagName;
+                                tag.InsertedDateTime = DateTime.Now;
+                                tag.UpdatedDateTime = DateTime.Now;
+
+                                entities.MstTags.Add(tag);
+                                entities.SaveChanges();
+                            }
+                            else
+                            {
+                                // タグが存在する場合、既にそのタグが付けられているか確認
+                                var query = from row in entities.TblTaggings
+                                            where row.TagId == tag.TagId
+                                                && row.ImageId == imageId
+                                            select row;
+
+                                if (query.Any())
+                                {
+                                    // 既に付けられている場合は何もしない
+                                    return;
+                                }
+                            }
+
+                            // タグ付けを作成
+                            var tagging = new TblTagging();
+                            tagging.TagId = tag.TagId;
+                            tagging.ImageId = imageId;
+                            tagging.InsertedDateTime = DateTime.Now;
+                            tagging.UpdatedDateTime = DateTime.Now;
+
+                            entities.TblTaggings.Add(tagging);
+                            entities.SaveChanges();
+                        }
+
+                        // タグ表示を更新
+                        ShowTags();
+                    }
+                    finally
+                    {
+                        e.Handled = true;
+                        e.SuppressKeyPress = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
         }
 
         #endregion

@@ -10,7 +10,7 @@
             <PropertyRef Name="CategoryId" />
           </Key>
           <Property Name="CategoryId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="CategoryName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="CategoryName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="InsertedDateTime" Type="datetime" Nullable="false" />
           <Property Name="UpdatedDateTime" Type="datetime" Nullable="false" />
         </EntityType>
@@ -19,7 +19,7 @@
             <PropertyRef Name="TagId" />
           </Key>
           <Property Name="TagId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="TagName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="TagName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="InsertedDateTime" Type="datetime" Nullable="false" />
           <Property Name="UpdatedDateTime" Type="datetime" Nullable="false" />
         </EntityType>
@@ -28,7 +28,7 @@
             <PropertyRef Name="GroupId" />
           </Key>
           <Property Name="GroupId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Description" Type="varchar" MaxLength="256" />
+          <Property Name="Description" Type="nvarchar" MaxLength="256" />
           <Property Name="InsertedDateTime" Type="datetime" Nullable="false" />
           <Property Name="UpdatedDateTime" Type="datetime" Nullable="false" />
         </EntityType>
@@ -38,22 +38,23 @@
           </Key>
           <Property Name="ImageId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ImageData" Type="varbinary(max)" Nullable="false" />
-          <Property Name="ImageFormat" Type="varchar" MaxLength="4" Nullable="false" />
+          <Property Name="ImageFormat" Type="nvarchar" MaxLength="4" Nullable="false" />
           <Property Name="CategoryId" Type="int" Nullable="false" />
-          <Property Name="TagId1" Type="int" />
-          <Property Name="TagId2" Type="int" />
-          <Property Name="TagId3" Type="int" />
-          <Property Name="TagId4" Type="int" />
-          <Property Name="TagId5" Type="int" />
-          <Property Name="TagId6" Type="int" />
-          <Property Name="TagId7" Type="int" />
-          <Property Name="TagId8" Type="int" />
-          <Property Name="TagId9" Type="int" />
           <Property Name="GroupId" Type="int" />
           <Property Name="GroupOrder" Type="int" />
-          <Property Name="Description" Type="varchar" MaxLength="256" />
-          <Property Name="Md5" Type="char" MaxLength="32" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="256" />
+          <Property Name="Md5" Type="nchar" MaxLength="32" Nullable="false" />
           <Property Name="DeleteFlag" Type="bit" Nullable="false" />
+          <Property Name="InsertedDateTime" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedDateTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TblTaggings">
+          <Key>
+            <PropertyRef Name="TagId" />
+            <PropertyRef Name="ImageId" />
+          </Key>
+          <Property Name="TagId" Type="int" Nullable="false" />
+          <Property Name="ImageId" Type="int" Nullable="false" />
           <Property Name="InsertedDateTime" Type="datetime" Nullable="false" />
           <Property Name="UpdatedDateTime" Type="datetime" Nullable="false" />
         </EntityType>
@@ -62,6 +63,7 @@
           <EntitySet Name="MstTags" EntityType="Self.MstTags" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblGroups" EntityType="Self.TblGroups" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblImages" EntityType="Self.TblImages" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TblTaggings" EntityType="Self.TblTaggings" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -72,7 +74,7 @@
             <PropertyRef Name="CategoryId" />
           </Key>
           <Property Name="CategoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-          <Property Name="CategoryName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CategoryName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="InsertedDateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="UpdatedDateTime" Type="DateTime" Precision="3" Nullable="false" />
         </EntityType>
@@ -81,7 +83,7 @@
             <PropertyRef Name="TagId" />
           </Key>
           <Property Name="TagId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-          <Property Name="TagName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="TagName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="InsertedDateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="UpdatedDateTime" Type="DateTime" Precision="3" Nullable="false" />
         </EntityType>
@@ -90,13 +92,14 @@
           <EntitySet Name="MstTags" EntityType="Self.MstTag" />
           <EntitySet Name="TblGroups" EntityType="SO.PictManager.DataModel.TblGroup" />
           <EntitySet Name="TblImages" EntityType="SO.PictManager.DataModel.TblImage" />
+          <EntitySet Name="TblTaggings" EntityType="SO.PictManager.DataModel.TblTagging" />
         </EntityContainer>
         <EntityType Name="TblGroup">
           <Key>
             <PropertyRef Name="GroupId" />
           </Key>
           <Property Name="GroupId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Description" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="InsertedDateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="UpdatedDateTime" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
@@ -106,24 +109,25 @@
           </Key>
           <Property Name="ImageId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ImageData" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
-          <Property Name="ImageFormat" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="ImageFormat" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="true" />
           <Property Name="CategoryId" Type="Int32" Nullable="false" />
-          <Property Name="TagId1" Type="Int32" />
-          <Property Name="TagId2" Type="Int32" />
-          <Property Name="TagId3" Type="Int32" />
-          <Property Name="TagId4" Type="Int32" />
-          <Property Name="TagId5" Type="Int32" />
-          <Property Name="TagId6" Type="Int32" />
-          <Property Name="TagId7" Type="Int32" />
-          <Property Name="TagId8" Type="Int32" />
-          <Property Name="TagId9" Type="Int32" />
           <Property Name="GroupId" Type="Int32" />
           <Property Name="GroupOrder" Type="Int32" />
-          <Property Name="Description" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Md5" Type="String" Nullable="false" MaxLength="32" FixedLength="true" Unicode="true" />
           <Property Name="DeleteFlag" Type="Boolean" Nullable="false" />
           <Property Name="InsertedDateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="UpdatedDateTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Md5" Type="String" Nullable="false" MaxLength="32" FixedLength="true" Unicode="false" />
+        </EntityType>
+        <EntityType Name="TblTagging">
+          <Key>
+            <PropertyRef Name="TagId" />
+            <PropertyRef Name="ImageId" />
+          </Key>
+          <Property Name="TagId" Type="Int32" Nullable="false" />
+          <Property Name="ImageId" Type="Int32" Nullable="false" />
+          <Property Name="InsertedDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedDateTime" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -164,26 +168,27 @@
           <EntitySetMapping Name="TblImages">
             <EntityTypeMapping TypeName="SO.PictManager.DataModel.TblImage">
               <MappingFragment StoreEntitySet="TblImages">
-                <ScalarProperty Name="Md5" ColumnName="Md5" />
                 <ScalarProperty Name="UpdatedDateTime" ColumnName="UpdatedDateTime" />
                 <ScalarProperty Name="InsertedDateTime" ColumnName="InsertedDateTime" />
                 <ScalarProperty Name="DeleteFlag" ColumnName="DeleteFlag" />
+                <ScalarProperty Name="Md5" ColumnName="Md5" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="GroupOrder" ColumnName="GroupOrder" />
                 <ScalarProperty Name="GroupId" ColumnName="GroupId" />
-                <ScalarProperty Name="TagId9" ColumnName="TagId9" />
-                <ScalarProperty Name="TagId8" ColumnName="TagId8" />
-                <ScalarProperty Name="TagId7" ColumnName="TagId7" />
-                <ScalarProperty Name="TagId6" ColumnName="TagId6" />
-                <ScalarProperty Name="TagId5" ColumnName="TagId5" />
-                <ScalarProperty Name="TagId4" ColumnName="TagId4" />
-                <ScalarProperty Name="TagId3" ColumnName="TagId3" />
-                <ScalarProperty Name="TagId2" ColumnName="TagId2" />
-                <ScalarProperty Name="TagId1" ColumnName="TagId1" />
                 <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
                 <ScalarProperty Name="ImageFormat" ColumnName="ImageFormat" />
                 <ScalarProperty Name="ImageData" ColumnName="ImageData" />
                 <ScalarProperty Name="ImageId" ColumnName="ImageId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TblTaggings">
+            <EntityTypeMapping TypeName="SO.PictManager.DataModel.TblTagging">
+              <MappingFragment StoreEntitySet="TblTaggings">
+                <ScalarProperty Name="UpdatedDateTime" ColumnName="UpdatedDateTime" />
+                <ScalarProperty Name="InsertedDateTime" ColumnName="InsertedDateTime" />
+                <ScalarProperty Name="ImageId" ColumnName="ImageId" />
+                <ScalarProperty Name="TagId" ColumnName="TagId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

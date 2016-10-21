@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ViewImageForm));
             this.picViewer = new System.Windows.Forms.PictureBox();
-            this.pnlParent = new System.Windows.Forms.SplitContainer();
+            this.pnlToolAreaSplit = new System.Windows.Forms.SplitContainer();
             this.picLupe = new System.Windows.Forms.PictureBox();
             this.lblInfo = new System.Windows.Forms.Label();
             this.cmbLupeMagnification = new System.Windows.Forms.ComboBox();
@@ -44,61 +44,69 @@
             this.barStatus = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.timLupe = new System.Windows.Forms.Timer(this.components);
+            this.pnlTagSplit = new System.Windows.Forms.SplitContainer();
+            this.pnlTags = new System.Windows.Forms.FlowLayoutPanel();
+            this.btnTagPanelToggle = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.picViewer)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pnlParent)).BeginInit();
-            this.pnlParent.Panel1.SuspendLayout();
-            this.pnlParent.Panel2.SuspendLayout();
-            this.pnlParent.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlToolAreaSplit)).BeginInit();
+            this.pnlToolAreaSplit.Panel1.SuspendLayout();
+            this.pnlToolAreaSplit.Panel2.SuspendLayout();
+            this.pnlToolAreaSplit.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLupe)).BeginInit();
             this.barStatus.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlTagSplit)).BeginInit();
+            this.pnlTagSplit.Panel1.SuspendLayout();
+            this.pnlTagSplit.Panel2.SuspendLayout();
+            this.pnlTagSplit.SuspendLayout();
             this.SuspendLayout();
             // 
             // picViewer
             // 
+            this.picViewer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.picViewer.ErrorImage = null;
             this.picViewer.InitialImage = null;
             this.picViewer.Location = new System.Drawing.Point(0, 0);
             this.picViewer.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.picViewer.Name = "picViewer";
-            this.picViewer.Size = new System.Drawing.Size(737, 460);
+            this.picViewer.Size = new System.Drawing.Size(737, 378);
             this.picViewer.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.picViewer.TabIndex = 1;
             this.picViewer.TabStop = false;
             this.picViewer.WaitOnLoad = true;
             // 
-            // pnlParent
+            // pnlToolAreaSplit
             // 
-            this.pnlParent.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlParent.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.pnlParent.IsSplitterFixed = true;
-            this.pnlParent.Location = new System.Drawing.Point(0, 24);
-            this.pnlParent.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.pnlParent.Name = "pnlParent";
-            this.pnlParent.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.pnlToolAreaSplit.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlToolAreaSplit.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.pnlToolAreaSplit.IsSplitterFixed = true;
+            this.pnlToolAreaSplit.Location = new System.Drawing.Point(0, 0);
+            this.pnlToolAreaSplit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.pnlToolAreaSplit.Name = "pnlToolAreaSplit";
+            this.pnlToolAreaSplit.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // pnlParent.Panel1
+            // pnlToolAreaSplit.Panel1
             // 
-            this.pnlParent.Panel1.AutoScroll = true;
-            this.pnlParent.Panel1.Controls.Add(this.picLupe);
-            this.pnlParent.Panel1.Controls.Add(this.picViewer);
-            this.pnlParent.Panel1.Controls.Add(this.lblInfo);
+            this.pnlToolAreaSplit.Panel1.AutoScroll = true;
+            this.pnlToolAreaSplit.Panel1.Controls.Add(this.picLupe);
+            this.pnlToolAreaSplit.Panel1.Controls.Add(this.picViewer);
+            this.pnlToolAreaSplit.Panel1.Controls.Add(this.lblInfo);
             // 
-            // pnlParent.Panel2
+            // pnlToolAreaSplit.Panel2
             // 
-            this.pnlParent.Panel2.BackColor = System.Drawing.SystemColors.Control;
-            this.pnlParent.Panel2.Controls.Add(this.cmbLupeMagnification);
-            this.pnlParent.Panel2.Controls.Add(this.chkLupe);
-            this.pnlParent.Panel2.Controls.Add(this.btnZoomOut);
-            this.pnlParent.Panel2.Controls.Add(this.btnZoomIn);
-            this.pnlParent.Panel2.Controls.Add(this.cmbPicMode);
-            this.pnlParent.Panel2.Controls.Add(this.btnDelete);
-            this.pnlParent.Panel2.Controls.Add(this.btnClose);
-            this.pnlParent.Panel2.Controls.Add(this.barStatus);
-            this.pnlParent.Size = new System.Drawing.Size(737, 534);
-            this.pnlParent.SplitterDistance = 445;
-            this.pnlParent.SplitterWidth = 5;
-            this.pnlParent.TabIndex = 0;
-            this.pnlParent.TabStop = false;
+            this.pnlToolAreaSplit.Panel2.BackColor = System.Drawing.SystemColors.Control;
+            this.pnlToolAreaSplit.Panel2.Controls.Add(this.cmbLupeMagnification);
+            this.pnlToolAreaSplit.Panel2.Controls.Add(this.chkLupe);
+            this.pnlToolAreaSplit.Panel2.Controls.Add(this.btnZoomOut);
+            this.pnlToolAreaSplit.Panel2.Controls.Add(this.btnZoomIn);
+            this.pnlToolAreaSplit.Panel2.Controls.Add(this.cmbPicMode);
+            this.pnlToolAreaSplit.Panel2.Controls.Add(this.btnDelete);
+            this.pnlToolAreaSplit.Panel2.Controls.Add(this.btnClose);
+            this.pnlToolAreaSplit.Panel2.Controls.Add(this.barStatus);
+            this.pnlToolAreaSplit.Size = new System.Drawing.Size(737, 453);
+            this.pnlToolAreaSplit.SplitterDistance = 378;
+            this.pnlToolAreaSplit.SplitterWidth = 5;
+            this.pnlToolAreaSplit.TabIndex = 0;
+            this.pnlToolAreaSplit.TabStop = false;
             // 
             // picLupe
             // 
@@ -117,7 +125,7 @@
             this.lblInfo.Font = new System.Drawing.Font("MS UI Gothic", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.lblInfo.Location = new System.Drawing.Point(0, 0);
             this.lblInfo.Name = "lblInfo";
-            this.lblInfo.Size = new System.Drawing.Size(737, 460);
+            this.lblInfo.Size = new System.Drawing.Size(737, 378);
             this.lblInfo.TabIndex = 0;
             this.lblInfo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -207,17 +215,17 @@
             // 
             this.barStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblStatus});
-            this.barStatus.Location = new System.Drawing.Point(0, 61);
+            this.barStatus.Location = new System.Drawing.Point(0, 48);
             this.barStatus.Name = "barStatus";
             this.barStatus.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
-            this.barStatus.Size = new System.Drawing.Size(737, 23);
+            this.barStatus.Size = new System.Drawing.Size(737, 22);
             this.barStatus.TabIndex = 7;
             this.barStatus.Text = "statusStrip1";
             // 
             // lblStatus
             // 
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(102, 18);
+            this.lblStatus.Size = new System.Drawing.Size(86, 17);
             this.lblStatus.Text = "[ステータス表示]";
             this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -226,12 +234,59 @@
             this.timLupe.Interval = 10;
             this.timLupe.Tick += new System.EventHandler(this.timLupe_Tick);
             // 
+            // pnlTagSplit
+            // 
+            this.pnlTagSplit.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlTagSplit.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.pnlTagSplit.IsSplitterFixed = true;
+            this.pnlTagSplit.Location = new System.Drawing.Point(0, 24);
+            this.pnlTagSplit.Name = "pnlTagSplit";
+            this.pnlTagSplit.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // pnlTagSplit.Panel1
+            // 
+            this.pnlTagSplit.Panel1.BackColor = System.Drawing.SystemColors.Info;
+            this.pnlTagSplit.Panel1.Controls.Add(this.pnlTags);
+            this.pnlTagSplit.Panel1.Controls.Add(this.btnTagPanelToggle);
+            this.pnlTagSplit.Panel1MinSize = 30;
+            // 
+            // pnlTagSplit.Panel2
+            // 
+            this.pnlTagSplit.Panel2.Controls.Add(this.pnlToolAreaSplit);
+            this.pnlTagSplit.Size = new System.Drawing.Size(737, 534);
+            this.pnlTagSplit.SplitterDistance = 80;
+            this.pnlTagSplit.SplitterWidth = 1;
+            this.pnlTagSplit.TabIndex = 1;
+            // 
+            // pnlTags
+            // 
+            this.pnlTags.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlTags.Location = new System.Drawing.Point(0, 0);
+            this.pnlTags.Name = "pnlTags";
+            this.pnlTags.Size = new System.Drawing.Size(697, 80);
+            this.pnlTags.TabIndex = 1;
+            // 
+            // btnTagPanelToggle
+            // 
+            this.btnTagPanelToggle.BackColor = System.Drawing.SystemColors.Info;
+            this.btnTagPanelToggle.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnTagPanelToggle.FlatAppearance.BorderColor = System.Drawing.SystemColors.Info;
+            this.btnTagPanelToggle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnTagPanelToggle.Image = global::SO.PictManager.Properties.Resources.arrow_down;
+            this.btnTagPanelToggle.Location = new System.Drawing.Point(697, 0);
+            this.btnTagPanelToggle.Name = "btnTagPanelToggle";
+            this.btnTagPanelToggle.Size = new System.Drawing.Size(40, 80);
+            this.btnTagPanelToggle.TabIndex = 0;
+            this.btnTagPanelToggle.UseVisualStyleBackColor = false;
+            this.btnTagPanelToggle.Visible = false;
+            this.btnTagPanelToggle.Click += new System.EventHandler(this.btnTagPanelToggle_Click);
+            // 
             // ViewImageForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(737, 558);
-            this.Controls.Add(this.pnlParent);
+            this.Controls.Add(this.pnlTagSplit);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.Name = "ViewImageForm";
@@ -242,16 +297,20 @@
             this.ResizeEnd += new System.EventHandler(this.Form_ResizeEnd);
             this.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.Form_MouseWheel);
             this.Resize += new System.EventHandler(this.Form_Resize);
-            this.Controls.SetChildIndex(this.pnlParent, 0);
+            this.Controls.SetChildIndex(this.pnlTagSplit, 0);
             ((System.ComponentModel.ISupportInitialize)(this.picViewer)).EndInit();
-            this.pnlParent.Panel1.ResumeLayout(false);
-            this.pnlParent.Panel2.ResumeLayout(false);
-            this.pnlParent.Panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pnlParent)).EndInit();
-            this.pnlParent.ResumeLayout(false);
+            this.pnlToolAreaSplit.Panel1.ResumeLayout(false);
+            this.pnlToolAreaSplit.Panel2.ResumeLayout(false);
+            this.pnlToolAreaSplit.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlToolAreaSplit)).EndInit();
+            this.pnlToolAreaSplit.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picLupe)).EndInit();
             this.barStatus.ResumeLayout(false);
             this.barStatus.PerformLayout();
+            this.pnlTagSplit.Panel1.ResumeLayout(false);
+            this.pnlTagSplit.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pnlTagSplit)).EndInit();
+            this.pnlTagSplit.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -262,7 +321,7 @@
         /// <summary>指定画像表示用PictureBox</summary>
         protected System.Windows.Forms.PictureBox picViewer;
         /// <summary>画像表示部とコントロール部の分割を行なう為のSplitCotainer</summary>
-        protected System.Windows.Forms.SplitContainer pnlParent;
+        protected System.Windows.Forms.SplitContainer pnlToolAreaSplit;
         /// <summary>ステータスバー本体</summary>
         protected System.Windows.Forms.StatusStrip barStatus;
         /// <summary>ステータスバー内表示用ラベル</summary>
@@ -283,5 +342,8 @@
         private System.Windows.Forms.Timer timLupe;
         private Components.KeyPrevCheckBox chkLupe;
         private System.Windows.Forms.ComboBox cmbLupeMagnification;
+        private System.Windows.Forms.Button btnTagPanelToggle;
+        protected System.Windows.Forms.SplitContainer pnlTagSplit;
+        private System.Windows.Forms.FlowLayoutPanel pnlTags;
     }
 }

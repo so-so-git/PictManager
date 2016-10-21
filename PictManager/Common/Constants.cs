@@ -27,6 +27,9 @@ namespace SO.PictManager.Common
 
         /// <summary>削除済ファイルリスト内の現ファイル名・元ファイルパス区切り文字</summary>
         public const string DEL_LIST_SEPARATOR = "/";
+
+        /// <summary>画像のタグ付けの最大数</summary>
+        public const int TAG_MAX_COUNT = 9;
     }
 
     #region enum ResultStatus - 処理結果ステータス列挙体

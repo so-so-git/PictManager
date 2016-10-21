@@ -9,13 +9,10 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Xml.Linq;
 
-using SO.Library.Drawing;
 using SO.Library.Extensions;
 using SO.Library.Forms;
 using SO.Library.Forms.Extensions;
 using SO.Library.IO;
-using SO.Library.Text;
-using SO.PictManager.Components;
 using SO.PictManager.Common;
 using SO.PictManager.DataModel;
 using SO.PictManager.Forms.Info;
@@ -115,17 +112,17 @@ namespace SO.PictManager.Forms
         /// </summary>
         private void ConstructCommon()
         {
-            // 表示対象画像取得
-            RefreshImageList();
-            lblCount.Text = ImageCount.ToString();
-            txtIndex.MaxLength = lblCount.Text.Length;
-
             // ソート順コンボボックス構築
             cmbSort.SelectedIndexChanged -= cmbSort_SelectedIndexChanged;
             ImageSorter.BindSortOrderDataSource(cmbSort);
             cmbSort.SelectedValue = Utilities.State.SortOrder;
             ImageList = ImageSorter.Sort(ImageList, Utilities.State.SortOrder, ImageMode).ToList();
             cmbSort.SelectedIndexChanged += cmbSort_SelectedIndexChanged;
+
+            // 表示対象画像取得
+            RefreshImageList();
+            lblCount.Text = ImageCount.ToString();
+            txtIndex.MaxLength = lblCount.Text.Length;
 
             // 最初の画像を基底クラスの表示対象画像プロパティに設定
             if (ImageCount > 0)
@@ -316,13 +313,13 @@ namespace SO.PictManager.Forms
             try
             {
                 // スクロールバー位置初期化
-                if (pnlParent.Panel1.VerticalScroll.Visible)
+                if (pnlToolAreaSplit.Panel1.VerticalScroll.Visible)
                 {
-                    pnlParent.Panel1.VerticalScroll.Value = 0;
+                    pnlToolAreaSplit.Panel1.VerticalScroll.Value = 0;
                 }
-                if (pnlParent.Panel1.HorizontalScroll.Visible)
+                if (pnlToolAreaSplit.Panel1.HorizontalScroll.Visible)
                 {
-                    pnlParent.Panel1.HorizontalScroll.Value = 0;
+                    pnlToolAreaSplit.Panel1.HorizontalScroll.Value = 0;
                 }
 
                 // イメージファイルがあるか確認
@@ -983,7 +980,7 @@ namespace SO.PictManager.Forms
                 leftEdgeControl = chkSimilar;
             }
 
-            int x = pnlParent.Width / 2 - lblCountDelim.Width / 2 - txtIndex.Width - btnPrevious.Width - SPACE_WIDTH * 2;
+            int x = pnlToolAreaSplit.Width / 2 - lblCountDelim.Width / 2 - txtIndex.Width - btnPrevious.Width - SPACE_WIDTH * 2;
             int leftLimit = leftEdgeControl.Location.X + leftEdgeControl.Width + SPACE_WIDTH;
             if (x < leftLimit)
             {
@@ -1005,7 +1002,7 @@ namespace SO.PictManager.Forms
             btnNext.Location = new Point(x, btnNext.Location.Y);
 
             // 右のコントロール群の位置調整
-            x = pnlParent.Width - btnClose.Width - cmbPicMode.Width - cmbSort.Width
+            x = pnlToolAreaSplit.Width - btnClose.Width - cmbPicMode.Width - cmbSort.Width
                 - btnZoomOut.Width - btnZoomIn.Width - SPACE_WIDTH * 5;
             leftLimit = btnNext.Location.X + btnNext.Width + SPACE_WIDTH;
             if (x < leftLimit)

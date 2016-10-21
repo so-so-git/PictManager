@@ -194,7 +194,16 @@
   <ItemGroup>
     <Compile Include="Common\Constants.cs" />
     <Compile Include="Common\ImageSorter.cs" />
+    <Compile Include="Components\TagUnit.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\TagUnit.Designer.cs">
+      <DependentUpon>TagUnit.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataModel\TblGroup.cs">
+      <DependentUpon>PictManagerEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\TblTagging.cs">
       <DependentUpon>PictManagerEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Forms\ComboInputDialog.cs">
@@ -361,6 +370,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Components\TagUnit.resx">
+      <DependentUpon>TagUnit.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\BaseForm.resx">
       <SubType>Designer</SubType>
       <DependentUpon>BaseForm.cs</DependentUpon>
@@ -397,6 +409,8 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="arrow_down.png" />
+    <None Include="arrow_up.png" />
     <Content Include="images.ico" />
     <EmbeddedResource Include="Components\ThumbnailUnit.resx">
       <SubType>Designer</SubType>

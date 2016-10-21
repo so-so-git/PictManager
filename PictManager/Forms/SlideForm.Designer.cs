@@ -39,36 +39,39 @@
             this.btnBookmark = new SO.PictManager.Components.KeyPrevButton();
             this.btnGroup = new SO.PictManager.Components.KeyPrevButton();
             ((System.ComponentModel.ISupportInitialize)(this.picViewer)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pnlParent)).BeginInit();
-            this.pnlParent.Panel1.SuspendLayout();
-            this.pnlParent.Panel2.SuspendLayout();
-            this.pnlParent.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlToolAreaSplit)).BeginInit();
+            this.pnlToolAreaSplit.Panel1.SuspendLayout();
+            this.pnlToolAreaSplit.Panel2.SuspendLayout();
+            this.pnlToolAreaSplit.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlTagSplit)).BeginInit();
+            this.pnlTagSplit.Panel2.SuspendLayout();
+            this.pnlTagSplit.SuspendLayout();
             this.SuspendLayout();
             // 
             // picViewer
             // 
             this.picViewer.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
-            this.picViewer.Size = new System.Drawing.Size(737, 432);
+            this.picViewer.Size = new System.Drawing.Size(1134, 398);
             // 
-            // pnlParent
+            // pnlToolAreaSplit
             // 
-            this.pnlParent.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            this.pnlToolAreaSplit.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             // 
-            // pnlParent.Panel2
+            // pnlToolAreaSplit.Panel2
             // 
-            this.pnlParent.Panel2.AutoScroll = true;
-            this.pnlParent.Panel2.Controls.Add(this.chkSimilar);
-            this.pnlParent.Panel2.Controls.Add(this.cmbSort);
-            this.pnlParent.Panel2.Controls.Add(this.btnGroup);
-            this.pnlParent.Panel2.Controls.Add(this.btnBookmark);
-            this.pnlParent.Panel2.Controls.Add(this.btnNext);
-            this.pnlParent.Panel2.Controls.Add(this.txtIndex);
-            this.pnlParent.Panel2.Controls.Add(this.lblCount);
-            this.pnlParent.Panel2.Controls.Add(this.btnPrevious);
-            this.pnlParent.Panel2.Controls.Add(this.lblCountDelim);
-            this.pnlParent.Size = new System.Drawing.Size(1134, 470);
-            this.pnlParent.SplitterDistance = 370;
-            this.pnlParent.SplitterWidth = 6;
+            this.pnlToolAreaSplit.Panel2.AutoScroll = true;
+            this.pnlToolAreaSplit.Panel2.Controls.Add(this.chkSimilar);
+            this.pnlToolAreaSplit.Panel2.Controls.Add(this.cmbSort);
+            this.pnlToolAreaSplit.Panel2.Controls.Add(this.btnGroup);
+            this.pnlToolAreaSplit.Panel2.Controls.Add(this.btnBookmark);
+            this.pnlToolAreaSplit.Panel2.Controls.Add(this.btnNext);
+            this.pnlToolAreaSplit.Panel2.Controls.Add(this.txtIndex);
+            this.pnlToolAreaSplit.Panel2.Controls.Add(this.lblCount);
+            this.pnlToolAreaSplit.Panel2.Controls.Add(this.btnPrevious);
+            this.pnlToolAreaSplit.Panel2.Controls.Add(this.lblCountDelim);
+            this.pnlToolAreaSplit.Size = new System.Drawing.Size(1134, 472);
+            this.pnlToolAreaSplit.SplitterDistance = 398;
+            this.pnlToolAreaSplit.SplitterWidth = 6;
             // 
             // btnClose
             // 
@@ -87,7 +90,7 @@
             // 
             // lblInfo
             // 
-            this.lblInfo.Size = new System.Drawing.Size(1117, 432);
+            this.lblInfo.Size = new System.Drawing.Size(1134, 307);
             // 
             // btnZoomOut
             // 
@@ -102,6 +105,11 @@
             this.btnZoomIn.Location = new System.Drawing.Point(700, 8);
             this.btnZoomIn.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.btnZoomIn.TabIndex = 11;
+            // 
+            // pnlTagSplit
+            // 
+            this.pnlTagSplit.Panel1Collapsed = true;
+            this.pnlTagSplit.Size = new System.Drawing.Size(1134, 472);
             // 
             // btnPrevious
             // 
@@ -209,14 +217,17 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.Name = "SlideForm";
-            this.Text = "PictManager - スライドショー";
+            this.Text = "PictManager - イメージビューア [画像パス：]";
             this.Resize += new System.EventHandler(this.Form_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.picViewer)).EndInit();
-            this.pnlParent.Panel1.ResumeLayout(false);
-            this.pnlParent.Panel2.ResumeLayout(false);
-            this.pnlParent.Panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pnlParent)).EndInit();
-            this.pnlParent.ResumeLayout(false);
+            this.pnlToolAreaSplit.Panel1.ResumeLayout(false);
+            this.pnlToolAreaSplit.Panel2.ResumeLayout(false);
+            this.pnlToolAreaSplit.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlToolAreaSplit)).EndInit();
+            this.pnlToolAreaSplit.ResumeLayout(false);
+            this.pnlTagSplit.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pnlTagSplit)).EndInit();
+            this.pnlTagSplit.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
