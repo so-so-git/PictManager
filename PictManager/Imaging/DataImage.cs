@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 using SO.PictManager.Common;
 using SO.PictManager.DataModel;
@@ -200,7 +197,7 @@ namespace SO.PictManager.Imaging
                              where i.ImageId == imageId
                              select i).First();
 
-                entities.Entry<TblImage>(image).State = EntityState.Detached;
+                entities.Entry(image).State = EntityState.Detached;
 
                 _image = image;
 

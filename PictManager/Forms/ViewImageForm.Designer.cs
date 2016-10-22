@@ -309,8 +309,6 @@
         /// <summary>ズームインボタン</summary>
         protected System.Windows.Forms.Button btnZoomIn;
         private System.Windows.Forms.Timer timLupe;
-        private Components.KeyPrevCheckBox chkLupe;
-        private System.Windows.Forms.ComboBox cmbLupeMagnification;
         private System.Windows.Forms.PictureBox picLupe;
         protected System.Windows.Forms.PictureBox picViewer;
         protected System.Windows.Forms.Label lblInfo;
@@ -319,5 +317,7 @@
         protected System.Windows.Forms.Panel pnlFooter;
         protected System.Windows.Forms.Panel pnlHeader;
         protected System.Windows.Forms.Panel pnlContent;
+        protected Components.KeyPrevCheckBox chkLupe;
+        protected System.Windows.Forms.ComboBox cmbLupeMagnification;
     }
 }

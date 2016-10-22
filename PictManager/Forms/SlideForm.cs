@@ -84,7 +84,7 @@ namespace SO.PictManager.Forms
         }
 
         /// <summary>
-        /// データベースモード用のコンストラクタです。
+        /// データベースモード用のカテゴリー指定コンストラクタです。
         /// </summary>
         /// <param name="category">対象カテゴリー</param>
         public SlideForm(MstCategory category)
@@ -93,8 +93,28 @@ namespace SO.PictManager.Forms
             // コンポーネント初期化
             InitializeComponent();
 
-            // フィールド初期化
+            // 対象カテゴリー、対象タグ保管
             TargetCategory = category;
+
+            // 画面表示制御
+            btnGroup.Visible = true;
+
+            // 共通処理
+            ConstructCommon();
+        }
+
+        /// <summary>
+        /// データベースモード用のタグ指定コンストラクタです。
+        /// </summary>
+        /// <param name="tag">対象タグ</param>
+        public SlideForm(MstTag tag)
+            : base(ConfigInfo.ImageDataMode.Database)
+        {
+            // コンポーネント初期化
+            InitializeComponent();
+
+            // 対象カテゴリー、対象タグ保管
+            TargetTag = tag;
 
             // 画面表示制御
             btnGroup.Visible = true;
@@ -251,11 +271,14 @@ namespace SO.PictManager.Forms
         {
             if (ImageCount == 0)
             {
-                btnDelete.Enabled = false;
-                btnNext.Enabled = false;
-                btnPrevious.Enabled = false;
-                txtIndex.Enabled = false;
-                cmbPicMode.Enabled = false;
+                // 画像数が0の場合、閉じるボタン以外を非活性化
+                foreach (var control in pnlFooter.Controls.OfType<Control>())
+                {
+                    if (control != btnClose)
+                    {
+                        control.Enabled = false;
+                    }
+                }
             }
         }
 
@@ -1181,10 +1204,14 @@ namespace SO.PictManager.Forms
             // 対象画像リスト最新化
             RefreshImageList();
 
-            // カテゴリー変更実行、正常終了時はスタートフォームへ戻る
+            // カテゴリー変更実行
             if (ChangeAllCategories() == ResultStatus.OK)
             {
-                this.BackToOwner();
+                if (TargetCategory != null)
+                {
+                    // カテゴリー指定での表示時、呼出元画面へ戻る
+                    this.BackToOwner();
+                }
             }
         }
 
@@ -1209,8 +1236,11 @@ namespace SO.PictManager.Forms
                 return;
             }
 
-            // 次の有効画像を表示
-            menuRefresh_Click(sender, e);
+            if (TargetCategory != null)
+            {
+                // カテゴリー指定での表示時、次の有効画像を表示
+                menuRefresh_Click(sender, e);
+            }
         }
 
         #endregion

@@ -55,20 +55,30 @@
             this.lblTargetFolder = new System.Windows.Forms.Label();
             this.lblCategory = new System.Windows.Forms.Label();
             this.pnlForDatabase = new System.Windows.Forms.Panel();
+            this.grpTargetSelect = new System.Windows.Forms.GroupBox();
+            this.rdoTargetTag = new System.Windows.Forms.RadioButton();
+            this.rdoTargetCategory = new System.Windows.Forms.RadioButton();
+            this.lstSearchedTags = new System.Windows.Forms.ListBox();
+            this.lblTagSearch = new System.Windows.Forms.Label();
+            this.txtTagSearch = new System.Windows.Forms.TextBox();
+            this.btnTagSearch = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.fileWatcher)).BeginInit();
             this.tasktrayMenu.SuspendLayout();
             this.grpViewMode.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.pnlForDatabase.SuspendLayout();
+            this.grpTargetSelect.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtTargetFolder
             // 
             this.txtTargetFolder.AllowDrop = true;
-            this.txtTargetFolder.Location = new System.Drawing.Point(61, 4);
+            this.txtTargetFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtTargetFolder.Location = new System.Drawing.Point(76, 4);
             this.txtTargetFolder.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtTargetFolder.Name = "txtTargetFolder";
-            this.txtTargetFolder.Size = new System.Drawing.Size(288, 23);
+            this.txtTargetFolder.Size = new System.Drawing.Size(273, 23);
             this.txtTargetFolder.TabIndex = 1;
             this.txtTargetFolder.DragDrop += new System.Windows.Forms.DragEventHandler(this.txtTargetFolder_DragDrop);
             this.txtTargetFolder.DragEnter += new System.Windows.Forms.DragEventHandler(this.txtTargetFolder_DragEnter);
@@ -76,10 +86,11 @@
             // 
             // btnFolderBrowse
             // 
+            this.btnFolderBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnFolderBrowse.Location = new System.Drawing.Point(355, 4);
             this.btnFolderBrowse.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnFolderBrowse.Name = "btnFolderBrowse";
-            this.btnFolderBrowse.Size = new System.Drawing.Size(29, 25);
+            this.btnFolderBrowse.Size = new System.Drawing.Size(29, 23);
             this.btnFolderBrowse.TabIndex = 2;
             this.btnFolderBrowse.Text = "...";
             this.btnFolderBrowse.UseVisualStyleBackColor = true;
@@ -88,11 +99,11 @@
             // btnView
             // 
             this.btnView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnView.Location = new System.Drawing.Point(122, 98);
+            this.btnView.Location = new System.Drawing.Point(120, 98);
             this.btnView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnView.Name = "btnView";
             this.btnView.Size = new System.Drawing.Size(84, 30);
-            this.btnView.TabIndex = 6;
+            this.btnView.TabIndex = 5;
             this.btnView.Text = "閲覧";
             this.btnView.UseVisualStyleBackColor = true;
             this.btnView.Click += new System.EventHandler(this.btnView_Click);
@@ -101,11 +112,11 @@
             // 
             this.btnQuit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnQuit.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnQuit.Location = new System.Drawing.Point(302, 136);
+            this.btnQuit.Location = new System.Drawing.Point(300, 134);
             this.btnQuit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnQuit.Name = "btnQuit";
             this.btnQuit.Size = new System.Drawing.Size(84, 30);
-            this.btnQuit.TabIndex = 8;
+            this.btnQuit.TabIndex = 9;
             this.btnQuit.Text = "終了";
             this.btnQuit.UseVisualStyleBackColor = true;
             this.btnQuit.Click += new System.EventHandler(this.btnQuit_Click);
@@ -132,7 +143,7 @@
             this.rdoList.Text = "リスト表示";
             this.rdoList.UseVisualStyleBackColor = true;
             // 
-            // dlgRef
+            // dlgFolderRef
             // 
             this.dlgFolderRef.Description = "表示対象ディレクトリを選択して下さい。";
             this.dlgFolderRef.ShowNewFolderButton = false;
@@ -153,7 +164,7 @@
             // btnConfig
             // 
             this.btnConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnConfig.Location = new System.Drawing.Point(2, 96);
+            this.btnConfig.Location = new System.Drawing.Point(7, 98);
             this.btnConfig.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnConfig.Name = "btnConfig";
             this.btnConfig.Size = new System.Drawing.Size(84, 30);
@@ -186,13 +197,13 @@
             this.menuEndWatch,
             this.menuQuit});
             this.tasktrayMenu.Name = "tasktrayMenu";
-            this.tasktrayMenu.Size = new System.Drawing.Size(221, 70);
+            this.tasktrayMenu.Size = new System.Drawing.Size(195, 70);
             // 
             // menuOpenFolder
             // 
             this.menuOpenFolder.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.menuOpenFolder.Name = "menuOpenFolder";
-            this.menuOpenFolder.Size = new System.Drawing.Size(220, 22);
+            this.menuOpenFolder.Size = new System.Drawing.Size(194, 22);
             this.menuOpenFolder.Text = "監視対象のフォルダを開く";
             this.menuOpenFolder.Click += new System.EventHandler(this.menuOpenFolder_Click);
             // 
@@ -200,7 +211,7 @@
             // 
             this.menuEndWatch.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.menuEndWatch.Name = "menuEndWatch";
-            this.menuEndWatch.Size = new System.Drawing.Size(220, 22);
+            this.menuEndWatch.Size = new System.Drawing.Size(194, 22);
             this.menuEndWatch.Text = "監視終了";
             this.menuEndWatch.Click += new System.EventHandler(this.menuEndWatch_Click);
             // 
@@ -208,7 +219,7 @@
             // 
             this.menuQuit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.menuQuit.Name = "menuQuit";
-            this.menuQuit.Size = new System.Drawing.Size(220, 22);
+            this.menuQuit.Size = new System.Drawing.Size(194, 22);
             this.menuQuit.Text = "アプリケーション終了";
             this.menuQuit.Click += new System.EventHandler(this.menuQuit_Click);
             // 
@@ -216,32 +227,35 @@
             // 
             this.btnSaveMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSaveMode.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnSaveMode.Location = new System.Drawing.Point(212, 98);
+            this.btnSaveMode.Location = new System.Drawing.Point(210, 98);
             this.btnSaveMode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnSaveMode.Name = "btnSaveMode";
             this.btnSaveMode.Size = new System.Drawing.Size(84, 30);
-            this.btnSaveMode.TabIndex = 7;
+            this.btnSaveMode.TabIndex = 6;
             this.btnSaveMode.Text = "監視";
             this.btnSaveMode.UseVisualStyleBackColor = true;
             // 
             // cmbCategory
             // 
+            this.cmbCategory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbCategory.DisplayMember = "CategoryName";
             this.cmbCategory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbCategory.FormattingEnabled = true;
-            this.cmbCategory.Location = new System.Drawing.Point(61, 5);
+            this.cmbCategory.Location = new System.Drawing.Point(76, 63);
             this.cmbCategory.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cmbCategory.Name = "cmbCategory";
-            this.cmbCategory.Size = new System.Drawing.Size(230, 23);
+            this.cmbCategory.Size = new System.Drawing.Size(218, 23);
             this.cmbCategory.TabIndex = 1;
             // 
             // btnMaintenance
             // 
             this.btnMaintenance.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnMaintenance.Location = new System.Drawing.Point(297, 5);
+            this.btnMaintenance.Location = new System.Drawing.Point(7, 134);
             this.btnMaintenance.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnMaintenance.Name = "btnMaintenance";
-            this.btnMaintenance.Size = new System.Drawing.Size(84, 23);
-            this.btnMaintenance.TabIndex = 2;
+            this.btnMaintenance.Size = new System.Drawing.Size(84, 30);
+            this.btnMaintenance.TabIndex = 8;
             this.btnMaintenance.Text = "DBメンテ";
             this.btnMaintenance.UseVisualStyleBackColor = true;
             this.btnMaintenance.Click += new System.EventHandler(this.btnMaintenance_Click);
@@ -250,23 +264,25 @@
             // 
             this.btnOpenUrlDrop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOpenUrlDrop.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnOpenUrlDrop.Location = new System.Drawing.Point(302, 98);
+            this.btnOpenUrlDrop.Location = new System.Drawing.Point(300, 98);
             this.btnOpenUrlDrop.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnOpenUrlDrop.Name = "btnOpenUrlDrop";
             this.btnOpenUrlDrop.Size = new System.Drawing.Size(84, 30);
-            this.btnOpenUrlDrop.TabIndex = 5;
+            this.btnOpenUrlDrop.TabIndex = 7;
             this.btnOpenUrlDrop.Text = "URL受付";
             this.btnOpenUrlDrop.UseVisualStyleBackColor = true;
             this.btnOpenUrlDrop.Click += new System.EventHandler(this.btnOpenUrlDrop_Click);
             // 
             // grpViewMode
             // 
+            this.grpViewMode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.grpViewMode.Controls.Add(this.rdoSlide);
             this.grpViewMode.Controls.Add(this.rdoThumbnail);
             this.grpViewMode.Controls.Add(this.rdoList);
-            this.grpViewMode.Location = new System.Drawing.Point(2, 34);
+            this.grpViewMode.Location = new System.Drawing.Point(7, 34);
             this.grpViewMode.Name = "grpViewMode";
-            this.grpViewMode.Size = new System.Drawing.Size(382, 55);
+            this.grpViewMode.Size = new System.Drawing.Size(377, 55);
             this.grpViewMode.TabIndex = 3;
             this.grpViewMode.TabStop = false;
             this.grpViewMode.Text = "表示モード";
@@ -275,6 +291,7 @@
             // 
             this.pnlMain.Controls.Add(this.lblTargetFolder);
             this.pnlMain.Controls.Add(this.txtTargetFolder);
+            this.pnlMain.Controls.Add(this.btnMaintenance);
             this.pnlMain.Controls.Add(this.btnQuit);
             this.pnlMain.Controls.Add(this.btnFolderBrowse);
             this.pnlMain.Controls.Add(this.btnOpenUrlDrop);
@@ -282,7 +299,7 @@
             this.pnlMain.Controls.Add(this.btnConfig);
             this.pnlMain.Controls.Add(this.btnSaveMode);
             this.pnlMain.Controls.Add(this.btnView);
-            this.pnlMain.Location = new System.Drawing.Point(9, 41);
+            this.pnlMain.Location = new System.Drawing.Point(9, 237);
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Size = new System.Drawing.Size(389, 170);
             this.pnlMain.TabIndex = 1;
@@ -292,14 +309,14 @@
             this.lblTargetFolder.AutoSize = true;
             this.lblTargetFolder.Location = new System.Drawing.Point(4, 7);
             this.lblTargetFolder.Name = "lblTargetFolder";
-            this.lblTargetFolder.Size = new System.Drawing.Size(42, 15);
+            this.lblTargetFolder.Size = new System.Drawing.Size(66, 15);
             this.lblTargetFolder.TabIndex = 0;
-            this.lblTargetFolder.Text = "フォルダ";
+            this.lblTargetFolder.Text = "対象フォルダ";
             // 
             // lblCategory
             // 
             this.lblCategory.AutoSize = true;
-            this.lblCategory.Location = new System.Drawing.Point(4, 8);
+            this.lblCategory.Location = new System.Drawing.Point(4, 66);
             this.lblCategory.Name = "lblCategory";
             this.lblCategory.Size = new System.Drawing.Size(51, 15);
             this.lblCategory.TabIndex = 0;
@@ -307,13 +324,104 @@
             // 
             // pnlForDatabase
             // 
+            this.pnlForDatabase.Controls.Add(this.grpTargetSelect);
+            this.pnlForDatabase.Controls.Add(this.lstSearchedTags);
+            this.pnlForDatabase.Controls.Add(this.lblTagSearch);
             this.pnlForDatabase.Controls.Add(this.lblCategory);
+            this.pnlForDatabase.Controls.Add(this.txtTagSearch);
+            this.pnlForDatabase.Controls.Add(this.btnTagSearch);
             this.pnlForDatabase.Controls.Add(this.cmbCategory);
-            this.pnlForDatabase.Controls.Add(this.btnMaintenance);
             this.pnlForDatabase.Location = new System.Drawing.Point(9, 3);
             this.pnlForDatabase.Name = "pnlForDatabase";
-            this.pnlForDatabase.Size = new System.Drawing.Size(389, 32);
+            this.pnlForDatabase.Size = new System.Drawing.Size(389, 228);
             this.pnlForDatabase.TabIndex = 0;
+            // 
+            // grpTargetSelect
+            // 
+            this.grpTargetSelect.Controls.Add(this.rdoTargetTag);
+            this.grpTargetSelect.Controls.Add(this.rdoTargetCategory);
+            this.grpTargetSelect.Location = new System.Drawing.Point(7, 3);
+            this.grpTargetSelect.Name = "grpTargetSelect";
+            this.grpTargetSelect.Size = new System.Drawing.Size(215, 53);
+            this.grpTargetSelect.TabIndex = 6;
+            this.grpTargetSelect.TabStop = false;
+            this.grpTargetSelect.Text = "対象指定";
+            // 
+            // rdoTargetTag
+            // 
+            this.rdoTargetTag.AutoSize = true;
+            this.rdoTargetTag.Location = new System.Drawing.Point(129, 22);
+            this.rdoTargetTag.Name = "rdoTargetTag";
+            this.rdoTargetTag.Size = new System.Drawing.Size(66, 19);
+            this.rdoTargetTag.TabIndex = 0;
+            this.rdoTargetTag.Text = "タグ指定";
+            this.rdoTargetTag.UseVisualStyleBackColor = true;
+            this.rdoTargetTag.CheckedChanged += new System.EventHandler(this.rdoTargetSelect_CheckedChanged);
+            // 
+            // rdoTargetCategory
+            // 
+            this.rdoTargetCategory.AutoSize = true;
+            this.rdoTargetCategory.Checked = true;
+            this.rdoTargetCategory.Location = new System.Drawing.Point(19, 22);
+            this.rdoTargetCategory.Name = "rdoTargetCategory";
+            this.rdoTargetCategory.Size = new System.Drawing.Size(93, 19);
+            this.rdoTargetCategory.TabIndex = 0;
+            this.rdoTargetCategory.TabStop = true;
+            this.rdoTargetCategory.Text = "カテゴリー指定";
+            this.rdoTargetCategory.UseVisualStyleBackColor = true;
+            this.rdoTargetCategory.CheckedChanged += new System.EventHandler(this.rdoTargetSelect_CheckedChanged);
+            // 
+            // lstSearchedTags
+            // 
+            this.lstSearchedTags.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lstSearchedTags.DisplayMember = "TagName";
+            this.lstSearchedTags.Enabled = false;
+            this.lstSearchedTags.FormattingEnabled = true;
+            this.lstSearchedTags.ItemHeight = 15;
+            this.lstSearchedTags.Location = new System.Drawing.Point(76, 125);
+            this.lstSearchedTags.Name = "lstSearchedTags";
+            this.lstSearchedTags.Size = new System.Drawing.Size(237, 94);
+            this.lstSearchedTags.TabIndex = 5;
+            // 
+            // lblTagSearch
+            // 
+            this.lblTagSearch.AutoSize = true;
+            this.lblTagSearch.Enabled = false;
+            this.lblTagSearch.Location = new System.Drawing.Point(4, 98);
+            this.lblTagSearch.Name = "lblTagSearch";
+            this.lblTagSearch.Size = new System.Drawing.Size(24, 15);
+            this.lblTagSearch.TabIndex = 2;
+            this.lblTagSearch.Text = "タグ";
+            // 
+            // txtTagSearch
+            // 
+            this.txtTagSearch.AllowDrop = true;
+            this.txtTagSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtTagSearch.Enabled = false;
+            this.txtTagSearch.Location = new System.Drawing.Point(76, 94);
+            this.txtTagSearch.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.txtTagSearch.Name = "txtTagSearch";
+            this.txtTagSearch.Size = new System.Drawing.Size(237, 23);
+            this.txtTagSearch.TabIndex = 3;
+            this.txtTagSearch.DragDrop += new System.Windows.Forms.DragEventHandler(this.txtTargetFolder_DragDrop);
+            this.txtTagSearch.DragEnter += new System.Windows.Forms.DragEventHandler(this.txtTargetFolder_DragEnter);
+            this.txtTagSearch.Enter += new System.EventHandler(this.txtTargetFolder_Enter);
+            // 
+            // btnTagSearch
+            // 
+            this.btnTagSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnTagSearch.Enabled = false;
+            this.btnTagSearch.Location = new System.Drawing.Point(319, 94);
+            this.btnTagSearch.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnTagSearch.Name = "btnTagSearch";
+            this.btnTagSearch.Size = new System.Drawing.Size(65, 23);
+            this.btnTagSearch.TabIndex = 4;
+            this.btnTagSearch.Text = "タグ検索";
+            this.btnTagSearch.UseVisualStyleBackColor = true;
+            this.btnTagSearch.Click += new System.EventHandler(this.btnTagSearch_Click);
             // 
             // StartForm
             // 
@@ -321,7 +429,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnQuit;
-            this.ClientSize = new System.Drawing.Size(402, 215);
+            this.ClientSize = new System.Drawing.Size(408, 418);
             this.Controls.Add(this.pnlForDatabase);
             this.Controls.Add(this.pnlMain);
             this.Font = new System.Drawing.Font("Meiryo UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
@@ -340,6 +448,8 @@
             this.pnlMain.PerformLayout();
             this.pnlForDatabase.ResumeLayout(false);
             this.pnlForDatabase.PerformLayout();
+            this.grpTargetSelect.ResumeLayout(false);
+            this.grpTargetSelect.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -371,6 +481,13 @@
         private System.Windows.Forms.Label lblCategory;
         private System.Windows.Forms.Label lblTargetFolder;
         private System.Windows.Forms.Panel pnlForDatabase;
+        private System.Windows.Forms.Label lblTagSearch;
+        private System.Windows.Forms.TextBox txtTagSearch;
+        private System.Windows.Forms.Button btnTagSearch;
+        private System.Windows.Forms.ListBox lstSearchedTags;
+        private System.Windows.Forms.GroupBox grpTargetSelect;
+        private System.Windows.Forms.RadioButton rdoTargetCategory;
+        private System.Windows.Forms.RadioButton rdoTargetTag;
     }
 }
 

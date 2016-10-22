@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -29,7 +30,7 @@ namespace SO.PictManager.Forms
         #region クラス定数
 
         /// <summary>フォームタイトル書式</summary>
-        private const string FORM_TITLE_FORMAT = "PictManager - 対象{0}指定";
+        private const string FORM_TITLE_FORMAT = "PictManager - {0}";
 
         /// <summary>カテゴリーIDとカテゴリー名の区切り文字</summary>
         private const char CATEGORY_SEPARATOR = '_';
@@ -83,9 +84,13 @@ namespace SO.PictManager.Forms
             if (Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.File)
             {
                 // 表示状態切替
-                this.Text = string.Format(FORM_TITLE_FORMAT, "フォルダ");
-                pnlForDatabase.Visible = false;
+                this.Text = string.Format(FORM_TITLE_FORMAT, "ファイルモード");
+                lblTargetFolder.Text = "対象フォルダ";
                 btnOpenUrlDrop.Visible = false;
+                btnMaintenance.Visible = false;
+
+                // パネル表示切替
+                pnlForDatabase.Visible = false;
                 pnlMain.Location = pnlForDatabase.Location;
                 this.Size = _formSizeInFileMode;
 
@@ -94,6 +99,7 @@ namespace SO.PictManager.Forms
                 btnSaveMode.Click -= btnAutoImport_Click;
                 btnSaveMode.Click += btnFolderWatch_Click;
 
+                // フォルダ監視処理切替
                 fileWatcher.Created -= fileWatcherInDatabaseMode_Created;
                 fileWatcher.Created += fileWatcherInFileMode_Created;
 
@@ -108,26 +114,39 @@ namespace SO.PictManager.Forms
             else
             {
                 // 表示状態切替
-                this.Text = string.Format(FORM_TITLE_FORMAT, "カテゴリー");
-                pnlMain.Location = new Point(pnlMain.Location.X, pnlForDatabase.Location.Y + pnlForDatabase.Height + _spacer);
-                this.Size = _formSizeInDatabaseMode;
-                pnlForDatabase.Visible = true;
+                this.Text = string.Format(FORM_TITLE_FORMAT, "データベースモード");
+                lblTargetFolder.Text = "監視フォルダ";
                 btnOpenUrlDrop.Visible = true;
+                btnMaintenance.Visible = true;
+
+                // パネル表示切替
+                this.Size = _formSizeInDatabaseMode;
+                pnlMain.Location = new Point(pnlMain.Location.X, pnlForDatabase.Location.Y + pnlForDatabase.Height + _spacer);
+                pnlForDatabase.Visible = true;
 
                 // 保存モードボタン設定変更
                 btnSaveMode.Text = "自動取込";
                 btnSaveMode.Click -= btnFolderWatch_Click;
                 btnSaveMode.Click += btnAutoImport_Click;
 
+                // フォルダ監視処理切替
                 fileWatcher.Created -= fileWatcherInFileMode_Created;
                 fileWatcher.Created += fileWatcherInDatabaseMode_Created;
 
-                // カテゴリ読込
+                // カテゴリー読込
+                cmbCategory.Items.Clear();
                 using (var entities = new PictManagerEntities())
                 {
-                    cmbCategory.DataSource = entities.MstCategories.OrderBy(c => c.CategoryName).ToList();
-                    cmbCategory.DisplayMember = "CategoryName";
+                    foreach (var category in entities.MstCategories.OrderBy(c => c.CategoryName))
+                    {
+                        entities.Entry(category).State = EntityState.Detached;
+                        cmbCategory.Items.Add(category);
+                    }
+
+                    cmbCategory.SelectedIndex = 0;
                 }
+
+                lstSearchedTags.Items.Clear();
 
                 // 状態情報読込
                 StateInfo stateInfo = Utilities.State;
@@ -298,6 +317,94 @@ namespace SO.PictManager.Forms
         #endregion
 
         //*** イベントハンドラ ***
+
+        #region rdoTargetSelect_CheckedChanged - 対象指定ラジオボタンチェック変更時
+
+        /// <summary>
+        /// 対象指定ラジオボタンのチェック状態を変更した際に実行される処理です。
+        /// 選択されている対象指定ラジオボタンに応じてコントロールの活性状態を切り替えます。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void rdoTargetSelect_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!(sender as RadioButton).Checked)
+                {
+                    return;
+                }
+
+                // カテゴリー指定活性制御
+                lblCategory.Enabled = rdoTargetCategory.Checked;
+                cmbCategory.Enabled = rdoTargetCategory.Checked;
+
+                // タグ指定活性制御
+                lblTagSearch.Enabled = rdoTargetTag.Checked;
+                txtTagSearch.Enabled = rdoTargetTag.Checked;
+                btnTagSearch.Enabled = rdoTargetTag.Checked;
+                lstSearchedTags.Enabled = rdoTargetTag.Checked;
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
+        }
+
+        #endregion
+
+        #region btnTagSearch_Click - タグ検索ボタン押下時
+
+        /// <summary>
+        /// タグ検索ボタンをクリックした際に実行される処理です。
+        /// テキストボックスに入力された内容に該当するタグを検索します。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void btnTagSearch_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(txtTagSearch.Text))
+                {
+                    return;
+                }
+
+                lstSearchedTags.Items.Clear();
+
+                // 検索条件に該当するタグをリストボックスに表示
+                string searchValue = txtTagSearch.Text.ToLower();
+                using (var entities = new PictManagerEntities())
+                {
+                    var tags = from tag in entities.MstTags
+                               where tag.TagName.ToLower().Contains(searchValue)
+                               select tag;
+
+                    foreach (var tag in tags)
+                    {
+                        entities.Entry(tag).State = EntityState.Detached;
+                        lstSearchedTags.Items.Add(tag);
+                    }
+                }
+
+                if (lstSearchedTags.Items.Count > 0)
+                {
+                    lstSearchedTags.Focus();
+                    lstSearchedTags.SelectedIndex = 0;
+                }
+                else
+                {
+                    txtTagSearch.Focus();
+                    txtTagSearch.SelectAll();
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
+        }
+
+        #endregion
 
         #region btnFolderBrowse_Click - フォルダー参照ボタン押下時
 
@@ -542,18 +649,52 @@ namespace SO.PictManager.Forms
                 }
                 else
                 {
-                    var category = cmbCategory.SelectedItem as MstCategory;
-                    if (rdoSlide.Checked)
+                    if (rdoTargetCategory.Checked)  // カテゴリー指定
                     {
-                        frmViewer = new SlideForm(category);        // スライドショー表示
+                        var category = cmbCategory.SelectedItem as MstCategory;
+                        if (rdoSlide.Checked)
+                        {
+                            frmViewer = new SlideForm(category);        // スライドショー表示
+                        }
+                        else if (rdoList.Checked)
+                        {
+                            frmViewer = new ListForm(category);         // 一覧表示
+                        }
+                        else
+                        {
+                            frmViewer = new ThumbnailForm(category);    // サムネイル表示
+                        }
                     }
-                    else if (rdoList.Checked)
+                    else    // タグ指定
                     {
-                        frmViewer = new ListForm(category);         // 一覧表示
-                    }
-                    else
-                    {
-                        frmViewer = new ThumbnailForm(category);    // サムネイル表示
+                        if (lstSearchedTags.SelectedItem == null)
+                        {
+                            FormUtilities.ShowMessage("W030");
+                            txtTagSearch.Focus();
+                            txtTagSearch.SelectAll();
+
+                            return;
+                        }
+
+                        var tag = lstSearchedTags.SelectedItem as MstTag;
+                        if (rdoSlide.Checked)
+                        {
+                            frmViewer = new SlideForm(tag);     // スライドショー表示
+                        }
+                        else if (rdoList.Checked)
+                        {
+                            //frmViewer = new ListForm(tag);      // 一覧表示
+                            MessageBox.Show("タグ指定の一覧表示は未実装です。",
+                                "未実装", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            return;
+                        }
+                        else
+                        {
+                            //frmViewer = new ThumbnailForm(tag); // サムネイル表示
+                            MessageBox.Show("タグ指定の一覧表示は未実装です。",
+                                "未実装", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            return;
+                        }
                     }
                 }
 

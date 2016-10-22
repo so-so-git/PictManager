@@ -45,6 +45,9 @@ namespace SO.PictManager.Forms
         /// <summary>表示対象カテゴリー</summary>
         private MstCategory _targetCategory;
 
+        /// <summary>表示対象タグ</summary>
+        private MstTag _targetTag;
+
         /// <summary>サブフォルダ包含フラグ</summary>
         private bool _includeSubFlg = false;
 
@@ -76,6 +79,16 @@ namespace SO.PictManager.Forms
         {
             get { return _targetCategory; }
             protected set { _targetCategory = value; }
+        }
+
+        /// <summary>
+        /// 表示対象タグを取得または設定します。
+        /// </summary>
+        [Browsable(false)]
+        protected internal MstTag TargetTag
+        {
+            get { return _targetTag; }
+            protected set { _targetTag = value; }
         }
 
         /// <summary>
@@ -964,11 +977,31 @@ namespace SO.PictManager.Forms
                     // 画像テーブルから対象画像データを取得
                     using (var entities = new PictManagerEntities())
                     {
-                        var imageIds = from i in entities.TblImages
-                                       where i.CategoryId == TargetCategory.CategoryId
-                                          && !i.DeleteFlag
-                                       orderby i.ImageId
-                                       select i.ImageId;
+                        IEnumerable<int> imageIds;
+                        if (TargetCategory != null)
+                        {
+                            // 対象カテゴリーに該当する画像を抽出
+                            imageIds = from image in entities.TblImages
+                                       where image.CategoryId == TargetCategory.CategoryId
+                                          && !image.DeleteFlag
+                                       orderby image.ImageId
+                                       select image.ImageId;
+                        }
+                        else if (TargetTag != null)
+                        {
+                            // 対象タグに該当する画像を抽出
+                            imageIds = from tagging in entities.TblTaggings
+                                       where tagging.TagId == TargetTag.TagId
+                                       join image in entities.TblImages
+                                         on tagging.ImageId equals image.ImageId
+                                       where !image.DeleteFlag
+                                       orderby image.ImageId
+                                       select image.ImageId;
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException("対象カテゴリー、対象タグの何れも未指定.");
+                        }
 
                         foreach (var imageId in imageIds)
                         {
