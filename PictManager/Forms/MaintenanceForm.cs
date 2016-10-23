@@ -42,7 +42,7 @@ namespace SO.PictManager.Forms
                 // 物理削除済み画像数取得
                 var deletedCount = entities.TblImages.Where(i => i.DeleteFlag).Count();
                 lblDeletedCount.Text = deletedCount.ToString("#,0");
-                btnApplyDelete.Enabled = deletedCount > 0;
+                btnPhysicalDelete.Enabled = deletedCount > 0;
             }
 
             lblStatus.Text = string.Empty;
@@ -426,7 +426,7 @@ namespace SO.PictManager.Forms
                 // 物理削除済み画像数取得
                 var deletedCount = entities.TblImages.Where(i => i.DeleteFlag).Count();
                 lblDeletedCount.Text = deletedCount.ToString("#,0");
-                btnApplyDelete.Enabled = deletedCount > 0;
+                btnPhysicalDelete.Enabled = deletedCount > 0;
             }
         }
 
@@ -761,7 +761,7 @@ namespace SO.PictManager.Forms
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>
-        private void btnApplyDelete_Click(object sender, EventArgs e)
+        private void btnPhysicalDelete_Click(object sender, EventArgs e)
         {
             try
             {
@@ -774,18 +774,33 @@ namespace SO.PictManager.Forms
                 // 物理削除実行
                 using (var entities = new PictManagerEntities())
                 {
-                    var deletedImages = entities.TblImages.Where(i => i.DeleteFlag);
+                    // 論理削除されている画像と、それに関連するタグ付けを取得
+                    var query = from image in entities.TblImages
+                                where image.DeleteFlag
+                                join tagging in entities.TblTaggings
+                                  on image.ImageId equals tagging.ImageId
+                                select new { Image = image, Tagging = tagging} into joined
+                                group joined by joined.Image into groups
+                                select groups;
+                                
 
-                    foreach (var img in deletedImages)
+                    foreach (var group in query)
                     {
-                        entities.TblImages.Remove(img);
+                        // 画像データを削除
+                        entities.TblImages.Remove(group.Key);
+
+                        // 関連するタグ付けを全て削除
+                        foreach (var entity in group)
+                        {
+                            entities.TblTaggings.Remove(entity.Tagging);
+                        }
                     }
 
                     entities.SaveChanges();
                 }
 
                 lblDeletedCount.Text = "0";
-                btnApplyDelete.Enabled = false;
+                btnPhysicalDelete.Enabled = false;
 
                 FormUtilities.ShowMessage("I011", "削除画像の完全消去");
             }
@@ -844,7 +859,7 @@ namespace SO.PictManager.Forms
                     // 物理削除済み画像数取得
                     var deletedCount = entities.TblImages.Where(i => i.DeleteFlag).Count();
                     lblDeletedCount.Text = deletedCount.ToString("#,0");
-                    btnApplyDelete.Enabled = deletedCount > 0;
+                    btnPhysicalDelete.Enabled = deletedCount > 0;
                 }
             }
             catch (Exception ex)

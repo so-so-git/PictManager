@@ -54,7 +54,7 @@
             this.btnClose = new System.Windows.Forms.Button();
             this.grpDeletedImages = new System.Windows.Forms.GroupBox();
             this.lblDeletedCount = new System.Windows.Forms.Label();
-            this.btnApplyDelete = new System.Windows.Forms.Button();
+            this.btnPhysicalDelete = new System.Windows.Forms.Button();
             this.lblDeletedCountHeader = new System.Windows.Forms.Label();
             this.barStatus = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
@@ -325,7 +325,7 @@
             // grpDeletedImages
             // 
             this.grpDeletedImages.Controls.Add(this.lblDeletedCount);
-            this.grpDeletedImages.Controls.Add(this.btnApplyDelete);
+            this.grpDeletedImages.Controls.Add(this.btnPhysicalDelete);
             this.grpDeletedImages.Controls.Add(this.lblDeletedCountHeader);
             this.grpDeletedImages.Location = new System.Drawing.Point(13, 326);
             this.grpDeletedImages.Name = "grpDeletedImages";
@@ -345,14 +345,14 @@
             // 
             // btnApplyDelete
             // 
-            this.btnApplyDelete.Location = new System.Drawing.Point(215, 18);
-            this.btnApplyDelete.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.btnApplyDelete.Name = "btnApplyDelete";
-            this.btnApplyDelete.Size = new System.Drawing.Size(80, 25);
-            this.btnApplyDelete.TabIndex = 2;
-            this.btnApplyDelete.Text = "完全に削除";
-            this.btnApplyDelete.UseVisualStyleBackColor = true;
-            this.btnApplyDelete.Click += new System.EventHandler(this.btnApplyDelete_Click);
+            this.btnPhysicalDelete.Location = new System.Drawing.Point(215, 18);
+            this.btnPhysicalDelete.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnPhysicalDelete.Name = "btnApplyDelete";
+            this.btnPhysicalDelete.Size = new System.Drawing.Size(80, 25);
+            this.btnPhysicalDelete.TabIndex = 2;
+            this.btnPhysicalDelete.Text = "完全に削除";
+            this.btnPhysicalDelete.UseVisualStyleBackColor = true;
+            this.btnPhysicalDelete.Click += new System.EventHandler(this.btnPhysicalDelete_Click);
             // 
             // lblDeletedCountHeader
             // 
@@ -445,7 +445,7 @@
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.GroupBox grpDeletedImages;
         private System.Windows.Forms.Label lblDeletedCount;
-        private System.Windows.Forms.Button btnApplyDelete;
+        private System.Windows.Forms.Button btnPhysicalDelete;
         private System.Windows.Forms.Label lblDeletedCountHeader;
         private System.Windows.Forms.StatusStrip barStatus;
         private System.Windows.Forms.ToolStripStatusLabel lblStatus;

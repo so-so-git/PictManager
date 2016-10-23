@@ -163,6 +163,7 @@ namespace SO.PictManager.Imaging
         {
             using (var entities = new PictManagerEntities())
             {
+                // 画像データを論理削除
                 var image = (from i in entities.TblImages
                              where i.ImageId == _image.ImageId
                              select i).First();
