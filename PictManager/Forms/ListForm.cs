@@ -140,7 +140,7 @@ namespace SO.PictManager.Forms
         }
 
         /// <summary>
-        /// データベースモード用のコンストラクタです。
+        /// データベースモード用のカテゴリー指定コンストラクタです。
         /// </summary>
         /// <param name="category">対象カテゴリー</param>
         public ListForm(MstCategory category)
@@ -159,11 +159,30 @@ namespace SO.PictManager.Forms
         }
 
         /// <summary>
+        /// データベースモード用のタグ指定コンストラクタです。
+        /// </summary>
+        /// <param name="tag">タグ</param>
+        public ListForm(MstTag tag)
+            : base(tag)
+        {
+            try
+            {
+                // コンポーネント初期化
+                InitializeComponent();
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+                this.BackToOwner();
+            }
+        }
+
+        /// <summary>
         /// 表示対象カスタマイズ用のコンストラクタです。
         /// </summary>
         /// <param name="function">表示対象画像リスト取得デリゲート</param>
         public ListForm(Func<List<IImage>> function)
-            : base(null)
+            : base(null as MstCategory)
         {
             try
             {

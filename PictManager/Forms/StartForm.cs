@@ -683,17 +683,11 @@ namespace SO.PictManager.Forms
                         }
                         else if (rdoList.Checked)
                         {
-                            //frmViewer = new ListForm(tag);      // 一覧表示
-                            MessageBox.Show("タグ指定の一覧表示は未実装です。",
-                                "未実装", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                            return;
+                            frmViewer = new ListForm(tag);      // 一覧表示
                         }
                         else
                         {
-                            //frmViewer = new ThumbnailForm(tag); // サムネイル表示
-                            MessageBox.Show("タグ指定の一覧表示は未実装です。",
-                                "未実装", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                            return;
+                            frmViewer = new ThumbnailForm(tag); // サムネイル表示
                         }
                     }
                 }

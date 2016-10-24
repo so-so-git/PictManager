@@ -28,8 +28,8 @@ namespace SO.PictManager.Forms
     {
         #region クラス定数
 
-        /// <summary>イメージファイル無し時の表示テキスト</summary>
-        private const string NO_IMAGE_LABEL = "No image file in selected folder.";
+        /// <summary>対象画像無し時の表示テキスト</summary>
+        private const string NO_IMAGE_LABEL = "表示対象となる画像がありません。";
 
         #endregion
 
@@ -136,7 +136,7 @@ namespace SO.PictManager.Forms
         }
 
         /// <summary>
-        /// データベースモード用のコンストラクタです。
+        /// データベースモード用のカテゴリー指定コンストラクタです。
         /// </summary>
         /// <param name="category">対象カテゴリー</param>
         public ThumbnailForm(MstCategory category)
@@ -151,6 +151,25 @@ namespace SO.PictManager.Forms
             // ステータスバー更新
             lblStatus.Text = ImageCount > 0
                 ? category.CategoryName + string.Format(" - {0}件", ImageCount)
+                : NO_IMAGE_LABEL;
+        }
+
+        /// <summary>
+        /// データベースモード用のタグ指定コンストラクタです。
+        /// </summary>
+        /// <param name="tag">対象タグ</param>
+        public ThumbnailForm(MstTag tag)
+            : base(tag)
+        {
+            // コンポーネント初期化
+            InitializeComponent();
+
+            // 共通構築処理
+            CommonConstruction();
+
+            // ステータスバー更新
+            lblStatus.Text = ImageCount > 0
+                ? tag.TagName + string.Format(" - {0}件", ImageCount)
                 : NO_IMAGE_LABEL;
         }
 
@@ -376,7 +395,7 @@ namespace SO.PictManager.Forms
         protected override void RefreshImageList()
         {
             if ((ImageMode == ConfigInfo.ImageDataMode.File && TargetDirectory == null)
-                || (ImageMode == ConfigInfo.ImageDataMode.Database && TargetCategory == null))
+                || (ImageMode == ConfigInfo.ImageDataMode.Database && TargetCategory == null && TargetTag == null))
             {
                 return;
             }

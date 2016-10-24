@@ -207,7 +207,7 @@ namespace SO.PictManager.Forms
         }
 
         /// <summary>
-        /// データベースモード用のコンストラクタです。
+        /// データベースモード用のカテゴリー指定コンストラクタです。
         /// </summary>
         /// <param name="category">対象カテゴリー</param>
         public BaseForm(MstCategory category)
@@ -218,6 +218,23 @@ namespace SO.PictManager.Forms
             // フィールド初期化
             ImageMode = ConfigInfo.ImageDataMode.Database;
             _targetCategory = category;
+
+            // メニューバー作成
+            CreateMenu();
+        }
+
+        /// <summary>
+        /// データベースモード用のタグ指定コンストラクタです。
+        /// </summary>
+        /// <param name="tag">対象タグ</param>
+        public BaseForm(MstTag tag)
+        {
+            // コンポーネント初期化
+            InitializeComponent();
+
+            // フィールド初期化
+            ImageMode = ConfigInfo.ImageDataMode.Database;
+            _targetTag = tag;
 
             // メニューバー作成
             CreateMenu();
