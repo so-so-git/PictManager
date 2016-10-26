@@ -1,198 +1,224 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="SO.PictManager.Common.Constants" Collapsed="true">
-    <Position X="17" Y="0.5" Width="1.5" />
+    <Position X="16.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AQAgAAAAAAAAAAgAAAAAAAAAAAgAAAAACUCAAAAAAAA=</HashCode>
       <FileName>Common\Constants.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="SO.PictManager.Common.FileSorter" Collapsed="true">
-    <Position X="13.5" Y="1.5" Width="1.5" />
+  <Class Name="SO.PictManager.Common.ImageSorter" Collapsed="true">
+    <Position X="14.75" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AFACAAACgAAAAAAAABAAIAAAAAAAAAAGAAAQAAAAIgA=</HashCode>
-      <FileName>Common\FileSorter.cs</FileName>
+      <HashCode>AAAAAAAAgAAAAAAAABAQIAAAAAAAAAAAAAAAAAAAIgA=</HashCode>
+      <FileName>Common\ImageSorter.cs</FileName>
     </TypeIdentifier>
-  </Class>
-  <Class Name="SO.PictManager.Common.ImageController" Collapsed="true">
-    <Position X="17" Y="1.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAIAAAAAAAgQAAACAAAAABAAAAAAAAAAAA=</HashCode>
-      <FileName>Common\ImageController.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="SO.PictManager.Common.JoystickWrapper" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="10" Y="2.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>SAgCCAAASiBCAIBQAAACMABKEIBAgQAAAQhAAIAAAKk=</HashCode>
-      <FileName>Common\JoystickWrapper.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="SO.PictManager.Common.Utilities" Collapsed="true">
-    <Position X="17" Y="3.5" Width="1.5" />
+    <Position X="7.75" Y="5.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AggAAAIAAgIAAAAAAAAACAAAAAAAAAAgAAAABAAAAAA=</HashCode>
+      <HashCode>AggIAAIAAgIAQAAAAAAACAAAAAAAAAAgAAEBBQAAgAA=</HashCode>
       <FileName>Common\Utilities.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SO.PictManager.Components.KeyPrevButton" Collapsed="true">
-    <Position X="11.75" Y="2.5" Width="1.5" />
+    <Position X="16.5" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQA=</HashCode>
       <FileName>Components\KeyPrevButton.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SO.PictManager.Components.KeyPrevCheckBox" Collapsed="true">
-    <Position X="13.5" Y="2.5" Width="1.5" />
+    <Position X="7.75" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQA=</HashCode>
       <FileName>Components\KeyPrevCheckBox.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="SO.PictManager.Components.ThumbnailUnit" Collapsed="true">
-    <Position X="15.25" Y="3.5" Width="1.5" />
+  <Class Name="SO.PictManager.Components.TagUnit" Collapsed="true">
+    <Position X="7.75" Y="4.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAACBIAAADAGAAAAAACIAEADAAABAAAgQQhBQAABAgA=</HashCode>
+      <HashCode>AAAAAggAACAAAAAAAACAAAASAAAAAAEAACAAAAAACQU=</HashCode>
+      <FileName>Components\TagUnit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SO.PictManager.Components.ThumbnailUnit" Collapsed="true">
+    <Position X="14.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACBIAAADAGAAAAAACAAIADBAAAAAAgRAiBQAABAQA=</HashCode>
       <FileName>Components\ThumbnailUnit.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="SO.PictManager.Data.DbUtilities" Collapsed="true">
-    <Position X="10" Y="1.5" Width="1.5" />
+  <Class Name="SO.PictManager.DataModel.PictManagerDbConfiguration" Collapsed="true">
+    <Position X="14.75" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAABAAAA=</HashCode>
-      <FileName>Data\DbUtilities.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataModel\PictManagerDbConfiguration.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="SO.PictManager.Data.ImageAccessor" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="15.25" Y="1.5" Width="1.5" />
+  <Class Name="SO.PictManager.DataModel.PictManagerDbExecutionStrategy" Collapsed="true">
+    <Position X="16.5" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAEkAAAACAAAAAAAAAAAAAAAAAAAAAAQAAAAAAABAA=</HashCode>
-      <FileName>Data\ImageAccessor.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
-  </Class>
-  <Class Name="SO.PictManager.Data.Dto.BaseDto" Collapsed="true">
-    <Position X="3.75" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAABAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Data\Dto\BaseDto.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAA=</HashCode>
+      <FileName>DataModel\PictManagerDbConfiguration.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="SO.PictManager.Data.Dto.MstCategoriesDto" Collapsed="true">
-    <Position X="7.25" Y="1.75" Width="1.5" />
+  <Class Name="SO.PictManager.DataModel.PictManagerEntities" Collapsed="true">
+    <Position X="7.75" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAgACAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Data\Dto\MstCategoriesDto.cs</FileName>
+      <HashCode>AAQAAACAAAAAAAAAAAAAAAAAEAAQABAABAQAAAAAAAA=</HashCode>
+      <FileName>DataModel\PictManagerEntity.Context.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="SO.PictManager.Data.Dto.MstTagsDto" Collapsed="true">
-    <Position X="0.5" Y="1.75" Width="1.5" />
+  <Class Name="SO.PictManager.DataModel.MstCategory" Collapsed="true">
+    <Position X="11.25" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAE=</HashCode>
-      <FileName>Data\Dto\MstTagsDto.cs</FileName>
+      <HashCode>AAAAABAAAAAAAgAAAAIAAAAAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataModel\MstCategory.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="SO.PictManager.Data.Dto.TblImagesDto" Collapsed="true">
-    <Position X="2.75" Y="1.75" Width="1.5" />
+  <Class Name="SO.PictManager.DataModel.MstTag" Collapsed="true">
+    <Position X="13" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>EAAAAAAAAAAgIgAAAAAAAIAAAAAAAAEAAAAAAAAAAAE=</HashCode>
-      <FileName>Data\Dto\TblImagesDto.cs</FileName>
+      <HashCode>AAAAABAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAACAE=</HashCode>
+      <FileName>DataModel\MstTag.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="SO.PictManager.Data.Dto.TblSetsDto" Collapsed="true">
-    <Position X="5" Y="1.75" Width="1.5" />
+  <Class Name="SO.PictManager.DataModel.TblGroup" Collapsed="true">
+    <Position X="9.5" Y="4.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Data\Dto\TblSetsDto.cs</FileName>
+      <HashCode>AAAAABAEAAAgAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataModel\TblGroup.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SO.PictManager.DataModel.TblImage" Collapsed="true">
+    <Position X="11.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAEBAEAAAgAgAAAAIABIAAAAAAAAEACAAAAAAAAAA=</HashCode>
+      <FileName>DataModel\TblImage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SO.PictManager.DataModel.TblTagging" Collapsed="true">
+    <Position X="13" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAAAIAAAAAAAAAAAEAAAAAAAAAAAE=</HashCode>
+      <FileName>DataModel\TblTagging.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SO.PictManager.DataModel.VImageOverview" Collapsed="true">
+    <Position X="9.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAgEgAAAAIABAAAAAAAAAEACAAAAAAAAAA=</HashCode>
+      <FileName>DataModel\VImageOverview.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SO.PictManager.EntryPoint" Collapsed="true">
-    <Position X="11.75" Y="1.5" Width="1.5" />
+    <Position X="9.5" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AABAAAAAAAAAAAAAACEAAACgAAAAAQBAAAAABAAAAAA=</HashCode>
+      <HashCode>AABAQAAAAgAAAAAAASEAAACoAAAAAQhAACAABAAAAAA=</HashCode>
       <FileName>EntryPoint.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SO.PictManager.Forms.BaseDialog" Collapsed="true">
-    <Position X="6.5" Y="6.5" Width="1.5" />
+    <Position X="1.75" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AACAAIAAACAAAAEAAACAAAACAAAEBAAAAAAAAAAAAAA=</HashCode>
       <FileName>Forms\BaseDialog.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SO.PictManager.Forms.BaseForm" Collapsed="true">
-    <Position X="2.75" Y="3.5" Width="1.5" />
+    <Position X="3" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>IQgkSQAAASAAAoAAAAiAgAALgJAQAAAACQMBBAAAASA=</HashCode>
+      <HashCode>IAkEAQAACyAAAgAIAIiAgSQKgJAQAAAAAAIABAAAAGg=</HashCode>
       <FileName>Forms\BaseForm.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SO.PictManager.Forms.BookmarkForm" Collapsed="true">
-    <Position X="11.75" Y="0.5" Width="1.5" />
+    <Position X="9.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>ABACFAAAACEAABBEgFCDAAgCBAAAIIEEAAgBAAAAAQQ=</HashCode>
       <FileName>Forms\BookmarkForm.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SO.PictManager.Forms.BookmarkEventArgs" Collapsed="true">
-    <Position X="10" Y="0.5" Width="1.5" />
+    <Position X="7.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Forms\BookmarkForm.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="SO.PictManager.Forms.ConfigDialog" Collapsed="true">
-    <Position X="5.25" Y="8" Width="1.5" />
+  <Class Name="SO.PictManager.Forms.ComboInputDialog&lt;T&gt;" Collapsed="true">
+    <Position X="13" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AiAAAIgAADCEECAAAACACAUCAgAACAAAAAABAAAAAEg=</HashCode>
+      <HashCode>AAgAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Forms\ComboInputDialog.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SO.PictManager.Forms.ConfigDialog" Collapsed="true">
+    <Position X="0.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AiAAAIgAADAEEDAAAACACAUCAgAECAAAAAABAgAAAEg=</HashCode>
       <FileName>Forms\ConfigDialog.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SO.PictManager.Forms.ListForm" Collapsed="true">
-    <Position X="5" Y="5" Width="1.5" />
+    <Position X="3" Y="2" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AIwIAhVAECIIIABAGACACQDKGI4AQEAFAIAUwAwEAuA=</HashCode>
+      <HashCode>AIgLIgUAAjJAIAgRGACEEQRimA5BQECBIICQAAAEAiA=</HashCode>
       <FileName>Forms\ListForm.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="SO.PictManager.Forms.RenameDialog" Collapsed="true">
-    <Position X="7.5" Y="8" Width="1.5" />
+  <Class Name="SO.PictManager.Forms.MaintenanceForm" Collapsed="true">
+    <Position X="9.5" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>EACCgIAIqSABAAACAIGAGCAzAAAIICCAAAqBIBoAAQg=</HashCode>
+      <HashCode>AApCMAoAACIjAAQAUiSMALnDACCQQAgAEIBaBAaAAAE=</HashCode>
+      <FileName>Forms\MaintenanceForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SO.PictManager.Forms.RenameDialog" Collapsed="true">
+    <Position X="2.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EACCgIAIqSARAAACAIGAGCADBAAKICCAAAqBoBgAAQg=</HashCode>
       <FileName>Forms\RenameDialog.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SO.PictManager.Forms.SlideForm" Collapsed="true">
-    <Position X="2.75" Y="6.25" Width="1.5" />
+    <Position X="5.25" Y="3.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CAgAghNAETCQNEAAgCDACBICCAkFKkMJABKAARBkIyA=</HashCode>
+      <HashCode>CAgAwBMAMTAQEEAAAKTCCBYCGAkDMkMJgBKAARBEIyA=</HashCode>
       <FileName>Forms\SlideForm.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SO.PictManager.Forms.StartForm" Collapsed="true">
-    <Position X="11.75" Y="3.5" Width="1.5" />
+    <Position X="14.75" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAQGgoMCQKAAAAhAgACABIACIAHCBqHAAABACAQgCQI=</HashCode>
+      <HashCode>gEQIkKdCS6AkEyJDgACuASNKBAEQBmHAUCBACAAkCZY=</HashCode>
       <FileName>Forms\StartForm.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SO.PictManager.Forms.ThumbnailForm" Collapsed="true">
-    <Position X="0.5" Y="5" Width="1.5" />
+    <Position X="0.75" Y="2" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>IFBCgAFAACIEAEEAAACqABACEAIhQAIIAYDQgAAUASQ=</HashCode>
+      <HashCode>IFCSgAFnQCIEAEGAAICqAhQSEAohQAIIAYjQgAAWASQ=</HashCode>
       <FileName>Forms\ThumbnailForm.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="SO.PictManager.Forms.ViewImageForm" Collapsed="true">
-    <Position X="2.75" Y="5" Width="1.5" />
+  <Class Name="SO.PictManager.Forms.UrlDropForm" Collapsed="true">
+    <Position X="16.5" Y="4.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>YEgAAQEAASKAAEAAAAzACAkCEAAGQABAgIBRANAUQXQ=</HashCode>
+      <HashCode>AAAAAAAAACAAAAwAAACIACACABAAAAAAAgAAAAAAAAg=</HashCode>
+      <FileName>Forms\UrlDropForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SO.PictManager.Forms.ViewImageForm" Collapsed="true">
+    <Position X="5.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>YUgBAwEAASqASEAgAYzCiIkKMBADQABAgIBQANA9AfQ=</HashCode>
       <FileName>Forms\ViewImageForm.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SO.PictManager.Forms.Info.BookmarkInfo" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="13.5" Y="0.5" Width="1.5" />
+    <Position X="11.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAADBQCAAAAAAAAAAAAAAAQCAAAAAAAAAAAAAAAAABA=</HashCode>
       <FileName>Forms\Info\BookmarkInfo.cs</FileName>
@@ -200,7 +226,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="SO.PictManager.Forms.Info.ConfigInfo" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="15.25" Y="0.5" Width="1.5" />
+    <Position X="14.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>EAAAAQAAAAAAAAAAAAAAAAAAACAAAAQAAAAIAAAAABA=</HashCode>
       <FileName>Forms\Info\ConfigInfo.cs</FileName>
@@ -208,59 +234,82 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="SO.PictManager.Forms.Info.RenameInfo" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="15.25" Y="2.5" Width="1.5" />
+    <Position X="9.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAEAEAAQAAAAAAAACAAgACCCAIAAAgQCAAgAAAABA=</HashCode>
+      <HashCode>AAAAFQEAAQAAAAAAAAAAAgACCCAIAAAgQCAAgAAAABA=</HashCode>
       <FileName>Forms\Info\RenameInfo.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="SO.PictManager.Forms.Info.StateInfo" Collapsed="true">
-    <Position X="13.5" Y="3.5" Width="1.5" />
+    <Position X="16.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAABQAIAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAABA=</HashCode>
+      <HashCode>AAAABQAIAAAAAAACAAAAAAAAAAAAAAAAAAAAAABAABA=</HashCode>
       <FileName>Forms\Info\StateInfo.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="SO.PictManager.Properties.Resources" Collapsed="true">
-    <Position X="17" Y="2.5" Width="1.5" />
+  <Class Name="SO.PictManager.Imaging.DataImage" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="7.75" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAABEAAAAQAAAAAAAAAAAAAAAIA=</HashCode>
+      <HashCode>AAAAAACEAAIgEgQABAACBAAQAAEAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>Imaging\DataImage.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="SO.PictManager.Imaging.FileImage" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAEAQAAAACAAAQAAEAAQAAAAAAAQAAAAA=</HashCode>
+      <FileName>Imaging\FileImage.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="SO.PictManager.Imaging.ImageController" Collapsed="true">
+    <Position X="13" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAAAAAAgQAAACAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>Imaging\ImageController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SO.PictManager.Properties.Resources" Collapsed="true">
+    <Position X="11.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAEABEAAAAQAAEAAAAAAAAAAAAIA=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="SO.PictManager.Properties.Settings" Collapsed="true">
-    <Position X="10" Y="3.5" Width="1.5" />
+    <Position X="13" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAA=</HashCode>
     </TypeIdentifier>
   </Class>
-  <Enum Name="SO.PictManager.Common.FileSortOrder" Collapsed="true">
-    <Position X="10" Y="4.75" Width="1.5" />
+  <Interface Name="SO.PictManager.Imaging.IImage" Collapsed="true">
+    <Position X="7.75" Y="6.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ABAAAAAAAAAAAAQAgBAAAAAAAAAAAAAAIAAABAAAAAA=</HashCode>
-      <FileName>Common\FileSorter.cs</FileName>
+      <HashCode>AAAAAAAAAAAAEAQAAAACAAAQAAEAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>Imaging\IImage.cs</FileName>
     </TypeIdentifier>
-  </Enum>
-  <Enum Name="SO.PictManager.Common.Ps2ControllerButtons" Collapsed="true">
-    <Position X="13.5" Y="4.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAIAACAQAAABAABAABAAAAggAAgACACgQAAIAAI=</HashCode>
-      <FileName>Common\JoystickWrapper.cs</FileName>
-    </TypeIdentifier>
-  </Enum>
-  <Enum Name="SO.PictManager.Forms.ResultStatus" Collapsed="true">
-    <Position X="15.25" Y="4.75" Width="1.5" />
+  </Interface>
+  <Enum Name="SO.PictManager.Common.ResultStatus" Collapsed="true">
+    <Position X="11.25" Y="7.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAQAAAAQAAAAIAAAAAAAAAAAAAAAABAAAAAAA=</HashCode>
-      <FileName>Forms\BaseForm.cs</FileName>
+      <FileName>Common\Constants.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SO.PictManager.Common.ImageSortOrder" Collapsed="true">
+    <Position X="7.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAhAAAAABAAAAABAAAMAAAAAAAAEA=</HashCode>
+      <FileName>Common\ImageSorter.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="SO.PictManager.Forms.OriginalPosition" Collapsed="true">
-    <Position X="11.75" Y="4.75" Width="1.5" />
+    <Position X="9.5" Y="7.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAQAA=</HashCode>
       <FileName>Forms\RenameDialog.cs</FileName>
     </TypeIdentifier>
   </Enum>
-  <Font Name="MS UI Gothic" Size="9" />
+  <Font Name="Meiryo UI" Size="9" />
 </ClassDiagram>
