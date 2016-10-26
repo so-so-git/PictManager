@@ -400,6 +400,8 @@
             this.txtTagSearch.AllowDrop = true;
             this.txtTagSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtTagSearch.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.txtTagSearch.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
             this.txtTagSearch.Enabled = false;
             this.txtTagSearch.Location = new System.Drawing.Point(76, 94);
             this.txtTagSearch.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);

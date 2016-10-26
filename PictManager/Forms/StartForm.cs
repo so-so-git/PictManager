@@ -133,10 +133,10 @@ namespace SO.PictManager.Forms
                 fileWatcher.Created -= fileWatcherInFileMode_Created;
                 fileWatcher.Created += fileWatcherInDatabaseMode_Created;
 
-                // カテゴリー読込
-                cmbCategory.Items.Clear();
                 using (var entities = new PictManagerEntities())
                 {
+                    // カテゴリー読込
+                    cmbCategory.Items.Clear();
                     foreach (var category in entities.MstCategories.OrderBy(c => c.CategoryName))
                     {
                         entities.Entry(category).State = EntityState.Detached;
@@ -144,6 +144,11 @@ namespace SO.PictManager.Forms
                     }
 
                     cmbCategory.SelectedIndex = 0;
+
+                    // タグ検索テキストボックスにサジェストを設定
+                    var tagSuggest = new AutoCompleteStringCollection();
+                    tagSuggest.AddRange(entities.MstTags.Select(t => t.TagName).ToArray());
+                    txtTagSearch.AutoCompleteCustomSource = tagSuggest;
                 }
 
                 lstSearchedTags.Items.Clear();

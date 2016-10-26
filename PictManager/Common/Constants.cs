@@ -29,7 +29,10 @@ namespace SO.PictManager.Common
         public const string DEL_LIST_SEPARATOR = "/";
 
         /// <summary>画像のタグ付けの最大数</summary>
-        public const int TAG_MAX_COUNT = 9;
+        public const int TAGGING_MAX_COUNT = 9;
+
+        /// <summary>タグのサジェストの最大表示数</summary>
+        public const int TAG_SUGGEST_MAX_COUNT = 5;
     }
 
     #region enum ResultStatus - 処理結果ステータス列挙体

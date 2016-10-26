@@ -348,7 +348,7 @@ namespace SO.PictManager.Forms
                 }
             }
 
-            if (pnlTags.Controls.Count < Constants.TAG_MAX_COUNT)
+            if (pnlTags.Controls.Count < Constants.TAGGING_MAX_COUNT)
             {
                 // タグ付けが最大数に満たない場合、タグ付け追加用のテキストボックスを配置
                 var txtNewTag = new TextBox();
