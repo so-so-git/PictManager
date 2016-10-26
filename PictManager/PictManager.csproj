@@ -206,6 +206,9 @@
     <Compile Include="DataModel\TblTagging.cs">
       <DependentUpon>PictManagerEntity.tt</DependentUpon>
     </Compile>
+    <Compile Include="DataModel\VImageOverview.cs">
+      <DependentUpon>PictManagerEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ComboInputDialog.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.Entity;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
@@ -16,14 +15,8 @@ namespace SO.PictManager.Imaging
     {
         #region インスタンス変数
 
-        /// <summary>
-        /// 画像テーブルデータ
-        /// ※メモリ圧迫回避の為、画像のバイナリデータは保持していません。
-        /// </summary>
-        private TblImage _image;
-
-        /// <summary>画像のデータサイズ</summary>
-        private long _dataSize;
+        /// <summary>画像データ概要</summary>
+        private VImageOverview _overview;
 
         #endregion
 
@@ -34,8 +27,8 @@ namespace SO.PictManager.Imaging
         /// </summary>
         public string Key
         {
-            get { return _image.ImageId.ToString(); }
-            set { GetTblImage(int.Parse(value)); }
+            get { return _overview.ImageId.ToString(); }
+            set { GetImageOverview(int.Parse(value)); }
         }
 
         /// <summary>
@@ -43,8 +36,8 @@ namespace SO.PictManager.Imaging
         /// </summary>
         public DateTime Timestamp
         {
-            get { return _image.UpdatedDateTime; }
-            set { _image.UpdatedDateTime = value; }
+            get { return _overview.UpdatedDateTime; }
+            set { _overview.UpdatedDateTime = value; }
         }
 
         /// <summary>
@@ -52,7 +45,7 @@ namespace SO.PictManager.Imaging
         /// </summary>
         public long DataSize
         {
-            get { return _dataSize; }
+            get { return _overview.DataSize; }
         }
 
         /// <summary>
@@ -60,8 +53,8 @@ namespace SO.PictManager.Imaging
         /// </summary>
         public bool IsDeleted
         {
-            get { return _image.DeleteFlag; }
-            set { _image.DeleteFlag = value; }
+            get { return _overview.DeleteFlag; }
+            set { _overview.DeleteFlag = value; }
         }
 
         /// <summary>
@@ -69,8 +62,8 @@ namespace SO.PictManager.Imaging
         /// </summary>
         public int CategoryId
         {
-            get { return _image.CategoryId; }
-            set { _image.CategoryId = value; }
+            get { return _overview.CategoryId; }
+            set { _overview.CategoryId = value; }
         }
 
         /// <summary>
@@ -78,8 +71,8 @@ namespace SO.PictManager.Imaging
         /// </summary>
         public string Description
         {
-            get { return _image.Description; }
-            set { _image.Description = value; }
+            get { return _overview.Description; }
+            set { _overview.Description = value; }
         }
 
         /// <summary>
@@ -87,8 +80,8 @@ namespace SO.PictManager.Imaging
         /// </summary>
         public int? GroupId
         {
-            get { return _image.GroupId; }
-            set { _image.GroupId = value; }
+            get { return _overview.GroupId; }
+            set { _overview.GroupId = value; }
         }
 
         /// <summary>
@@ -96,8 +89,8 @@ namespace SO.PictManager.Imaging
         /// </summary>
         public int? GroupOrder
         {
-            get { return _image.GroupOrder; }
-            set { _image.GroupOrder = value; }
+            get { return _overview.GroupOrder; }
+            set { _overview.GroupOrder = value; }
         }
 
         /// <summary>
@@ -110,7 +103,7 @@ namespace SO.PictManager.Imaging
                 using (var entities = new PictManagerEntities())
                 {
                     return (from i in entities.TblImages
-                            where i.ImageId == _image.ImageId
+                            where i.ImageId == _overview.ImageId
                             select i.ImageData).First();
                 }
             }
@@ -126,7 +119,7 @@ namespace SO.PictManager.Imaging
         /// <param name="imageId">画像ID</param>
         public DataImage(int imageId)
         {
-            GetTblImage(imageId);
+            GetImageOverview(imageId);
         }
 
         #endregion
@@ -142,7 +135,7 @@ namespace SO.PictManager.Imaging
             using (var entities = new PictManagerEntities())
             {
                 byte[] imageData = (from i in entities.TblImages
-                                    where i.ImageId == _image.ImageId
+                                    where i.ImageId == _overview.ImageId
                                     select i.ImageData).First();
 
                 var converter = new ImageConverter();
@@ -165,7 +158,7 @@ namespace SO.PictManager.Imaging
             {
                 // 画像データを論理削除
                 var image = (from i in entities.TblImages
-                             where i.ImageId == _image.ImageId
+                             where i.ImageId == _overview.ImageId
                              select i).First();
 
                 image.DeleteFlag = true;
@@ -173,12 +166,12 @@ namespace SO.PictManager.Imaging
 
                 entities.SaveChanges();
 
-                GetTblImage(_image.ImageId);
+                GetImageOverview(_overview.ImageId);
             }
 
             // ログ出力
             Utilities.Logger.WriteLog(GetType().FullName, MethodBase.GetCurrentMethod().Name,
-                "[DELETE] 画像ID: " + _image.ImageId.ToString());
+                "[DELETE] 画像ID: " + _overview.ImageId.ToString());
         }
 
         #endregion
@@ -186,25 +179,17 @@ namespace SO.PictManager.Imaging
         #region GetTblImage - 画像テーブルデータ取得
 
         /// <summary>
-        /// 指定されたIDの画像データを画像テーブルから取得します。
-        /// 但し、画像のバイナリデータは、画像データサイズのみ取得しクリアされます。
+        /// 指定されたIDの画像データの概要をビューから取得します。
         /// </summary>
         /// <param name="imageId">画像ID</param>
-        private void GetTblImage(int imageId)
+        private void GetImageOverview(int imageId)
         {
             using (var entities = new PictManagerEntities())
             {
-                var image = (from i in entities.TblImages
-                             where i.ImageId == imageId
-                             select i).First();
-
-                entities.Entry(image).State = EntityState.Detached;
-
-                _image = image;
-
-                // データサイズを取得し、バイナリデータを削除
-                _dataSize = _image.ImageData.LongLength;
-                _image.ImageData = null;
+                _overview = (from overview in entities.VImageOverviews
+                             where overview.ImageId == imageId
+                             select overview
+                            ).First();
             }
         }
 

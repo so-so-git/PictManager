@@ -30,5 +30,6 @@ namespace SO.PictManager.DataModel
         public DbSet<TblGroup> TblGroups { get; set; }
         public DbSet<TblImage> TblImages { get; set; }
         public DbSet<TblTagging> TblTaggings { get; set; }
+        public DbSet<VImageOverview> VImageOverviews { get; set; }
     }
 }

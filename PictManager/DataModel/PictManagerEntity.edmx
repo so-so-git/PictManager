@@ -58,12 +58,39 @@
           <Property Name="InsertedDateTime" Type="datetime" Nullable="false" />
           <Property Name="UpdatedDateTime" Type="datetime" Nullable="false" />
         </EntityType>
+        <!--生成中に見つかったエラー:
+警告 6002: テーブル/ビュー 'PictManager.dbo.VImageOverview' には主キーが定義されていません。主キーは推論され、定義は読み取り専用のテーブル/ビューとして作成されました。-->
+        <EntityType Name="VImageOverview">
+          <Key>
+            <PropertyRef Name="ImageId" />
+          </Key>
+          <Property Name="ImageId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CategoryId" Type="int" Nullable="false" />
+          <Property Name="GroupId" Type="int" />
+          <Property Name="GroupOrder" Type="int" />
+          <Property Name="Description" Type="nvarchar" MaxLength="256" />
+          <Property Name="DeleteFlag" Type="bit" Nullable="false" />
+          <Property Name="UpdatedDateTime" Type="datetime" Nullable="false" />
+          <Property Name="DataSize" Type="bigint" Nullable="false" />
+        </EntityType>
         <EntityContainer Name="SOPictManagerDataModelStoreContainer">
           <EntitySet Name="MstCategories" EntityType="Self.MstCategories" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MstTags" EntityType="Self.MstTags" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblGroups" EntityType="Self.TblGroups" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblImages" EntityType="Self.TblImages" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblTaggings" EntityType="Self.TblTaggings" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="VImageOverview" EntityType="Self.VImageOverview" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [VImageOverview].[ImageId] AS [ImageId], 
+    [VImageOverview].[CategoryId] AS [CategoryId], 
+    [VImageOverview].[GroupId] AS [GroupId], 
+    [VImageOverview].[GroupOrder] AS [GroupOrder], 
+    [VImageOverview].[Description] AS [Description], 
+    [VImageOverview].[DeleteFlag] AS [DeleteFlag], 
+    [VImageOverview].[UpdatedDateTime] AS [UpdatedDateTime], 
+    [VImageOverview].[DataSize] AS [DataSize]
+    FROM [dbo].[VImageOverview] AS [VImageOverview]</DefiningQuery>
+          </EntitySet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -93,6 +120,7 @@
           <EntitySet Name="TblGroups" EntityType="SO.PictManager.DataModel.TblGroup" />
           <EntitySet Name="TblImages" EntityType="SO.PictManager.DataModel.TblImage" />
           <EntitySet Name="TblTaggings" EntityType="SO.PictManager.DataModel.TblTagging" />
+          <EntitySet Name="VImageOverviews" EntityType="SO.PictManager.DataModel.VImageOverview" />
         </EntityContainer>
         <EntityType Name="TblGroup">
           <Key>
@@ -128,6 +156,19 @@
           <Property Name="ImageId" Type="Int32" Nullable="false" />
           <Property Name="InsertedDateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="UpdatedDateTime" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="VImageOverview">
+          <Key>
+            <PropertyRef Name="ImageId" />
+          </Key>
+          <Property Name="ImageId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CategoryId" Type="Int32" Nullable="false" />
+          <Property Name="GroupId" Type="Int32" />
+          <Property Name="GroupOrder" Type="Int32" />
+          <Property Name="Description" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="DeleteFlag" Type="Boolean" Nullable="false" />
+          <Property Name="UpdatedDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DataSize" Type="Int64" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -189,6 +230,20 @@
                 <ScalarProperty Name="InsertedDateTime" ColumnName="InsertedDateTime" />
                 <ScalarProperty Name="ImageId" ColumnName="ImageId" />
                 <ScalarProperty Name="TagId" ColumnName="TagId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VImageOverviews">
+            <EntityTypeMapping TypeName="SO.PictManager.DataModel.VImageOverview">
+              <MappingFragment StoreEntitySet="VImageOverview">
+                <ScalarProperty Name="DataSize" ColumnName="DataSize" />
+                <ScalarProperty Name="UpdatedDateTime" ColumnName="UpdatedDateTime" />
+                <ScalarProperty Name="DeleteFlag" ColumnName="DeleteFlag" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="GroupOrder" ColumnName="GroupOrder" />
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="ImageId" ColumnName="ImageId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
