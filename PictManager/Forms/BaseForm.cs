@@ -18,8 +18,6 @@ using SO.PictManager.DataModel;
 using SO.PictManager.Forms.Info;
 using SO.PictManager.Imaging;
 
-using Config = System.Configuration.ConfigurationManager;
-
 namespace SO.PictManager.Forms
 {
     /// <summary>

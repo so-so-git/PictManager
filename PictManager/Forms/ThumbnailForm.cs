@@ -6,13 +6,11 @@ using System.IO;
 using System.Reflection;
 using System.Linq;
 using System.Windows.Forms;
-using System.Windows.Forms.Layout;
 
 using SO.Library.Extensions;
 using SO.Library.Forms;
 using SO.Library.Forms.Extensions;
 using SO.Library.IO;
-using SO.Library.Text;
 using SO.PictManager.Common;
 using SO.PictManager.Components;
 using SO.PictManager.DataModel;

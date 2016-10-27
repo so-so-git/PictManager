@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 using SO.Library.Extensions;
 using SO.Library.Forms;
-using SO.Library.Text;
 using SO.PictManager.Common;
 using SO.PictManager.Forms.Info;
 

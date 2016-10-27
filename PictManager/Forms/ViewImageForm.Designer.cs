@@ -270,7 +270,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.Name = "ViewImageForm";
-            this.Text = "ViewImageForm";
+            this.Text = "PictManager - イメージビューア";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_FormClosing);
             this.Shown += new System.EventHandler(this.Form_Shown);

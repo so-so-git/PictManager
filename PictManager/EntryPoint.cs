@@ -12,7 +12,6 @@ using System.Windows.Forms;
 using SO.Library.Extensions;
 using SO.Library.Forms;
 using SO.Library.IO;
-using SO.Library.Text;
 using SO.PictManager.Common;
 using SO.PictManager.DataModel;
 using SO.PictManager.Forms;

@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Drawing;
-using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
 
 using SO.Library.Forms;
-using SO.Library.Text;
-using SO.PictManager.Common;
-using SO.PictManager.DataModel;
 using SO.PictManager.Imaging;
 
 namespace SO.PictManager.Components

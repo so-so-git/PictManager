@@ -1,7 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-
-using SO.PictManager.Common;
+﻿using System.Windows.Forms;
 
 namespace SO.PictManager.Components
 {

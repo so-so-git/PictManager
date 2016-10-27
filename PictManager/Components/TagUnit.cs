@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Windows.Forms;
 
 using SO.Library.Extensions;
-using SO.PictManager.Common;
 using SO.PictManager.DataModel;
 
 namespace SO.PictManager.Components

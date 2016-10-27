@@ -230,7 +230,6 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.Name = "SlideForm";
-            this.Text = "PictManager - イメージビューア [画像ID：]";
             this.Resize += new System.EventHandler(this.Form_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.picViewer)).EndInit();
             this.pnlFooter.ResumeLayout(false);

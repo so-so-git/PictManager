@@ -731,11 +731,6 @@ namespace SO.PictManager.Forms
             // 情報ラベル不可視化
             lblInfo.Hide();
 
-            // タイトルバー表示
-            this.Text = string.Format("PictManager - イメージビューア [画像{0}：{1}]",
-                ImageMode == ConfigInfo.ImageDataMode.File ? "パス" : "ID",
-                ImageData == null ? string.Empty : ImageData.Key);
-
             // ステータスバーに画像情報を表示
             ShowImageInfoByStatusBar();
 
