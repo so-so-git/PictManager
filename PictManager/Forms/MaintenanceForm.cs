@@ -108,17 +108,17 @@ namespace SO.PictManager.Forms
             cmbEditCategory.DataSource = editableCategories;
             cmbEditCategory.DisplayMember = "CategoryName";
 
-            if (editableCategories.Any())
+            // コントロールの状態を設定
+            bool isEnabledCategoryEdit = editableCategories.Any();
+
+            if (isEnabledCategoryEdit)
             {
                 cmbEditCategory.SelectedIndex = 0;
-                btnDeleteCategory.Enabled = true;
-                btnUpdateCategory.Enabled = true;
             }
-            else
-            {
-                btnDeleteCategory.Enabled = false;
-                btnUpdateCategory.Enabled = false;
-            }
+            cmbEditCategory.Enabled = 
+                btnDeleteCategory.Enabled = 
+                txtUpdateCategory.Enabled = 
+                btnUpdateCategory.Enabled = isEnabledCategoryEdit;
         }
 
         #endregion
