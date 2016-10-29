@@ -208,8 +208,8 @@
   <msg id="W029" caption="重複画像有り" buttons="OK" icon="Warning">
     {0} ファイルの画像は既にデータベースに存在する為、インポートをスキップしました。
   </msg>
-  <msg id="W030" caption="タグ未選択" buttons="OK" icon="Warning">
-    閲覧対象のタグを選択してください。
+  <msg id="W030" caption="カテゴリー及びタグ未選択" buttons="OK" icon="Warning">
+    閲覧対象のカテゴリー、もしくはタグのどちらかを指定してください。
   </msg>
 
   <!-- エラーメッセージ -->

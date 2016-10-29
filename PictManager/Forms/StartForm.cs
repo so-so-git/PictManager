@@ -688,6 +688,13 @@ namespace SO.PictManager.Forms
                     }
                     var tag = lstSearchedTags.SelectedItem as MstTag;
 
+                    // 閲覧対象未指定警告
+                    if (category == null && tag == null)
+                    {
+                        FormUtilities.ShowMessage("W030");
+                        return;
+                    }
+
                     if (rdoSlide.Checked)
                     {
                         frmViewer = new SlideForm(category, tag);       // スライドショー表示
