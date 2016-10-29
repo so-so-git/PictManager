@@ -59,7 +59,6 @@
             this.lblTagSearch = new System.Windows.Forms.Label();
             this.txtTagSearch = new System.Windows.Forms.TextBox();
             this.btnTagSearch = new System.Windows.Forms.Button();
-            this.btnUnselectTag = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.fileWatcher)).BeginInit();
             this.tasktrayMenu.SuspendLayout();
             this.grpViewMode.SuspendLayout();
@@ -325,7 +324,6 @@
             this.pnlForDatabase.Controls.Add(this.lblTagSearch);
             this.pnlForDatabase.Controls.Add(this.lblCategory);
             this.pnlForDatabase.Controls.Add(this.txtTagSearch);
-            this.pnlForDatabase.Controls.Add(this.btnUnselectTag);
             this.pnlForDatabase.Controls.Add(this.btnTagSearch);
             this.pnlForDatabase.Controls.Add(this.cmbCategory);
             this.pnlForDatabase.Location = new System.Drawing.Point(9, 3);
@@ -343,8 +341,10 @@
             this.lstSearchedTags.ItemHeight = 15;
             this.lstSearchedTags.Location = new System.Drawing.Point(76, 72);
             this.lstSearchedTags.Name = "lstSearchedTags";
+            this.lstSearchedTags.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
             this.lstSearchedTags.Size = new System.Drawing.Size(237, 79);
             this.lstSearchedTags.TabIndex = 5;
+            this.lstSearchedTags.SelectedIndexChanged += new System.EventHandler(this.lstSearchedTags_SelectedIndexChanged);
             // 
             // lblTagSearch
             // 
@@ -357,7 +357,6 @@
             // 
             // txtTagSearch
             // 
-            this.txtTagSearch.AllowDrop = true;
             this.txtTagSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtTagSearch.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
@@ -367,9 +366,7 @@
             this.txtTagSearch.Name = "txtTagSearch";
             this.txtTagSearch.Size = new System.Drawing.Size(237, 23);
             this.txtTagSearch.TabIndex = 3;
-            this.txtTagSearch.DragDrop += new System.Windows.Forms.DragEventHandler(this.txtTargetFolder_DragDrop);
-            this.txtTagSearch.DragEnter += new System.Windows.Forms.DragEventHandler(this.txtTargetFolder_DragEnter);
-            this.txtTagSearch.Enter += new System.EventHandler(this.txtTargetFolder_Enter);
+            this.txtTagSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtTagSearch_KeyDown);
             // 
             // btnTagSearch
             // 
@@ -383,21 +380,8 @@
             this.btnTagSearch.UseVisualStyleBackColor = true;
             this.btnTagSearch.Click += new System.EventHandler(this.btnTagSearch_Click);
             // 
-            // btnUnselectTag
-            // 
-            this.btnUnselectTag.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnUnselectTag.Location = new System.Drawing.Point(319, 72);
-            this.btnUnselectTag.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.btnUnselectTag.Name = "btnUnselectTag";
-            this.btnUnselectTag.Size = new System.Drawing.Size(65, 23);
-            this.btnUnselectTag.TabIndex = 6;
-            this.btnUnselectTag.Text = "選択解除";
-            this.btnUnselectTag.UseVisualStyleBackColor = true;
-            this.btnUnselectTag.Click += new System.EventHandler(this.btnUnselectTag_Click);
-            // 
             // StartForm
             // 
-            this.AcceptButton = this.btnView;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnQuit;
@@ -455,7 +439,6 @@
         private System.Windows.Forms.TextBox txtTagSearch;
         private System.Windows.Forms.Button btnTagSearch;
         private System.Windows.Forms.ListBox lstSearchedTags;
-        private System.Windows.Forms.Button btnUnselectTag;
     }
 }
 

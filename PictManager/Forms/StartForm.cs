@@ -50,6 +50,9 @@ namespace SO.PictManager.Forms
         /// <summary>未選択用のブランクカテゴリー</summary>
         private readonly MstCategory _blankCategory;
 
+        /// <summary>選択されているタグ検索結果リストのインデックス</summary>
+        private int? _selectedTagIndex = null;
+
         #endregion
 
         #region コンストラクタ
@@ -366,6 +369,34 @@ namespace SO.PictManager.Forms
 
         //*** イベントハンドラ ***
 
+        #region txtTagSearch_KeyDown - タグ検索テキストボックスキー押下時
+
+        /// <summary>
+        /// タグ検索テキストボックスでキーを押下した際に実行される処理です。
+        /// Enterキー押下時にタグ検索ボタン押下時と同等の処理を行います。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void txtTagSearch_KeyDown(object sender, KeyEventArgs e)
+        {
+            try
+            {
+                if ((e.KeyCode & Keys.Return) == Keys.Return)
+                {
+                    e.Handled = true;
+                    e.SuppressKeyPress = true;
+
+                    btnTagSearch_Click(sender, e);
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
+        }
+
+        #endregion
+
         #region btnTagSearch_Click - タグ検索ボタン押下時
 
         /// <summary>
@@ -419,23 +450,53 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region btnUnselectTag_Click - タグ選択解除ボタン押下時
+        #region lstSearchedTags_SelectedIndexChanged - タグ検索結果リストボックス選択インデックス変更時
 
         /// <summary>
-        /// タグ選択解除ボタンをクリックした際に実行される処理です。
-        /// タグ検索結果をクリアし、タグの選択を解除します。
+        /// タグ検索結果リストボックスの選択インデックスを変更した際に実行される処理です。
+        /// 選択済みのインデックスが再選択された場合、選択を解除します。
+        /// 選択されていないインデックスが選択された場合、既に他に選択されているインデックスがある場合は
+        /// その選択を解除し、最後に選択されたもののみを選択状態にします。
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>
-        private void btnUnselectTag_Click(object sender, EventArgs e)
+        private void lstSearchedTags_SelectedIndexChanged(object sender, EventArgs e)
         {
+            lstSearchedTags.SelectedIndexChanged -= lstSearchedTags_SelectedIndexChanged;
+
             try
             {
-                lstSearchedTags.Items.Clear();
+                if (lstSearchedTags.SelectedIndices.Count == 0)
+                {
+                    // 選択が解除された場合
+                    _selectedTagIndex = null;
+                }
+                else if (lstSearchedTags.SelectedIndices.Count == 1)
+                {
+                    // 単一の項目が選択されている場合
+                    _selectedTagIndex = lstSearchedTags.SelectedIndices[0];
+                }
+                else
+                {
+                    // 複数の項目が選択されている場合、最後に選択したもののみを選択状態にする
+                    _selectedTagIndex = lstSearchedTags.SelectedIndices
+                        .Cast<int>().Except(new[] { _selectedTagIndex.Value }).First();
+                    
+                    while (lstSearchedTags.SelectedIndices.Count > 0)
+                    {
+                        lstSearchedTags.SetSelected(lstSearchedTags.SelectedIndices[0], false);
+                    }
+
+                    lstSearchedTags.SetSelected(_selectedTagIndex.Value, true);
+                }
             }
             catch (Exception ex)
             {
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
+            finally
+            {
+                lstSearchedTags.SelectedIndexChanged += lstSearchedTags_SelectedIndexChanged;
             }
         }
 
