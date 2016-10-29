@@ -85,7 +85,7 @@
             this.grpImportExport.Controls.Add(this.cmbImportCategory);
             this.grpImportExport.Controls.Add(this.lblTargetDirectory);
             this.grpImportExport.Controls.Add(this.lblCategories);
-            this.grpImportExport.Location = new System.Drawing.Point(13, 161);
+            this.grpImportExport.Location = new System.Drawing.Point(13, 139);
             this.grpImportExport.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.grpImportExport.Name = "grpImportExport";
             this.grpImportExport.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -272,7 +272,7 @@
             this.grpCategories.Controls.Add(this.cmbEditCategory);
             this.grpCategories.Location = new System.Drawing.Point(13, 13);
             this.grpCategories.Name = "grpCategories";
-            this.grpCategories.Size = new System.Drawing.Size(307, 141);
+            this.grpCategories.Size = new System.Drawing.Size(307, 119);
             this.grpCategories.TabIndex = 0;
             this.grpCategories.TabStop = false;
             this.grpCategories.Text = "カテゴリー管理";
@@ -353,7 +353,7 @@
             // btnClose
             // 
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClose.Location = new System.Drawing.Point(375, 474);
+            this.btnClose.Location = new System.Drawing.Point(375, 459);
             this.btnClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(87, 29);
@@ -370,7 +370,7 @@
             this.grpCleanup.Controls.Add(this.btnPhysicalDeleteImages);
             this.grpCleanup.Controls.Add(this.lblUnusedTagsHeader);
             this.grpCleanup.Controls.Add(this.lblLogicalDeletedImagesHeader);
-            this.grpCleanup.Location = new System.Drawing.Point(13, 377);
+            this.grpCleanup.Location = new System.Drawing.Point(13, 355);
             this.grpCleanup.Name = "grpCleanup";
             this.grpCleanup.Size = new System.Drawing.Size(307, 90);
             this.grpCleanup.TabIndex = 2;
@@ -439,7 +439,7 @@
             // 
             this.barStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblStatus});
-            this.barStatus.Location = new System.Drawing.Point(0, 507);
+            this.barStatus.Location = new System.Drawing.Point(0, 492);
             this.barStatus.Name = "barStatus";
             this.barStatus.Size = new System.Drawing.Size(471, 22);
             this.barStatus.TabIndex = 5;
@@ -454,7 +454,7 @@
             // btnCheckDuplicate
             // 
             this.btnCheckDuplicate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnCheckDuplicate.Location = new System.Drawing.Point(13, 474);
+            this.btnCheckDuplicate.Location = new System.Drawing.Point(13, 459);
             this.btnCheckDuplicate.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnCheckDuplicate.Name = "btnCheckDuplicate";
             this.btnCheckDuplicate.Size = new System.Drawing.Size(109, 29);
@@ -467,7 +467,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(471, 529);
+            this.ClientSize = new System.Drawing.Size(471, 514);
             this.Controls.Add(this.barStatus);
             this.Controls.Add(this.grpCleanup);
             this.Controls.Add(this.grpCategories);
