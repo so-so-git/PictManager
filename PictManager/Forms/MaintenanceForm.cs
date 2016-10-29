@@ -95,27 +95,29 @@ namespace SO.PictManager.Forms
         /// <param name="entity">エンティティオブジェクト</param>
         private void RefreshCategoriesComboBox(PictManagerEntities entity)
         {
-            // インポート先カテゴリ
+            // インポート先カテゴリー
             var allCategories = entity.MstCategories.OrderBy(c => c.CategoryName).ToList();
 
             cmbImportCategory.DataSource = allCategories;
             cmbImportCategory.DisplayMember = "CategoryName";
             cmbImportCategory.SelectedIndex = 0;
 
-            // 削除カテゴリ
-            var deletableCategories = allCategories.Where(c => c.CategoryId != Constants.UN_CLASSIFIED_CATEGORY_ID).ToList();
+            // 編集カテゴリー
+            var editableCategories = allCategories.Where(c => c.CategoryId != Constants.UN_CLASSIFIED_CATEGORY_ID).ToList();
 
-            cmbDeleteCategory.DataSource = deletableCategories;
-            cmbDeleteCategory.DisplayMember = "CategoryName";
+            cmbEditCategory.DataSource = editableCategories;
+            cmbEditCategory.DisplayMember = "CategoryName";
 
-            if (deletableCategories.Any())
+            if (editableCategories.Any())
             {
-                cmbDeleteCategory.SelectedIndex = 0;
+                cmbEditCategory.SelectedIndex = 0;
                 btnDeleteCategory.Enabled = true;
+                btnUpdateCategory.Enabled = true;
             }
             else
             {
                 btnDeleteCategory.Enabled = false;
+                btnUpdateCategory.Enabled = false;
             }
         }
 
@@ -498,6 +500,29 @@ namespace SO.PictManager.Forms
 
         #endregion
 
+        #region cmbEditCategory_SelectedIndexChanged - カテゴリー編集コンボボックス選択インデックス変更時
+
+        /// <summary>
+        /// カテゴリー編集コンボボックスの選択インデックスが変更された際に実行される処理です。
+        /// 選択されたカテゴリーの名前をカテゴリー更新テキストボックスに表示します。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void cmbEditCategory_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                var selectedCategory = cmbEditCategory.SelectedItem as MstCategory;
+                txtUpdateCategory.Text = selectedCategory.CategoryName;
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
+        }
+
+        #endregion
+
         #region btnDeleteCategory_Click - カテゴリー削除ボタンクリック時
 
         /// <summary>
@@ -510,7 +535,7 @@ namespace SO.PictManager.Forms
         {
             try
             {
-                var selectedCategory = cmbDeleteCategory.SelectedItem as MstCategory;
+                var selectedCategory = cmbEditCategory.SelectedItem as MstCategory;
 
                 using (var entities = new PictManagerEntities())
                 {
@@ -557,7 +582,57 @@ namespace SO.PictManager.Forms
             {
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
+        }
 
+        #endregion
+
+        #region btnUpdateCategory_Click - カテゴリー更新ボタンクリック時
+
+        /// <summary>
+        /// カテゴリー更新ボタンがクリックされた際に実行される処理です。
+        /// カテゴリー編集コンボボックスで選択されているカテゴリーの名前を更新します。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void btnUpdateCategory_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(txtUpdateCategory.Text))
+                {
+                    txtUpdateCategory.Focus();
+                    txtUpdateCategory.SelectAll();
+                    FormUtilities.ShowMessage("W000", "更新後のカテゴリー名");
+                    return;
+                }
+                
+                if (FormUtilities.ShowMessage("Q022", "選択されているカテゴリーの名前")
+                    == DialogResult.No)
+                {
+                    return;
+                }
+
+                var selectedCategory = cmbEditCategory.SelectedItem as MstCategory;
+
+                using (var entities = new PictManagerEntities())
+                {
+                    // 入力された内容でカテゴリー名を更新
+                    var category = (from row in entities.MstCategories
+                                    where row.CategoryId == selectedCategory.CategoryId
+                                    select row
+                                   ).Single();
+
+                    category.CategoryName = txtUpdateCategory.Text;
+                    entities.SaveChanges();
+
+                    // コンボボックス内容を更新
+                    RefreshCategoriesComboBox(entities);
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
         }
 
         #endregion

@@ -113,6 +113,9 @@
   <msg id="Q021" caption="不要タグ削除確認" buttons="YesNo" icon="Question">
     画像が紐付いていないタグを削除してよろしいですか？
   </msg>
+  <msg id="Q022" caption="更新確認" buttons="YesNo" icon="Question">
+    {0}を更新してよろしいですか？
+  </msg>
 
   <!-- ワーニングメッセージ -->
 	<msg id="W000" caption="未入力エラー" buttons="OK" icon="Warning">
