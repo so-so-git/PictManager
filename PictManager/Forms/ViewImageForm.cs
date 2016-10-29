@@ -299,7 +299,7 @@ namespace SO.PictManager.Forms
                 ResetScrollProperties();
 
                 // タグを表示
-                ShowTags();
+                ShowTags(false);
             }
             catch (Exception ex)
             {
@@ -325,7 +325,8 @@ namespace SO.PictManager.Forms
         /// <summary>
         /// 表示中の画像のタグを表示します。
         /// </summary>
-        private void ShowTags()
+        /// <param name="isFocusNewTagText">新規タグ追加テキストボックスにフォーカスをセットするかを示すフラグ</param>
+        private void ShowTags(bool isFocusNewTagText)
         {
             // 前の画像のタグ表示を消去
             pnlTags.Controls.Clear();
@@ -342,7 +343,7 @@ namespace SO.PictManager.Forms
                 {
                     // タグユニットをパネルに追加
                     var tagUnit = new TagUnit(imageId, tagging.TagId);
-                    tagUnit.TagDeleted += (sender, e) => ShowTags();
+                    tagUnit.TagDeleted += (sender, e) => ShowTags(false);
 
                     pnlTags.Controls.Add(tagUnit);
                 }
@@ -353,11 +354,16 @@ namespace SO.PictManager.Forms
                 // タグ付けが最大数に満たない場合、タグ付け追加用のテキストボックスを配置
                 var txtNewTag = new TextBox();
                 txtNewTag.Name = TEXT_BOX_NAME_NEW_TAG;
-                txtNewTag.MaxLength = 50;
+                txtNewTag.MaxLength = Constants.TAG_NAME_MAX_LENGTH;
 
                 txtNewTag.KeyDown += txtNewTag_KeyDown;
 
                 pnlTags.Controls.Add(txtNewTag);
+
+                if (isFocusNewTagText)
+                {
+                    txtNewTag.Focus();
+                }
             }
         }
 
@@ -1231,7 +1237,7 @@ namespace SO.PictManager.Forms
                         }
 
                         // タグ表示を更新
-                        ShowTags();
+                        ShowTags(true);
                     }
                     finally
                     {

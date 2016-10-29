@@ -41,8 +41,20 @@ namespace SO.PictManager.Forms
 
                 // 物理削除済み画像数取得
                 var deletedCount = entities.TblImages.Where(i => i.DeleteFlag).Count();
-                lblDeletedCount.Text = deletedCount.ToString("#,0");
-                btnPhysicalDelete.Enabled = deletedCount > 0;
+                lblLogicalDeletedImages.Text = deletedCount.ToString("#,0");
+                btnPhysicalDeleteImages.Enabled = deletedCount > 0;
+
+                // 画像が紐付けられていないタグ数を取得
+                var unusedTags = (from tag in entities.MstTags
+                                  join tagging in entities.TblTaggings
+                                    on tag.TagId equals tagging.TagId into tmpTagging
+                                  from joinedTagging in tmpTagging.DefaultIfEmpty()
+                                  where joinedTagging == null
+                                  select tag
+                                 ).Count();
+                lblUnusedTags.Text = unusedTags.ToString("#,0");
+                btnDeleteUnusedTags.Enabled = unusedTags > 0;
+
             }
 
             lblStatus.Text = string.Empty;
@@ -425,8 +437,8 @@ namespace SO.PictManager.Forms
 
                 // 物理削除済み画像数取得
                 var deletedCount = entities.TblImages.Where(i => i.DeleteFlag).Count();
-                lblDeletedCount.Text = deletedCount.ToString("#,0");
-                btnPhysicalDelete.Enabled = deletedCount > 0;
+                lblLogicalDeletedImages.Text = deletedCount.ToString("#,0");
+                btnPhysicalDeleteImages.Enabled = deletedCount > 0;
             }
         }
 
@@ -753,15 +765,15 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region btnApplyDelete_Click - 完全に削除ボタンクリック
+        #region btnPhysicalDeleteImages_Click - 画像物理削除ボタンクリック
 
         /// <summary>
-        /// 完全に削除ボタンがクリックされた際に実行される処理です。
+        /// 画像物理削除ボタンがクリックされた際に実行される処理です。
         /// 論理削除済みの画像データを物理削除します。
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>
-        private void btnPhysicalDelete_Click(object sender, EventArgs e)
+        private void btnPhysicalDeleteImages_Click(object sender, EventArgs e)
         {
             try
             {
@@ -799,10 +811,57 @@ namespace SO.PictManager.Forms
                     entities.SaveChanges();
                 }
 
-                lblDeletedCount.Text = "0";
-                btnPhysicalDelete.Enabled = false;
+                lblLogicalDeletedImages.Text = "0";
+                btnPhysicalDeleteImages.Enabled = false;
 
                 FormUtilities.ShowMessage("I011", "削除画像の完全消去");
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
+        }
+
+        #endregion
+
+        #region btnDeleteUnusedTags_Click - 不要タグ削除ボタンクリック
+
+        /// <summary>
+        /// 不要タグ削除ボタンがクリックされた際に実行される処理です。
+        /// 画像が紐付けられていないタグを削除します。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void btnDeleteUnusedTags_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // 削除確認
+                if (FormUtilities.ShowMessage("Q014") == DialogResult.No)
+                {
+                    return;
+                }
+
+                using (var entities = new PictManagerEntities())
+                {
+                    // 画像が紐付けられていないタグを削除
+                    var unusedTags = from tag in entities.MstTags
+                                     join tagging in entities.TblTaggings
+                                       on tag.TagId equals tagging.TagId into tmpTagging
+                                     from joinedTagging in tmpTagging.DefaultIfEmpty()
+                                     where joinedTagging == null
+                                     select tag;
+
+                    foreach (var unusedTag in unusedTags)
+                    {
+                        entities.MstTags.Remove(unusedTag);
+                    }
+
+                    entities.SaveChanges();
+                }
+
+                lblUnusedTags.Text = "0";
+                btnDeleteUnusedTags.Enabled = false;
             }
             catch (Exception ex)
             {
@@ -858,8 +917,8 @@ namespace SO.PictManager.Forms
                 {
                     // 物理削除済み画像数取得
                     var deletedCount = entities.TblImages.Where(i => i.DeleteFlag).Count();
-                    lblDeletedCount.Text = deletedCount.ToString("#,0");
-                    btnPhysicalDelete.Enabled = deletedCount > 0;
+                    lblLogicalDeletedImages.Text = deletedCount.ToString("#,0");
+                    btnPhysicalDeleteImages.Enabled = deletedCount > 0;
                 }
             }
             catch (Exception ex)

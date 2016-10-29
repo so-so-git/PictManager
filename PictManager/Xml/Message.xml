@@ -89,8 +89,8 @@
   <msg id="Q013" caption="カテゴリー削除確認" buttons="YesNo" icon="Question">
     カテゴリー[{0}]に属している画像が存在します。\nカテゴリーを削除してもよろしいですか？\n(属していた画像は未分類カテゴリーになります)
   </msg>
-  <msg id="Q014" caption="画像完全消去確認" buttons="YesNo" icon="Question">
-    仮削除の状態の画像データを完全に消去してよろしいですか？
+  <msg id="Q014" caption="画像完全削除確認" buttons="YesNo" icon="Question">
+    仮削除の状態の画像データを完全に削除してよろしいですか？
   </msg>
   <msg id="Q015" caption="ファイル上書き確認" buttons="YesNo" icon="Question">
     移動先に同名のファイル[{0}]が存在します。\n上書きしてもよろしいですか？
@@ -109,6 +109,9 @@
   </msg>
   <msg id="Q020" caption="ファイルが存在するフォルダへのエクスポート確認" buttons="YesNo" icon="Question">
     指定されたフォルダには既にファイルが存在します。\nエクスポートを継続してもよろしいですか？\n(ファイルが上書きされる可能性があります)
+  </msg>
+  <msg id="Q021" caption="不要タグ削除確認" buttons="YesNo" icon="Question">
+    画像が紐付いていないタグを削除してよろしいですか？
   </msg>
 
   <!-- ワーニングメッセージ -->

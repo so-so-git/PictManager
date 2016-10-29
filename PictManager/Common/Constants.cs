@@ -28,6 +28,9 @@
 
         /// <summary>タグのサジェストの最大表示数</summary>
         public const int TAG_SUGGEST_MAX_COUNT = 5;
+
+        /// <summary>タグ名の最大文字数</summary>
+        public const int TAG_NAME_MAX_LENGTH = 50;
     }
 
     #region enum ResultStatus - 処理結果ステータス列挙体
