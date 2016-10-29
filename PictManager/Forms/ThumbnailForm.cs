@@ -137,8 +137,9 @@ namespace SO.PictManager.Forms
         /// データベースモード用のカテゴリー指定コンストラクタです。
         /// </summary>
         /// <param name="category">対象カテゴリー</param>
-        public ThumbnailForm(MstCategory category)
-            : base(category)
+        /// <param name="tag">対象タグ</param>
+        public ThumbnailForm(MstCategory category, MstTag tag)
+            : base(category, tag)
         {
             // コンポーネント初期化
             InitializeComponent();
@@ -149,25 +150,6 @@ namespace SO.PictManager.Forms
             // ステータスバー更新
             lblStatus.Text = ImageCount > 0
                 ? category.CategoryName + string.Format(" - {0}件", ImageCount)
-                : NO_IMAGE_LABEL;
-        }
-
-        /// <summary>
-        /// データベースモード用のタグ指定コンストラクタです。
-        /// </summary>
-        /// <param name="tag">対象タグ</param>
-        public ThumbnailForm(MstTag tag)
-            : base(tag)
-        {
-            // コンポーネント初期化
-            InitializeComponent();
-
-            // 共通構築処理
-            CommonConstruction();
-
-            // ステータスバー更新
-            lblStatus.Text = ImageCount > 0
-                ? tag.TagName + string.Format(" - {0}件", ImageCount)
                 : NO_IMAGE_LABEL;
         }
 

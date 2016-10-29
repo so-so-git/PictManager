@@ -84,10 +84,11 @@ namespace SO.PictManager.Forms
         }
 
         /// <summary>
-        /// データベースモード用のカテゴリー指定コンストラクタです。
+        /// データベースモード用のコンストラクタです。
         /// </summary>
         /// <param name="category">対象カテゴリー</param>
-        public SlideForm(MstCategory category)
+        /// <param name="tag">対象タグ</param>
+        public SlideForm(MstCategory category, MstTag tag)
             : base(ConfigInfo.ImageDataMode.Database)
         {
             // コンポーネント初期化
@@ -95,25 +96,6 @@ namespace SO.PictManager.Forms
 
             // 対象カテゴリー、対象タグ保管
             TargetCategory = category;
-
-            // 画面表示制御
-            btnGroup.Visible = true;
-
-            // 共通処理
-            ConstructCommon();
-        }
-
-        /// <summary>
-        /// データベースモード用のタグ指定コンストラクタです。
-        /// </summary>
-        /// <param name="tag">対象タグ</param>
-        public SlideForm(MstTag tag)
-            : base(ConfigInfo.ImageDataMode.Database)
-        {
-            // コンポーネント初期化
-            InitializeComponent();
-
-            // 対象カテゴリー、対象タグ保管
             TargetTag = tag;
 
             // 画面表示制御

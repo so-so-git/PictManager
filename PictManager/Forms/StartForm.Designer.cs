@@ -55,19 +55,16 @@
             this.lblTargetFolder = new System.Windows.Forms.Label();
             this.lblCategory = new System.Windows.Forms.Label();
             this.pnlForDatabase = new System.Windows.Forms.Panel();
-            this.grpTargetSelect = new System.Windows.Forms.GroupBox();
-            this.rdoTargetTag = new System.Windows.Forms.RadioButton();
-            this.rdoTargetCategory = new System.Windows.Forms.RadioButton();
             this.lstSearchedTags = new System.Windows.Forms.ListBox();
             this.lblTagSearch = new System.Windows.Forms.Label();
             this.txtTagSearch = new System.Windows.Forms.TextBox();
             this.btnTagSearch = new System.Windows.Forms.Button();
+            this.btnUnselectTag = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.fileWatcher)).BeginInit();
             this.tasktrayMenu.SuspendLayout();
             this.grpViewMode.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.pnlForDatabase.SuspendLayout();
-            this.grpTargetSelect.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtTargetFolder
@@ -242,7 +239,7 @@
             this.cmbCategory.DisplayMember = "CategoryName";
             this.cmbCategory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbCategory.FormattingEnabled = true;
-            this.cmbCategory.Location = new System.Drawing.Point(76, 63);
+            this.cmbCategory.Location = new System.Drawing.Point(76, 10);
             this.cmbCategory.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cmbCategory.Name = "cmbCategory";
             this.cmbCategory.Size = new System.Drawing.Size(218, 23);
@@ -299,7 +296,7 @@
             this.pnlMain.Controls.Add(this.btnConfig);
             this.pnlMain.Controls.Add(this.btnSaveMode);
             this.pnlMain.Controls.Add(this.btnView);
-            this.pnlMain.Location = new System.Drawing.Point(9, 237);
+            this.pnlMain.Location = new System.Drawing.Point(9, 172);
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Size = new System.Drawing.Size(389, 170);
             this.pnlMain.TabIndex = 1;
@@ -316,7 +313,7 @@
             // lblCategory
             // 
             this.lblCategory.AutoSize = true;
-            this.lblCategory.Location = new System.Drawing.Point(4, 66);
+            this.lblCategory.Location = new System.Drawing.Point(4, 13);
             this.lblCategory.Name = "lblCategory";
             this.lblCategory.Size = new System.Drawing.Size(51, 15);
             this.lblCategory.TabIndex = 0;
@@ -324,52 +321,17 @@
             // 
             // pnlForDatabase
             // 
-            this.pnlForDatabase.Controls.Add(this.grpTargetSelect);
             this.pnlForDatabase.Controls.Add(this.lstSearchedTags);
             this.pnlForDatabase.Controls.Add(this.lblTagSearch);
             this.pnlForDatabase.Controls.Add(this.lblCategory);
             this.pnlForDatabase.Controls.Add(this.txtTagSearch);
+            this.pnlForDatabase.Controls.Add(this.btnUnselectTag);
             this.pnlForDatabase.Controls.Add(this.btnTagSearch);
             this.pnlForDatabase.Controls.Add(this.cmbCategory);
             this.pnlForDatabase.Location = new System.Drawing.Point(9, 3);
             this.pnlForDatabase.Name = "pnlForDatabase";
-            this.pnlForDatabase.Size = new System.Drawing.Size(389, 228);
+            this.pnlForDatabase.Size = new System.Drawing.Size(389, 163);
             this.pnlForDatabase.TabIndex = 0;
-            // 
-            // grpTargetSelect
-            // 
-            this.grpTargetSelect.Controls.Add(this.rdoTargetTag);
-            this.grpTargetSelect.Controls.Add(this.rdoTargetCategory);
-            this.grpTargetSelect.Location = new System.Drawing.Point(7, 3);
-            this.grpTargetSelect.Name = "grpTargetSelect";
-            this.grpTargetSelect.Size = new System.Drawing.Size(215, 53);
-            this.grpTargetSelect.TabIndex = 6;
-            this.grpTargetSelect.TabStop = false;
-            this.grpTargetSelect.Text = "対象指定";
-            // 
-            // rdoTargetTag
-            // 
-            this.rdoTargetTag.AutoSize = true;
-            this.rdoTargetTag.Location = new System.Drawing.Point(129, 22);
-            this.rdoTargetTag.Name = "rdoTargetTag";
-            this.rdoTargetTag.Size = new System.Drawing.Size(66, 19);
-            this.rdoTargetTag.TabIndex = 0;
-            this.rdoTargetTag.Text = "タグ指定";
-            this.rdoTargetTag.UseVisualStyleBackColor = true;
-            this.rdoTargetTag.CheckedChanged += new System.EventHandler(this.rdoTargetSelect_CheckedChanged);
-            // 
-            // rdoTargetCategory
-            // 
-            this.rdoTargetCategory.AutoSize = true;
-            this.rdoTargetCategory.Checked = true;
-            this.rdoTargetCategory.Location = new System.Drawing.Point(19, 22);
-            this.rdoTargetCategory.Name = "rdoTargetCategory";
-            this.rdoTargetCategory.Size = new System.Drawing.Size(93, 19);
-            this.rdoTargetCategory.TabIndex = 0;
-            this.rdoTargetCategory.TabStop = true;
-            this.rdoTargetCategory.Text = "カテゴリー指定";
-            this.rdoTargetCategory.UseVisualStyleBackColor = true;
-            this.rdoTargetCategory.CheckedChanged += new System.EventHandler(this.rdoTargetSelect_CheckedChanged);
             // 
             // lstSearchedTags
             // 
@@ -377,19 +339,17 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lstSearchedTags.DisplayMember = "TagName";
-            this.lstSearchedTags.Enabled = false;
             this.lstSearchedTags.FormattingEnabled = true;
             this.lstSearchedTags.ItemHeight = 15;
-            this.lstSearchedTags.Location = new System.Drawing.Point(76, 125);
+            this.lstSearchedTags.Location = new System.Drawing.Point(76, 72);
             this.lstSearchedTags.Name = "lstSearchedTags";
-            this.lstSearchedTags.Size = new System.Drawing.Size(237, 94);
+            this.lstSearchedTags.Size = new System.Drawing.Size(237, 79);
             this.lstSearchedTags.TabIndex = 5;
             // 
             // lblTagSearch
             // 
             this.lblTagSearch.AutoSize = true;
-            this.lblTagSearch.Enabled = false;
-            this.lblTagSearch.Location = new System.Drawing.Point(4, 98);
+            this.lblTagSearch.Location = new System.Drawing.Point(4, 45);
             this.lblTagSearch.Name = "lblTagSearch";
             this.lblTagSearch.Size = new System.Drawing.Size(24, 15);
             this.lblTagSearch.TabIndex = 2;
@@ -402,8 +362,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtTagSearch.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.txtTagSearch.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.txtTagSearch.Enabled = false;
-            this.txtTagSearch.Location = new System.Drawing.Point(76, 94);
+            this.txtTagSearch.Location = new System.Drawing.Point(76, 41);
             this.txtTagSearch.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtTagSearch.Name = "txtTagSearch";
             this.txtTagSearch.Size = new System.Drawing.Size(237, 23);
@@ -415,8 +374,7 @@
             // btnTagSearch
             // 
             this.btnTagSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnTagSearch.Enabled = false;
-            this.btnTagSearch.Location = new System.Drawing.Point(319, 94);
+            this.btnTagSearch.Location = new System.Drawing.Point(319, 41);
             this.btnTagSearch.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnTagSearch.Name = "btnTagSearch";
             this.btnTagSearch.Size = new System.Drawing.Size(65, 23);
@@ -425,13 +383,25 @@
             this.btnTagSearch.UseVisualStyleBackColor = true;
             this.btnTagSearch.Click += new System.EventHandler(this.btnTagSearch_Click);
             // 
+            // btnUnselectTag
+            // 
+            this.btnUnselectTag.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnUnselectTag.Location = new System.Drawing.Point(319, 72);
+            this.btnUnselectTag.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnUnselectTag.Name = "btnUnselectTag";
+            this.btnUnselectTag.Size = new System.Drawing.Size(65, 23);
+            this.btnUnselectTag.TabIndex = 6;
+            this.btnUnselectTag.Text = "選択解除";
+            this.btnUnselectTag.UseVisualStyleBackColor = true;
+            this.btnUnselectTag.Click += new System.EventHandler(this.btnUnselectTag_Click);
+            // 
             // StartForm
             // 
             this.AcceptButton = this.btnView;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnQuit;
-            this.ClientSize = new System.Drawing.Size(408, 418);
+            this.ClientSize = new System.Drawing.Size(408, 352);
             this.Controls.Add(this.pnlForDatabase);
             this.Controls.Add(this.pnlMain);
             this.Font = new System.Drawing.Font("Meiryo UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
@@ -450,8 +420,6 @@
             this.pnlMain.PerformLayout();
             this.pnlForDatabase.ResumeLayout(false);
             this.pnlForDatabase.PerformLayout();
-            this.grpTargetSelect.ResumeLayout(false);
-            this.grpTargetSelect.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -487,9 +455,7 @@
         private System.Windows.Forms.TextBox txtTagSearch;
         private System.Windows.Forms.Button btnTagSearch;
         private System.Windows.Forms.ListBox lstSearchedTags;
-        private System.Windows.Forms.GroupBox grpTargetSelect;
-        private System.Windows.Forms.RadioButton rdoTargetCategory;
-        private System.Windows.Forms.RadioButton rdoTargetTag;
+        private System.Windows.Forms.Button btnUnselectTag;
     }
 }
 

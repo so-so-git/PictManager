@@ -205,10 +205,11 @@ namespace SO.PictManager.Forms
         }
 
         /// <summary>
-        /// データベースモード用のカテゴリー指定コンストラクタです。
+        /// データベースモード用のコンストラクタです。
         /// </summary>
         /// <param name="category">対象カテゴリー</param>
-        public BaseForm(MstCategory category)
+        /// <param name="tag">対象タグ</param>
+        public BaseForm(MstCategory category, MstTag tag)
         {
             // コンポーネント初期化
             InitializeComponent();
@@ -216,22 +217,6 @@ namespace SO.PictManager.Forms
             // フィールド初期化
             ImageMode = ConfigInfo.ImageDataMode.Database;
             _targetCategory = category;
-
-            // メニューバー作成
-            CreateMenu();
-        }
-
-        /// <summary>
-        /// データベースモード用のタグ指定コンストラクタです。
-        /// </summary>
-        /// <param name="tag">対象タグ</param>
-        public BaseForm(MstTag tag)
-        {
-            // コンポーネント初期化
-            InitializeComponent();
-
-            // フィールド初期化
-            ImageMode = ConfigInfo.ImageDataMode.Database;
             _targetTag = tag;
 
             // メニューバー作成
@@ -993,7 +978,22 @@ namespace SO.PictManager.Forms
                     using (var entities = new PictManagerEntities())
                     {
                         IEnumerable<int> imageIds;
-                        if (TargetCategory != null)
+                        if (TargetCategory != null && TargetTag != null)
+                        {
+                            // 対象カテゴリー及びタグに該当する画像を抽出
+                            imageIds = from image in entities.TblImages
+                                       where image.CategoryId == TargetCategory.CategoryId
+                                          && !image.DeleteFlag
+                                       join tagging in (
+                                          from subTagging in entities.TblTaggings
+                                          where subTagging.TagId == TargetTag.TagId
+                                          select subTagging
+                                       )
+                                         on image.ImageId equals tagging.ImageId
+                                       orderby image.ImageId
+                                       select image.ImageId;
+                        }
+                        else if (TargetCategory != null)
                         {
                             // 対象カテゴリーに該当する画像を抽出
                             imageIds = from image in entities.TblImages

@@ -47,6 +47,9 @@ namespace SO.PictManager.Forms
         /// <summary>データベースモード時の画面サイズ</summary>
         private readonly Size _formSizeInDatabaseMode;
 
+        /// <summary>未選択用のブランクカテゴリー</summary>
+        private readonly MstCategory _blankCategory;
+
         #endregion
 
         #region コンストラクタ
@@ -63,6 +66,16 @@ namespace SO.PictManager.Forms
             _spacer = 6;
             _formSizeInDatabaseMode = this.Size;
             _formSizeInFileMode = new Size(this.Width, this.Height - (pnlForDatabase.Height + _spacer));
+
+            // 未選択用のカテゴリーを用意
+            _blankCategory = new MstCategory()
+            {
+                CategoryId = int.MinValue,
+                CategoryName = string.Empty,
+            };
+
+            // タグ検索テキストボックスにサジェストを設定
+            var tagSuggest = new AutoCompleteStringCollection();
 
             // フォーム状態設定
             ChangeImageMode();
@@ -129,23 +142,8 @@ namespace SO.PictManager.Forms
                 fileWatcher.Created -= fileWatcherInFileMode_Created;
                 fileWatcher.Created += fileWatcherInDatabaseMode_Created;
 
-                using (var entities = new PictManagerEntities())
-                {
-                    // カテゴリー読込
-                    cmbCategory.Items.Clear();
-                    foreach (var category in entities.MstCategories.OrderBy(c => c.CategoryName))
-                    {
-                        entities.Entry(category).State = EntityState.Detached;
-                        cmbCategory.Items.Add(category);
-                    }
-
-                    cmbCategory.SelectedIndex = 0;
-
-                    // タグ検索テキストボックスにサジェストを設定
-                    var tagSuggest = new AutoCompleteStringCollection();
-                    tagSuggest.AddRange(entities.MstTags.Select(t => t.TagName).ToArray());
-                    txtTagSearch.AutoCompleteCustomSource = tagSuggest;
-                }
+                // 有効なカテゴリーとタグを更新
+                UpdateCategoriesAndTags();
 
                 lstSearchedTags.Items.Clear();
 
@@ -159,6 +157,55 @@ namespace SO.PictManager.Forms
             }
 
             this.Update();
+        }
+
+        #endregion
+
+        #region UpdateCategoriesAndTags - 有効なカテゴリーとタグを更新
+
+        /// <summary>
+        /// 画面上で有効なカテゴリーとタグを更新します。
+        /// </summary>
+        private void UpdateCategoriesAndTags()
+        {
+            using (var entities = new PictManagerEntities())
+            {
+                // 最後に選択していたカテゴリーのIDを保管
+                int lastSelectedCategoryId;
+                if (cmbCategory.SelectedItem == null)
+                {
+                    lastSelectedCategoryId = _blankCategory.CategoryId;
+                }
+                else
+                {
+                    lastSelectedCategoryId = (cmbCategory.SelectedItem as MstCategory).CategoryId;
+                }
+
+                // カテゴリーをクリアし未選択用カテゴリーを追加
+                cmbCategory.Items.Clear();
+                cmbCategory.Items.Add(_blankCategory);
+                int selectedIndex = 0;
+
+                // カテゴリー読込
+                var categories = entities.MstCategories.OrderBy(c => c.CategoryName).ToArray();
+                for (int i = 0; i < categories.Count(); i++)
+                {
+                    MstCategory category = categories.ElementAt(i);
+                    entities.Entry(category).State = EntityState.Detached;
+                    cmbCategory.Items.Add(category);
+
+                    // 最後に選択していたものを同じカテゴリーの場合は選択対象とする
+                    if (category.CategoryId == lastSelectedCategoryId)
+                    {
+                        selectedIndex = i + 1;  // 未選択用カテゴリーの分があるので1プラス
+                    }
+                }
+                cmbCategory.SelectedIndex = selectedIndex;
+
+                // タグ検索のサジェストを更新
+                txtTagSearch.AutoCompleteCustomSource.Clear();
+                txtTagSearch.AutoCompleteCustomSource.AddRange(entities.MstTags.Select(t => t.TagName).ToArray());
+            }
         }
 
         #endregion
@@ -319,41 +366,6 @@ namespace SO.PictManager.Forms
 
         //*** イベントハンドラ ***
 
-        #region rdoTargetSelect_CheckedChanged - 対象指定ラジオボタンチェック変更時
-
-        /// <summary>
-        /// 対象指定ラジオボタンのチェック状態を変更した際に実行される処理です。
-        /// 選択されている対象指定ラジオボタンに応じてコントロールの活性状態を切り替えます。
-        /// </summary>
-        /// <param name="sender">イベント発生元オブジェクト</param>
-        /// <param name="e">イベント引数</param>
-        private void rdoTargetSelect_CheckedChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                if (!(sender as RadioButton).Checked)
-                {
-                    return;
-                }
-
-                // カテゴリー指定活性制御
-                lblCategory.Enabled = rdoTargetCategory.Checked;
-                cmbCategory.Enabled = rdoTargetCategory.Checked;
-
-                // タグ指定活性制御
-                lblTagSearch.Enabled = rdoTargetTag.Checked;
-                txtTagSearch.Enabled = rdoTargetTag.Checked;
-                btnTagSearch.Enabled = rdoTargetTag.Checked;
-                lstSearchedTags.Enabled = rdoTargetTag.Checked;
-            }
-            catch (Exception ex)
-            {
-                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
-            }
-        }
-
-        #endregion
-
         #region btnTagSearch_Click - タグ検索ボタン押下時
 
         /// <summary>
@@ -398,6 +410,28 @@ namespace SO.PictManager.Forms
                     txtTagSearch.Focus();
                     txtTagSearch.SelectAll();
                 }
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
+        }
+
+        #endregion
+
+        #region btnUnselectTag_Click - タグ選択解除ボタン押下時
+
+        /// <summary>
+        /// タグ選択解除ボタンをクリックした際に実行される処理です。
+        /// タグ検索結果をクリアし、タグの選択を解除します。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void btnUnselectTag_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                lstSearchedTags.Items.Clear();
             }
             catch (Exception ex)
             {
@@ -455,12 +489,8 @@ namespace SO.PictManager.Forms
                 var mainteForm = new MaintenanceForm();
                 mainteForm.FormClosed += (sender2, e2) =>
                 {
-                    // カテゴリ読込
-                    using (var entities = new PictManagerEntities())
-                    {
-                        cmbCategory.DataSource = entities.MstCategories.OrderBy(c => c.CategoryName).ToList();
-                        cmbCategory.DisplayMember = "CategoryName";
-                    }
+                    // 有効なカテゴリーとタグを更新
+                    UpdateCategoriesAndTags();
 
                     this.ShowInTaskbar = true;
                     this.Show();
@@ -650,51 +680,36 @@ namespace SO.PictManager.Forms
                 }
                 else
                 {
-                    if (rdoTargetCategory.Checked)  // カテゴリー指定
+                    var category = cmbCategory.SelectedItem as MstCategory;
+                    if (category == _blankCategory)
                     {
-                        var category = cmbCategory.SelectedItem as MstCategory;
-                        if (rdoSlide.Checked)
-                        {
-                            frmViewer = new SlideForm(category);        // スライドショー表示
-                        }
-                        else if (rdoList.Checked)
-                        {
-                            frmViewer = new ListForm(category);         // 一覧表示
-                        }
-                        else
-                        {
-                            frmViewer = new ThumbnailForm(category);    // サムネイル表示
-                        }
+                        // 未選択用カテゴリーが選択されている場合は対象カテゴリーをnullに読み替え
+                        category = null;
                     }
-                    else    // タグ指定
+                    var tag = lstSearchedTags.SelectedItem as MstTag;
+
+                    if (rdoSlide.Checked)
                     {
-                        if (lstSearchedTags.SelectedItem == null)
-                        {
-                            FormUtilities.ShowMessage("W030");
-                            txtTagSearch.Focus();
-                            txtTagSearch.SelectAll();
-
-                            return;
-                        }
-
-                        var tag = lstSearchedTags.SelectedItem as MstTag;
-                        if (rdoSlide.Checked)
-                        {
-                            frmViewer = new SlideForm(tag);     // スライドショー表示
-                        }
-                        else if (rdoList.Checked)
-                        {
-                            frmViewer = new ListForm(tag);      // 一覧表示
-                        }
-                        else
-                        {
-                            frmViewer = new ThumbnailForm(tag); // サムネイル表示
-                        }
+                        frmViewer = new SlideForm(category, tag);       // スライドショー表示
+                    }
+                    else if (rdoList.Checked)
+                    {
+                        frmViewer = new ListForm(category, tag);        // 一覧表示
+                    }
+                    else
+                    {
+                        frmViewer = new ThumbnailForm(category, tag);   // サムネイル表示
                     }
                 }
 
+                frmViewer.Disposed += (sender2, e2) =>
+                {
+                    // 有効なカテゴリーとタグを更新
+                    UpdateCategoriesAndTags();
+                };
+
                 frmViewer.Show(this);
-                Visible = false;
+                this.Hide();
             }
             catch (Exception ex)
             {
