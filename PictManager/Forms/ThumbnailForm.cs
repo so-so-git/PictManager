@@ -395,75 +395,68 @@ namespace SO.PictManager.Forms
         /// </summary>
         private void RefreshThumbnails()
         {
-            try
+            // サムネイルパネル表示更新抑制、表示中サムネイルクリア
+            pnlThumbnail.SuspendLayout();
+
+            // 表示中サムネイルの破棄
+            _thumbnails.Clear();
+            pnlThumbnail.Controls.Clear();
+            foreach (var thumbnail in _thumbnails)
             {
-                // サムネイルパネル表示更新抑制、表示中サムネイルクリア
-                pnlThumbnail.SuspendLayout();
+                thumbnail.Dispose();
+            }
 
-                // 表示中サムネイルの破棄
-                _thumbnails.Clear();
-                pnlThumbnail.Controls.Clear();
-                foreach (var thumbnail in _thumbnails)
+            // 選択画像表示メニューを非活性化
+            FormUtilities.GetMenuItem<ToolStripMenuItem>(barMenu.Items, "menuView/menuViewImage").Enabled = false;
+
+            // プログレスダイアログ表示
+            using (var progDlg = new ProgressDialog(this))
+            {
+                progDlg.StartProgress(string.Format("ページ{0}表示中...", _currentPage.ToString()), string.Empty, 0,
+                    _currentPage == int.Parse(lblPageMax.Text) ? ImageCount % _maxDispNum : _maxDispNum);
+                Update();
+
+                for (int i = 0; i < _maxDispNum && (_currentPage - 1) * _maxDispNum + i < ImageCount; i++)
                 {
-                    thumbnail.Dispose();
-                }
+                    // 対象ファイルインデックス算出
+                    int idx = (_currentPage - 1) * _maxDispNum + i;
 
-                // 選択画像表示メニューを非活性化
-                FormUtilities.GetMenuItem<ToolStripMenuItem>(barMenu.Items, "menuView/menuViewImage").Enabled = false;
+                    // プログレスメッセージ更新
+                    progDlg.Message = ImageList[idx].Key;
 
-                // プログレスダイアログ表示
-                using (var progDlg = new ProgressDialog(this))
-                {
-                    progDlg.StartProgress(string.Format("ページ{0}表示中...", _currentPage.ToString()), string.Empty, 0,
-                        _currentPage == int.Parse(lblPageMax.Text) ? ImageCount % _maxDispNum : _maxDispNum);
-                    Update();
-
-                    for (int i = 0; i < _maxDispNum && (_currentPage - 1) * _maxDispNum + i < ImageCount; i++)
+                    ThumbnailUnit addThumbnail;
+                    if (ImageList[idx].IsDeleted)
                     {
-                        // 対象ファイルインデックス算出
-                        int idx = (_currentPage - 1) * _maxDispNum + i;
-
-                        // プログレスメッセージ更新
-                        progDlg.Message = ImageList[idx].Key;
-
-                        ThumbnailUnit addThumbnail;
-                        if (ImageList[idx].IsDeleted)
-                        {
-                            // 削除済み画像用のサムネイルユニットを作成
-                            addThumbnail = new ThumbnailUnit();
-                            addThumbnail.ImageKey = ThumbnailUnit.DELETED_NAME_LABEL;
-                        }
-                        else
-                        {
-                            // 指定パスを表示するサムネイルユニットを作成
-                            addThumbnail = new ThumbnailUnit(ImageList[idx]);
-                        }
-
-                        // イベント定義
-                        addThumbnail.UnitClick += ThumbnailUnit_Click;
-                        addThumbnail.UnitDoubleClick += ThumbnailUnit_DoubleClick;
-
-                        if (_canChangeOrder)
-                        {
-                            SetMouseEventHandlers(addThumbnail);
-                        }
-
-                        // サムネイルをパネルと管理リストに追加
-                        pnlThumbnail.Controls.Add(addThumbnail);
-                        _thumbnails.Add(addThumbnail);
-
-                        // プログレスバー更新
-                        progDlg.PerformStep();
+                        // 削除済み画像用のサムネイルユニットを作成
+                        addThumbnail = new ThumbnailUnit();
+                        addThumbnail.ImageKey = ThumbnailUnit.DELETED_NAME_LABEL;
                     }
-                }
+                    else
+                    {
+                        // 指定パスを表示するサムネイルユニットを作成
+                        addThumbnail = new ThumbnailUnit(ImageList[idx]);
+                    }
 
-                // サムネイルパネル表示更新再開
-                pnlThumbnail.ResumeLayout();
+                    // イベント定義
+                    addThumbnail.UnitClick += ThumbnailUnit_Click;
+                    addThumbnail.UnitDoubleClick += ThumbnailUnit_DoubleClick;
+
+                    if (_canChangeOrder)
+                    {
+                        SetMouseEventHandlers(addThumbnail);
+                    }
+
+                    // サムネイルをパネルと管理リストに追加
+                    pnlThumbnail.Controls.Add(addThumbnail);
+                    _thumbnails.Add(addThumbnail);
+
+                    // プログレスバー更新
+                    progDlg.PerformStep();
+                }
             }
-            catch (Exception ex)
-            {
-                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
-            }
+
+            // サムネイルパネル表示更新再開
+            pnlThumbnail.ResumeLayout();
         }
 
         #endregion
@@ -526,8 +519,15 @@ namespace SO.PictManager.Forms
         /// <param name="e">イベント引数</param>
         private void Form_Shown(object sender, EventArgs e)
         {
-            // サムネイル表示を初期化
-            RefreshThumbnails();
+            try
+            {
+                // サムネイル表示を初期化
+                RefreshThumbnails();
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
         }
 
         #endregion
@@ -542,17 +542,24 @@ namespace SO.PictManager.Forms
         /// <param name="e">イベント引数</param>
         private void Form_Resize(object sender, EventArgs e)
         {
-            if (!Size.Equals(_beforeResize))
+            try
             {
-                int gap = Size.Width - _beforeResize.Width;
+                if (!Size.Equals(_beforeResize))
+                {
+                    int gap = Size.Width - _beforeResize.Width;
 
-                btnPrevious.Location = new Point(btnPrevious.Location.X + gap / 2, btnPrevious.Location.Y);
-                txtPage.Location = new Point(txtPage.Location.X + gap / 2, txtPage.Location.Y);
-                lblPageSlash.Location = new Point(lblPageSlash.Location.X + gap / 2, lblPageSlash.Location.Y);
-                lblPageMax.Location = new Point(lblPageMax.Location.X + gap / 2, lblPageMax.Location.Y);
-                btnNext.Location = new Point(btnNext.Location.X + gap / 2, btnNext.Location.Y);
+                    btnPrevious.Location = new Point(btnPrevious.Location.X + gap / 2, btnPrevious.Location.Y);
+                    txtPage.Location = new Point(txtPage.Location.X + gap / 2, txtPage.Location.Y);
+                    lblPageSlash.Location = new Point(lblPageSlash.Location.X + gap / 2, lblPageSlash.Location.Y);
+                    lblPageMax.Location = new Point(lblPageMax.Location.X + gap / 2, lblPageMax.Location.Y);
+                    btnNext.Location = new Point(btnNext.Location.X + gap / 2, btnNext.Location.Y);
 
-                _beforeResize = Size;
+                    _beforeResize = Size;
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
 
@@ -868,17 +875,26 @@ namespace SO.PictManager.Forms
         /// <param name="e">イベント引数</param>
         private void btnClose_Click(object sender, EventArgs e)
         {
-            // 全サムネイルのリソース破棄
-            foreach (var thumbnail in _thumbnails)
+            try
             {
-                if (thumbnail != null)
+                // 全サムネイルのリソース破棄
+                foreach (var thumbnail in _thumbnails)
                 {
-                    thumbnail.Dispose();
+                    if (thumbnail != null)
+                    {
+                        thumbnail.Dispose();
+                    }
                 }
             }
-
-            // 自フォームを破棄し親フォームを表示
-            this.BackToOwner();
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
+            finally
+            {
+                // 自フォームを破棄し親フォームを表示
+                this.BackToOwner();
+            }
         }
 
         #endregion
@@ -893,20 +909,27 @@ namespace SO.PictManager.Forms
         /// <param name="e">イベント引数</param>
         private void btnPrevious_Click(object sender, EventArgs e)
         {
-            // ページ更新
-            if (_currentPage == 1)
+            try
             {
-                _currentPage = int.Parse(lblPageMax.Text);
+                // ページ更新
+                if (_currentPage == 1)
+                {
+                    _currentPage = int.Parse(lblPageMax.Text);
+                }
+                else
+                {
+                    _currentPage--;
+                }
+
+                txtPage.Text = _currentPage.ToString();
+
+                // サムネイル表示更新
+                RefreshThumbnails();
             }
-            else
+            catch (Exception ex)
             {
-                _currentPage--;
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
-
-            txtPage.Text = _currentPage.ToString();
-
-            // サムネイル表示更新
-            RefreshThumbnails();
         }
 
         #endregion
@@ -921,20 +944,27 @@ namespace SO.PictManager.Forms
         /// <param name="e">イベント引数</param>
         private void btnNext_Click(object sender, EventArgs e)
         {
-            // ページ更新
-            if (_currentPage == int.Parse(lblPageMax.Text))
+            try
             {
-                _currentPage = 1;
+                // ページ更新
+                if (_currentPage == int.Parse(lblPageMax.Text))
+                {
+                    _currentPage = 1;
+                }
+                else
+                {
+                    _currentPage++;
+                }
+
+                txtPage.Text = _currentPage.ToString();
+
+                // サムネイル表示更新
+                RefreshThumbnails();
             }
-            else
+            catch (Exception ex)
             {
-                _currentPage++;
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
-
-            txtPage.Text = _currentPage.ToString();
-
-            // サムネイル表示更新
-            RefreshThumbnails();
         }
 
         #endregion
@@ -1005,8 +1035,15 @@ namespace SO.PictManager.Forms
         /// <param name="e">イベント引数</param>
         private void txtPage_Leave(object sender, EventArgs e)
         {
-            // 指定されたページを表示
-            AcceptPageNumber();
+            try
+            {
+                // 指定されたページを表示
+                AcceptPageNumber();
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
         }
 
         #endregion
@@ -1060,17 +1097,24 @@ namespace SO.PictManager.Forms
         /// <param name="e">イベント引数</param>
         private void txtPage_TextChanged(object sender, EventArgs e)
         {
-            // メニューとメイン画面の同期を取る
-            ToolStripTextBox menuTxtPage =
-                FormUtilities.GetMenuItem<ToolStripTextBox>(barMenu.Items, "menuOpe/menuTxtPage");
+            try
+            {
+                // メニューとメイン画面の同期を取る
+                ToolStripTextBox menuTxtPage =
+                    FormUtilities.GetMenuItem<ToolStripTextBox>(barMenu.Items, "menuOpe/menuTxtPage");
 
-            if (sender == txtPage)
-            {
-                menuTxtPage.Text = txtPage.Text;
+                if (sender == txtPage)
+                {
+                    menuTxtPage.Text = txtPage.Text;
+                }
+                else
+                {
+                    txtPage.Text = menuTxtPage.Text;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                txtPage.Text = menuTxtPage.Text;
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
 

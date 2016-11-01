@@ -24,8 +24,8 @@
 	<msg id="I004" caption="処理完了" buttons="OK" icon="Information">
 		ファイル移動が完了しました。
 	</msg>
-	<msg id="I005" caption="全画像削除済み" buttons="OK" icon="Information">
-		全ての画像が削除されました。
+	<msg id="I005" caption="画像無し" buttons="OK" icon="Information">
+		表示対象となる画像がなくなりました。
 	</msg>
 	<msg id="I006" caption="削除済み画像無し" buttons="OK" icon="Information">
     削除済みの画像はありません。
@@ -210,6 +210,9 @@
   </msg>
   <msg id="W030" caption="カテゴリー及びタグ未選択" buttons="OK" icon="Warning">
     閲覧対象のカテゴリー、もしくはタグのどちらかを指定してください。
+  </msg>
+  <msg id="W031" caption="画像無し" buttons="OK" icon="Warning">
+    表示対象となる画像がありません。
   </msg>
 
   <!-- エラーメッセージ -->

@@ -45,7 +45,6 @@
             this.pnlFooter = new System.Windows.Forms.Panel();
             this.picLupe = new System.Windows.Forms.PictureBox();
             this.picViewer = new System.Windows.Forms.PictureBox();
-            this.lblInfo = new System.Windows.Forms.Label();
             this.pnlHeader = new System.Windows.Forms.Panel();
             this.pnlContent = new System.Windows.Forms.Panel();
             this.barStatus.SuspendLayout();
@@ -225,16 +224,6 @@
             this.picViewer.TabStop = false;
             this.picViewer.WaitOnLoad = true;
             // 
-            // lblInfo
-            // 
-            this.lblInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblInfo.Font = new System.Drawing.Font("MS UI Gothic", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.lblInfo.Location = new System.Drawing.Point(0, 0);
-            this.lblInfo.Name = "lblInfo";
-            this.lblInfo.Size = new System.Drawing.Size(737, 432);
-            this.lblInfo.TabIndex = 8;
-            this.lblInfo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // pnlHeader
             // 
             this.pnlHeader.BackColor = System.Drawing.SystemColors.Info;
@@ -251,7 +240,6 @@
             this.pnlContent.AutoScroll = true;
             this.pnlContent.Controls.Add(this.picLupe);
             this.pnlContent.Controls.Add(this.picViewer);
-            this.pnlContent.Controls.Add(this.lblInfo);
             this.pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlContent.Location = new System.Drawing.Point(0, 54);
             this.pnlContent.Name = "pnlContent";
@@ -311,7 +299,6 @@
         private System.Windows.Forms.Timer timLupe;
         private System.Windows.Forms.PictureBox picLupe;
         protected System.Windows.Forms.PictureBox picViewer;
-        protected System.Windows.Forms.Label lblInfo;
         protected System.Windows.Forms.Button btnTagPanelToggle;
         protected System.Windows.Forms.FlowLayoutPanel pnlTags;
         protected System.Windows.Forms.Panel pnlFooter;

@@ -78,10 +78,6 @@
             this.picViewer.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.picViewer.Size = new System.Drawing.Size(1134, 370);
             // 
-            // lblInfo
-            // 
-            this.lblInfo.Size = new System.Drawing.Size(1134, 370);
-            // 
             // btnTagPanelToggle
             // 
             this.btnTagPanelToggle.FlatAppearance.BorderColor = System.Drawing.SystemColors.Info;

@@ -27,16 +27,6 @@ namespace SO.PictManager.Forms
     /// </summary>
     public sealed partial class SlideForm : ViewImageForm
     {
-        #region クラス定数
-
-        /// <summary>イメージファイル無し時の表示テキスト</summary>
-        private const string NO_IMAGE_LABEL = "No image file in \nselected folder.";
-
-        /// <summary>削除済時の表示テキスト</summary>
-        private const string DELETED_IMAGE_LABEL = "This image is deleted.";
-
-        #endregion 
-
         #region インスタンス変数
 
         /// <summary>スライド表示制御用スレッド</summary>
@@ -114,6 +104,15 @@ namespace SO.PictManager.Forms
         /// </summary>
         private void ConstructCommon()
         {
+            // 表示対象画像取得
+            RefreshImageList();
+
+            if (ImageCount == 0)
+            {
+                // 表示画像無し
+                return;
+            }
+
             // ソート順コンボボックス構築
             cmbSort.SelectedIndexChanged -= cmbSort_SelectedIndexChanged;
             ImageSorter.BindSortOrderDataSource(cmbSort);
@@ -121,23 +120,12 @@ namespace SO.PictManager.Forms
             ImageList = ImageSorter.Sort(ImageList, Utilities.State.SortOrder, ImageMode).ToList();
             cmbSort.SelectedIndexChanged += cmbSort_SelectedIndexChanged;
 
-            // 表示対象画像取得
-            RefreshImageList();
+            // 表示位置制御系コントロールの設定
             lblCount.Text = ImageCount.ToString();
             txtIndex.MaxLength = lblCount.Text.Length;
 
             // 最初の画像を基底クラスの表示対象画像プロパティに設定
-            if (ImageCount > 0)
-            {
-                ImageData = ImageList.First();
-            }
-            else
-            {
-                txtIndex.Text = string.Empty;
-                txtIndex.Enabled = false;
-                lblStatus.Text = string.Empty;
-                ShowInformationLabel(NO_IMAGE_LABEL);
-            }
+            ImageData = ImageList.First();
 
             // UI制御
             InitializeAccessibility();
@@ -243,29 +231,6 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region InitializeAccessibility - コンポーネントのアクセス制限初期化
-
-        /// <summary>
-        /// (ViewImageForm.InitializeAccessibility()をオーバーライドします)
-        /// フォーム項目のアクセス可不可の初期設定を行ないます。
-        /// </summary>
-        protected override void InitializeAccessibility()
-        {
-            if (ImageCount == 0)
-            {
-                // 画像数が0の場合、閉じるボタン以外を非活性化
-                foreach (var control in pnlFooter.Controls.OfType<Control>())
-                {
-                    if (control != btnClose)
-                    {
-                        control.Enabled = false;
-                    }
-                }
-            }
-        }
-
-        #endregion
-
         #region RefreshImageList - 対象画像リスト最新化
 
         /// <summary>
@@ -327,26 +292,9 @@ namespace SO.PictManager.Forms
                     pnlContent.HorizontalScroll.Value = 0;
                 }
 
-                // イメージファイルがあるか確認
-                if (ImageCount == 0)
-                {
-                    lblStatus.Text = string.Empty;
-                    ShowInformationLabel(NO_IMAGE_LABEL);
-                    return;
-                }
-
-                // PictureBox更新
-                if (ImageList[CurrentIndex].IsDeleted)
-                {
-                    // 既に対象イメージが削除されている場合は非表示
-                    ShowInformationLabel(DELETED_IMAGE_LABEL);
-                }
-                else
-                {
-                    // イメージ表示
-                    ImageData = ImageList[CurrentIndex];
-                    base.DisplayImage();
-                }
+                // イメージ表示
+                ImageData = ImageList[CurrentIndex];
+                base.DisplayImage();
 
                 // 表示中情報更新
                 txtIndex.Text = (CurrentIndex + 1).ToString();
@@ -1165,8 +1113,25 @@ namespace SO.PictManager.Forms
                 return;
             }
 
-            // 次の有効画像を表示
-            menuRefresh_Click(sender, e);
+            // 対象リストから削除
+            ImageList.RemoveAt(CurrentIndex);
+
+            if (ImageCount == 0)
+            {
+                // 表示対象画像無し
+                FormUtilities.ShowMessage("I005");
+                this.BackToOwner();
+                return;
+            }
+
+            // 次の有効イメージを表示
+            lblCount.Text = ImageCount.ToString();
+            if (CurrentIndex >= ImageCount)
+            {
+                CurrentIndex = ImageCount - 1;
+            }
+
+            DisplayImage();
         }
 
         #endregion
@@ -1218,11 +1183,25 @@ namespace SO.PictManager.Forms
                 return;
             }
 
-            if (TargetCategory != null)
+            // 対象リストから削除
+            ImageList.RemoveAt(CurrentIndex);
+
+            if (ImageCount == 0)
             {
-                // カテゴリー指定での表示時、次の有効画像を表示
-                menuRefresh_Click(sender, e);
+                // 表示対象画像無し
+                FormUtilities.ShowMessage("I005");
+                this.BackToOwner();
+                return;
             }
+
+            // 次の有効イメージを表示
+            lblCount.Text = ImageCount.ToString();
+            if (CurrentIndex >= ImageCount)
+            {
+                CurrentIndex = ImageCount - 1;
+            }
+
+            DisplayImage();
         }
 
         #endregion
@@ -1418,23 +1397,24 @@ namespace SO.PictManager.Forms
 
                 // 対象ファイルを削除
                 ImageData.Delete();
+                ImageList.RemoveAt(CurrentIndex);
 
-                // 次の有効イメージを表示
-                CurrentIndex = SearchNextValidIndex();
-                if (CurrentIndex == -1)
+                if (ImageCount == 0)
                 {
+                    // 表示対象画像無し
                     FormUtilities.ShowMessage("I005");
                     this.BackToOwner();
+                    return;
                 }
-                else
-                {
-                    if (CurrentIndex == 0)
-                    {
-                        FormUtilities.ShowMessage("I000");
-                    }
 
-                    DisplayImage();
+                // 次の有効イメージを表示
+                lblCount.Text = ImageCount.ToString();
+                if (CurrentIndex >= ImageCount)
+                {
+                    CurrentIndex = ImageCount - 1;
                 }
+
+                DisplayImage();
             }
             catch (Exception ex)
             {

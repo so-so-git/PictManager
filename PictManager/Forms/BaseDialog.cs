@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Reflection;
 using System.Windows.Forms;
+
+using SO.Library.Extensions;
 
 namespace SO.PictManager.Forms
 {
@@ -72,10 +75,17 @@ namespace SO.PictManager.Forms
         /// <param name="e">イベント引数</param>
         protected virtual void btnOk_Click(object sender, EventArgs e)
         {
-            // 入力チェック、相関チェックOKなら呼出元へOKを返す
-            if (IsValidInput())
+            try
             {
-                this.DialogResult = DialogResult.OK;
+                // 入力チェック、相関チェックOKなら呼出元へOKを返す
+                if (IsValidInput())
+                {
+                    this.DialogResult = DialogResult.OK;
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
         }
 

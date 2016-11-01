@@ -27,9 +27,6 @@ namespace SO.PictManager.Forms
     {
         #region クラス定数
 
-        /// <summary>表示エラー時の表示テキスト</summary>
-        protected const string DISP_ERR_LABEL = "Error Occured\n when loading image.";
-
         /// <summary>倍率変更単位</summary>
         protected const int ZOOM_UNIT = 25;
 
@@ -292,9 +289,6 @@ namespace SO.PictManager.Forms
                 picViewer.Image = ImageData.GetImage();
                 ResizeImageRect();
 
-                lblInfo.Hide();
-                picViewer.Show();
-
                 // スクロール設定
                 ResetScrollProperties();
 
@@ -303,9 +297,6 @@ namespace SO.PictManager.Forms
             }
             catch (Exception ex)
             {
-                // エラーラベル表示
-                ShowInformationLabel(lblInfo.Text = DISP_ERR_LABEL);
-
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
 
                 // エラー対象画像削除確認ダイアログ表示
@@ -411,30 +402,6 @@ namespace SO.PictManager.Forms
             {
                 ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
             }
-        }
-
-        #endregion
-
-        #region ShowInformationLabel - 情報ラベル表示
-
-        /// <summary>
-        /// 情報通知ラベルを表示します。
-        /// </summary>
-        /// <param name="text">ラベルに表示するメッセージ</param>
-        protected void ShowInformationLabel(string text)
-        {
-            // 表示画像がnullの場合、PictureBoxのサイズ未確定エラー回避の為、
-            // サイズモードをNormal、サイズを固定に強制変更
-            if (picViewer.Image == null)
-            {
-                picViewer.SizeMode = PictureBoxSizeMode.Normal;
-                picViewer.Size = new Size(1, 1);
-            }
-
-            // 情報ラベル設定・可視化、PictureBox不可視化
-            lblInfo.Text = text;
-            lblInfo.Show();
-            picViewer.Hide();
         }
 
         #endregion
@@ -734,9 +701,6 @@ namespace SO.PictManager.Forms
         /// <param name="e">イベント引数</param>
         protected virtual void Form_Shown(object sender, EventArgs e)
         {
-            // 情報ラベル不可視化
-            lblInfo.Hide();
-
             // ステータスバーに画像情報を表示
             ShowImageInfoByStatusBar();
 

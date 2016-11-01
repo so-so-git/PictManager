@@ -715,7 +715,7 @@ namespace SO.PictManager.Forms
         {
             try
             {
-                Form frmViewer;
+                BaseForm frmViewer;
                 if (Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.File)
                 {
                     // 対象チェック、状態更新
@@ -768,6 +768,12 @@ namespace SO.PictManager.Forms
                     {
                         frmViewer = new ThumbnailForm(category, tag);   // サムネイル表示
                     }
+                }
+
+                if (frmViewer.ImageCount == 0)
+                {
+                    FormUtilities.ShowMessage("W031");
+                    return;
                 }
 
                 frmViewer.Disposed += (sender2, e2) =>
