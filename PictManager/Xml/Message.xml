@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="shift_jis" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE root [
 	<!ELEMENT root (msg)+>
 	<!ELEMENT msg (#PCDATA)>
@@ -8,254 +8,257 @@
 	<!ATTLIST msg icon CDATA #REQUIRED>
 ]>
 <root>
-	<!-- �C���t�H���[�V�������b�Z�[�W -->
-	<msg id="I000" caption="�摜���" buttons="OK" icon="Information">
-		������܂����B
+	<!-- インフォメーションメッセージ -->
+	<msg id="I000" caption="画像一周" buttons="OK" icon="Information">
+		一周しました。
 	</msg>
-	<msg id="I001" caption="��������" buttons="OK" icon="Information">
-		�t�@�C�����̕ύX���������܂����B
+	<msg id="I001" caption="処理完了" buttons="OK" icon="Information">
+		ファイル名の変更が完了しました。
 	</msg>
-	<msg id="I002" caption="�t�@�C�����ꊇ�ύX���s��" buttons="OK" icon="Information">
-		���̕ύX�Ώۃt�@�C�����擾��...\n-> {0}
+	<msg id="I002" caption="ファイル名一括変更実行中" buttons="OK" icon="Information">
+		名称変更対象ファイル情報取得中...\n-> {0}
 	</msg>
-	<msg id="I003" caption="�t�@�C�����ꊇ�ύX���s��" buttons="OK" icon="Information">
-		�t�@�C�����ύX��...\n-> {0}
+	<msg id="I003" caption="ファイル名一括変更実行中" buttons="OK" icon="Information">
+		ファイル名変更中...\n-> {0}
 	</msg>
-	<msg id="I004" caption="��������" buttons="OK" icon="Information">
-		�t�@�C���ړ����������܂����B
+	<msg id="I004" caption="処理完了" buttons="OK" icon="Information">
+		ファイル移動が完了しました。
 	</msg>
-	<msg id="I005" caption="�摜����" buttons="OK" icon="Information">
-		�\���ΏۂƂȂ�摜���Ȃ��Ȃ�܂����B
+	<msg id="I005" caption="画像無し" buttons="OK" icon="Information">
+		表示対象となる画像がなくなりました。
 	</msg>
-	<msg id="I006" caption="�폜�ς݉摜����" buttons="OK" icon="Information">
-    �폜�ς݂̉摜�͂���܂���B
+	<msg id="I006" caption="削除済み画像無し" buttons="OK" icon="Information">
+    削除済みの画像はありません。
   </msg>
-	<msg id="I007" caption="�ύX���e�K�p���~" buttons="OK" icon="Information">
-		�ύX���e�̓K�p�����~����܂����B
+	<msg id="I007" caption="変更内容適用中止" buttons="OK" icon="Information">
+		変更内容の適用が中止されました。
 	</msg>
-	<msg id="I008" caption="�ގ��摜����" buttons="OK" icon="Information">
-		�ގ��摜�͌��o����܂���ł����B
+	<msg id="I008" caption="類似画像無し" buttons="OK" icon="Information">
+		類似画像は検出されませんでした。
 	</msg>
-	<msg id="I009" caption="�ގ��摜�ꊇ��������" buttons="OK" icon="Information">
-		�S�Ă̍s�̗ގ��摜�̌������������܂����B
+	<msg id="I009" caption="類似画像一括検索完了" buttons="OK" icon="Information">
+		全ての行の類似画像の検索が完了しました。
 	</msg>
-	<msg id="I010" caption="�摜�\�����\�[�g���s��" buttons="OK" icon="Information">
-    �摜�\�����\�[�g��...
+	<msg id="I010" caption="画像表示順ソート実行中" buttons="OK" icon="Information">
+    画像表示順ソート中...
   </msg>
-  <msg id="I011" caption="��������" buttons="OK" icon="Information">
-    {0}���������܂����B
-  </msg>
-
-  <!-- �R���t�H�[�����b�Z�[�W -->
-	<msg id="Q000" caption="�I���m�F" buttons="YesNo" icon="Question">
-		�I�����܂��B\n��낵���ł����H
-	</msg>
-	<msg id="Q001" caption="�摜�폜�m�F" buttons="YesNo" icon="Question">
-    �G���[�Ώۂ̉摜���폜���܂����H
-  </msg>
-	<msg id="Q002" caption="�폜�m�F" buttons="YesNo" icon="Question">
-    �\�����̉摜���폜���܂��B\n��낵���ł����H
-  </msg>
-	<msg id="Q003" caption="�X���C�h�\���J�n�m�F" buttons="YesNo" icon="Question">
-		�X���C�h�\�����J�n���܂����H
-	</msg>
-	<msg id="Q004" caption="�摜�폜�m�F" buttons="YesNo" icon="Question">
-    �I�𒆂̉摜���폜���܂��B\n��낵���ł����H
-  </msg>
-	<msg id="Q005" caption="�ҏW���e�j���m�F" buttons="YesNo" icon="Question">
-		�ҏW���ꂽ�Z�������݂��܂��B\n�ҏW���e��j�����A��ʂ���Ă�낵���ł����H
-	</msg>
-	<msg id="Q006" caption="�ҏW���e�j���m�F" buttons="YesNo" icon="Question">
-		�I������Ă���s�̕ҏW���e��j�����A�Ō�ɓK�p�������_�֖߂��Ă�낵���ł����H
-	</msg>
-	<msg id="Q007" caption="�㏑���ۑ��m�F" buttons="YesNo" icon="Question">
-		�\�����̓��e�Ńt�@�C�����㏑�����Ă�낵���ł����H
-	</msg>
-	<msg id="Q008" caption="�ύX�m��m�F" buttons="YesNo" icon="Question">
-		�ύX���e���m�肵�Ă�낵���ł����H
-	</msg>
-	<msg id="Q009" caption="�t�H���_�쐬�m�F" buttons="YesNo" icon="Question">
-		{0}�̃t�H���_[{1}]�����݂��܂���B\n�쐬���Ă�낵���ł����H
-	</msg>
-	<msg id="Q010" caption="�u�b�N�}�[�N�S�폜�m�F" buttons="YesNo" icon="Question">
-		�S�Ẵu�b�N�}�[�N���폜���Ă�낵���ł����H
-	</msg>
-  <msg id="Q011" caption="�ҏW���e�j���m�F" buttons="YesNo" icon="Question">
-    �S�Ă̕ҏW���e��j�����A�Ō�ɓK�p�������_�֖߂��Ă�낵���ł����H
-  </msg>
-  <msg id="Q012" caption="�J�e�S���[�폜�m�F" buttons="YesNo" icon="Question">
-    �J�e�S���[[{0}]���폜���Ă���낵���ł����H
-  </msg>
-  <msg id="Q013" caption="�J�e�S���[�폜�m�F" buttons="YesNo" icon="Question">
-    �J�e�S���[[{0}]�ɑ����Ă���摜�����݂��܂��B\n�J�e�S���[���폜���Ă���낵���ł����H\n(�����Ă����摜�͖����ރJ�e�S���[�ɂȂ�܂�)
-  </msg>
-  <msg id="Q014" caption="�摜���S�폜�m�F" buttons="YesNo" icon="Question">
-    ���폜�̏�Ԃ̉摜�f�[�^�����S�ɍ폜���Ă�낵���ł����H
-  </msg>
-  <msg id="Q015" caption="�t�@�C���㏑���m�F" buttons="YesNo" icon="Question">
-    �ړ���ɓ����̃t�@�C��[{0}]�����݂��܂��B\n�㏑�����Ă���낵���ł����H
-  </msg>
-	<msg id="Q016" caption="�摜�폜�m�F" buttons="YesNo" icon="Question">
-		�I������Ă���摜���폜���Ă�낵���ł����H
-	</msg>
-  <msg id="Q017" caption="�t�H���_�č쐬�m�F" buttons="YesNo" icon="Question">
-    �����捞�t�H���_�͊��ɍ쐬����Ă��܂��B\n�ŐV�̏��ōč쐬���܂����H
-  </msg>
-  <msg id="Q018" caption="�C���|�[�g�ς݃t�@�C���폜�m�F" buttons="YesNo" icon="Question">
-    {0}�̃C���|�[�g���������܂����B\n�C���|�[�g�����t�@�C�����폜���܂����H
-  </msg>
-  <msg id="Q019" caption="�G�N�X�|�[�g�ς݉摜�f�[�^�폜�m�F" buttons="YesNo" icon="Question">
-    {0}�̃G�N�X�|�[�g���������܂����B\n�G�N�X�|�[�g�����摜�f�[�^���f�[�^�x�[�X����폜���܂����H
-  </msg>
-  <msg id="Q020" caption="�t�@�C�������݂���t�H���_�ւ̃G�N�X�|�[�g�m�F" buttons="YesNo" icon="Question">
-    �w�肳�ꂽ�t�H���_�ɂ͊��Ƀt�@�C�������݂��܂��B\n�G�N�X�|�[�g���p�����Ă���낵���ł����H\n(�t�@�C�����㏑�������\��������܂�)
-  </msg>
-  <msg id="Q021" caption="�s�v�^�O�폜�m�F" buttons="YesNo" icon="Question">
-    �摜���R�t���Ă��Ȃ��^�O���폜���Ă�낵���ł����H
-  </msg>
-  <msg id="Q022" caption="�X�V�m�F" buttons="YesNo" icon="Question">
-    {0}���X�V���Ă�낵���ł����H
+  <msg id="I011" caption="処理完了" buttons="OK" icon="Information">
+    {0}が完了しました。
   </msg>
 
-  <!-- ���[�j���O���b�Z�[�W -->
-	<msg id="W000" caption="�����̓G���[" buttons="OK" icon="Warning">
-		{0} �������͂ł��B
+  <!-- コンフォームメッセージ -->
+	<msg id="Q000" caption="終了確認" buttons="YesNo" icon="Question">
+		終了します。\nよろしいですか？
 	</msg>
-	<msg id="W001" caption="�s���ȑΏۃt�H���_" buttons="OK" icon="Warning">
-		�Ώۃt�H���_���s���ł��B\n�������t�H���_����͂��ĉ������B
-	</msg>
-	<msg id="W002" caption="�s���ȓ���" buttons="OK" icon="Warning">
-		�v���X�l�œ��͂��ĉ������B
-	</msg>
-	<msg id="W003" caption="����l�I�[�o�[" buttons="OK" icon="Warning">
-		���͂��ꂽ�l������l�𒴂��Ă��܂��B\n���͖͂����ł��B
-	</msg>
-	<msg id="W004" caption="�����ȃy�[�W�w��" buttons="OK" icon="Warning">
-		�y�[�W�w���1�ȏ�̔��p�����̂ݗL���ł��B
-	</msg>
-	<msg id="W005" caption="�֑������L��" buttons="OK" icon="Warning">
-		�t�@�C�����Ɏg�p�o���Ȃ��������܂܂�Ă��܂��B\n�ē��͂��ĉ������B
-	</msg>
-	<msg id="W006" caption="�Ώۃt�@�C���폜��" buttons="OK" icon="Warning">
-		���ɍ폜�ς݂ł��B
-	</msg>
-	<msg id="W007" caption="�ؑ֊Ԋu������" buttons="OK" icon="Warning">
-		�摜�ؑ֊Ԋu����͂��ĉ������B
-	</msg>
-	<msg id="W008" caption="�ؑ֊Ԋu���̓G���[" buttons="OK" icon="Warning">
-		�摜�ؑ֊Ԋu��1�ȏ�̔��p�����œ��͂��ĉ������B
-	</msg>
-	<msg id="W009" caption="�Ώۉ摜���I��" buttons="OK" icon="Warning">
-    �Ώۉ摜��I�����ĉ������B
+	<msg id="Q001" caption="画像削除確認" buttons="YesNo" icon="Question">
+    エラー対象の画像を削除しますか？
   </msg>
-	<msg id="W010" caption="�����Ώی��o" buttons="OK" icon="Warning">
-		�P��̑Ώۂ݂̂��h���b�v���ĉ������B
-	</msg>
-	<msg id="W011" caption="�����̓G���[" buttons="OK" icon="Warning">
-		���t�@�C�����܂ށA�ʂ��ԍ���t������ �̉��ꂩ�������͗����Ƀ`�F�b�N�����ĉ������B
-	</msg>
-	<msg id="W012" caption="�����̓G���[" buttons="OK" icon="Warning">
-		�u���㕶�������͂���Ă���ꍇ�͒u���O��������͂��ĉ������B
-	</msg>
-	<msg id="W013" caption="�����̓G���[" buttons="OK" icon="Warning">
-		�ʂ��ԍ��̊Ԋu�������͂ł��B
-	</msg>
-	<msg id="W014" caption="���͒l�G���[" buttons="OK" icon="Warning">
-		�ʂ��ԍ��̊Ԋu�͔��p�����œ��͂��ĉ������B
-	</msg>
-	<msg id="W015" caption="���͒l�G���[" buttons="OK" icon="Warning">
-		{0} �Ƀt�@�C�����Ɏg�p�o���Ȃ��������܂܂�Ă��܂��B
-	</msg>
-	<msg id="W016" caption="�p�X��؂蕶���L��" buttons="OK" icon="Warning">
-		�p�X��؂蕶�����܂܂�Ă��܂��B\n�قȂ�t�H���_�ւ̈ړ��͏o���܂���B
-	</msg>
-	<msg id="W017" caption="�֑������L��" buttons="OK" icon="Warning">
-		�g�p�o���Ȃ��������܂܂�Ă��܂��B\n�ē��͂��邩�AEsc�L�[�ŕύX��j�����ĕҏW���I�����ĉ������B
-	</msg>
-	<msg id="W018" caption="�g���q�ύX���o" buttons="OK" icon="Warning">
-		�g���q��ύX���邱�Ƃ͏o���܂���B\n�ē��͂��邩�AEsc�L�[�ŕύX��j�����ĕҏW���I�����ĉ������B
-	</msg>
-	<msg id="W019" caption="�{�����[����؂蕶��������" buttons="OK" icon="Warning">
-		�{�����[����؂蕶�����܂܂�Ă��܂���B\n�ē��͂��邩�AEsc�L�[�ŕύX��j�����ĕҏW���I�����ĉ������B
-	</msg>
-	<msg id="W020" caption="�����̃{�����[����؂蕶���L��" buttons="OK" icon="Warning">
-		�{�����[����؂蕶�����������͂���Ă��܂��B\n�ē��͂��邩�AEsc�L�[�ŕύX��j�����ĕҏW���I�����ĉ������B
-	</msg>
-	<msg id="W021" caption="�s���ȃ{�����[����؂蕶���ʒu" buttons="OK" icon="Warning">
-		�{�����[����؂蕶���̈ʒu���s���ł��B\n�ē��͂��邩�AEsc�L�[�ŕύX��j�����ĕҏW���I�����ĉ������B
-	</msg>
-	<msg id="W022" caption="��̃t�H���_���L��" buttons="OK" icon="Warning">
-		�p�X���Ƀt�H���_������̉ӏ�������܂��B\n�ē��͂��邩�AEsc�L�[�ŕύX��j�����ĕҏW���I�����ĉ������B
-	</msg>
-	<msg id="W023" caption="���d�N��" buttons="OK" icon="Warning">
-		���ɋN�����Ă��܂��B
-	</msg>
-  <msg id="W024" caption="���݂��Ȃ��p�X" buttons="OK" icon="Warning">
-    �w�肳�ꂽ{0}�͑��݂��܂���B
+	<msg id="Q002" caption="削除確認" buttons="YesNo" icon="Question">
+    表示中の画像を削除します。\nよろしいですか？
   </msg>
-  <msg id="W025" caption="�����ȃt�@�C���`��" buttons="OK" icon="Warning">
-    �w�肳�ꂽ�`���̃t�@�C���͏����ł��܂���B
+	<msg id="Q003" caption="スライド表示開始確認" buttons="YesNo" icon="Question">
+		スライド表示を開始しますか？
+	</msg>
+	<msg id="Q004" caption="画像削除確認" buttons="YesNo" icon="Question">
+    選択中の画像を削除します。\nよろしいですか？
   </msg>
-  <msg id="W026" caption="�o�[�W�����x��" buttons="OK" icon="Warning">
-    {0}���[�h�Ńr���h���ꂽ���W���[���ł��B
+	<msg id="Q005" caption="編集内容破棄確認" buttons="YesNo" icon="Question">
+		編集されたセルが存在します。\n編集内容を破棄し、画面を閉じてよろしいですか？
+	</msg>
+	<msg id="Q006" caption="編集内容破棄確認" buttons="YesNo" icon="Question">
+		選択されている行の編集内容を破棄し、最後に適用した時点へ戻してよろしいですか？
+	</msg>
+	<msg id="Q007" caption="上書き保存確認" buttons="YesNo" icon="Question">
+		表示中の内容でファイルを上書きしてよろしいですか？
+	</msg>
+	<msg id="Q008" caption="変更確定確認" buttons="YesNo" icon="Question">
+		変更内容を確定してよろしいですか？
+	</msg>
+	<msg id="Q009" caption="フォルダ作成確認" buttons="YesNo" icon="Question">
+		{0}のフォルダ[{1}]が存在しません。\n作成してよろしいですか？
+	</msg>
+	<msg id="Q010" caption="ブックマーク全削除確認" buttons="YesNo" icon="Question">
+		全てのブックマークを削除してよろしいですか？
+	</msg>
+  <msg id="Q011" caption="編集内容破棄確認" buttons="YesNo" icon="Question">
+    全ての編集内容を破棄し、最後に適用した時点へ戻してよろしいですか？
   </msg>
-  <msg id="W027" caption="�T�[�r�X��~�L�����Z��" buttons="OK" icon="Warning">
-    �T�[�r�X[{0}]�̒�~���L�����Z������܂����B
+  <msg id="Q012" caption="カテゴリー削除確認" buttons="YesNo" icon="Question">
+    カテゴリー[{0}]を削除してもよろしいですか？
   </msg>
-  <msg id="W028" caption="�Ώۃt�@�C������" buttons="OK" icon="Warning">
-    �C���|�[�g�ΏۂƂȂ�t�@�C�������݂��܂���B
+  <msg id="Q013" caption="カテゴリー削除確認" buttons="YesNo" icon="Question">
+    カテゴリー[{0}]に属している画像が存在します。\nカテゴリーを削除してもよろしいですか？\n(属していた画像は未分類カテゴリーになります)
   </msg>
-  <msg id="W029" caption="�d���摜�L��" buttons="OK" icon="Warning">
-    {0} �t�@�C���̉摜�͊��Ƀf�[�^�x�[�X�ɑ��݂���ׁA�C���|�[�g���X�L�b�v���܂����B
+  <msg id="Q014" caption="画像完全削除確認" buttons="YesNo" icon="Question">
+    仮削除の状態の画像データを完全に削除してよろしいですか？
   </msg>
-  <msg id="W030" caption="�J�e�S���[�y�у^�O���I��" buttons="OK" icon="Warning">
-    �{���Ώۂ̃J�e�S���[�A�������̓^�O�̂ǂ��炩���w�肵�Ă��������B
+  <msg id="Q015" caption="ファイル上書き確認" buttons="YesNo" icon="Question">
+    移動先に同名のファイル[{0}]が存在します。\n上書きしてもよろしいですか？
   </msg>
-  <msg id="W031" caption="�摜����" buttons="OK" icon="Warning">
-    �\���ΏۂƂȂ�摜������܂���B
+	<msg id="Q016" caption="画像削除確認" buttons="YesNo" icon="Question">
+		選択されている画像を削除してよろしいですか？
+	</msg>
+  <msg id="Q017" caption="フォルダ再作成確認" buttons="YesNo" icon="Question">
+    自動取込フォルダは既に作成されています。\n最新の情報で再作成しますか？
+  </msg>
+  <msg id="Q018" caption="インポート済みファイル削除確認" buttons="YesNo" icon="Question">
+    {0}のインポートが完了しました。\nインポートしたファイルを削除しますか？
+  </msg>
+  <msg id="Q019" caption="エクスポート済み画像データ削除確認" buttons="YesNo" icon="Question">
+    {0}のエクスポートが完了しました。\nエクスポートした画像データをデータベースから削除しますか？
+  </msg>
+  <msg id="Q020" caption="ファイルが存在するフォルダへのエクスポート確認" buttons="YesNo" icon="Question">
+    指定されたフォルダには既にファイルが存在します。\nエクスポートを継続してもよろしいですか？\n(ファイルが上書きされる可能性があります)
+  </msg>
+  <msg id="Q021" caption="不要タグ削除確認" buttons="YesNo" icon="Question">
+    画像が紐付いていないタグを削除してよろしいですか？
+  </msg>
+  <msg id="Q022" caption="更新確認" buttons="YesNo" icon="Question">
+    {0}を更新してよろしいですか？
+  </msg>
+  <msg id="Q023" caption="画像グループ削除確認" buttons="YesNo" icon="Question">
+    画像グループ内の画像が全て除去されました。\n画像グループを削除しますがよろしいですか？
   </msg>
 
-  <!-- �G���[���b�Z�[�W -->
-	<msg id="E000" caption="�o�[�W�����G���[" buttons="OK" icon="Error">
-		{0}���[�h�Ńr���h���ꂽ���W���[���ׁ̈A�N���o���܂���B
+  <!-- ワーニングメッセージ -->
+	<msg id="W000" caption="未入力エラー" buttons="OK" icon="Warning">
+		{0} が未入力です。
+	</msg>
+	<msg id="W001" caption="不正な対象フォルダ" buttons="OK" icon="Warning">
+		対象フォルダが不正です。\n正しいフォルダを入力して下さい。
+	</msg>
+	<msg id="W002" caption="不正な入力" buttons="OK" icon="Warning">
+		プラス値で入力して下さい。
+	</msg>
+	<msg id="W003" caption="上限値オーバー" buttons="OK" icon="Warning">
+		入力された値が上限値を超えています。\n入力は無効です。
+	</msg>
+	<msg id="W004" caption="無効なページ指定" buttons="OK" icon="Warning">
+		ページ指定は1以上の半角整数のみ有効です。
+	</msg>
+	<msg id="W005" caption="禁則文字有り" buttons="OK" icon="Warning">
+		ファイル名に使用出来ない文字が含まれています。\n再入力して下さい。
+	</msg>
+	<msg id="W006" caption="対象ファイル削除済" buttons="OK" icon="Warning">
+		既に削除済みです。
+	</msg>
+	<msg id="W007" caption="切替間隔未入力" buttons="OK" icon="Warning">
+		画像切替間隔を入力して下さい。
+	</msg>
+	<msg id="W008" caption="切替間隔入力エラー" buttons="OK" icon="Warning">
+		画像切替間隔は1以上の半角数字で入力して下さい。
+	</msg>
+	<msg id="W009" caption="対象画像未選択" buttons="OK" icon="Warning">
+    対象画像を選択して下さい。
+  </msg>
+	<msg id="W010" caption="複数対象検出" buttons="OK" icon="Warning">
+		単一の対象のみをドロップして下さい。
+	</msg>
+	<msg id="W011" caption="未入力エラー" buttons="OK" icon="Warning">
+		元ファイルを含む、通し番号を付加する の何れかもしくは両方にチェックを入れて下さい。
+	</msg>
+	<msg id="W012" caption="未入力エラー" buttons="OK" icon="Warning">
+		置換後文字が入力されている場合は置換前文字を入力して下さい。
+	</msg>
+	<msg id="W013" caption="未入力エラー" buttons="OK" icon="Warning">
+		通し番号の間隔が未入力です。
+	</msg>
+	<msg id="W014" caption="入力値エラー" buttons="OK" icon="Warning">
+		通し番号の間隔は半角整数で入力して下さい。
+	</msg>
+	<msg id="W015" caption="入力値エラー" buttons="OK" icon="Warning">
+		{0} にファイル名に使用出来ない文字が含まれています。
+	</msg>
+	<msg id="W016" caption="パス区切り文字有り" buttons="OK" icon="Warning">
+		パス区切り文字が含まれています。\n異なるフォルダへの移動は出来ません。
+	</msg>
+	<msg id="W017" caption="禁則文字有り" buttons="OK" icon="Warning">
+		使用出来ない文字が含まれています。\n再入力するか、Escキーで変更を破棄して編集を終了して下さい。
+	</msg>
+	<msg id="W018" caption="拡張子変更検出" buttons="OK" icon="Warning">
+		拡張子を変更することは出来ません。\n再入力するか、Escキーで変更を破棄して編集を終了して下さい。
+	</msg>
+	<msg id="W019" caption="ボリューム区切り文字未入力" buttons="OK" icon="Warning">
+		ボリューム区切り文字が含まれていません。\n再入力するか、Escキーで変更を破棄して編集を終了して下さい。
+	</msg>
+	<msg id="W020" caption="複数のボリューム区切り文字有り" buttons="OK" icon="Warning">
+		ボリューム区切り文字が複数入力されています。\n再入力するか、Escキーで変更を破棄して編集を終了して下さい。
+	</msg>
+	<msg id="W021" caption="不正なボリューム区切り文字位置" buttons="OK" icon="Warning">
+		ボリューム区切り文字の位置が不正です。\n再入力するか、Escキーで変更を破棄して編集を終了して下さい。
+	</msg>
+	<msg id="W022" caption="空のフォルダ名有り" buttons="OK" icon="Warning">
+		パス中にフォルダ名が空の箇所があります。\n再入力するか、Escキーで変更を破棄して編集を終了して下さい。
+	</msg>
+	<msg id="W023" caption="多重起動" buttons="OK" icon="Warning">
+		既に起動しています。
+	</msg>
+  <msg id="W024" caption="存在しないパス" buttons="OK" icon="Warning">
+    指定された{0}は存在しません。
+  </msg>
+  <msg id="W025" caption="無効なファイル形式" buttons="OK" icon="Warning">
+    指定された形式のファイルは処理できません。
+  </msg>
+  <msg id="W026" caption="バージョン警告" buttons="OK" icon="Warning">
+    {0}モードでビルドされたモジュールです。
+  </msg>
+  <msg id="W027" caption="サービス停止キャンセル" buttons="OK" icon="Warning">
+    サービス[{0}]の停止がキャンセルされました。
+  </msg>
+  <msg id="W028" caption="対象ファイル無し" buttons="OK" icon="Warning">
+    インポート対象となるファイルが存在しません。
+  </msg>
+  <msg id="W029" caption="重複画像有り" buttons="OK" icon="Warning">
+    {0} ファイルの画像は既にデータベースに存在する為、インポートをスキップしました。
+  </msg>
+  <msg id="W030" caption="カテゴリー及びタグ未選択" buttons="OK" icon="Warning">
+    閲覧対象のカテゴリー、もしくはタグのどちらかを指定してください。
+  </msg>
+  <msg id="W031" caption="画像無し" buttons="OK" icon="Warning">
+    表示対象となる画像がありません。
+  </msg>
+
+  <!-- エラーメッセージ -->
+	<msg id="E000" caption="バージョンエラー" buttons="OK" icon="Error">
+		{0}モードでビルドされたモジュールの為、起動出来ません。
 	</msg>
 	<msg id="E001" caption="IOException" buttons="OK" icon="Error">
-		�G���[�Ώۉ摜 - {0}
+		エラー対象画像 - {0}
 	</msg>
-	<msg id="E002" caption="�폜���s" buttons="OK" icon="Error">
-    �摜�̍폜�͎��s���܂����B
+	<msg id="E002" caption="削除失敗" buttons="OK" icon="Error">
+    画像の削除は失敗しました。
   </msg>
-	<msg id="E003" caption="�Ώۃt�@�C���G���[" buttons="OK" icon="Error">
-		{0} �����݂��܂���B\n�폜���ꂽ���A�ړ����ꂽ�\��������܂��B
+	<msg id="E003" caption="対象ファイルエラー" buttons="OK" icon="Error">
+		{0} が存在しません。\n削除されたか、移動された可能性があります。
 	</msg>
-	<msg id="E004" caption="���j���[�o�[�����G���[" buttons="OK" icon="Error">
-		���j���[�o�[�̐����Ɏ��s���܂����B\n�t�H�[�����ɑΉ������������\�b�h�����邩�m�F���ĉ������B\n(��̃��j���[�o�[�Ńt�H�[���𐶐����܂�)
+	<msg id="E004" caption="メニューバー生成エラー" buttons="OK" icon="Error">
+		メニューバーの生成に失敗しました。\nフォーム名に対応した生成メソッドがあるか確認して下さい。\n(空のメニューバーでフォームを生成します)
 	</msg>
-	<msg id="E005" caption="�\���Ώۖ��w��" buttons="OK" icon="Error">
-		�\���Ώۂ̉摜���w�肳��Ă��܂���B
+	<msg id="E005" caption="表示対象未指定" buttons="OK" icon="Error">
+		表示対象の画像が指定されていません。
 	</msg>
-	<msg id="E006" caption="�Ώۃt�H���_����" buttons="OK" icon="Error">
-    {0}�Ώۂ̃t�H���_�����݂��܂���B
+	<msg id="E006" caption="対象フォルダ無し" buttons="OK" icon="Error">
+    {0}対象のフォルダが存在しません。
   </msg>
-	<msg id="E007" caption="�I�[�v���G���[" buttons="OK" icon="Error">
-		{0} ���J���܂���B
+	<msg id="E007" caption="オープンエラー" buttons="OK" icon="Error">
+		{0} を開けません。
 	</msg>
-	<msg id="E008" caption="�t�H���_�Ď��G���[" buttons="OK" icon="Error">
-		�t�H���_�Ď����ɁA�t�@�C�� "{0}" �̃��l�[���Ɏ��s���܂����B
+	<msg id="E008" caption="フォルダ監視エラー" buttons="OK" icon="Error">
+		フォルダ監視中に、ファイル "{0}" のリネームに失敗しました。
 	</msg>
-  <msg id="E009" caption="�d������J�e�S���[��" buttons="OK" icon="Error">
-    ���͂��ꂽ�J�e�S���[�� [{0}] �͊��ɑ��݂��܂��B
+  <msg id="E009" caption="重複するカテゴリー名" buttons="OK" icon="Error">
+    入力されたカテゴリー名 [{0}] は既に存在します。
   </msg>
-  <msg id="E010" caption="�T�[�r�X�J�n�L�����Z��" buttons="OK" icon="Error">
-    �T�[�r�X[{0}]�̊J�n���L�����Z������܂����B\n�A�v���P�[�V�����͋N���ł��܂���B
+  <msg id="E010" caption="サービス開始キャンセル" buttons="OK" icon="Error">
+    サービス[{0}]の開始がキャンセルされました。\nアプリケーションは起動できません。
   </msg>
-  <msg id="E011" caption="�t�H���_�쐬���s" buttons="OK" icon="Error">
-    �t�H���_���쐬�ł��܂���ł����B
+  <msg id="E011" caption="フォルダ作成失敗" buttons="OK" icon="Error">
+    フォルダが作成できませんでした。
   </msg>
-  <msg id="E012" caption="�d���摜" buttons="OK" icon="Error">
-    �w�肳�ꂽ�摜�͊��Ƀf�[�^�x�[�X�ɑ��݂��܂��B
+  <msg id="E012" caption="重複画像" buttons="OK" icon="Error">
+    指定された画像は既にデータベースに存在します。
   </msg>
-  <msg id="E013" caption="�d���摜" buttons="OK" icon="Error">
-    �w�肳�ꂽ�t�H���_�̑S�Ẳ摜�͊��Ƀf�[�^�x�[�X�ɑ��݂��܂��B
+  <msg id="E013" caption="重複画像" buttons="OK" icon="Error">
+    指定されたフォルダの全ての画像は既にデータベースに存在します。
   </msg>
 </root>

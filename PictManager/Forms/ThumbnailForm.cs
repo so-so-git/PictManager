@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -24,6 +25,22 @@ namespace SO.PictManager.Forms
     /// </summary>
     public sealed partial class ThumbnailForm : BaseForm
     {
+        #region enum Mode - 表示モード列挙体
+
+        /// <summary>
+        /// 表示モード列挙体
+        /// </summary>
+        public enum ViewMode
+        {
+            /// <summary>通常</summary>
+            Normal,
+
+            /// <summary>グループ編集</summary>
+            GroupEdit,
+        }
+
+        #endregion
+
         #region クラス定数
 
         /// <summary>対象画像無し時の表示テキスト</summary>
@@ -60,6 +77,12 @@ namespace SO.PictManager.Forms
         /// <summary>ドラッグしているサムネイル</summary>
         private ThumbnailUnit _dragThumbnail;
 
+        /// <summary>グループ編集適用後の処理</summary>
+        private Action _groupApplied = () => { };
+
+        /// <summary>サムネイル除去後の処理</summary>
+        private Action _thumbnailRemoved = () => { };
+
         #endregion
 
         #region プロパティ
@@ -83,6 +106,11 @@ namespace SO.PictManager.Forms
         }
 
         /// <summary>
+        /// 表示モードを取得します。
+        /// </summary>
+        public ViewMode Mode { get; private set; }
+
+        /// <summary>
         /// 表示している画像グループのIDを取得または設定します。
         /// </summary>
         public int? GroupId { get; set; }
@@ -92,21 +120,21 @@ namespace SO.PictManager.Forms
         #region イベント
 
         /// <summary>
-        /// 登録ボタン押下時に発生するイベントです。
+        /// グループ編集内容の登録後に発生するイベントです。
         /// </summary>
-        public event EventHandler EntryButtonClick
+        public event Action GroupApplied
         {
-            add { btnEntry.Click += value; }
-            remove { btnEntry.Click -= value; }
+            add { _groupApplied += value; }
+            remove { _groupApplied -= value; }
         }
 
         /// <summary>
-        /// 削除ボタン押下時に発生するイベントです。
+        /// サムネイルの表示を除去した後に発生するイベントです。
         /// </summary>
-        public event EventHandler DeleteButtonClick
+        public event Action ThumbnailRemoved
         {
-            add { btnDelete.Click += value; }
-            remove { btnDelete.Click -= value; }
+            add { _thumbnailRemoved += value; }
+            remove { _thumbnailRemoved -= value; }
         }
 
         #endregion
@@ -123,6 +151,10 @@ namespace SO.PictManager.Forms
         {
             // コンポーネント初期化
             InitializeComponent();
+
+            // 表示モードとボタンイ周りを設定
+            Mode = ViewMode.Normal;
+            btnDelete.Click += btnDeleteForDataDelete_Click;
 
             // 共通構築処理
             CommonConstruction();
@@ -144,6 +176,10 @@ namespace SO.PictManager.Forms
             // コンポーネント初期化
             InitializeComponent();
 
+            // 表示モードとボタン周りを設定
+            Mode = ViewMode.Normal;
+            btnDelete.Click += btnDeleteForDataDelete_Click;
+
             // 共通構築処理
             CommonConstruction();
 
@@ -151,6 +187,33 @@ namespace SO.PictManager.Forms
             lblStatus.Text = ImageCount > 0
                 ? category.CategoryName + string.Format(" - {0}件", ImageCount)
                 : NO_IMAGE_LABEL;
+        }
+
+        /// <summary>
+        /// 画像グループ編集用のコンストラクタです。
+        /// </summary>
+        /// <param name="imageList">画像データリスト</param>
+        /// <param name="groupId">表示する画像グループのID</param>
+        public ThumbnailForm(List<IImage> imageList, int? groupId)
+            : base(ConfigInfo.ImageDataMode.Database)
+        {
+            // コンポーネント初期化
+            InitializeComponent();
+
+            // 表示モードとボタン周りを設定
+            Mode = ViewMode.GroupEdit;
+            btnDelete.Click += btnDeleteForRemoveThumbnail_Click;
+            btnEntry.Click += btnEntryForApplyGroupEdit_Click;
+
+            // 渡された画像リストを操作対象とする
+            ImageList = imageList;
+            GroupId = groupId;
+
+            // その他フィールド初期化
+            _canChangeOrder = true;
+
+            // 共通構築処理
+            CommonConstruction();
         }
 
         /// <summary>
@@ -167,14 +230,16 @@ namespace SO.PictManager.Forms
             // コンポーネント初期化
             InitializeComponent();
 
+            // 表示モードとボタン周りを設定
+            Mode = ViewMode.Normal;
+            btnDelete.Visible = false;
+            btnEntry.Visible = false;
+
             // 渡された画像リストを操作対象とする
             ImageList = imageList;
             GroupId = groupId;
 
             _canChangeOrder = canChangeOrder;
-
-            // 削除ボタンイベントを除去
-            btnDelete.Click -= btnDelete_Click;
 
             // 共通構築処理
             CommonConstruction();
@@ -225,34 +290,6 @@ namespace SO.PictManager.Forms
         public void AddImage(IImage imageData)
         {
             ImageList.Add(imageData);
-            RefreshThumbnails();
-        }
-
-        #endregion
-
-        #region RemoveSelectedImage - 選択されている画像を表示対象リストから除去
-
-        /// <summary>
-        /// 選択されている画像を表示対象リストから除去します。
-        /// </summary>
-        public void RemoveSelectedImage()
-        {
-            var selectedList = from t in _thumbnails
-                               where t.BorderStyle == BorderStyle.FixedSingle
-                               join i in ImageList
-                               on t.ImageKey equals i.Key
-                               select i;
-
-            if (!selectedList.Any())
-            {
-                return;
-            }
-
-            foreach (var selected in selectedList)
-            {
-                ImageList.Remove(selected);
-            }
-
             RefreshThumbnails();
         }
 
@@ -316,7 +353,7 @@ namespace SO.PictManager.Forms
                 menuTemp.DropDownItems.Add(new ToolStripMenuItem("ページ再表示", null, (s, e) => RefreshThumbnails()));
                 menuTemp.DropDownItems.Add(new ToolStripSeparator());
                 menuTemp.DropDownItems.Add(new ToolStripMenuItem("選択ファイル移動", null, menuMoveSelected_Click));
-                menuTemp.DropDownItems.Add(new ToolStripMenuItem("選択ファイル削除", null, btnDelete_Click));
+                menuTemp.DropDownItems.Add(new ToolStripMenuItem("選択ファイル削除", null, btnDeleteForDataDelete_Click));
                 menuTemp.DropDownItems.Add(new ToolStripSeparator());
                 menuTemp.DropDownItems.Add(new ToolStripMenuItem("ディレクトリを開く", null, (s, e) => Utilities.OpenExplorer(TargetDirectory.FullName)));
                 menuTemp.DropDownItems.Add(new ToolStripSeparator());
@@ -969,15 +1006,15 @@ namespace SO.PictManager.Forms
 
         #endregion
 
-        #region btnDelete_Click - 削除ボタン押下時
+        #region btnDeleteForDataDelete_Click - 削除ボタン押下時(画像実体削除)
 
         /// <summary>
         /// 削除ボタンが押下された際に実行される処理です。
-        /// 選択状態のサムネイルの画像を削除します。
+        /// 選択状態のサムネイルの画像ファイルまたはデータを削除します。
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>
-        private void btnDelete_Click(object sender, EventArgs e)
+        private void btnDeleteForDataDelete_Click(object sender, EventArgs e)
         {
             try
             {
@@ -1016,6 +1053,183 @@ namespace SO.PictManager.Forms
                     // 選択マークを解除
                     selected.BorderStyle = BorderStyle.None;
                 }
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
+        }
+
+        #endregion
+
+        #region btnDeleteForRemoveThumbnail_Click - 削除ボタン押下時(選択サムネイル除去)
+
+        /// <summary>
+        /// 削除ボタンが押下された際に実行される処理です。
+        /// 選択状態のサムネイルを画面から除去します。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void btnDeleteForRemoveThumbnail_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // 全ての選択中サムネイルを取得
+                var selectedList = from t in _thumbnails
+                                   where t.BorderStyle == BorderStyle.FixedSingle
+                                   join i in ImageList
+                                     on t.ImageKey equals i.Key
+                                   select i;
+
+                if (!selectedList.Any())
+                {
+                    return;
+                }
+
+                // 選択中のサムネイルを表示対象から除去
+                foreach (var selected in selectedList)
+                {
+                    ImageList.Remove(selected);
+                }
+
+                RefreshThumbnails();
+
+                // サムネイル除去後の処理が指定されていれば実行
+                _thumbnailRemoved();
+            }
+            catch (Exception ex)
+            {
+                ex.DoDefault(GetType().FullName, MethodBase.GetCurrentMethod());
+            }
+        }
+
+        #endregion
+
+        #region btnEntryForApplyGroupEdit_Click - 登録ボタン押下時(グループ編集適用)
+
+        /// <summary>
+        /// 登録ボタンが押下された際に実行される処理です。
+        /// 画面のグループ編集内容をデータベースに適用します。
+        /// </summary>
+        /// <param name="sender">イベント発生元オブジェクト</param>
+        /// <param name="e">イベント引数</param>
+        private void btnEntryForApplyGroupEdit_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int groupId;
+                using (var entities = new PictManagerEntities())
+                {
+                    DateTime now = DateTime.Now;
+                    TblGroup group = null;
+                    if (GroupId.HasValue)
+                    {
+                        // 既にグループが存在する場合はそれを取得
+                        group = (from g in entities.TblGroups
+                                 where g.GroupId == GroupId.Value
+                                 select g).First();
+
+                        if (ImageCount == 0)
+                        {
+                            // 画像が全て除去された場合は画像グループの削除確認
+                            if (FormUtilities.ShowMessage("Q023") == DialogResult.No)
+                            {
+                                return;
+                            }
+
+                            // 古い画像グループ情報をクリア
+                            foreach (var image in entities.TblImages.Where(i => i.GroupId == group.GroupId))
+                            {
+                                image.GroupId = null;
+                                image.GroupOrder = null;
+                                image.UpdatedDateTime = now;
+                            }
+
+                            // 画像グループを削除
+                            entities.TblGroups.Remove(group);
+                            entities.SaveChanges();
+
+                            // グループ編集反映後処理が指定されていれば実行
+                            _groupApplied();
+
+                            FormUtilities.ShowMessage("I011", string.Format("画像グループ(ID: {0})の削除", group.GroupId));
+
+                            Dispose();
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        if (ImageCount == 0)
+                        {
+                            // 新規で画像0の場合は何もしない
+                            FormUtilities.ShowMessage("W009");
+                            return;
+                        }
+
+                        // 新規画像グループを発行
+                        group = new TblGroup();
+                        group.Description = string.Empty;
+                    }
+
+                    // 画像グループの説明を設定
+                    using (var dlg = new CommonInputDialog(
+                        "グループ説明", "画像グループの説明を入力して下さい。", false, group.Description))
+                    {
+                        if (dlg.ShowDialog(this) != DialogResult.OK)
+                        {
+                            return;
+                        }
+
+                        group.Description = dlg.InputString;
+                    }
+
+                    if (entities.Entry(group).State == EntityState.Detached)
+                    {
+                        // 新規画像グループを登録
+                        group.InsertedDateTime = now;
+                        group.UpdatedDateTime = now;
+
+                        entities.TblGroups.Add(group);
+                        entities.SaveChanges();
+                    }
+                    else
+                    {
+                        // 古い画像グループ情報をクリア
+                        foreach (var image in entities.TblImages.Where(i => i.GroupId == group.GroupId))
+                        {
+                            image.GroupId = null;
+                            image.GroupOrder = null;
+                            image.UpdatedDateTime = now;
+                        }
+                    }
+
+                    // 画像グループ情報を新しく設定したグループの画像に入れる
+                    for (int i = 0; i < ImageCount; i++)
+                    {
+                        int imageId = int.Parse(ImageList[i].Key);
+
+                        var entity = (from img in entities.TblImages
+                                      where img.ImageId == imageId
+                                      select img
+                                     ).First();
+
+                        entity.GroupId = group.GroupId;
+                        entity.GroupOrder = i;
+                        entity.UpdatedDateTime = now;
+                    }
+
+                    entities.SaveChanges();
+
+                    groupId = group.GroupId;
+                }
+
+                // グループ編集反映後処理が指定されていれば実行
+                _groupApplied();
+
+                FormUtilities.ShowMessage("I011", string.Format("画像グループ(ID: {0})の登録", groupId));
+
+                Dispose();
             }
             catch (Exception ex)
             {

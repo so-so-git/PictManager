@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -526,7 +527,7 @@ namespace SO.PictManager.Forms
             var imageList = new List<IImage>();
             if (currentImage.GroupId.HasValue)
             {
-                // 既に画像グループが設定されている場合、同じグループの画像を表示
+                // 既に画像グループが設定されている場合、同じグループの画像を表示リストに追加
                 using (var entities = new PictManagerEntities())
                 {
                     var imageIds = from i in entities.TblImages
@@ -549,110 +550,34 @@ namespace SO.PictManager.Forms
             }
             else
             {
-                // セットが設定されていない場合は現在の画像のみを表示
+                // 画像グループが設定されていない場合は現在の画像のみを表示リストに追加
                 imageList.Add(currentImage);
 
-                titleText = "新規画像グループ";
-                statusText = "新規画像グループ";
+                titleText = statusText = "新規画像グループ";
             }
 
-            _groupForm = new ThumbnailForm(imageList, ImageMode, currentImage.GroupId, true);
+            // サムネイル画面をグループ表示モードで生成
+            _groupForm = new ThumbnailForm(imageList, currentImage.GroupId);
             _groupForm.TitleBarText = titleText;
             _groupForm.StatusBarText = statusText;
 
-            // 登録ボタン押下時の処理を定義
-            _groupForm.EntryButtonClick += (sender3, e3) =>
+            _groupForm.GroupApplied += () =>
             {
-                int groupId;
-                using (var entities = new PictManagerEntities())
-                {
-                    string description = string.Empty;
-                    TblGroup group = null;
-                    if (_groupForm.GroupId.HasValue)
-                    {
-                        group = (from g in entities.TblGroups
-                                 where g.GroupId == _groupForm.GroupId.Value
-                                 select g).First();
-                        
-                        groupId = group.GroupId;
-                        description = group.Description;
-                    }
-                    else
-                    {
-                        groupId = -1;
-                        description = string.Empty;
-                    }
-
-                    // 画像グループの説明を登録
-                    using (var dlg = new CommonInputDialog(
-                        "グループ説明", "画像グループの説明を入力して下さい。", false, description))
-                    {
-                        if (dlg.ShowDialog(this) != DialogResult.OK)
-                        {
-                            return;
-                        }
-
-                        description = dlg.InputString;
-                    }
-
-                    DateTime now = DateTime.Now;
-
-                    if (_groupForm.GroupId.HasValue)
-                    {
-                        // 古い画像グループ情報をクリア
-                        foreach (var image in entities.TblImages.Where(i => i.GroupId == groupId))
-                        {
-                            image.GroupId = null;
-                            image.GroupOrder = null;
-                        }
-
-                        group.Description = description;
-                    }
-                    else
-                    {
-                        // 新規画像グループを発行
-                        group = new TblGroup();
-                        group.Description = description;
-                        group.InsertedDateTime = now;
-                        group.UpdatedDateTime = now;
-
-                        entities.TblGroups.Add(group);
-                        entities.SaveChanges();
-
-                        groupId = group.GroupId;
-                    }
-
-                    // 画像グループ情報を新しく設定したグループの画像に入れる
-                    for (int i = 0; i < _groupForm.ImageCount; i++)
-                    {
-                        int imageId = int.Parse(_groupForm.ImageList[i].Key);
-
-                        var entity = (from img in entities.TblImages
-                                      where img.ImageId == imageId
-                                      select img).First();
-
-                        entity.GroupId = groupId;
-                        entity.GroupOrder = i;
-                        entity.UpdatedDateTime = now;
-                    }
-
-                    entities.SaveChanges();
-                }
+                // グループ適用時、画像情報再読込
+                int storeIndex = CurrentIndex;
 
                 RefreshImageList();
 
-                ImageData = ImageList[CurrentIndex];
-                RefreshGroupButtonState();
-
-                FormUtilities.ShowMessage("I011", string.Format("画像グループ(ID: {0})の登録", groupId));
+                CurrentIndex = storeIndex;
+                DisplayImage();
             };
 
-            // 削除ボタン押下時の処理を定義
-            _groupForm.DeleteButtonClick += (sender4, e4) => _groupForm.RemoveSelectedImage();
+            // サムネイル除去時、画像グループボタン状態更新
+            _groupForm.ThumbnailRemoved += RefreshGroupButtonState;
 
-            // 画面クローズ時の処理を定義
             _groupForm.Disposed += (sender2, e2) =>
             {
+                // サムネイル画面破棄時、画像グループボタン状態更新
                 _groupForm = null;
                 RefreshGroupButtonState();
             };
@@ -1535,6 +1460,7 @@ namespace SO.PictManager.Forms
                     if (!isExists)
                     {
                         _groupForm.AddImage(ImageData);
+                        RefreshGroupButtonState();
                     }
                 }
             }

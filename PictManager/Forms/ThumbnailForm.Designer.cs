@@ -52,16 +52,16 @@
             // 
             this.barStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblStatus});
-            this.barStatus.Location = new System.Drawing.Point(0, 535);
+            this.barStatus.Location = new System.Drawing.Point(0, 536);
             this.barStatus.Name = "barStatus";
             this.barStatus.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
-            this.barStatus.Size = new System.Drawing.Size(737, 23);
+            this.barStatus.Size = new System.Drawing.Size(737, 22);
             this.barStatus.TabIndex = 0;
             // 
             // lblStatus
             // 
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(102, 18);
+            this.lblStatus.Size = new System.Drawing.Size(86, 17);
             this.lblStatus.Text = "[ステータス表示]";
             // 
             // pnlParent
@@ -88,7 +88,7 @@
             this.pnlParent.Panel2.Controls.Add(this.lblPageSlash);
             this.pnlParent.Panel2.Controls.Add(this.txtPage);
             this.pnlParent.Panel2.Controls.Add(this.btnClose);
-            this.pnlParent.Size = new System.Drawing.Size(737, 511);
+            this.pnlParent.Size = new System.Drawing.Size(737, 512);
             this.pnlParent.SplitterDistance = 461;
             this.pnlParent.SplitterWidth = 5;
             this.pnlParent.TabIndex = 1;
@@ -134,7 +134,6 @@
             this.btnDelete.TabIndex = 1;
             this.btnDelete.Text = "削除";
             this.btnDelete.UseVisualStyleBackColor = true;
-            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
             // btnPrevious
             // 
