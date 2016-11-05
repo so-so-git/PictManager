@@ -243,6 +243,7 @@
             this.cmbCategory.Name = "cmbCategory";
             this.cmbCategory.Size = new System.Drawing.Size(218, 23);
             this.cmbCategory.TabIndex = 1;
+            this.cmbCategory.ValueMember = "CategoryId";
             // 
             // btnMaintenance
             // 

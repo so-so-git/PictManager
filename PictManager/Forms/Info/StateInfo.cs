@@ -24,6 +24,8 @@ namespace SO.PictManager.Forms.Info
         /// </summary>
         public StateInfo()
         {
+            LastSelectCategoryId = null;
+            LastSearchTagName = null;
 			LastViewPath = null;
             LastAutoImportPath = null;
 			SizeMode = PictureBoxSizeMode.Normal;
@@ -38,7 +40,9 @@ namespace SO.PictManager.Forms.Info
 		{
 			var newObj = new StateInfo();
 
-			newObj.LastViewPath = this.LastViewPath;
+            newObj.LastSelectCategoryId = this.LastSelectCategoryId;
+            newObj.LastSearchTagName = this.LastSearchTagName;
+            newObj.LastViewPath = this.LastViewPath;
             newObj.LastAutoImportPath = this.LastAutoImportPath;
             newObj.SizeMode = this.SizeMode;
             newObj.SortOrder = this.SortOrder;
@@ -46,7 +50,13 @@ namespace SO.PictManager.Forms.Info
 
         #endregion
 
-		#region プロパティ
+        #region プロパティ
+
+        /// <summary>最後に選択したカテゴリーIDを取得または設定します。</summary>
+        public int? LastSelectCategoryId { get; set; }
+
+        /// <summary>最後に検索したタグ名を取得または設定します。</summary>
+        public string LastSearchTagName { get; set; }
 
         /// <summary>最後に表示したフォルダのパスを取得または設定します。</summary>
 		public string LastViewPath { get; set; }

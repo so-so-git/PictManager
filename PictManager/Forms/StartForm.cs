@@ -81,7 +81,7 @@ namespace SO.PictManager.Forms
             var tagSuggest = new AutoCompleteStringCollection();
 
             // フォーム状態設定
-            ChangeImageMode();
+            ChangeImageMode(true);
         }
 
         #endregion
@@ -91,7 +91,8 @@ namespace SO.PictManager.Forms
         /// <summary>
         /// 読込画像データモードに応じてフォームの状態を切り替えます。
         /// </summary>
-        private void ChangeImageMode()
+        /// <param name="isInitialize">初期化処理化を示すフラグ</param>
+        private void ChangeImageMode(bool isInitialize)
         {
             if (Utilities.Config.CommonInfo.Mode == ConfigInfo.ImageDataMode.File)
             {
@@ -115,12 +116,15 @@ namespace SO.PictManager.Forms
                 fileWatcher.Created -= fileWatcherInDatabaseMode_Created;
                 fileWatcher.Created += fileWatcherInFileMode_Created;
 
-                // 状態情報読込
-                StateInfo stateInfo = Utilities.State;
-                if (!string.IsNullOrEmpty(stateInfo.LastViewPath))
+                if (isInitialize)
                 {
-                    txtTargetFolder.Text = stateInfo.LastViewPath;
-                    dlgFolderRef.SelectedPath = stateInfo.LastViewPath;
+                    // 状態情報読込
+                    StateInfo stateInfo = Utilities.State;
+                    if (!string.IsNullOrEmpty(stateInfo.LastViewPath))
+                    {
+                        txtTargetFolder.Text = stateInfo.LastViewPath;
+                        dlgFolderRef.SelectedPath = stateInfo.LastViewPath;
+                    }
                 }
             }
             else
@@ -150,12 +154,30 @@ namespace SO.PictManager.Forms
 
                 lstSearchedTags.Items.Clear();
 
-                // 状態情報読込
-                StateInfo stateInfo = Utilities.State;
-                if (!string.IsNullOrEmpty(stateInfo.LastAutoImportPath))
+                if (isInitialize)
                 {
-                    txtTargetFolder.Text = stateInfo.LastAutoImportPath;
-                    dlgFolderRef.SelectedPath = stateInfo.LastAutoImportPath;
+                    // 状態情報読込
+                    StateInfo stateInfo = Utilities.State;
+                    if (stateInfo.LastSelectCategoryId.HasValue)
+                    {
+                        var query = from category in cmbCategory.Items.Cast<MstCategory>()
+                                    where category.CategoryId == stateInfo.LastSelectCategoryId.Value
+                                    select category;
+                        if (query.Any())
+                        {
+                            cmbCategory.SelectedItem = query.First();
+                        }
+                    }
+                    if (!string.IsNullOrEmpty(stateInfo.LastSearchTagName))
+                    {
+                        txtTagSearch.Text = stateInfo.LastSearchTagName;
+                        SearchTag(false);
+                    }
+                    if (!string.IsNullOrEmpty(stateInfo.LastAutoImportPath))
+                    {
+                        txtTargetFolder.Text = stateInfo.LastAutoImportPath;
+                        dlgFolderRef.SelectedPath = stateInfo.LastAutoImportPath;
+                    }
                 }
             }
 
@@ -367,6 +389,54 @@ namespace SO.PictManager.Forms
 
         #endregion
 
+        #region SearchTag - タグ検索
+
+        /// <summary>
+        /// タグ検索テキストボックスに入力されている内容に該当するタグを検索し、
+        /// 結果をタグ検索結果リストボックスに表示します。
+        /// </summary>
+        /// <param name="isSelectFirst">検索後、検索結果の先頭を選択状態にするかを示すフラグ</param>
+        private void SearchTag(bool isSelectFirst)
+        {
+            if (string.IsNullOrWhiteSpace(txtTagSearch.Text))
+            {
+                return;
+            }
+
+            lstSearchedTags.Items.Clear();
+
+            // 検索条件に該当するタグをリストボックスに表示
+            string searchValue = txtTagSearch.Text.ToLower();
+            using (var entities = new PictManagerEntities())
+            {
+                var tags = from tag in entities.MstTags
+                           where tag.TagName.ToLower().Contains(searchValue)
+                           select tag;
+
+                foreach (var tag in tags)
+                {
+                    entities.Entry(tag).State = EntityState.Detached;
+                    lstSearchedTags.Items.Add(tag);
+                }
+            }
+
+            if (lstSearchedTags.Items.Count > 0)
+            {
+                if (isSelectFirst)
+                {
+                    lstSearchedTags.Focus();
+                    lstSearchedTags.SelectedIndex = 0;
+                }
+            }
+            else
+            {
+                txtTagSearch.Focus();
+                txtTagSearch.SelectAll();
+            }
+        }
+
+        #endregion
+
         //*** イベントハンドラ ***
 
         #region txtTagSearch_KeyDown - タグ検索テキストボックスキー押下時
@@ -401,7 +471,7 @@ namespace SO.PictManager.Forms
 
         /// <summary>
         /// タグ検索ボタンをクリックした際に実行される処理です。
-        /// テキストボックスに入力された内容に該当するタグを検索します。
+        /// タグ検索テキストボックスに入力された内容に該当するタグを検索します。
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベント引数</param>
@@ -409,38 +479,7 @@ namespace SO.PictManager.Forms
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(txtTagSearch.Text))
-                {
-                    return;
-                }
-
-                lstSearchedTags.Items.Clear();
-
-                // 検索条件に該当するタグをリストボックスに表示
-                string searchValue = txtTagSearch.Text.ToLower();
-                using (var entities = new PictManagerEntities())
-                {
-                    var tags = from tag in entities.MstTags
-                               where tag.TagName.ToLower().Contains(searchValue)
-                               select tag;
-
-                    foreach (var tag in tags)
-                    {
-                        entities.Entry(tag).State = EntityState.Detached;
-                        lstSearchedTags.Items.Add(tag);
-                    }
-                }
-
-                if (lstSearchedTags.Items.Count > 0)
-                {
-                    lstSearchedTags.Focus();
-                    lstSearchedTags.SelectedIndex = 0;
-                }
-                else
-                {
-                    txtTagSearch.Focus();
-                    txtTagSearch.SelectAll();
-                }
+                SearchTag(true);
             }
             catch (Exception ex)
             {
@@ -589,7 +628,7 @@ namespace SO.PictManager.Forms
             }
 
             // フォーム状態設定
-            ChangeImageMode();
+            ChangeImageMode(false);
         }
 
         #endregion
@@ -822,7 +861,7 @@ namespace SO.PictManager.Forms
                     Directory.Delete(Utilities.State.LastAutoImportPath, true);
                 }
 
-                Dispose();
+                Close();
             }
             catch (Exception ex)
             {
@@ -855,6 +894,26 @@ namespace SO.PictManager.Forms
                         e.Cancel = true;
                         return;
                     }
+                }
+
+                // 状態保存
+                bool isUpdateState = false;
+                if (cmbCategory.Visible)
+                {
+                    MstCategory selectedCategory = cmbCategory.SelectedItem as MstCategory;
+                    Utilities.State.LastSelectCategoryId = selectedCategory == _blankCategory
+                        ? null : selectedCategory.CategoryId as int?;
+                    isUpdateState = true;
+                }
+                if (txtTagSearch.Visible)
+                {
+                    Utilities.State.LastSearchTagName = string.IsNullOrWhiteSpace(txtTagSearch.Text)
+                        ? null : txtTagSearch.Text;
+                    isUpdateState = true;
+                }
+                if (isUpdateState)
+                {
+                    Utilities.SaveStateInfo();
                 }
 
                 // 自動取込フォルダが残っている場合は削除
